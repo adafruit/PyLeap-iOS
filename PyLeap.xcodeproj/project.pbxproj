@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		292CE10625F13A53009D7261 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292CE10525F13A53009D7261 /* AppDelegate.swift */; };
 		292CE10825F13A54009D7261 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292CE10725F13A54009D7261 /* SceneDelegate.swift */; };
-		292CE10A25F13A54009D7261 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292CE10925F13A54009D7261 /* ViewController.swift */; };
+		292CE10A25F13A54009D7261 /* ConsoleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292CE10925F13A54009D7261 /* ConsoleViewController.swift */; };
 		292CE10D25F13A54009D7261 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 292CE10B25F13A54009D7261 /* Main.storyboard */; };
 		292CE10F25F13A56009D7261 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 292CE10E25F13A56009D7261 /* Assets.xcassets */; };
 		292CE11225F13A56009D7261 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 292CE11025F13A56009D7261 /* LaunchScreen.storyboard */; };
@@ -19,13 +19,18 @@
 		29BE76A125F54C82007D65DC /* ScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BE76A025F54C82007D65DC /* ScannerViewController.swift */; };
 		29C08A3E25F58CA9001BFDD9 /* TableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C08A3D25F58CA9001BFDD9 /* TableCell.swift */; };
 		29F048CF25F171BB00D5C61B /* NUSCBUUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F048CE25F171BB00D5C61B /* NUSCBUUID.swift */; };
+		D5166C0E261ACDAE006CF50C /* ScannerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5166C0D261ACDAE006CF50C /* ScannerTableViewController.swift */; };
+		D5166C11261AD19B006CF50C /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5166C10261AD19B006CF50C /* RootViewController.swift */; };
+		D5166C19261CB631006CF50C /* ManufacturerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5166C18261CB631006CF50C /* ManufacturerViewController.swift */; };
+		D5451EF32616DB21001757B9 /* HexUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5451EF22616DB21001757B9 /* HexUtil.swift */; };
+		D5A24F33261CD8C30008B61C /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5A24F32261CD8C30008B61C /* Launch Screen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		292CE10225F13A53009D7261 /* PyLeap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PyLeap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		292CE10525F13A53009D7261 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		292CE10725F13A54009D7261 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		292CE10925F13A54009D7261 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		292CE10925F13A54009D7261 /* ConsoleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleViewController.swift; sourceTree = "<group>"; };
 		292CE10C25F13A54009D7261 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		292CE10E25F13A56009D7261 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		292CE11125F13A56009D7261 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -36,6 +41,11 @@
 		29BE76A025F54C82007D65DC /* ScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerViewController.swift; sourceTree = "<group>"; };
 		29C08A3D25F58CA9001BFDD9 /* TableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableCell.swift; sourceTree = "<group>"; };
 		29F048CE25F171BB00D5C61B /* NUSCBUUID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NUSCBUUID.swift; sourceTree = "<group>"; };
+		D5166C0D261ACDAE006CF50C /* ScannerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerTableViewController.swift; sourceTree = "<group>"; };
+		D5166C10261AD19B006CF50C /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
+		D5166C18261CB631006CF50C /* ManufacturerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManufacturerViewController.swift; sourceTree = "<group>"; };
+		D5451EF22616DB21001757B9 /* HexUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HexUtil.swift; sourceTree = "<group>"; };
+		D5A24F32261CD8C30008B61C /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,16 +78,21 @@
 		292CE10425F13A53009D7261 /* PyLeap */ = {
 			isa = PBXGroup;
 			children = (
-				292CE10525F13A53009D7261 /* AppDelegate.swift */,
 				292CE10725F13A54009D7261 /* SceneDelegate.swift */,
-				292CE10925F13A54009D7261 /* ViewController.swift */,
+				29BE76A025F54C82007D65DC /* ScannerViewController.swift */,
+				292CE10925F13A54009D7261 /* ConsoleViewController.swift */,
+				D5166C0D261ACDAE006CF50C /* ScannerTableViewController.swift */,
 				29F048CE25F171BB00D5C61B /* NUSCBUUID.swift */,
 				29C08A3D25F58CA9001BFDD9 /* TableCell.swift */,
+				D5166C18261CB631006CF50C /* ManufacturerViewController.swift */,
 				2937F11925F8104100C65FC4 /* BlePeripheral.swift */,
-				29BE76A025F54C82007D65DC /* ScannerViewController.swift */,
+				D5166C10261AD19B006CF50C /* RootViewController.swift */,
+				292CE10525F13A53009D7261 /* AppDelegate.swift */,
+				D5451EF22616DB21001757B9 /* HexUtil.swift */,
 				2937F11625F80A2C00C65FC4 /* pytest.py */,
 				2937F11325F8051300C65FC4 /* ProjectTextFile.txt */,
 				292CE10B25F13A54009D7261 /* Main.storyboard */,
+				D5A24F32261CD8C30008B61C /* Launch Screen.storyboard */,
 				292CE10E25F13A56009D7261 /* Assets.xcassets */,
 				292CE11025F13A56009D7261 /* LaunchScreen.storyboard */,
 				292CE11325F13A56009D7261 /* Info.plist */,
@@ -142,6 +157,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5A24F33261CD8C30008B61C /* Launch Screen.storyboard in Resources */,
 				292CE11225F13A56009D7261 /* LaunchScreen.storyboard in Resources */,
 				2937F11425F8051300C65FC4 /* ProjectTextFile.txt in Resources */,
 				2937F11725F80A2C00C65FC4 /* pytest.py in Resources */,
@@ -157,11 +173,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5166C11261AD19B006CF50C /* RootViewController.swift in Sources */,
+				D5166C19261CB631006CF50C /* ManufacturerViewController.swift in Sources */,
 				29F048CF25F171BB00D5C61B /* NUSCBUUID.swift in Sources */,
-				292CE10A25F13A54009D7261 /* ViewController.swift in Sources */,
+				292CE10A25F13A54009D7261 /* ConsoleViewController.swift in Sources */,
 				292CE10625F13A53009D7261 /* AppDelegate.swift in Sources */,
+				D5451EF32616DB21001757B9 /* HexUtil.swift in Sources */,
 				29C08A3E25F58CA9001BFDD9 /* TableCell.swift in Sources */,
 				29BE76A125F54C82007D65DC /* ScannerViewController.swift in Sources */,
+				D5166C0E261ACDAE006CF50C /* ScannerTableViewController.swift in Sources */,
 				292CE10825F13A54009D7261 /* SceneDelegate.swift in Sources */,
 				2937F11A25F8104100C65FC4 /* BlePeripheral.swift in Sources */,
 			);
@@ -317,6 +337,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.adafruit.PyLeap.PyLeap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -336,6 +357,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.adafruit.PyLeap.PyLeap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

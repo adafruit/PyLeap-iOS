@@ -1,4 +1,5 @@
 //
+//
 //  ScannerViewController.swift
 //  PyLeap
 //
@@ -14,61 +15,75 @@ import CoreBluetooth
 //}
 
 
-class ScannerViewController: UIViewController {
-
-
-
-  func getBlePeripheral(_ peripheral: CBPeripheral) {
-//peripheral = tempBluefruitPeripheral
-  }
-
-  func getTXCharacteristic(_ characteristic: CBCharacteristic) {
-   // characteristic =
-  }
-
-
+class ScannerTableViewController: UITableViewController {
 
 
 
 
   // Data
    var centralManager: CBCentralManager!
-   var tempBluefruitPeripheral: CBPeripheral!
-   var tempTxCharacteristic: CBCharacteristic!
+   private var discoveredPeripherals = [BlePeripheral]()
+    var blePeripheral: BlePeripheral!
+    
+  var tempTxCharacteristic: CBCharacteristic!
   private var tempRxCharacteristic: CBCharacteristic!
-  private var peripheralArray: [CBPeripheral] = []
+  private var peripheralArray: [BlePeripheral] = []
+   
+    
+    
   var deviceString: String?
-    var valueData: Data?
+  var valueData: Data?
 
 // Weak so that there's no chance for a retain cycle
 
 // UI
-  @IBOutlet weak var bleTableView: UITableView!
 
   @IBOutlet weak var activitySpinner: UIActivityIndicatorView!
 
-  @IBAction func buttonPressed(_ sender: Any) {
- //   guard let text = customTextField.text else { return }
-//    guard let peripheral = bluefruitPeripheral else { return }
-//    guard let txChar = txCharacteristic else { return }
-//    guard let rxChar = rxCharacteristic else { return }
-//    guard let text = deviceString else { return }
-
-
- //   delegate?.scannerViewController(self, peripheral: bluefruitPeripheral, txChar: txCharacteristic, rxChar: rxCharacteristic, peripheralName: bluefruitPeripheral.name!)
-
-
-    //delegate?.scannerViewController(self, peripheralName: text)
- //   dismiss(animated: true, completion: nil)
-  }
 
 
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        discoveredPeripherals.removeAll()
+        tableView.reloadData()
+    }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+       
+        centralManager.delegate = self
+       
+        DispatchQueue.main.async {
+                       // self.tableView.reloadData()
+                    }
+       
+        if centralManager.state == .poweredOn {
+            print("Scanning....")
+        }
+        
+
+    }
+    
+    override func viewDidLoad() {
+      super.viewDidLoad()
+       print("View Did Load")
+        
+        centralManager = CBCentralManager(delegate: self, queue: nil)
+        tableView.delegate = self
+        tableView.dataSource = self
+       // tableView.reloadData()
+    }
+
+
+
+    override func viewDidDisappear(_ animated: Bool) {
+   // stopScanning()
+    }
 
   func startScanning() -> Void {
       // Start Scanning
-
+   // tableView.reloadData()
     if let periph = BlePeripheral.connectedPeripheral {
       centralManager.cancelPeripheralConnection(periph)
 
@@ -76,11 +91,11 @@ class ScannerViewController: UIViewController {
       print("Nil")
     }
 
-
-
     peripheralArray.removeAll()
     print("started scan")
+    
     centralManager?.scanForPeripherals(withServices: [])
+    tableView.reloadData()
 //      Timer.scheduledTimer(withTimeInterval: 15, repeats: false) {_ in
 //        print("Stopped Scan")
 //       // self.stopScanning()
@@ -96,87 +111,94 @@ class ScannerViewController: UIViewController {
 
   func connectToDevice() -> Void {
     stopScanning()
-    centralManager?.connect(tempBluefruitPeripheral!, options: nil)
+    //centralManager?.connect(tempBluefruitPeripheral!, options: nil)
 
 }
 
- @objc func delayedConnection() -> Void {
+ 
+// MARK:- Navigation
 
-   // consoleViewController.delegate = self
-//    consoleViewController.bluefruitPeripheral = self.tempBluefruitPeripheral
-//    consoleViewController.txCharacteristic = self.tempTxCharacteristic
-//    consoleViewController.testString = "Hello"
-
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
-    //Once connected, move to new view controller to manager incoming and outgoing data
-
-   // self.present(consoleViewController, animated: true, completion: nil)
-
-    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//
-    let detailViewController = storyboard.instantiateViewController(withIdentifier: "ConsoleViewController") as! ConsoleViewController
-//
-  // self.navigationController?.popViewController(animated: true)
-//    self.delegate?.getBlePeripheral(self.tempBluefruitPeripheral)
-//    self.delegate?.getTXCharacteristic(self.tempTxCharacteristic)
-//
-//
-    self.navigationController?.pushViewController(detailViewController, animated: true)
-
-
-
-
-    
-    
-  })
-}
-
-  func getData() {
-          print("data being retrieved...")
-       //   let data: AnyObject? = delegate?.getThatData()
-      }
-
-  func test() {
-
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.10, execute: {
-
-     // self.delegate?.scannerViewController(self, peripheral: self.bluefruitPeripheral, txChar: self.txCharacteristic, rxChar: self.rxCharacteristic, peripheralName: self.bluefruitPeripheral.name!)
-
-      print(self.tempBluefruitPeripheral.name)
-      print(self.tempTxCharacteristic.uuid)
-      print(self.tempRxCharacteristic.uuid)
-
-    })
-  }
-
-  override func viewDidLoad() {
-    super.viewDidLoad()
-
-
-
-    self.bleTableView.delegate = self
-    self.bleTableView.dataSource = self
-    self.bleTableView.reloadData()
-
-    centralManager = CBCentralManager(delegate: self, queue: nil)
-
-    activitySpinner.startAnimating()
-  }
-
-  override func viewDidAppear(_ animated: Bool) {
-    if let blePeripheral = tempBluefruitPeripheral {
-      centralManager.cancelPeripheralConnection(blePeripheral)
-    } else {
-      print("nil")
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        return identifier == "ConsoleViewController"
     }
-  }
+    
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier == "ConsoleViewController" {
+//            if let peripheral = sender as? BlePeripheral {
+//                let destinationView = segue.destination as! ConsoleViewController
+//                destinationView.setPeripheral(peripheral)
+//            }
+//        }
+//    }
 
-  override func viewDidDisappear(_ animated: Bool) {
-  stopScanning()
-  }
+    
+    
+    
+    // MARK:- Table view
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return "Nearby devices"
+    }
+    
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+   
+       // tableView.deselectRow(at: indexPath, animated: true)
+        blePeripheral = peripheralArray[indexPath.row]
+        blePeripheral.connect()
+        
+        
+        self.performSegue(withIdentifier: "com.segue.console", sender: self)
+        
+      //  performSegue(withIdentifier: "com.segue.console", sender: )
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+    {
+        if segue.destination is ConsoleViewController {
+            let vc = segue.destination as? ConsoleViewController
+            vc?.bluefruitPeripheral = blePeripheral
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return peripheralArray.count
+    }
+
+
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+//        let cell = UITableViewCell()
+//        cell.textLabel?.text = "Test"
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "blueCell") as! TableCell
+
+        let selectedPeripheral =  self.peripheralArray[indexPath.row]
+        
+        
+        if selectedPeripheral != selectedPeripheral {
+                cell.peripheralLabel.text = "Unknown"
+            }else {
+                cell.peripheralLabel.text = selectedPeripheral.localName
+        }
+        
+        cell.setupView(withPeripheral: selectedPeripheral)
+        
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "blueCell") as! TableCell
+//
+//        let peripheralFound = self.peripheralArray[indexPath.row]
+//
+//          if peripheralFound == nil {
+//              cell.peripheralLabel.text = "Unknown"
+//          }else {
+//              cell.peripheralLabel.text = peripheralFound.name
+//             
+//          }
+        return cell
+    }
 }
 
-extension ScannerViewController: CBPeripheralDelegate {
+extension ScannerTableViewController: CBPeripheralDelegate {
 
   func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
 
@@ -243,7 +265,7 @@ extension ScannerViewController: CBPeripheralDelegate {
           }
 
         }
-    perform(#selector(delayedConnection), with: nil)
+ //   perform(#selector(delayedConnection), with: nil)
     //delayedConnection()
   }
 
@@ -274,10 +296,10 @@ extension ScannerViewController: CBPeripheralDelegate {
 }
 
 
+// MARK: - CBCentralManagerDelegate
+extension ScannerTableViewController: CBCentralManagerDelegate {
 
-extension ScannerViewController: CBCentralManagerDelegate {
-
-    // MARK: - Check
+    
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
 
       switch central.state {
@@ -314,17 +336,42 @@ extension ScannerViewController: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
     //  print("Function: \(#function),Line: \(#line)")
 
-      tempBluefruitPeripheral = peripheral
-
-      if peripheralArray.contains(peripheral) {
+        print("peripheralArray: \(peripheralArray.count)")
+        
+        let peripheralFound = BlePeripheral(withPeripheral: peripheral, advertisementData: advertisementData, with: centralManager)
+        
+        print("Peripheral Data: \(peripheralFound.localName)")
+        
+//        if !discoveredPeripherals.contains(peripheralFound) {
+//            discoveredPeripherals.append(peripheralFound)
+//            tableView.beginUpdates()
+//
+//            if discoveredPeripherals.count == 1 {
+//                tableView.insertSections(IndexSet(integer: 0), with: .fade)
+//            }
+//
+//        }else {
+//            print("this")
+//        }
+        
+        
+        //peripheral.delegate = self
+//
+//
+//
+//        //***********************************
+//      tempBluefruitPeripheral = peripheral
+//
+        if peripheralArray.contains(peripheralFound) {
           print("Duplicate Found.")
       } else {
-        peripheralArray.append(peripheral)
+        peripheralArray.append(peripheralFound)
+        tableView.reloadData()
 
       }
-      
-      tempBluefruitPeripheral.delegate = self
-print("---------------------------------------------- \n")
+//
+//      tempBluefruitPeripheral.delegate = self
+      print("---------------------------------------------- \n")
       print("Peripheral: \(peripheral)\n")
 
       print("Advertisement Data:  \(advertisementData.count)\n")
@@ -389,75 +436,17 @@ print("---------------------------------------------- \n")
         print("publicDataAsHexString: \(publicDataAsHexString ?? "<Unknown>")")
         
         print("---------------------------------------------- \n")
-      self.bleTableView.reloadData()
+        
+        DispatchQueue.main.async {
+           //             self.tableView.reloadData()
+                    }
+        
+       // tableView.reloadData()
     }
 
-    // MARK: - Connect
-    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-      print("PyLeap has connected to Peripheral: \(tempBluefruitPeripheral.name)")
 
-      
-
-      tempBluefruitPeripheral.discoverServices([NUSCBUUID.BLEService_UUID])
-    }
 
   
 
 }
 
-extension ScannerViewController: UITableViewDataSource {
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.peripheralArray.count
-    }
-
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-      let cell = tableView.dequeueReusableCell(withIdentifier: "blueCell") as! TableCell
-
-      let peripheralFound = self.peripheralArray[indexPath.row]
-
-        if peripheralFound == nil {
-            cell.peripheralLabel.text = "Unknown"
-        }else {
-            cell.peripheralLabel.text = peripheralFound.name
-           
-        }
-        return cell
-    }
-}
-
-//// Data extension
-extension Data {
-    var dataToHexString: String {
-        return reduce("") {$0 + String(format: "%02x", $1)}
-    }
-}
-
-extension StringProtocol {
-    var drop0xPrefix: SubSequence { hasPrefix("0x") ? dropFirst(2) : self[...] }
-    var drop0bPrefix: SubSequence { hasPrefix("0b") ? dropFirst(2) : self[...] }
-    var hexaToDecimal: Int { Int(drop0xPrefix, radix: 16) ?? 0 }
-    var hexaToBinary: String { .init(hexaToDecimal, radix: 2) }
-    var decimalToHexa: String { .init(Int(self) ?? 0, radix: 16) }
-    var decimalToBinary: String { .init(Int(self) ?? 0, radix: 2) }
-    var binaryToDecimal: Int { Int(drop0bPrefix, radix: 2) ?? 0 }
-    var binaryToHexa: String { .init(binaryToDecimal, radix: 16) }
-}
-
-extension ScannerViewController: UITableViewDelegate {
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
-      tempBluefruitPeripheral = peripheralArray[indexPath.row]
-
-      BlePeripheral.connectedPeripheral = tempBluefruitPeripheral
-
-      connectToDevice()
-
-
-
-    }
-}
-//MAYBE YOU'LL NEED TO CONNECT TO THE PERIPHERAL FIRST, BEFORE GETTING THE MANUFACTERER'S NAME DATA.

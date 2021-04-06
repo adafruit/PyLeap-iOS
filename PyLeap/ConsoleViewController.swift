@@ -7,22 +7,24 @@
 
 import UIKit
 import CoreBluetooth
-protocol VCProto: AnyObject {
-  func get(_ peripheral: CBPeripheral)
-}
+
 
 class ConsoleViewController: UIViewController {
 
-  weak var delegate: VCProto?
-
   // Data
-  var peripheralManager: CBPeripheralManager?
+   var peripheralManager: CBPeripheralManager?
    var centralManager: CBCentralManager!
-   var bluefruitPeripheral: CBPeripheral!
+   var bluefruitPeripheral: BlePeripheral!
    var txCharacteristic: CBCharacteristic!
+   var testString: String?
+    private var hapticGenerator: NSObject?
+    
+    
+  //What are these??
+  // Params
+  var onConnect: (() -> Void)?
+  var onDisconnect: (() -> Void)?
 
-
-  
 
   //UI
 
@@ -34,11 +36,32 @@ class ConsoleViewController: UIViewController {
   @IBAction func buttonPress(_ sender: Any) {
 
     print("Button Pressed")
-   // consoleTextView.text.append("\n[Sent]: \(String(consoleTextField.text!)) \n")
-    writeOutgoingValue(data: "pyTextView.text")
+    consoleTextView.text.append("\n[Sent]: Test \n")
+   // writeOutgoingValue(data: pyTextView.text.split(by: 5))
 
   }
 
+    
+    
+    @IBAction func displayManufacturerInfo(_ sender: Any) {
+       
+        self.performSegue(withIdentifier: "com.segue.manufacturer", sender: self)
+        
+        
+    
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+    {
+        if segue.destination is ManufacturerViewController {
+            let vc = segue.destination as? ManufacturerViewController
+            vc?.manufacturerDataString = bluefruitPeripheral.advertisement.manufacturerHexDescription!
+            vc?.manufacturerDataDict = bluefruitPeripheral.advertData!
+        }
+    }
+    
+    
+    
   @IBAction func bleButton(_ sender: Any) {
 
     print("Button Press")
@@ -48,22 +71,40 @@ class ConsoleViewController: UIViewController {
     guard let detailViewController = self.storyboard?.instantiateViewController(withIdentifier: "ScannerViewController") as? ScannerViewController else {
       fatalError("View Controller not found")
   }
-    detailViewController.delegate = self
-
 
     self.navigationController?.pushViewController(detailViewController, animated: true)
   }
 
+    private func prepareHaptics() {
+        if #available(iOS 10.0, *) {
+            hapticGenerator = UIImpactFeedbackGenerator(style: .heavy)
+            (hapticGenerator as? UIImpactFeedbackGenerator)?.prepare()
+        }
+    }
+    
+    public func setPeripheral(_ peripheral: BlePeripheral) {
+        print(#function)
+        bluefruitPeripheral = peripheral
+        title = bluefruitPeripheral.localName
+      //  peripheral.delegate = self
+    }
+
   override func viewDidLoad() {
     super.viewDidLoad()
     // Do any additional setup after loading the view.
+   // prepareHaptics()
 
-    
-   // deviceName.text = "BlePeripheral.connectedPeripheral?.name"
-    guard let detailViewController = self.storyboard?.instantiateViewController(withIdentifier: "ScannerViewController") as? ScannerViewController else {
-      fatalError("View Controller not found")
-  }
-    detailViewController.delegate = self
+   // bluefruitPeripheral = BlePeripheral.connectedPeripheral
+    txCharacteristic = BlePeripheral.connectedTXChar
+
+    deviceName.text = "Connected: \(String(bluefruitPeripheral.localName!))"
+    print("Manufacturer: \(bluefruitPeripheral.advertisement.manufacturerHexDescription!)")
+
+
+//    guard let detailViewController = self.storyboard?.instantiateViewController(withIdentifier: "ScannerViewController") as? ScannerViewController else {
+//      fatalError("View Controller not found")
+//  }
+  //  detailViewController.delegate = self
 
 
 
@@ -179,9 +220,11 @@ while True:
 
         if let txCharacteristic = txCharacteristic {
 
-          bluefruitPeripheral.writeValue(valueString!, for: txCharacteristic, type: CBCharacteristicWriteType.withResponse)
-            }
+          //bluefruitPeripheral.writeValue(valueString!, for: txCharacteristic, type: CBCharacteristicWriteType.withResponse)
+
         }
+    
+      }
     }
 
   func writeToFile(fileName: String, writeText: String) -> Bool {
@@ -248,22 +291,7 @@ while True:
 }
 
 
-extension ConsoleViewController: ScannerViewControllerDelegate {
-  func getBlePeripheral(_ peripheral: CBPeripheral) {
-    print("VC" + String(peripheral.name ?? ""))
-    bluefruitPeripheral = peripheral
-  }
 
-  func getTXCharacteristic(_ characteristic: CBCharacteristic) {
-    print("VC" + "\(characteristic.uuid)")
-    txCharacteristic = characteristic
-  }
-
-
-
-
-
-}
 
 extension ConsoleViewController: CBPeripheralManagerDelegate {
 
@@ -291,6 +319,21 @@ extension ConsoleViewController: CBPeripheralManagerDelegate {
   func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic) {
       print("Device subscribe to characteristic")
   }
+
+}
+extension String {
+    func split(by length: Int) -> [String] {
+        var startIndex = self.startIndex
+        var results = [Substring]()
+
+        while startIndex < self.endIndex {
+            let endIndex = self.index(startIndex, offsetBy: length, limitedBy: self.endIndex) ?? self.endIndex
+            results.append(self[startIndex..<endIndex])
+            startIndex = endIndex
+        }
+
+        return results.map { String($0) }
+    }
 }
 
 
