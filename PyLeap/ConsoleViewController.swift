@@ -91,24 +91,13 @@ class ConsoleViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    // Do any additional setup after loading the view.
-   // prepareHaptics()
 
-   // bluefruitPeripheral = BlePeripheral.connectedPeripheral
     txCharacteristic = BlePeripheral.connectedTXChar
 
     deviceName.text = "Connected: \(String(bluefruitPeripheral.localName!))"
     print("Manufacturer: \(bluefruitPeripheral.advertisement.manufacturerHexDescription!)")
 
 
-//    guard let detailViewController = self.storyboard?.instantiateViewController(withIdentifier: "ScannerViewController") as? ScannerViewController else {
-//      fatalError("View Controller not found")
-//  }
-  //  detailViewController.delegate = self
-
-
-
-  //  consoleTextView.text = "Message Sent - Thurs 9:38PM :22 "
     createReadAndWriteFile()
    // centralManager = CBCentralManager(delegate: self, queue: nil) // Save data to file
 //    let fileName = "Test"
@@ -158,7 +147,6 @@ class ConsoleViewController: UIViewController {
   func startScanning() -> Void {
       // Start Scanning
     print("started scan")
-    //centralManager?.scanForPeripherals(withServices: [NUSCBUUID.BLEService_UUID])
       Timer.scheduledTimer(withTimeInterval: 15, repeats: false) {_ in
 
       }
