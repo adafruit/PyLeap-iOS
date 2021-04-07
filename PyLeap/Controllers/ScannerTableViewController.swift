@@ -1,18 +1,14 @@
 //
 //
-//  ScannerViewController.swift
+//  ScannerTableViewController.swift
 //  PyLeap
 //
-//  Created by Trevor Beaton on 3/7/21.
+//  Created by Trevor Beaton For Adafruit Industries on 3/7/21.
 //
-//Mainnnn
+//Main
+
 import UIKit
 import CoreBluetooth
-//MARK:- Protocol
-//protocol DataDelegate: AnyObject {
-//  func getBlePeripheral(_ peripheral: CBPeripheral)
-//  func getTXCharacteristic(_ characteristic: CBCharacteristic)
-//}
 
 
 class ScannerTableViewController: UITableViewController {
@@ -23,24 +19,13 @@ class ScannerTableViewController: UITableViewController {
   // Data
    var centralManager: CBCentralManager!
    private var discoveredPeripherals = [BlePeripheral]()
-    var blePeripheral: BlePeripheral!
+   var blePeripheral: BlePeripheral!
     
   var tempTxCharacteristic: CBCharacteristic!
   private var tempRxCharacteristic: CBCharacteristic!
   private var peripheralArray: [BlePeripheral] = []
-   
-    
-    
   var deviceString: String?
   var valueData: Data?
-
-// Weak so that there's no chance for a retain cycle
-
-// UI
-
-  @IBOutlet weak var activitySpinner: UIActivityIndicatorView!
-
-
 
 
     override func viewWillAppear(_ animated: Bool) {
@@ -51,13 +36,7 @@ class ScannerTableViewController: UITableViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-       
         centralManager.delegate = self
-       
-        DispatchQueue.main.async {
-                       // self.tableView.reloadData()
-                    }
-       
         if centralManager.state == .poweredOn {
             print("Scanning....")
         }
@@ -83,7 +62,6 @@ class ScannerTableViewController: UITableViewController {
 
   func startScanning() -> Void {
       // Start Scanning
-   // tableView.reloadData()
     if let periph = BlePeripheral.connectedPeripheral {
       centralManager.cancelPeripheralConnection(periph)
 
@@ -96,12 +74,6 @@ class ScannerTableViewController: UITableViewController {
     
     centralManager?.scanForPeripherals(withServices: [])
     tableView.reloadData()
-//      Timer.scheduledTimer(withTimeInterval: 15, repeats: false) {_ in
-//        print("Stopped Scan")
-//       // self.stopScanning()
-//    //    self.activitySpinner.stopAnimating()
-//   //     self.activitySpinner.hidesWhenStopped = true
-//      }
   }
 
   func stopScanning() -> Void {
@@ -111,29 +83,15 @@ class ScannerTableViewController: UITableViewController {
 
   func connectToDevice() -> Void {
     stopScanning()
-    //centralManager?.connect(tempBluefruitPeripheral!, options: nil)
-
 }
 
  
-// MARK:- Navigation
+    // MARK:- Navigation
 
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         return identifier == "ConsoleViewController"
     }
-    
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == "ConsoleViewController" {
-//            if let peripheral = sender as? BlePeripheral {
-//                let destinationView = segue.destination as! ConsoleViewController
-//                destinationView.setPeripheral(peripheral)
-//            }
-//        }
-//    }
 
-    
-    
-    
     // MARK:- Table view
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -143,14 +101,9 @@ class ScannerTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
    
-       // tableView.deselectRow(at: indexPath, animated: true)
         blePeripheral = peripheralArray[indexPath.row]
         blePeripheral.connect()
-        
-        
         self.performSegue(withIdentifier: "com.segue.console", sender: self)
-        
-      //  performSegue(withIdentifier: "com.segue.console", sender: )
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
@@ -168,9 +121,6 @@ class ScannerTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-//        let cell = UITableViewCell()
-//        cell.textLabel?.text = "Test"
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: "blueCell") as! TableCell
 
         let selectedPeripheral =  self.peripheralArray[indexPath.row]
@@ -184,16 +134,6 @@ class ScannerTableViewController: UITableViewController {
         
         cell.setupView(withPeripheral: selectedPeripheral)
         
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "blueCell") as! TableCell
-//
-//        let peripheralFound = self.peripheralArray[indexPath.row]
-//
-//          if peripheralFound == nil {
-//              cell.peripheralLabel.text = "Unknown"
-//          }else {
-//              cell.peripheralLabel.text = peripheralFound.name
-//             
-//          }
         return cell
     }
 }
@@ -260,13 +200,10 @@ extension ScannerTableViewController: CBPeripheralDelegate {
             BlePeripheral.connectedTXChar = characteristic
 
             print("TX Characteristic: \(tempTxCharacteristic.uuid)")
-
-
+            
           }
-
         }
- //   perform(#selector(delayedConnection), with: nil)
-    //delayedConnection()
+    
   }
 
   func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
@@ -341,27 +278,7 @@ extension ScannerTableViewController: CBCentralManagerDelegate {
         let peripheralFound = BlePeripheral(withPeripheral: peripheral, advertisementData: advertisementData, with: centralManager)
         
         print("Peripheral Data: \(peripheralFound.localName)")
-        
-//        if !discoveredPeripherals.contains(peripheralFound) {
-//            discoveredPeripherals.append(peripheralFound)
-//            tableView.beginUpdates()
-//
-//            if discoveredPeripherals.count == 1 {
-//                tableView.insertSections(IndexSet(integer: 0), with: .fade)
-//            }
-//
-//        }else {
-//            print("this")
-//        }
-        
-        
-        //peripheral.delegate = self
-//
-//
-//
-//        //***********************************
-//      tempBluefruitPeripheral = peripheral
-//
+
         if peripheralArray.contains(peripheralFound) {
           print("Duplicate Found.")
       } else {
@@ -369,8 +286,7 @@ extension ScannerTableViewController: CBCentralManagerDelegate {
         tableView.reloadData()
 
       }
-//
-//      tempBluefruitPeripheral.delegate = self
+
       print("---------------------------------------------- \n")
       print("Peripheral: \(peripheral)\n")
 
@@ -381,8 +297,6 @@ extension ScannerTableViewController: CBCentralManagerDelegate {
         print("\(key) : \(value)\n")
 
         }
-        
-
         
          var manufacturerData: Data? {
                 return advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data
@@ -395,7 +309,7 @@ extension ScannerTableViewController: CBCentralManagerDelegate {
         var manufacturerHexDescription: String? {
             guard let manufacturerData = manufacturerData else { return nil }
             return HexUtil.hexDescription(data: manufacturerData)
-//            return String(data: manufacturerData, encoding: .utf8)
+
         }
         
         print("Manufacturer: \(String(describing: manufacturerHexDescription))\n")
@@ -406,7 +320,7 @@ extension ScannerTableViewController: CBCentralManagerDelegate {
         
         if let manufacturerData = advertisementData["kCBAdvDataManufacturerData"] as? Data {
             assert(manufacturerData.count >= 8)
-            //0d00 - TI manufacturer ID
+            //0004 -  manufacturer ID
             //Constructing 2-byte data as little endian (as TI's manufacturer ID is 000D)
             let manufactureID = UInt16(manufacturerData[0]) + UInt16(manufacturerData[1]) << 8
             print(String(format: "%04X", manufactureID)) //->000D
@@ -425,28 +339,31 @@ extension ScannerTableViewController: CBCentralManagerDelegate {
             print(String(format: "%02X", packetCounter)) //->32
         }
         
-//        let publicData = Data(bytes: manufacturerData!.bytes, count: Int(manufacturerData!.count))
-      //  let str = String(decoding: manufacturerData!, as: UTF8.self)
-        let publicDataAsHexString = manufacturerData?.dataToHexString
-        // DLog("uart tx \(uartTxCharacteristicWriteType == .withResponse ? "withResponse":"withoutResponse") offset: \(writeStartingOffset): \(HexUtils.hexDescription(data: packet))")
         print("Manufacterer String: \(manufacturerString ?? "No String Found")\n")
         
         print("Manufacterer Data: \(manufacturerHexDescription ?? "Nothing")\n")
        
-        print("publicDataAsHexString: \(publicDataAsHexString ?? "<Unknown>")")
+       
         
         print("---------------------------------------------- \n")
         
-        DispatchQueue.main.async {
-           //             self.tableView.reloadData()
-                    }
-        
-       // tableView.reloadData()
     }
-
-
-
-  
-
 }
 
+//// Data extension
+extension Data {
+    var dataToHexString: String {
+        return reduce("") {$0 + String(format: "%02x", $1)}
+    }
+}
+
+extension StringProtocol {
+    var drop0xPrefix: SubSequence { hasPrefix("0x") ? dropFirst(2) : self[...] }
+    var drop0bPrefix: SubSequence { hasPrefix("0b") ? dropFirst(2) : self[...] }
+    var hexaToDecimal: Int { Int(drop0xPrefix, radix: 16) ?? 0 }
+    var hexaToBinary: String { .init(hexaToDecimal, radix: 2) }
+    var decimalToHexa: String { .init(Int(self) ?? 0, radix: 16) }
+    var decimalToBinary: String { .init(Int(self) ?? 0, radix: 2) }
+    var binaryToDecimal: Int { Int(drop0bPrefix, radix: 2) ?? 0 }
+    var binaryToHexa: String { .init(binaryToDecimal, radix: 16) }
+}

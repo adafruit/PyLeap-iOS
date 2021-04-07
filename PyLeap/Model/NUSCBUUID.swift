@@ -2,7 +2,7 @@
 //  NUSCBUUID.swift
 //  PyLeap
 //
-//  Created by Trevor Beaton on 3/4/21.
+//  Created by Trevor Beaton For Adafruit Industries on 3/4/21.
 //
 
 import Foundation

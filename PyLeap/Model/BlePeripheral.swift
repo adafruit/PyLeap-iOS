@@ -2,7 +2,7 @@
 //  BlePeripheral.swift
 //  PyLeap
 //
-//  Created by Trevor Beaton on 3/9/21.
+//  Created by Trevor Beaton For Adafruit Industries on 3/9/21.
 //
 
 import Foundation

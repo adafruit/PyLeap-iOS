@@ -16,7 +16,6 @@
 		2937F11425F8051300C65FC4 /* ProjectTextFile.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2937F11325F8051300C65FC4 /* ProjectTextFile.txt */; };
 		2937F11725F80A2C00C65FC4 /* pytest.py in Resources */ = {isa = PBXBuildFile; fileRef = 2937F11625F80A2C00C65FC4 /* pytest.py */; };
 		2937F11A25F8104100C65FC4 /* BlePeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2937F11925F8104100C65FC4 /* BlePeripheral.swift */; };
-		29BE76A125F54C82007D65DC /* ScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BE76A025F54C82007D65DC /* ScannerViewController.swift */; };
 		29C08A3E25F58CA9001BFDD9 /* TableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C08A3D25F58CA9001BFDD9 /* TableCell.swift */; };
 		29F048CF25F171BB00D5C61B /* NUSCBUUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F048CE25F171BB00D5C61B /* NUSCBUUID.swift */; };
 		D5166C0E261ACDAE006CF50C /* ScannerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5166C0D261ACDAE006CF50C /* ScannerTableViewController.swift */; };
@@ -38,7 +37,6 @@
 		2937F11325F8051300C65FC4 /* ProjectTextFile.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ProjectTextFile.txt; sourceTree = "<group>"; };
 		2937F11625F80A2C00C65FC4 /* pytest.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = pytest.py; sourceTree = "<group>"; };
 		2937F11925F8104100C65FC4 /* BlePeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlePeripheral.swift; sourceTree = "<group>"; };
-		29BE76A025F54C82007D65DC /* ScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerViewController.swift; sourceTree = "<group>"; };
 		29C08A3D25F58CA9001BFDD9 /* TableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableCell.swift; sourceTree = "<group>"; };
 		29F048CE25F171BB00D5C61B /* NUSCBUUID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NUSCBUUID.swift; sourceTree = "<group>"; };
 		D5166C0D261ACDAE006CF50C /* ScannerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerTableViewController.swift; sourceTree = "<group>"; };
@@ -78,17 +76,11 @@
 		292CE10425F13A53009D7261 /* PyLeap */ = {
 			isa = PBXGroup;
 			children = (
-				292CE10725F13A54009D7261 /* SceneDelegate.swift */,
-				29BE76A025F54C82007D65DC /* ScannerViewController.swift */,
-				292CE10925F13A54009D7261 /* ConsoleViewController.swift */,
-				D5166C0D261ACDAE006CF50C /* ScannerTableViewController.swift */,
-				29F048CE25F171BB00D5C61B /* NUSCBUUID.swift */,
-				29C08A3D25F58CA9001BFDD9 /* TableCell.swift */,
-				D5166C18261CB631006CF50C /* ManufacturerViewController.swift */,
-				2937F11925F8104100C65FC4 /* BlePeripheral.swift */,
-				D5166C10261AD19B006CF50C /* RootViewController.swift */,
 				292CE10525F13A53009D7261 /* AppDelegate.swift */,
-				D5451EF22616DB21001757B9 /* HexUtil.swift */,
+				292CE10725F13A54009D7261 /* SceneDelegate.swift */,
+				D5A24F3B261DEA570008B61C /* Controllers */,
+				D5A24F3D261DEA770008B61C /* Model */,
+				D5A24F40261DEACC0008B61C /* Utilities */,
 				2937F11625F80A2C00C65FC4 /* pytest.py */,
 				2937F11325F8051300C65FC4 /* ProjectTextFile.txt */,
 				292CE10B25F13A54009D7261 /* Main.storyboard */,
@@ -98,6 +90,35 @@
 				292CE11325F13A56009D7261 /* Info.plist */,
 			);
 			path = PyLeap;
+			sourceTree = "<group>";
+		};
+		D5A24F3B261DEA570008B61C /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				D5166C0D261ACDAE006CF50C /* ScannerTableViewController.swift */,
+				29C08A3D25F58CA9001BFDD9 /* TableCell.swift */,
+				292CE10925F13A54009D7261 /* ConsoleViewController.swift */,
+				D5166C18261CB631006CF50C /* ManufacturerViewController.swift */,
+				D5166C10261AD19B006CF50C /* RootViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		D5A24F3D261DEA770008B61C /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				2937F11925F8104100C65FC4 /* BlePeripheral.swift */,
+				29F048CE25F171BB00D5C61B /* NUSCBUUID.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		D5A24F40261DEACC0008B61C /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				D5451EF22616DB21001757B9 /* HexUtil.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -180,7 +201,6 @@
 				292CE10625F13A53009D7261 /* AppDelegate.swift in Sources */,
 				D5451EF32616DB21001757B9 /* HexUtil.swift in Sources */,
 				29C08A3E25F58CA9001BFDD9 /* TableCell.swift in Sources */,
-				29BE76A125F54C82007D65DC /* ScannerViewController.swift in Sources */,
 				D5166C0E261ACDAE006CF50C /* ScannerTableViewController.swift in Sources */,
 				292CE10825F13A54009D7261 /* SceneDelegate.swift in Sources */,
 				2937F11A25F8104100C65FC4 /* BlePeripheral.swift in Sources */,

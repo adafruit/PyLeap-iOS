@@ -2,7 +2,7 @@
 //  TableViewCell.swift
 //  PyLeap
 //
-//  Created by Trevor Beaton on 3/7/21.
+//  Created by Trevor Beaton For Adafruit Industries on 3/7/21.
 //
 
 import UIKit

@@ -2,7 +2,7 @@
 //  ViewController.swift
 //  PyLeap
 //
-//  Created by Trevor Beaton on 3/4/21.
+//  Created by Trevor Beaton For Adafruit Industries on 3/4/21.
 //
 
 import UIKit
@@ -20,7 +20,6 @@ class ConsoleViewController: UIViewController {
     private var hapticGenerator: NSObject?
     
     
-  //What are these??
   // Params
   var onConnect: (() -> Void)?
   var onDisconnect: (() -> Void)?
@@ -42,13 +41,8 @@ class ConsoleViewController: UIViewController {
   }
 
     
-    
     @IBAction func displayManufacturerInfo(_ sender: Any) {
-       
         self.performSegue(withIdentifier: "com.segue.manufacturer", sender: self)
-        
-        
-    
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
@@ -60,27 +54,19 @@ class ConsoleViewController: UIViewController {
         }
     }
     
-    
-    
-  @IBAction func bleButton(_ sender: Any) {
+//  @IBAction func bleButton(_ sender: Any) {
+//
+//    print("Button Press")
+//
+//  //  let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//
+//    guard let detailViewController = self.storyboard?.instantiateViewController(withIdentifier: "ScannerViewController") as? ScannerViewController else {
+//      fatalError("View Controller not found")
+//  }
+//
+//    self.navigationController?.pushViewController(detailViewController, animated: true)
+//  }
 
-    print("Button Press")
-
-  //  let storyboard = UIStoryboard(name: "Main", bundle: nil)
-
-    guard let detailViewController = self.storyboard?.instantiateViewController(withIdentifier: "ScannerViewController") as? ScannerViewController else {
-      fatalError("View Controller not found")
-  }
-
-    self.navigationController?.pushViewController(detailViewController, animated: true)
-  }
-
-    private func prepareHaptics() {
-        if #available(iOS 10.0, *) {
-            hapticGenerator = UIImpactFeedbackGenerator(style: .heavy)
-            (hapticGenerator as? UIImpactFeedbackGenerator)?.prepare()
-        }
-    }
     
     public func setPeripheral(_ peripheral: BlePeripheral) {
         print(#function)
@@ -99,49 +85,7 @@ class ConsoleViewController: UIViewController {
 
 
     createReadAndWriteFile()
-   // centralManager = CBCentralManager(delegate: self, queue: nil) // Save data to file
-//    let fileName = "Test"
-//    let DocumentDirURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-//
-//    let fileURL = DocumentDirURL.appendingPathComponent(fileName).appendingPathExtension("txt")
-//    print("FilePath: \(fileURL.path)")
-//
-//
-//    // /Volumes/Max Void/PyLeap/PyLeap/pytest.py
-//
-//    let writeString = "Testing"
-//    do {
-//        // Write to the file
-//        try writeString.write(to: fileURL, atomically: true, encoding: String.Encoding.utf8)
-//    } catch let error as NSError {
-//        print("Failed writing to URL: \(fileURL), Error: " + error.localizedDescription)
-//    }
-//
-//    var readString = "" // Used to store the file contents
-//    do {
-//        // Read the file contents
-//        readString = try String(contentsOf: fileURL)
-//    } catch let error as NSError {
-//        print("Failed reading from URL: \(fileURL), Error: " + error.localizedDescription)
-//    }
-//    print("File Text: \(readString)")
-//
-//    /*** Read from project txt file ***/
-//
-//    // File location
-//    let fileURLProject = Bundle.main.path(forResource: "pytest", ofType: "py")
-//    // Read from the file
-//    var readStringProject = ""
-//    do {
-//        readStringProject = try String(contentsOfFile: fileURLProject!, encoding: String.Encoding.utf8)
-//    } catch let error as NSError {
-//         print("Failed reading from URL: \(fileURL), Error: " + error.localizedDescription)
-//    }
-//
-//    print(readStringProject)
-
-
-
+  
   }
 
   func startScanning() -> Void {
@@ -166,19 +110,7 @@ class ConsoleViewController: UIViewController {
      print("File path \(fileUrl.path)")
      //data to write in file.
     let stringData = """
-import board
-from digitalio import DigitalInOut, Direction, Pull
-
-led = DigitalInOut(board.D13)
-led.direction = Direction.OUTPUT
-
-switch = DigitalInOut(board.D5)
-switch.direction = Direction.INPUT
-switch.pull = Pull.UP   # Pull.Down is available on some MCUs
-
-while True:
-    led.value = not switch.value
-    time.sleep(0.01)
+print(Hello World)
 """
 
    do {
@@ -268,7 +200,7 @@ while True:
     var fileReadString = ""
   //  print ("2: " + String(readFromFile(fileName: fName, readText: &fileReadString)) + "\n" + fileReadString)
 
-    var fileWriteString = "We are having fun eating Apples!"
+    var fileWriteString = "Test 2"
     print ("1: " + String(writeToFile(fileName: fName, writeText: fileWriteString))  + "\n" + fileWriteString)
 
     //fileReadString = ""

@@ -2,7 +2,7 @@
 //  HexUtil.swift
 //  PyLeap
 //
-//  Created by Trevor Beaton on 4/2/21.
+//  Created by Trevor Beaton For Adafruit Industries on 4/2/21.
 //
 
 import Foundation

@@ -2,7 +2,7 @@
 //  ManufacturerViewViewController.swift
 //  PyLeap
 //
-//  Created by Trevor Beaton on 4/6/21.
+//  Created by Trevor Beaton For Adafruit Industries on 4/6/21.
 //
 
 import UIKit
@@ -16,13 +16,14 @@ class ManufacturerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("View Loaded")
-        if manufacturerDataString == "22 08 0A 04 00 9A 23 00 00 72 80 00 00 " {
+        print(manufacturerDataString)
+        if manufacturerDataString == TableCell.clueID {
+            
             manufacturerLabel.text = "Adafruit CLUE nRF52840 Express with nRF52840"
+        
         } else {
             manufacturerLabel.text = "Unknown"
         }
-        
-        //22 08 0A 04 00 9A 23 00 00 46 80 00 00
         
         if manufacturerDataString == "22 08 0A 04 00 9A 23 00 00 46 80 00 00 " {
             manufacturerLabel.text = "Adafruit Feather nRF52840 Express with nRF52840"
