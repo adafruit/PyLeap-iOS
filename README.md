@@ -1,18 +1,17 @@
 # PyLeap-iOS
 
-A Bluetooth Low Energy File Transfer native iOS app written in Swift for Adafruit Industries.
-
-This app will make it accessible to send files via BLE (Bluetooth LE) to your Adafruit hardware on the go!
+A Bluetooth Low Energy File Transfer native iOS app written in Swift for Adafruit Industries. This app will make it accessible to send files via BLE (Bluetooth LE) to your Adafruit hardware on the go!
 
 Work in progress. 
 
+### [Introduction To iOS Development](https://learn.adafruit.com/introduction-to-ios-development)
 
 If you'd like to get started with iOS development, I'll written a guide on how you can get started right way.
 
-### [Introduction To iOS Development](https://learn.adafruit.com/introduction-to-ios-development)
+
+### [Basic Chat](https://github.com/adafruit/Basic-Chat)
 
 You can also check out the Basic Chat project this basic iOS project focused on Bluetooth Low Energy communication.
-### [Basic Chat](https://github.com/adafruit/Basic-Chat)
 
 Basic Chat is a Bluetooth Low Energy native iOS app using Swift 5. Basic Chat communicates with bluetooth enabled devices that implements the Nordic UART Service.
 
