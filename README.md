@@ -39,6 +39,6 @@ Currently testing with:
  
  (Note: Bluetooth Low Engery is not available in the iOS simulator, so the iOS device is a requirement to test the application)
  
- This project is not available to Mac Catalyst yet.
+### This project is not available to Mac Catalyst yet.
  
  
