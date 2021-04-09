@@ -18,25 +18,23 @@ class ScannerTableViewController: UITableViewController {
 
   // Data
    var centralManager: CBCentralManager!
-   private var discoveredPeripherals = [BlePeripheral]()
    var blePeripheral: BlePeripheral!
     
   var tempTxCharacteristic: CBCharacteristic!
   private var tempRxCharacteristic: CBCharacteristic!
-  private var peripheralArray: [BlePeripheral] = []
+private var peripheralArray = [BlePeripheral]()
   var deviceString: String?
   var valueData: Data?
 
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        discoveredPeripherals.removeAll()
         tableView.reloadData()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        centralManager.delegate = self
+      //  centralManager.delegate = self
         if centralManager.state == .poweredOn {
             print("Scanning....")
         }
@@ -51,7 +49,7 @@ class ScannerTableViewController: UITableViewController {
         centralManager = CBCentralManager(delegate: self, queue: nil)
         tableView.delegate = self
         tableView.dataSource = self
-       // tableView.reloadData()
+        tableView.reloadData()
     }
 
 
@@ -72,8 +70,8 @@ class ScannerTableViewController: UITableViewController {
     peripheralArray.removeAll()
     print("started scan")
     
-    centralManager?.scanForPeripherals(withServices: [])
-    tableView.reloadData()
+    centralManager?.scanForPeripherals(withServices: [], options: [CBCentralManagerScanOptionAllowDuplicatesKey : false])
+    
   }
 
   func stopScanning() -> Void {
@@ -127,7 +125,7 @@ class ScannerTableViewController: UITableViewController {
         
         
         if selectedPeripheral != selectedPeripheral {
-                cell.peripheralLabel.text = "Unknown"
+            cell.peripheralLabel.text = selectedPeripheral.localName
             }else {
                 cell.peripheralLabel.text = selectedPeripheral.localName
         }
@@ -271,24 +269,25 @@ extension ScannerTableViewController: CBCentralManagerDelegate {
 
     // MARK: - Discover
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-    //  print("Function: \(#function),Line: \(#line)")
+      
+        print("Function: \(#function),Line: \(#line)")
 
         print("peripheralArray: \(peripheralArray.count)")
+        
+        let peripheralID = peripheral.description
         
         let peripheralFound = BlePeripheral(withPeripheral: peripheral, advertisementData: advertisementData, with: centralManager)
         
         print("Peripheral Data: \(peripheralFound.localName)")
 
-        if peripheralArray.contains(peripheralFound) {
-          print("Duplicate Found.")
-      } else {
-        peripheralArray.append(peripheralFound)
-        tableView.reloadData()
-
-      }
+        
+        if(!peripheralArray.contains(peripheralFound)) {
+            peripheralArray.append(peripheralFound)
+        }
+        self.tableView.reloadData()
 
       print("---------------------------------------------- \n")
-      print("Peripheral: \(peripheral)\n")
+      print("Peripheral: \(peripheral.description)\n")
 
       print("Advertisement Data:  \(advertisementData.count)\n")
         
@@ -343,10 +342,10 @@ extension ScannerTableViewController: CBCentralManagerDelegate {
         
         print("Manufacterer Data: \(manufacturerHexDescription ?? "Nothing")\n")
        
-       
-        
         print("---------------------------------------------- \n")
-        
+        print(peripheralArray.description)
+        print("---------------------------------------------- \n")
+        peripheralArray.unique()
     }
 }
 
@@ -366,4 +365,11 @@ extension StringProtocol {
     var decimalToBinary: String { .init(Int(self) ?? 0, radix: 2) }
     var binaryToDecimal: Int { Int(drop0bPrefix, radix: 2) ?? 0 }
     var binaryToHexa: String { .init(binaryToDecimal, radix: 16) }
+}
+
+extension Sequence where Iterator.Element: Hashable {
+    func unique() -> [Iterator.Element] {
+        var seen: Set<Iterator.Element> = []
+        return filter { seen.insert($0).inserted }
+    }
 }

@@ -26,7 +26,7 @@ class ManufacturerViewController: UIViewController {
         }
         
         if manufacturerDataString == "22 08 0A 04 00 9A 23 00 00 46 80 00 00 " {
-            manufacturerLabel.text = "Adafruit Feather nRF52840 Express with nRF52840"
+            manufacturerLabel.text = "Adafruit Circuit Playground Bluefruit with nRF52840"
         } else {
             manufacturerLabel.text = "Unknown"
         }

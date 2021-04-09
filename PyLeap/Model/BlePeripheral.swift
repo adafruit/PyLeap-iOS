@@ -146,7 +146,7 @@ class BlePeripheral: NSObject {
         if let name = advertisementDictionary[CBAdvertisementDataLocalNameKey] as? String{
             localName = name
         } else {
-            localName = "Unknown Device"
+            localName = "\(name ?? "Unknown Device")"
         }
         
         return localName
