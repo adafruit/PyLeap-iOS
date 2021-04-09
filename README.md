@@ -3,7 +3,7 @@ A Bluetooth Low Energy File Transfer native iOS app written in Swift for Adafrui
 
 Work in progress. 
 
-### [Introduction To iOS Development](https://learn.adafruit.com/introduction-to-ios-development)
+### [Introduction to iOS Development](https://learn.adafruit.com/introduction-to-ios-development)
 If you'd like to get started with iOS development, I'll written a guide on how you can get started right way.
 
 
