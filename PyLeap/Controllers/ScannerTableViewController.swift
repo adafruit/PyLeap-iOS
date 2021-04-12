@@ -278,6 +278,8 @@ extension ScannerTableViewController: CBCentralManagerDelegate {
         
         let peripheralFound = BlePeripheral(withPeripheral: peripheral, advertisementData: advertisementData, with: centralManager)
         
+        
+        
         print("Peripheral Data: \(peripheralFound.localName)")
 
         
