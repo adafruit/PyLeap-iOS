@@ -351,8 +351,22 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="PyLeap" id="9l5-hL-5oB">
                         <barButtonItem key="backBarButtonItem" title="Scanner" id="M6w-Tv-MXn"/>
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="eR6-Yz-4D7">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="U4F-yu-Sig">
+                                <rect key="frame" x="302" y="7" width="92" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="17"/>
+                                <state key="normal" title="Scanning...">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="scanButtonPressed:" destination="Urr-kT-Aet" eventType="touchUpInside" id="7yt-mo-kdm"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="scannerButton" destination="U4F-yu-Sig" id="SOr-Dd-FtS"/>
                         <segue destination="BYZ-38-t0r" kind="show" identifier="com.segue.console" id="Kjz-Fh-zur"/>
                     </connections>
                 </tableViewController>

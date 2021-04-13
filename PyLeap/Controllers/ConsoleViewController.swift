@@ -17,13 +17,10 @@ class ConsoleViewController: UIViewController {
    var bluefruitPeripheral: BlePeripheral!
    var txCharacteristic: CBCharacteristic!
    var testString: String?
-    private var hapticGenerator: NSObject?
-    
     
   // Params
   var onConnect: (() -> Void)?
   var onDisconnect: (() -> Void)?
-
 
   //UI
 
@@ -81,7 +78,8 @@ class ConsoleViewController: UIViewController {
     txCharacteristic = BlePeripheral.connectedTXChar
 
     deviceName.text = "Connected: \(String(bluefruitPeripheral.localName!))"
-    print("Manufacturer: \(bluefruitPeripheral.advertisement.manufacturerHexDescription!)")
+   
+    print("Manufacturer: \(bluefruitPeripheral.advertisement.manufacturerHexDescription ?? "No Manufacturer Data Found.")")
 
 
     createReadAndWriteFile()
