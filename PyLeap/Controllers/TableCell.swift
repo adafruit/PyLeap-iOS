@@ -30,7 +30,7 @@ class TableCell: UITableViewCell {
         } else if advertisedPeripheral.advertisement.manufacturerHexDescription == TableCell.cpbID {
             deviceIcon.image = #imageLiteral(resourceName: "cpb")
         } else {
-            deviceIcon.image = #imageLiteral(resourceName: "Blinka")
+            deviceIcon.image = nil
         }
     }
 //    if manufacturerDataString == "22 08 0A 04 00 9A 23 00 00 72 80 00 00 " {

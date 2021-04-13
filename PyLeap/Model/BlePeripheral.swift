@@ -180,7 +180,7 @@ class BlePeripheral: NSObject {
     
     // MARK: - Implementation
     
-    /// Starts service discovery, only for LED Button Service.
+    
     private func discoverServices() {
         print("Discovering LED Button service...")
         basePeripheral.delegate = self
@@ -220,84 +220,7 @@ extension BlePeripheral: CBCentralManagerDelegate {
 
     // MARK: - Discover
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-    //  print("Function: \(#function),Line: \(#line)")
-
-//      tempBluefruitPeripheral = peripheral
-//
-//      if peripheralArray.contains(peripheral) {
-//          print("Duplicate Found.")
-//      } else {
-//        peripheralArray.append(peripheral)
-//
-//      }
-//
-//      tempBluefruitPeripheral.delegate = self
-//print("---------------------------------------------- \n")
-//      print("Peripheral: \(peripheral)\n")
-//
-//      print("Advertisement Data:  \(advertisementData.count)\n")
-//
-//        for (key,value) in advertisementData{
-//
-//        print("\(key) : \(value)\n")
-//
-//        }
-//
-//
-//
-//         var manufacturerData: Data? {
-//                return advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data
-//            }
-//
-//        var manufacturerString: String? {
-//            return advertisementData[CBAdvertisementDataManufacturerDataKey] as? String
-//           }
-//
-//        var manufacturerHexDescription: String? {
-//            guard let manufacturerData = manufacturerData else { return nil }
-//            return HexUtil.hexDescription(data: manufacturerData)
-////            return String(data: manufacturerData, encoding: .utf8)
-//        }
-//
-//        print("Manufacturer: \(String(describing: manufacturerHexDescription))\n")
-//
-//        var localName: String? {
-//            return advertisementData[CBAdvertisementDataLocalNameKey] as? String
-//        }
-//
-//        if let manufacturerData = advertisementData["kCBAdvDataManufacturerData"] as? Data {
-//            assert(manufacturerData.count >= 8)
-//            //0d00 - TI manufacturer ID
-//            //Constructing 2-byte data as little endian (as TI's manufacturer ID is 000D)
-//            let manufactureID = UInt16(manufacturerData[0]) + UInt16(manufacturerData[1]) << 8
-//            print(String(format: "%04X", manufactureID)) //->000D
-//            //fe - the node ID that I have given
-//            let nodeID = manufacturerData[2]
-//            print(String(format: "%02X", nodeID)) //->FE
-//            //05 - state of the node (something that remains constant
-//            let state = manufacturerData[3]
-//            print(String(format: "%02X", state)) //->05
-//            //c6f - is the sensor tag battery voltage
-//            //Constructing 2-byte data as big endian (as shown in the Java code)
-//            let batteryVoltage = UInt16(manufacturerData[4]) << 8 + UInt16(manufacturerData[5])
-//            print(String(format: "%04X", batteryVoltage)) //->0C6F
-//            //32- is the BLE packet counter.
-//            let packetCounter = manufacturerData[6]
-//            print(String(format: "%02X", packetCounter)) //->32
-//        }
-//
-////        let publicData = Data(bytes: manufacturerData!.bytes, count: Int(manufacturerData!.count))
-//      //  let str = String(decoding: manufacturerData!, as: UTF8.self)
-//        let publicDataAsHexString = manufacturerData?.dataToHexString
-//        // DLog("uart tx \(uartTxCharacteristicWriteType == .withResponse ? "withResponse":"withoutResponse") offset: \(writeStartingOffset): \(HexUtils.hexDescription(data: packet))")
-//        print("Manufacterer String: \(manufacturerString ?? "No String Found")\n")
-//
-//        print("Manufacterer Data: \(manufacturerHexDescription ?? "Nothing")\n")
-//
-//        print("publicDataAsHexString: \(publicDataAsHexString ?? "<Unknown>")")
-//
-//        print("---------------------------------------------- \n")
-//      self.bleTableView.reloadData()
+   
     }
 
     // MARK: - Connect
@@ -313,6 +236,19 @@ extension BlePeripheral: CBCentralManagerDelegate {
 //
 //      tempBluefruitPeripheral.discoverServices([NUSCBUUID.BLEService_UUID])
     }
+    
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        
+    }
+
+    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        
+    }
+    
+    func centralManager(_ central: CBCentralManager, connectionEventDidOccur event: CBConnectionEvent, for peripheral: CBPeripheral) {
+        
+    }
+    
 }
 
 extension BlePeripheral: CBPeripheralDelegate {
