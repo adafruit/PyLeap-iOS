@@ -212,14 +212,6 @@ extension ScannerTableViewController: CBCentralManagerDelegate {
         
         print("Peripheral Data: \(peripheralFound.localName)")
         
-        
-        if(!peripheralArray.contains(peripheralFound)) {
-            peripheralArray.append(peripheralFound)
-        }
-        peripheralArray.sort { $0.localName ?? "Unknown" > $1.localName ?? "Unknown" }
-        peripheralArray.reverse()
-        self.tableView.reloadData()
-        
         print("---------------------------------------------- \n")
         print("Peripheral: \(peripheral.description)\n")
         print("Advertisement Data:  \(advertisementData.count)\n")
@@ -248,26 +240,39 @@ extension ScannerTableViewController: CBCentralManagerDelegate {
             return advertisementData[CBAdvertisementDataLocalNameKey] as? String
         }
         
+        var addToList: Bool = false;
+        
         if let manufacturerData = advertisementData["kCBAdvDataManufacturerData"] as? Data {
-            assert(manufacturerData.count >= 8)
             //0004 -  manufacturer ID
             //Constructing 2-byte data as little endian (as TI's manufacturer ID is 000D)
-            let manufactureID = UInt16(manufacturerData[0]) + UInt16(manufacturerData[1]) << 8
-            print(String(format: "%04X", manufactureID)) //->000D
-            //fe - the node ID that I have given
-            let nodeID = manufacturerData[2]
-            print(String(format: "%02X", nodeID)) //->FE
-            //05 - state of the node (something that remains constant
-            let state = manufacturerData[3]
-            print(String(format: "%02X", state)) //->05
-            //c6f - is the sensor tag battery voltage
-            //Constructing 2-byte data as big endian (as shown in the Java code)
-            let batteryVoltage = UInt16(manufacturerData[4]) << 8 + UInt16(manufacturerData[5])
-            print(String(format: "%04X", batteryVoltage)) //->0C6F
-            //32- is the BLE packet counter.
-            let packetCounter = manufacturerData[6]
-            print(String(format: "%02X", packetCounter)) //->32
+            let manufacturerID = UInt16(manufacturerData[0]) + UInt16(manufacturerData[1]) << 8
+            print(String(format: "%04X", manufacturerID)) //->000D
+            // This looks like TI example code. Do we want to remove it?
+            if (manufacturerID == 0x000d) {
+                assert(manufacturerData.count >= 8)
+                //fe - the node ID that I have given
+                let nodeID = manufacturerData[2]
+                print(String(format: "%02X", nodeID)) //->FE
+                //05 - state of the node (something that remains constant
+                let state = manufacturerData[3]
+                print(String(format: "%02X", state)) //->05
+                //c6f - is the sensor tag battery voltage
+                //Constructing 2-byte data as big endian (as shown in the Java code)
+                let batteryVoltage = UInt16(manufacturerData[4]) << 8 + UInt16(manufacturerData[5])
+                print(String(format: "%04X", batteryVoltage)) //->0C6F
+                //32- is the BLE packet counter.
+                let packetCounter = manufacturerData[6]
+                print(String(format: "%02X", packetCounter)) //->32
+            }
+            addToList = manufacturerID == 0x0822;
         }
+        
+        if(addToList && !peripheralArray.contains(peripheralFound)) {
+            peripheralArray.append(peripheralFound)
+        }
+        peripheralArray.sort { $0.localName ?? "Unknown" > $1.localName ?? "Unknown" }
+        peripheralArray.reverse()
+        self.tableView.reloadData()
         
         print("Manufacterer String: \(manufacturerString ?? "No String Found")\n")
         
