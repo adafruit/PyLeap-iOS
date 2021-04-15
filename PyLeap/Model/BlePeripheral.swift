@@ -8,12 +8,6 @@
 import Foundation
 import CoreBluetooth
 
-protocol BluefruitDelegate {
-    func bluefruitDidConnect(supported: Bool, buttonSupported: Bool)
-    func bluefruitDidDisconnect()
-    func buttonStateChanged(isPressed: Bool)
-    func stateChanged(isOn: Bool)
-}
 
 class BlePeripheral: NSObject {
  static var connectedPeripheral: CBPeripheral?
@@ -21,20 +15,23 @@ class BlePeripheral: NSObject {
  static var connectedTXChar: CBCharacteristic?
  static var connectedRXChar: CBCharacteristic?
 
+    static let readCharacteristic = "ADAF0100-4669-6C65-5472-616E73666572"
+    static let writeCharacteristic = "ADAF0200-4669-6C65-5472-616E73666572"
+    
+     var featheruuid = CBUUID(string: "6e400002-b5a3-f393-e0a9-e50e24dcca9e")
+    
     private let centralManager: CBCentralManager
-    private let basePeripheral: CBPeripheral
+    public  let basePeripheral: CBPeripheral
+    
     public  var localName: String?
     public  var advertData: [String : Any]?
     public  var advertisement: Advertisement
-
-    public var isConnected: Bool {
-        return basePeripheral.state == .connected
-    }
+    
     
     // MARK: - Characteristic properties
     
-    private var txCharacteristic: CBCharacteristic?
-    private var rxCharacteristic: CBCharacteristic?
+    public var txCharacteristic: CBCharacteristic?
+    public var rxCharacteristic: CBCharacteristic?
     
     
     var identifier: UUID {
@@ -49,7 +46,9 @@ class BlePeripheral: NSObject {
         return basePeripheral.state
     }
     
-    
+    public var isConnected: Bool {
+        return basePeripheral.state == .connected
+    }
 
     
     
@@ -112,9 +111,7 @@ class BlePeripheral: NSObject {
     }
     
     
-    init(withPeripheral peripheral: CBPeripheral,
-         advertisementData advertisementDictionary: [String : Any],
-         with manager: CBCentralManager) {
+    init(withPeripheral peripheral: CBPeripheral, advertisementData advertisementDictionary: [String : Any],with manager: CBCentralManager) {
     
     centralManager = manager
     basePeripheral = peripheral
@@ -124,7 +121,6 @@ class BlePeripheral: NSObject {
     localName = parseAdvertisementData(advertisementDictionary)
     advertData = advertisementDictionary
     basePeripheral.delegate = self
-    
     }
     
     /// Connects to the device.
@@ -152,13 +148,13 @@ class BlePeripheral: NSObject {
         return localName
     }
     
-    public func writeOutgoingValue(data: String){
-
-        let valueString = (data as NSString).data(using: String.Encoding.utf8.rawValue)
-
-        basePeripheral.writeValue(valueString!, for: txCharacteristic!, type: CBCharacteristicWriteType.withResponse)
-
-          }
+//    public func writeOutgoingValue(data: String){
+//
+//        let valueString = (data as NSString).data(using: String.Encoding.utf8.rawValue)
+//
+//        basePeripheral.writeValue(valueString!, for: txCharacteristic!, type: CBCharacteristicWriteType.withResponse)
+//
+//          }
       
     private func writeTxCharcateristic(withValue value: Data) {
         if let txCharacteristic = txCharacteristic {
@@ -182,7 +178,6 @@ class BlePeripheral: NSObject {
     
     
     private func discoverServices() {
-        print("Discovering LED Button service...")
         basePeripheral.delegate = self
         basePeripheral.discoverServices([])
     }
@@ -193,6 +188,16 @@ class BlePeripheral: NSObject {
        // delegate?.buttonStateChanged(isPressed: value[0] == 0x1)
     }
 
+    // Write functions
+    public func writeOutgoingValue(data: String){
+       print("Attempted to write")
+        let valueString = (data as NSString).data(using: String.Encoding.utf8.rawValue)
+
+        basePeripheral.writeValue(valueString!, for: txCharacteristic!, type: CBCharacteristicWriteType.withResponse)
+            }
+        
+    
+    
 }
 
 extension BlePeripheral: CBCentralManagerDelegate {
@@ -204,7 +209,6 @@ extension BlePeripheral: CBCentralManagerDelegate {
             print("Is Powered Off.")
         case .poweredOn:
             print("Is Powered On.")
-            
         case .unsupported:
             print("Is Unsupported.")
         case .unauthorized:
@@ -229,12 +233,6 @@ extension BlePeripheral: CBCentralManagerDelegate {
             print("Connected to device")
             discoverServices()
         }
-        
-        //      print("PyLeap has connected to Peripheral: \(tempBluefruitPeripheral.name)")
-//
-//
-//
-//      tempBluefruitPeripheral.discoverServices([NUSCBUUID.BLEService_UUID])
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
@@ -244,7 +242,7 @@ extension BlePeripheral: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         
     }
-    
+                                                               
     func centralManager(_ central: CBCentralManager, connectionEventDidOccur event: CBConnectionEvent, for peripheral: CBPeripheral) {
         
     }
@@ -267,6 +265,7 @@ extension BlePeripheral: CBPeripheralDelegate {
             
         }
         
+    
     
         
 //      var characteristicASCIIValue = NSString()
@@ -295,24 +294,18 @@ extension BlePeripheral: CBPeripheralDelegate {
             return
         }
         
+        var currentIndex = 0
+        
         //We need to discover the all characteristic
         for service in services {
+            print("Service found: @index:\(currentIndex) - Service: \(service.description)")
             peripheral.discoverCharacteristics(nil, for: service)
+            currentIndex += 1
         }
-        print("Discovered Services: \(services.count)")
         
-        //        if let services = peripheral.services {
-//            for service in services {
-//                if service.uuid == BlinkyPeripheral.nordicBlinkyServiceUUID {
-//                    print("LED Button service found")
-//                    //Capture and discover all characteristics for the blinky service
-//                    discoverCharacteristicsForBlinkyService(service)
-//                    return
-//                }
-//            }
-//        }
-//        // Blinky service has not been found
-//        delegate?.blinkyDidConnect(ledSupported: false, buttonSupported: false)
+        print("Discovered Services: \(services.count)")
+        print("Discovered Service UUID: \(services[0].uuid)")
+        
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
@@ -320,51 +313,97 @@ extension BlePeripheral: CBPeripheralDelegate {
                guard let characteristics = service.characteristics else {
               return
           }
+        print(#function, #line)
+          
+        print("Found \(characteristics.count) characteristics.")
+        print("Characteristic Count: \(characteristics.count) ")
+        
+        for element in characteristics {
+            print("Characteristic: \(element.uuid)\n")
+        }
+        
+        
+        
+        for characteristic in characteristics {
 
-          print("Found \(characteristics.count) characteristics.")
-
-          for characteristic in characteristics {
-
-            if characteristic.uuid.isEqual(NUSCBUUID.BLE_Characteristic_uuid_Rx)  {
-
-              rxCharacteristic = characteristic
-
-              peripheral.setNotifyValue(true, for: rxCharacteristic!)
-              peripheral.readValue(for: characteristic)
-
-                print("RX Characteristic: \(rxCharacteristic?.uuid)")
+            
+            if characteristic.properties.contains(.read){
+                print("Read characteristic found: \(characteristic.uuid)")
             }
-
-            if characteristic.uuid.isEqual(NUSCBUUID.BLE_Characteristic_uuid_Tx){
-
-              txCharacteristic = characteristic
-                
-                print("TX Characteristic: \(txCharacteristic?.uuid)")
-
-
+            if characteristic.properties.contains(.broadcast) {
+                print("Broadcast characteristic found: \(characteristic.uuid)")
             }
+            if characteristic.properties.contains(.write) {
+                print("Write characteristic found: \(characteristic.uuid)")
+            }
+            if characteristic.uuid.isEqual(featheruuid)  {
+               // print("Write without Response characteristic found: \(characteristic.uuid)")
+                txCharacteristic = characteristic
+                print("Write Characteristic Set: \(txCharacteristic?.description)")
+            }
+            
+            peripheral.discoverDescriptors(for: characteristics[0])
+//            if characteristic.uuid.isEqual(NUSCBUUID.BLE_Characteristic_uuid_Rx)  {
+//
+//                rxCharacteristic = characteristic
+//
+//              peripheral.setNotifyValue(true, for: rxCharacteristic!)
+//              peripheral.readValue(for: characteristic)
+//                print("RX Characteristic: \(rxCharacteristic)")
+//                print("RX Characteristic UUID: \(rxCharacteristic?.uuid)")
+//            }
+//
+//            if characteristic.uuid.isEqual(NUSCBUUID.BLE_Characteristic_uuid_Tx){
+//
+//              txCharacteristic = characteristic
+//                print("RX Characteristic: \(rxCharacteristic)")
+//                print("TX Characteristic UUID: \(txCharacteristic?.uuid)")
+//
+//
+//            }
 
           }
-     // perform(#selector(delayedConnection), with: nil)
-      //delayedConnection()
+
     }
     
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverDescriptorsFor characteristic: CBCharacteristic, error: Error?){
+      
+        guard let descriptors = characteristic.descriptors else {
+       return
+        }
+//            guard let characteristics = service.characteristics else {
+//           return
+//       }
+        print("Descriptors: \(descriptors.description)")
+//            for descriptor in descriptors {
+//                print("Descriptor: \(descriptor.description)\n")
+//   }
+        
+    }
+
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
         // LED value has been written, let's read it to confirm.
-        readValue()
+       // readValue()
     }
     
-    public func readValue() {
-        if let txCharacteristic = txCharacteristic {
-            if txCharacteristic.properties.contains(.read) {
-                print("Reading characteristic...")
-                basePeripheral.readValue(for: txCharacteristic)
-            } else {
-                print("Can't read state")
-        
-            }
-        }
     }
     
+
     
-}
+
+
+
+//    public func readValue() {
+//        if let txCharacteristic = txCharacteristic {
+//            if txCharacteristic.properties.contains(.read) {
+//                print("Reading characteristic...")
+//                basePeripheral.readValue(for: txCharacteristic)
+//            } else {
+//                print("Can't read state")
+//
+//            }
+//        }
+//    }
+    
+    
+

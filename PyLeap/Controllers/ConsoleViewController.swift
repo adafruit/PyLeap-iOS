@@ -33,7 +33,8 @@ class ConsoleViewController: UIViewController {
 
     print("Button Pressed")
     consoleTextView.text.append("\n[Sent]: Test \n")
-   // writeOutgoingValue(data: pyTextView.text.split(by: 5))
+    bluefruitPeripheral.writeOutgoingValue(data: pyTextView.text)
+    
 
   }
 
@@ -75,7 +76,7 @@ class ConsoleViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    txCharacteristic = BlePeripheral.connectedTXChar
+    
 
     deviceName.text = "Connected: \(String(bluefruitPeripheral.localName!))"
    
