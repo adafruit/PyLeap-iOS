@@ -12,7 +12,6 @@
 		292CE10A25F13A54009D7261 /* ConsoleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292CE10925F13A54009D7261 /* ConsoleViewController.swift */; };
 		292CE10D25F13A54009D7261 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 292CE10B25F13A54009D7261 /* Main.storyboard */; };
 		292CE10F25F13A56009D7261 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 292CE10E25F13A56009D7261 /* Assets.xcassets */; };
-		292CE11225F13A56009D7261 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 292CE11025F13A56009D7261 /* LaunchScreen.storyboard */; };
 		2937F11425F8051300C65FC4 /* ProjectTextFile.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2937F11325F8051300C65FC4 /* ProjectTextFile.txt */; };
 		2937F11725F80A2C00C65FC4 /* pytest.py in Resources */ = {isa = PBXBuildFile; fileRef = 2937F11625F80A2C00C65FC4 /* pytest.py */; };
 		2937F11A25F8104100C65FC4 /* BlePeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2937F11925F8104100C65FC4 /* BlePeripheral.swift */; };
@@ -32,7 +31,6 @@
 		292CE10925F13A54009D7261 /* ConsoleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleViewController.swift; sourceTree = "<group>"; };
 		292CE10C25F13A54009D7261 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		292CE10E25F13A56009D7261 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		292CE11125F13A56009D7261 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		292CE11325F13A56009D7261 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2937F11325F8051300C65FC4 /* ProjectTextFile.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ProjectTextFile.txt; sourceTree = "<group>"; };
 		2937F11625F80A2C00C65FC4 /* pytest.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = pytest.py; sourceTree = "<group>"; };
@@ -86,7 +84,6 @@
 				292CE10B25F13A54009D7261 /* Main.storyboard */,
 				D5A24F32261CD8C30008B61C /* Launch Screen.storyboard */,
 				292CE10E25F13A56009D7261 /* Assets.xcassets */,
-				292CE11025F13A56009D7261 /* LaunchScreen.storyboard */,
 				292CE11325F13A56009D7261 /* Info.plist */,
 			);
 			path = PyLeap;
@@ -179,7 +176,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D5A24F33261CD8C30008B61C /* Launch Screen.storyboard in Resources */,
-				292CE11225F13A56009D7261 /* LaunchScreen.storyboard in Resources */,
 				2937F11425F8051300C65FC4 /* ProjectTextFile.txt in Resources */,
 				2937F11725F80A2C00C65FC4 /* pytest.py in Resources */,
 				292CE10F25F13A56009D7261 /* Assets.xcassets in Resources */,
@@ -216,14 +212,6 @@
 				292CE10C25F13A54009D7261 /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		292CE11025F13A56009D7261 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				292CE11125F13A56009D7261 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
