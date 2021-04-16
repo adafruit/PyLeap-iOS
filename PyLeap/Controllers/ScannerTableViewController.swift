@@ -71,7 +71,6 @@ class ScannerTableViewController: UITableViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if centralManager.state == .poweredOn {
-            print("Scanning....")
         }
     }
     
@@ -201,16 +200,15 @@ extension ScannerTableViewController: CBCentralManagerDelegate {
     // MARK: - Discover
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         
-        print("Function: \(#function),Line: \(#line)")
+      //  print("Function: \(#function),Line: \(#line)")
         
-        print("peripheralArray: \(peripheralArray.count)")
+       // print("peripheralArray: \(peripheralArray.count)")
         
         let peripheralID = peripheral.description
         
         let peripheralFound = BlePeripheral(withPeripheral: peripheral, advertisementData: advertisementData, with: centralManager)
     
-        
-        print("Peripheral Data: \(peripheralFound.localName)")
+       // print("Peripheral Data: \(peripheralID)")
         
         print("---------------------------------------------- \n")
         print("Peripheral: \(peripheral.description)\n")
@@ -270,7 +268,9 @@ extension ScannerTableViewController: CBCentralManagerDelegate {
         if(addToList && !peripheralArray.contains(peripheralFound)) {
             peripheralArray.append(peripheralFound)
         }
-        peripheralArray.sort { $0.localName ?? "Unknown" > $1.localName ?? "Unknown" }
+ //filter_device_list
+        
+      peripheralArray.sort { $0.localName ?? "Unknown" > $1.localName ?? "Unknown" }
         peripheralArray.reverse()
         self.tableView.reloadData()
         
@@ -281,6 +281,7 @@ extension ScannerTableViewController: CBCentralManagerDelegate {
         print("---------------------------------------------- \n")
         print(peripheralArray.description)
         print("---------------------------------------------- \n")
+
 
     }
 
@@ -322,55 +323,10 @@ extension ScannerTableViewController: CBPeripheralDelegate {
         NotificationCenter.default.post(name:NSNotification.Name(rawValue: "Notify"), object: "\((characteristicASCIIValue as String))")
     }
     
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        print("*******************************************************")
-        
-        if ((error) != nil) {
-            print("Error discovering services: \(error!.localizedDescription)")
-            return
-        }
-        guard let services = peripheral.services else {
-            return
-        }
-        //We need to discover the all characteristic
-        for service in services {
-            peripheral.discoverCharacteristics(nil, for: service)
-        }
-        print("Discovered Services: \(services.count)")
-    }
     
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        
-        guard let characteristics = service.characteristics else {
-            return
-        }
-        
-        print("Found \(characteristics.count) characteristics.")
-        
-        for characteristic in characteristics {
-            
-            if characteristic.uuid.isEqual(NUSCBUUID.BLE_Characteristic_uuid_Rx)  {
-                
-                tempRxCharacteristic = characteristic
-                
-                peripheral.setNotifyValue(true, for: tempRxCharacteristic!)
-                peripheral.readValue(for: characteristic)
-                
-                print("RX Characteristic: \(tempRxCharacteristic.uuid)")
-            }
-            
-            if characteristic.uuid.isEqual(NUSCBUUID.BLE_Characteristic_uuid_Tx){
-                
-                tempTxCharacteristic = characteristic
-                
-                BlePeripheral.connectedTXChar = characteristic
-                
-                print("TX Characteristic: \(tempTxCharacteristic.uuid)")
-                
-            }
-        }
-        
-    }
+
+    
+
     
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
         guard error == nil else {
