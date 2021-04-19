@@ -75,18 +75,20 @@ class ConsoleViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-
+    NotificationCenter.default.addObserver(self, selector: #selector(self.appendRxDataToTextView(notification:)), name: NSNotification.Name(rawValue: "Notify"), object: nil)
     
-
     deviceName.text = "Connected: \(String(bluefruitPeripheral.localName!))"
    
     print("Manufacturer: \(bluefruitPeripheral.advertisement.manufacturerHexDescription ?? "No Manufacturer Data Found.")")
-
 
     createReadAndWriteFile()
   
   }
 
+    @objc func appendRxDataToTextView(notification: Notification) -> Void{
+        consoleTextView.text.append("\n[Recv]: \(notification.object!) \n")
+      }
+    
   func startScanning() -> Void {
       // Start Scanning
     print("started scan")
@@ -109,7 +111,7 @@ class ConsoleViewController: UIViewController {
      print("File path \(fileUrl.path)")
      //data to write in file.
     let stringData = """
-print(Hello World)
+Test String
 """
 
    do {
@@ -138,8 +140,6 @@ print(Hello World)
       if let bluefruitPeripheral = bluefruitPeripheral {
 
         if let txCharacteristic = txCharacteristic {
-
-          //bluefruitPeripheral.writeValue(valueString!, for: txCharacteristic, type: CBCharacteristicWriteType.withResponse)
 
         }
     
@@ -206,8 +206,40 @@ print(Hello World)
    //print ("2: " + String(readFromFile(fileName: fName, readText: &fileReadString)) + "\n" + fileReadString)
   }
 
+    func keyboardNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide(notification:)), name: UIResponder.keyboardDidHideNotification, object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+      }
+
+      deinit {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardDidHideNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+      }
+
+      // MARK:- Keyboard
+      @objc func keyboardWillChange(notification: Notification) {
+
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+
+          let keyboardHeight = keyboardSize.height
+          print(keyboardHeight)
+          view.frame.origin.y = (-keyboardHeight + 50)
+        }
+      }
+
+      @objc func keyboardDidHide(notification: Notification) {
+        view.frame.origin.y = 0
+      }
+
+    
 
 }
+
+
 
 
 

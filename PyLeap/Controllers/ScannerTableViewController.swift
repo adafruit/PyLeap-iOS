@@ -54,7 +54,7 @@ class ScannerTableViewController: UITableViewController {
         // Start scan for new peripherals
         
         
-        centralManager?.scanForPeripherals(withServices: [], options: [CBCentralManagerScanOptionAllowDuplicatesKey : false])
+        centralManager?.scanForPeripherals(withServices: [NUSCBUUID.BLEService_UUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey : false])
         // Add Timer for this scan ~ 10 seconds
         Timer.scheduledTimer(withTimeInterval: 10, repeats: false) {_ in
             self.stopScanning()
@@ -102,7 +102,7 @@ class ScannerTableViewController: UITableViewController {
         // Start scan for new peripherals
         
         
-        centralManager?.scanForPeripherals(withServices: [], options: [CBCentralManagerScanOptionAllowDuplicatesKey : false])
+        centralManager?.scanForPeripherals(withServices: [NUSCBUUID.BLEService_UUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey : false])
         // Add Timer for this scan ~ 10 seconds
         Timer.scheduledTimer(withTimeInterval: 10, repeats: false) {_ in
             self.stopScanning()
@@ -307,50 +307,8 @@ extension ScannerTableViewController: CBCentralManagerDelegate {
 
 extension ScannerTableViewController: CBPeripheralDelegate {
     
-    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        
-        var characteristicASCIIValue = NSString()
-        
-        guard characteristic == tempRxCharacteristic,
-              
-              let characteristicValue = characteristic.value,
-              let ASCIIstring = NSString(data: characteristicValue, encoding: String.Encoding.utf8.rawValue) else { return }
-        
-        characteristicASCIIValue = ASCIIstring
-        
-        print("Value Recieved: \((characteristicASCIIValue as String))")
-        
-        NotificationCenter.default.post(name:NSNotification.Name(rawValue: "Notify"), object: "\((characteristicASCIIValue as String))")
-    }
-    
-    
 
     
-
-    
-    func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
-        guard error == nil else {
-            print("Error discovering services: error")
-            return
-        }
-        print("Function: \(#function),Line: \(#line)")
-        print("Message sent")
-    }
-    
-    func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
-        print("*******************************************************")
-        print("Function: \(#function),Line: \(#line)")
-        if (error != nil) {
-            print("Error changing notification state:\(String(describing: error?.localizedDescription))")
-            
-        } else {
-            print("Characteristic's value subscribed")
-        }
-        
-        if (characteristic.isNotifying) {
-            print ("Subscribed. Notification has begun for: \(characteristic.uuid)")
-        }
-    }
     
 }
 

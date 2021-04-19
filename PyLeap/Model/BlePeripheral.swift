@@ -10,15 +10,16 @@ import CoreBluetooth
 
 
 class BlePeripheral: NSObject {
- static var connectedPeripheral: CBPeripheral?
- static var connectedService: CBService?
- static var connectedTXChar: CBCharacteristic?
- static var connectedRXChar: CBCharacteristic?
+    static var connectedPeripheral: CBPeripheral?
+    static var connectedService: CBService?
+    static var connectedTXChar: CBCharacteristic?
+    static var connectedRXChar: CBCharacteristic?
 
-    static let readCharacteristic = "ADAF0100-4669-6C65-5472-616E73666572"
-    static let writeCharacteristic = "ADAF0200-4669-6C65-5472-616E73666572"
-    
-     var featheruuid = CBUUID(string: "6e400002-b5a3-f393-e0a9-e50e24dcca9e")
+    static let readCharacteristic = CBUUID(string: "ADAF1200-4669-6C65-5461-6E7366657221")
+    static let writeCharacteristic = CBUUID(string: "ADAF0200-4669-6C65-5461-6E7366657221")
+    // MARK:- UUID Characteritics
+    var featherWriteUUID = CBUUID(string: "ADAF0100-4669-6C65-5461-6E7366657221")
+    var featherReadUUID = CBUUID(string: "ADAF0200-4669-6C65-5461-6E7366657221")
     
     private let centralManager: CBCentralManager
     public  let basePeripheral: CBPeripheral
@@ -50,7 +51,6 @@ class BlePeripheral: NSObject {
         return basePeripheral.state == .connected
     }
 
-    
     
     //MARK:- Advertisment
     
@@ -110,7 +110,6 @@ class BlePeripheral: NSObject {
         }
     }
     
-    
     init(withPeripheral peripheral: CBPeripheral, advertisementData advertisementDictionary: [String : Any],with manager: CBCentralManager) {
     
     centralManager = manager
@@ -123,19 +122,24 @@ class BlePeripheral: NSObject {
     basePeripheral.delegate = self
     }
     
-    /// Connects to the device.
+    
+    
     public func connect() {
         centralManager.delegate = self
         print("Connecting to Adafruit device...")
         centralManager.connect(basePeripheral, options: nil)
     }
     
-    /// Cancels existing or pending connection.
     public func disconnect() {
         print("Cancel connection...")
         centralManager.cancelPeripheralConnection(basePeripheral)
     }
     
+    private func discoverServices() {
+        basePeripheral.delegate = self
+        basePeripheral.discoverServices([])
+    }
+
     private func parseAdvertisementData(_ advertisementDictionary: [String : Any]) -> String? {
         var localName: String
 
@@ -148,15 +152,7 @@ class BlePeripheral: NSObject {
         return localName
     }
     
-//    public func writeOutgoingValue(data: String){
-//
-//        let valueString = (data as NSString).data(using: String.Encoding.utf8.rawValue)
-//
-//        basePeripheral.writeValue(valueString!, for: txCharacteristic!, type: CBCharacteristicWriteType.withResponse)
-//
-//          }
-      
-    private func writeTxCharcateristic(withValue value: Data) {
+     func writeTxCharcateristic(withValue value: Data) {
         if let txCharacteristic = txCharacteristic {
             if txCharacteristic.properties.contains(.write) {
                 print("Writing value (with response)...")
@@ -174,29 +170,18 @@ class BlePeripheral: NSObject {
         }
     }
     
-    // MARK: - Implementation
-    
-    
-    private func discoverServices() {
-        basePeripheral.delegate = self
-        basePeripheral.discoverServices([])
-    }
-    
-    /// A callback called when the Bluetooth characteristic value has changed.
-    private func didReceiveButtonNotification(withValue value: Data) {
-        print("Value changed: \(value[0])")
-       // delegate?.buttonStateChanged(isPressed: value[0] == 0x1)
-    }
 
     // Write functions
     public func writeOutgoingValue(data: String){
        print("Attempted to write")
         let valueString = (data as NSString).data(using: String.Encoding.utf8.rawValue)
 
-        basePeripheral.writeValue(valueString!, for: txCharacteristic!, type: CBCharacteristicWriteType.withResponse)
-            }
-        
-    
+        if basePeripheral.canSendWriteWithoutResponse || ((rxCharacteristic?.properties.contains(.writeWithoutResponse)) != nil) {
+            print(basePeripheral.canSendWriteWithoutResponse)
+            
+           basePeripheral.writeValue(valueString!, for: rxCharacteristic!, type: CBCharacteristicWriteType.withoutResponse)
+        }
+    }
     
 }
 
@@ -230,7 +215,7 @@ extension BlePeripheral: CBCentralManagerDelegate {
     // MARK: - Connect
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         if peripheral == basePeripheral {
-            print("Connected to device")
+            print("Connected to Adafruit Device.")
             discoverServices()
         }
     }
@@ -251,36 +236,74 @@ extension BlePeripheral: CBCentralManagerDelegate {
 
 extension BlePeripheral: CBPeripheralDelegate {
     
+    func discoverDescriptors(peripheral: CBPeripheral, characteristic: CBCharacteristic) {
+        basePeripheral.discoverDescriptors(for: rxCharacteristic!)
+    }
+
+    // In CBPeripheralDelegate class/extension
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverDescriptorsFor characteristic: CBCharacteristic, error: Error?) {
+        guard let descriptors = characteristic.descriptors else { return }
+     
+        // Get user description descriptor
+        if let userDescriptionDescriptor = descriptors.first(where: {
+            return $0.uuid.uuidString == CBUUIDCharacteristicUserDescriptionString
+        }) {
+            // Read user description for characteristic
+            basePeripheral.readValue(for: userDescriptionDescriptor)
+        }
+    }
+     
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor descriptor: CBDescriptor, error: Error?) {
+        // Get and print user description for a given characteristic
+        if descriptor.uuid.uuidString == CBUUIDCharacteristicUserDescriptionString,
+            let userDescription = descriptor.value as? String {
+            print("Characterstic \(descriptor.characteristic.uuid.uuidString) is also known as \(userDescription)")
+        }
+    }
+    
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
 
-        if characteristic == txCharacteristic {
-            if let value = characteristic.value{
-                print("Tx Update Value: \(value)")
-           
-            } else if characteristic == rxCharacteristic {
-                if let value = characteristic.value {
-                print("Rx Update Value: \(value)")
-                }
-            }
-            
-        }
+        var characteristicASCIIValue = NSString()
+
+        guard characteristic == rxCharacteristic,
+        let readValueCharacteristic = characteristic.value,
         
-    
-    
+        let ASCIIstring = NSString(data: readValueCharacteristic, encoding: String.Encoding.utf8.rawValue) else { return }
         
-//      var characteristicASCIIValue = NSString()
+        
+        characteristicASCIIValue = ASCIIstring
+
+        print("Value Recieved:\((characteristicASCIIValue as String))")
+
+        print("printing characteristic value:\(characteristic.value?.base64EncodedString())")
+        
+        NotificationCenter.default.post(name:NSNotification.Name(rawValue: "Notify"), object: "\((characteristicASCIIValue as String))")
+        
+        
+        
+//        if characteristic == txCharacteristic {
+//            if let value = characteristic.value{
+//                print("Tx Update Value: \(value)")
 //
-//      guard characteristic == tempRxCharacteristic,
+//            } else if characteristic == rxCharacteristic {
+//                if let value = characteristic.value {
+//                print("Rx Update Value: \(value)")
+//                }
+//            }
 //
-//            let characteristicValue = characteristic.value,
-//            let ASCIIstring = NSString(data: characteristicValue, encoding: String.Encoding.utf8.rawValue) else { return }
-//
-//        characteristicASCIIValue = ASCIIstring
-//
-//      print("Value Recieved: \((characteristicASCIIValue as String))")
-//
-//      NotificationCenter.default.post(name:NSNotification.Name(rawValue: "Notify"), object: "\((characteristicASCIIValue as String))")
+//        }
+        
     }
+    
+    func peripheral(_ peripheral: CBPeripheral,
+    didUpdateNotificationStateFor characteristic: CBCharacteristic,
+    error: Error?) {
+        
+        print("didUpdateNotificationStateForCharacteristic:\(characteristic)")
+      
+    }
+    
+
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
 
@@ -290,7 +313,7 @@ extension BlePeripheral: CBPeripheralDelegate {
             print("Error discovering services: \(error!.localizedDescription)")
             return
         }
-        guard let services = peripheral.services else {
+        guard let services = basePeripheral.services else {
             return
         }
         
@@ -298,112 +321,105 @@ extension BlePeripheral: CBPeripheralDelegate {
         
         //We need to discover the all characteristic
         for service in services {
-            print("Service found: @index:\(currentIndex) - Service: \(service.description)")
-            peripheral.discoverCharacteristics(nil, for: service)
+            print("Service found: @index:\(currentIndex) - Service: \(service.description)\n")
+            basePeripheral.discoverCharacteristics(nil, for: service)
             currentIndex += 1
         }
         
-        print("Discovered Services: \(services.count)")
-        print("Discovered Service UUID: \(services[0].uuid)")
+        print("Discovered Services: \(services.count)\n")
+        print("Discovered Service UUID: \(services[0].uuid)\n")
         
     }
-    
+    //MARK:- didDiscoverCharacteristicsFor
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
 
                guard let characteristics = service.characteristics else {
               return
           }
-        print(#function, #line)
+        print(#function, #line, "------------------------------\n")
           
-        print("Found \(characteristics.count) characteristics.")
-        print("Characteristic Count: \(characteristics.count) ")
+        print("Found \(characteristics.count) characteristics.\n")
         
         for element in characteristics {
             print("Characteristic: \(element.uuid)\n")
         }
-        
+        //
+//        print("Found \(characteristics.count) characteristics.")
+//
+//        for characteristic in characteristics {
+//
+//          if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_Rx)  {
+//
+//            rxCharacteristic = characteristic
+//
+//            BlePeripheral.connectedRXChar = rxCharacteristic
+//
+//            peripheral.setNotifyValue(true, for: rxCharacteristic!)
+//            peripheral.readValue(for: characteristic)
+//
+//            print("RX Characteristic: \(rxCharacteristic.uuid)")
+//          }
+//
+//          if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_Tx){
+//            txCharacteristic = characteristic
+//            BlePeripheral.connectedTXChar = txCharacteristic
+//            print("TX Characteristic: \(txCharacteristic.uuid)")
+//          }
+//
         
         
         for characteristic in characteristics {
-
-            
-            if characteristic.properties.contains(.read){
-                print("Read characteristic found: \(characteristic.uuid)")
-            }
-            if characteristic.properties.contains(.broadcast) {
-                print("Broadcast characteristic found: \(characteristic.uuid)")
-            }
-            if characteristic.properties.contains(.write) {
-                print("Write characteristic found: \(characteristic.uuid)")
-            }
-            if characteristic.uuid.isEqual(featheruuid)  {
+print("Loop")
+            if characteristic.uuid.isEqual(featherWriteUUID) {
                // print("Write without Response characteristic found: \(characteristic.uuid)")
                 txCharacteristic = characteristic
-                print("Write Characteristic Set: \(txCharacteristic?.description)")
+                
+                print("Write Characteristic Set: \(characteristic.uuid)\n\n")
+
             }
+           
+            if characteristic.uuid.isEqual(featherReadUUID)  {
+               // print("Write without Response characteristic found: \(characteristic.uuid)")
+                DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
+                    self.rxCharacteristic = characteristic
+                    print("Read Characteristic Set: \(characteristic.uuid)\n\n")
+                    print("#:\(self.basePeripheral.maximumWriteValueLength(for: .withoutResponse))") 
+                    self.basePeripheral.setNotifyValue(true, for: rxCharacteristic!)
+                    basePeripheral.readValue(for: rxCharacteristic!)
+                }
+               
+            }
+           
             
-            peripheral.discoverDescriptors(for: characteristics[0])
-//            if characteristic.uuid.isEqual(NUSCBUUID.BLE_Characteristic_uuid_Rx)  {
-//
-//                rxCharacteristic = characteristic
-//
-//              peripheral.setNotifyValue(true, for: rxCharacteristic!)
-//              peripheral.readValue(for: characteristic)
-//                print("RX Characteristic: \(rxCharacteristic)")
-//                print("RX Characteristic UUID: \(rxCharacteristic?.uuid)")
-//            }
-//
-//            if characteristic.uuid.isEqual(NUSCBUUID.BLE_Characteristic_uuid_Tx){
-//
-//              txCharacteristic = characteristic
-//                print("RX Characteristic: \(rxCharacteristic)")
-//                print("TX Characteristic UUID: \(txCharacteristic?.uuid)")
-//
-//
-//            }
+           // peripheral.discoverDescriptors(for: characteristics[0])
+            basePeripheral.discoverDescriptors(for: characteristics[1])
+            
 
           }
 
     }
     
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverDescriptorsFor characteristic: CBCharacteristic, error: Error?){
-      
-        guard let descriptors = characteristic.descriptors else {
-       return
-        }
-//            guard let characteristics = service.characteristics else {
-//           return
-//       }
-        print("Descriptors: \(descriptors.description)")
-//            for descriptor in descriptors {
-//                print("Descriptor: \(descriptor.description)\n")
-//   }
-        
-    }
-
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
-        // LED value has been written, let's read it to confirm.
-       // readValue()
+
+            if let error = error {
+                print(error)
+            } else {
+                print("Value writen sucessfully.")
+            }
+        }
+    
+    func write(value: Data, characteristic: CBCharacteristic) {
+        if basePeripheral.canSendWriteWithoutResponse {
+           basePeripheral.writeValue(value, for: characteristic, type: .withoutResponse)
+        }
     }
     
-    }
-    
-
-    
-
-
-
-//    public func readValue() {
-//        if let txCharacteristic = txCharacteristic {
-//            if txCharacteristic.properties.contains(.read) {
-//                print("Reading characteristic...")
-//                basePeripheral.readValue(for: txCharacteristic)
-//            } else {
-//                print("Can't read state")
-//
-//            }
-//        }
+//    func peripheralIsReady(toSendWriteWithoutResponse peripheral: CBPeripheral) {
+//        // Called when peripheral is ready to send write without response again.
+//        // Write some value to some target characteristic.
+//        write(value: "someValue", characteristic: txCharacteristic)
 //    }
     
+}
     
 

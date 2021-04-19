@@ -13,7 +13,7 @@ struct NUSCBUUID {
 
 //nrf 52 Service: 00001523-1212-EFDE-1523-785FEABCD123
 
-    static let kBLEService_UUID = "ADAF0822-C332-42A8-93BD-25E905756CB8"
+    static let kBLEService_UUID = "FEBB"
     static let kBLE_Characteristic_uuid_Tx = "ADAF0100-4669-6C65-5472-616E73666572"
     static let kBLE_Characteristic_uuid_Rx = "ADAF0200-4669-6C65-5472-616E73666572"
     static let MaxCharacters = 20
