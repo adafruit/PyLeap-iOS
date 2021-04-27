@@ -152,15 +152,17 @@ class BlePeripheral: NSObject {
         return localName
     }
     
+    let testValue: Data? = "Test123".data(using: .utf8)
+    
      func writeTxCharcateristic(withValue value: Data) {
-        if let txCharacteristic = txCharacteristic {
-            if txCharacteristic.properties.contains(.write) {
+        if let rxCharacteristic = rxCharacteristic {
+            if rxCharacteristic.properties.contains(.write) {
                 print("Writing value (with response)...")
-                basePeripheral.writeValue(value, for: txCharacteristic, type: .withResponse)
+                basePeripheral.writeValue(value, for: rxCharacteristic, type: .withResponse)
            
-            } else if txCharacteristic.properties.contains(.writeWithoutResponse) {
+            } else if rxCharacteristic.properties.contains(.writeWithoutResponse) {
                 print("Writing value... (without response)")
-                basePeripheral.writeValue(value, for: txCharacteristic, type: .withoutResponse)
+                basePeripheral.writeValue(value, for: rxCharacteristic, type: .withoutResponse)
                 // peripheral(_:didWriteValueFor,error) will not be called after write without response
                 // we are caling the delegate here
                 
@@ -169,19 +171,78 @@ class BlePeripheral: NSObject {
             }
         }
     }
+    // Location  CIRCUITPY\ 1/code.py 
+    func stringToBytes(_ string: String) -> [UInt8]? {
+        let length = string.count
+        if length & 1 != 0 {
+            return nil
+        }
+        var bytes = [UInt8]()
+        bytes.reserveCapacity(length/2)
+        var index = string.startIndex
+        for _ in 0..<length/2 {
+            let nextIndex = string.index(index, offsetBy: 2)
+            if let b = UInt8(string[index..<nextIndex], radix: 16) {
+                bytes.append(b)
+            } else {
+                return nil
+            }
+            index = nextIndex
+        }
+        return bytes
+    }
     
+
 
     // Write functions
     public func writeOutgoingValue(data: String){
-       print("Attempted to write")
+        let str = "<BBI/0x02/HelloWorld/CIRCUITPY\\ 1/code.py>"
+        
+        let buf: [UInt8] = [UInt8](str.utf8)
+        let byteArrayData = Data(buf)
+        let bytes = stringToBytes("7661706f72")
+       
+        let unit8: [UInt8] = [67, 97, 102, 195, 169]
+        
+        let strFromUInt8 = String.init(decoding: unit8, as: UTF8.self)
+        
+        
+        // Get an array from the UTF8View.
+        // This is a byte array of character data.
+        var buffer = [UInt8](buf)
+
+        // Change the first byte in the byte array.
+        // ... The byte array is mutable.
+        buffer[0] = buffer[0] + UInt8(1)
+        print("Buffer: \(buffer)")
+        
+        print("Testing! \(String(bytes: buffer, encoding: .utf8))")
+        
+        print("Attempted to write")
         let valueString = (data as NSString).data(using: String.Encoding.utf8.rawValue)
 
         if basePeripheral.canSendWriteWithoutResponse || ((rxCharacteristic?.properties.contains(.writeWithoutResponse)) != nil) {
             print(basePeripheral.canSendWriteWithoutResponse)
             
-           basePeripheral.writeValue(valueString!, for: rxCharacteristic!, type: CBCharacteristicWriteType.withoutResponse)
+           basePeripheral.writeValue(byteArrayData, for: rxCharacteristic!, type: CBCharacteristicWriteType.withoutResponse)
         }
+        
+        
     }
+    
+//    public func writeOutgoingValue(data: [UInt8]){
+//       print("Attempted to write [UInt8]")
+//        let string: String = "abcd"
+//        let byteArray: [UInt8] = string.utf8.map{UInt8($0)}
+//
+//       // let valueString = (data as NSString).data(using: String.Encoding.utf8.rawValue)
+//        if basePeripheral.canSendWriteWithoutResponse || ((rxCharacteristic?.properties.contains(.writeWithoutResponse)) != nil) {
+//            print(basePeripheral.canSendWriteWithoutResponse)
+//
+//           basePeripheral.writeValue(byteArray, for: rxCharacteristic!, type: CBCharacteristicWriteType.withoutResponse)
+//        }
+//
+//    }
     
 }
 
@@ -383,7 +444,7 @@ print("Loop")
                 DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
                     self.rxCharacteristic = characteristic
                     print("Read Characteristic Set: \(characteristic.uuid)\n\n")
-                    print("#:\(self.basePeripheral.maximumWriteValueLength(for: .withoutResponse))") 
+                    print("#:\(self.basePeripheral.maximumWriteValueLength(for: .withoutResponse))")
                     self.basePeripheral.setNotifyValue(true, for: rxCharacteristic!)
                     basePeripheral.readValue(for: rxCharacteristic!)
                 }

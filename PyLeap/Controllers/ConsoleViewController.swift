@@ -29,14 +29,21 @@ class ConsoleViewController: UIViewController {
   @IBOutlet weak var sendButton: UIButton!
   @IBOutlet weak var consoleTextView: UITextView!
 
+    let testValue: Data? = "Wine".data(using: .utf8)
+    
   @IBAction func buttonPress(_ sender: Any) {
 
     print("Button Pressed")
+    
+    let string: String = "abcd"
+    let byteArray: [UInt8] = string.utf8.map{UInt8($0)}
+    
     consoleTextView.text.append("\n[Sent]: Test \n")
     bluefruitPeripheral.writeOutgoingValue(data: pyTextView.text)
-    
+    //bluefruitPeripheral.writeTxCharcateristic(withValue: testValue!)
 
   }
+
 
     
     @IBAction func displayManufacturerInfo(_ sender: Any) {
@@ -51,21 +58,7 @@ class ConsoleViewController: UIViewController {
             vc?.manufacturerDataDict = bluefruitPeripheral.advertData!
         }
     }
-    
-//  @IBAction func bleButton(_ sender: Any) {
-//
-//    print("Button Press")
-//
-//  //  let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//
-//    guard let detailViewController = self.storyboard?.instantiateViewController(withIdentifier: "ScannerViewController") as? ScannerViewController else {
-//      fatalError("View Controller not found")
-//  }
-//
-//    self.navigationController?.pushViewController(detailViewController, animated: true)
-//  }
 
-    
     public func setPeripheral(_ peripheral: BlePeripheral) {
         print(#function)
         bluefruitPeripheral = peripheral
@@ -85,9 +78,9 @@ class ConsoleViewController: UIViewController {
   
   }
 
-    @objc func appendRxDataToTextView(notification: Notification) -> Void{
-        consoleTextView.text.append("\n[Recv]: \(notification.object!) \n")
-      }
+  @objc func appendRxDataToTextView(notification: Notification) -> Void{
+    consoleTextView.text.append("\n[Recv]: \(notification.object!) \n")
+    }
     
   func startScanning() -> Void {
       // Start Scanning
@@ -111,7 +104,7 @@ class ConsoleViewController: UIViewController {
      print("File path \(fileUrl.path)")
      //data to write in file.
     let stringData = """
-Test String
+Testing
 """
 
    do {
@@ -132,19 +125,6 @@ Test String
     pyTextView.text.append("\(stringData)\n")
 
   }
-
-  public func writeOutgoingValue(data: String){
-
-      let valueString = (data as NSString).data(using: String.Encoding.utf8.rawValue)
-
-      if let bluefruitPeripheral = bluefruitPeripheral {
-
-        if let txCharacteristic = txCharacteristic {
-
-        }
-    
-      }
-    }
 
   func writeToFile(fileName: String, writeText: String) -> Bool {
       let desktopURL = try! FileManager.default.url(for: .desktopDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
@@ -287,6 +267,81 @@ extension String {
     }
 }
 
+// Source: http://stackoverflow.com/a/35201226/2115352
+
+extension Data {
+
+    /// Returns the Data as hexadecimal string.
+    var hexString: String {
+        var array: [UInt8] = []
+        
+        #if swift(>=5.0)
+        withUnsafeBytes { array.append(contentsOf: $0) }
+        #else
+        withUnsafeBytes { array.append(contentsOf: getByteArray($0)) }
+        #endif
+        
+        return array.reduce("") { (result, byte) -> String in
+            result + String(format: "%02x", byte)
+        }
+    }
+
+    private func getByteArray(_ pointer: UnsafePointer<UInt8>) -> [UInt8] {
+        let buffer = UnsafeBufferPointer<UInt8>(start: pointer, count: count)
+        return [UInt8](buffer)
+    }
+    
+}
+
+// Source: http://stackoverflow.com/a/42241894/2115352
+
+public protocol DataConvertible {
+    static func + (lhs: Data, rhs: Self) -> Data
+    static func += (lhs: inout Data, rhs: Self)
+}
+
+extension DataConvertible {
+    
+    public static func + (lhs: Data, rhs: Self) -> Data {
+        var value = rhs
+        let data = Data(buffer: UnsafeBufferPointer(start: &value, count: 1))
+        return lhs + data
+    }
+    
+    public static func += (lhs: inout Data, rhs: Self) {
+        lhs = lhs + rhs
+    }
+    
+}
+
+extension UInt8  : DataConvertible { }
+extension UInt16 : DataConvertible { }
+extension UInt32 : DataConvertible { }
+
+extension Int    : DataConvertible { }
+extension Float  : DataConvertible { }
+extension Double : DataConvertible { }
+
+extension String : DataConvertible {
+    
+    public static func + (lhs: Data, rhs: String) -> Data {
+        guard let data = rhs.data(using: .utf8) else { return lhs}
+        return lhs + data
+    }
+    
+}
+
+extension Data : DataConvertible {
+    
+    public static func + (lhs: Data, rhs: Data) -> Data {
+        var data = Data()
+        data.append(lhs)
+        data.append(rhs)
+        
+        return data
+    }
+    
+}
 
 
 
