@@ -35,8 +35,7 @@ class ConsoleViewController: UIViewController {
 
     print("Button Pressed")
     
-    let string: String = "abcd"
-    let byteArray: [UInt8] = string.utf8.map{UInt8($0)}
+    
     
     consoleTextView.text.append("\n[Sent]: Test \n")
     bluefruitPeripheral.writeOutgoingValue(data: pyTextView.text)
@@ -76,19 +75,16 @@ class ConsoleViewController: UIViewController {
 
     createReadAndWriteFile()
   
+    
+    
+    
   }
 
   @objc func appendRxDataToTextView(notification: Notification) -> Void{
     consoleTextView.text.append("\n[Recv]: \(notification.object!) \n")
     }
     
-  func startScanning() -> Void {
-      // Start Scanning
-    print("started scan")
-      Timer.scheduledTimer(withTimeInterval: 15, repeats: false) {_ in
 
-      }
-  }
 
   // function to create file and write into the same.
   public func createReadAndWriteFile() {
@@ -293,55 +289,6 @@ extension Data {
     
 }
 
-// Source: http://stackoverflow.com/a/42241894/2115352
-
-public protocol DataConvertible {
-    static func + (lhs: Data, rhs: Self) -> Data
-    static func += (lhs: inout Data, rhs: Self)
-}
-
-extension DataConvertible {
-    
-    public static func + (lhs: Data, rhs: Self) -> Data {
-        var value = rhs
-        let data = Data(buffer: UnsafeBufferPointer(start: &value, count: 1))
-        return lhs + data
-    }
-    
-    public static func += (lhs: inout Data, rhs: Self) {
-        lhs = lhs + rhs
-    }
-    
-}
-
-extension UInt8  : DataConvertible { }
-extension UInt16 : DataConvertible { }
-extension UInt32 : DataConvertible { }
-
-extension Int    : DataConvertible { }
-extension Float  : DataConvertible { }
-extension Double : DataConvertible { }
-
-extension String : DataConvertible {
-    
-    public static func + (lhs: Data, rhs: String) -> Data {
-        guard let data = rhs.data(using: .utf8) else { return lhs}
-        return lhs + data
-    }
-    
-}
-
-extension Data : DataConvertible {
-    
-    public static func + (lhs: Data, rhs: Data) -> Data {
-        var data = Data()
-        data.append(lhs)
-        data.append(rhs)
-        
-        return data
-    }
-    
-}
 
 
 

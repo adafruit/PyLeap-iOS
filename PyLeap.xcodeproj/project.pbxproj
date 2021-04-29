@@ -22,6 +22,7 @@
 		D5166C19261CB631006CF50C /* ManufacturerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5166C18261CB631006CF50C /* ManufacturerViewController.swift */; };
 		D5451EF32616DB21001757B9 /* HexUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5451EF22616DB21001757B9 /* HexUtil.swift */; };
 		D5A24F33261CD8C30008B61C /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5A24F32261CD8C30008B61C /* Launch Screen.storyboard */; };
+		D5A30BA9263AD458007E69F8 /* BinUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A30BA8263AD458007E69F8 /* BinUtils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		D5166C18261CB631006CF50C /* ManufacturerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManufacturerViewController.swift; sourceTree = "<group>"; };
 		D5451EF22616DB21001757B9 /* HexUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HexUtil.swift; sourceTree = "<group>"; };
 		D5A24F32261CD8C30008B61C /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		D5A30BA8263AD458007E69F8 /* BinUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BinUtils.swift; path = ../../../../../.Trash/BinUtils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +115,7 @@
 		D5A24F40261DEACC0008B61C /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				D5A30BA8263AD458007E69F8 /* BinUtils.swift */,
 				D5451EF22616DB21001757B9 /* HexUtil.swift */,
 			);
 			path = Utilities;
@@ -198,6 +201,7 @@
 				D5451EF32616DB21001757B9 /* HexUtil.swift in Sources */,
 				29C08A3E25F58CA9001BFDD9 /* TableCell.swift in Sources */,
 				D5166C0E261ACDAE006CF50C /* ScannerTableViewController.swift in Sources */,
+				D5A30BA9263AD458007E69F8 /* BinUtils.swift in Sources */,
 				292CE10825F13A54009D7261 /* SceneDelegate.swift in Sources */,
 				2937F11A25F8104100C65FC4 /* BlePeripheral.swift in Sources */,
 			);
