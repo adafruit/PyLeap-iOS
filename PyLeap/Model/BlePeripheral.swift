@@ -74,7 +74,6 @@ class BlePeripheral: NSObject {
         var manufacturerHexDescription: String? {
             guard let manufacturerData = manufacturerData else { return nil }
             return HexUtil.hexDescription(data: manufacturerData)
-//            return String(data: manufacturerData, encoding: .utf8)
         }
         
         var manufacturerIdentifier: Data? {
@@ -151,26 +150,7 @@ class BlePeripheral: NSObject {
         
         return localName
     }
-    
-    let testValue: Data? = "Test123".data(using: .utf8)
-    
-     func writeTxCharcateristic(withValue value: Data) {
-        if let rxCharacteristic = rxCharacteristic {
-            if rxCharacteristic.properties.contains(.write) {
-                print("Writing value (with response)...")
-                basePeripheral.writeValue(value, for: rxCharacteristic, type: .withResponse)
-           
-            } else if rxCharacteristic.properties.contains(.writeWithoutResponse) {
-                print("Writing value... (without response)")
-                basePeripheral.writeValue(value, for: rxCharacteristic, type: .withoutResponse)
-                // peripheral(_:didWriteValueFor,error) will not be called after write without response
-                // we are caling the delegate here
-                
-            } else {
-                print("Characteristic is not writable")
-            }
-        }
-    }
+
     // Location  CIRCUITPY\ 1/code.py 
     func stringToBytes(_ string: String) -> [UInt8]? {
         let length = string.count
@@ -193,50 +173,31 @@ class BlePeripheral: NSObject {
     }
     
 
-
+    
     // Write functions
     public func writeOutgoingValue(data: String){
-      
-       // Command: Single byte. Always 0x20.
-        let writeCmd = 0x20
-       // 1 Byte reserved for padding.
-        let padding = "x"
-       // Path length: 16-bit number encoding the encoded length of the path string.
-        let lengthPath = 2
-       // Offset: 32-bit number encoding the starting offset to write.
-        let offset = 34
-       // Total size: 32-bit number encoding the total length of the file contents.
-        let totalLength = 32
-       // Path: UTF-8 encoded string that is not null terminated. (We send the length instead.)
-        let path = "CIRCUITPY\\ 1/code.py"
-
-        let d = pack("<BxHII", [1, 2, 3, "asd", 0.5])
-       // assert(d == unhexlify("0100 02000000 03000000 617364 0000003f"))
+        let filePath = "/hello.txt"
+        let contents = "Hello World"
         
         
-        let str = "<BBI/0x02/HelloWorld/CIRCUITPY\\ 1/code.py>"
-        let buf: [UInt8] = [UInt8](str.utf8)
-        let byteArrayData = Data(buf)
-        let bytes = stringToBytes("7661706f72")
+       var newFilePath = filePath.data(using: .utf8)
        
-        let unit8: [UInt8] = [67, 97, 102, 195, 169]
+        // Command: Single byte. Always 0x20.
+       // 1 Byte reserved for padding.
+       // Path length: 16-bit number encoding the encoded length of the path string.
+       // Offset: 32-bit number encoding the starting offset to write.
+        let offset = 0
+       // Total size: 32-bit number encoding the total length of the file contents.
+       // Path: UTF-8 encoded string that is not null terminated. (We send the length instead.)
         
-        let strFromUInt8 = String.init(decoding: unit8, as: UTF8.self)
+        let lengthPath = newFilePath!.count
+        let totalContentLength = contents.count
+        print(lengthPath)
         
+        var d = pack("<BxHII", [FileTransferCommand.Write,lengthPath,offset, totalContentLength])
+        d.append(newFilePath!)
         
-        // Get an array from the UTF8View.
-        // This is a byte array of character data.
-        var buffer = [UInt8](buf)
-
-        // Change the first byte in the byte array.
-        // ... The byte array is mutable.
-        buffer[0] = buffer[0] + UInt8(1)
-        print("Buffer: \(buffer)")
-        
-        print("Testing! \(String(bytes: buffer, encoding: .utf8))")
-        
-        print("Attempted to write")
-        let valueString = (data as NSString).data(using: String.Encoding.utf8.rawValue)
+        print("hexlify: \(hexlify(d))")
 
         if basePeripheral.canSendWriteWithoutResponse || ((rxCharacteristic?.properties.contains(.writeWithoutResponse)) != nil) {
             print(basePeripheral.canSendWriteWithoutResponse)
@@ -340,7 +301,11 @@ extension BlePeripheral: CBPeripheralDelegate {
 
         print("Value Recieved:\((characteristicASCIIValue as String))\n\n")
 
-        print("printing characteristic value:\(characteristic.value?.base64EncodedString())\n\n")
+        print("Hexlify Recieved: \(hexlify(readValueCharacteristic))")
+        
+        print("printing characteristic value:\(hexlify(characteristic.value!))\n\n")
+        
+        
         
         NotificationCenter.default.post(name:NSNotification.Name(rawValue: "Notify"), object: "\((characteristicASCIIValue as String))")
         
