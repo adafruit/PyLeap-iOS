@@ -19,39 +19,82 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kOp-WI-Oif">
-                                <rect key="frame" x="20" y="255" width="374" height="641"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="TVk-qA-eQ3">
-                                    <size key="itemSize" width="105" height="120"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kOp-WI-Oif">
+                                <rect key="frame" x="8" y="263" width="398" height="633"/>
+                                <color key="backgroundColor" systemColor="systemGray6Color"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="EHz-X5-XXU">
+                                    <size key="itemSize" width="128" height="128"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ItemCell" id="mfr-pn-w0v" customClass="ItemCell" customModule="PyLeap" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="105" height="120"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <rect key="frame" x="99" y="0.0" width="200" height="200"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Cpr-p4-a0X">
-                                            <rect key="frame" x="0.0" y="0.0" width="105" height="120"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </collectionViewCellContentView>
-                                        <size key="customSize" width="105" height="120"/>
+                                        <size key="customSize" width="200" height="200"/>
                                     </collectionViewCell>
                                 </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="nTH-Q7-dyZ" id="uY4-Nc-kna"/>
+                                    <outlet property="delegate" destination="nTH-Q7-dyZ" id="UNP-YA-SmF"/>
+                                </connections>
                             </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ksB-ls-K1C">
+                                <rect key="frame" x="364" y="44" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Ahl-9W-vP3"/>
+                                    <constraint firstAttribute="width" constant="30" id="lgL-Eo-egv"/>
+                                </constraints>
+                                <state key="normal">
+                                    <imageReference key="image" image="gear" catalog="system" symbolScale="large"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" weight="bold"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vvg-SQ-SZc">
+                                <rect key="frame" x="326" y="44" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="Pq1-EG-Jpb"/>
+                                    <constraint firstAttribute="height" constant="30" id="bId-3D-F2Q"/>
+                                </constraints>
+                                <state key="normal">
+                                    <imageReference key="image" image="stop.fill" catalog="system" symbolScale="large"/>
+                                </state>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="00 Devices" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rjb-Zh-iYL">
+                                <rect key="frame" x="20" y="83" width="212" height="57"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="35"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="dwk-zK-eia"/>
-                        <color key="backgroundColor" systemColor="systemGray4Color"/>
+                        <color key="backgroundColor" systemColor="systemGray6Color"/>
+                        <constraints>
+                            <constraint firstItem="ksB-ls-K1C" firstAttribute="top" secondItem="dwk-zK-eia" secondAttribute="top" id="04z-Ru-keD"/>
+                            <constraint firstItem="dwk-zK-eia" firstAttribute="trailing" secondItem="ksB-ls-K1C" secondAttribute="trailing" constant="20" id="M3i-n9-Bwr"/>
+                            <constraint firstAttribute="bottom" secondItem="kOp-WI-Oif" secondAttribute="bottom" id="MWz-hG-MxT"/>
+                            <constraint firstItem="dwk-zK-eia" firstAttribute="trailing" secondItem="kOp-WI-Oif" secondAttribute="trailing" constant="8" id="O8D-z9-CLm"/>
+                            <constraint firstItem="Vvg-SQ-SZc" firstAttribute="top" secondItem="dwk-zK-eia" secondAttribute="top" id="PXq-Hd-qte"/>
+                            <constraint firstItem="kOp-WI-Oif" firstAttribute="top" secondItem="hqM-PO-Xkk" secondAttribute="top" constant="263" id="bzs-T5-qrR"/>
+                            <constraint firstItem="ksB-ls-K1C" firstAttribute="leading" secondItem="Vvg-SQ-SZc" secondAttribute="trailing" constant="8" id="fPt-d9-bB3"/>
+                            <constraint firstItem="kOp-WI-Oif" firstAttribute="leading" secondItem="dwk-zK-eia" secondAttribute="leading" constant="8" id="pRq-WL-dlA"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="kOp-WI-Oif" id="FRf-u9-8MQ"/>
+                        <outlet property="deviceLabel" destination="Rjb-Zh-iYL" id="Pph-Fe-9sF"/>
+                        <segue destination="BYZ-38-t0r" kind="showDetail" identifier="com.segue.console" id="6cR-O2-Ph2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uVQ-LE-mui" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-4672.463768115942" y="-79.017857142857139"/>
+            <point key="canvasLocation" x="-4112" y="586"/>
         </scene>
         <!--Root View Controller-->
         <scene sceneID="CGn-Pj-d3l">
@@ -81,7 +124,7 @@
             <objects>
                 <viewController storyboardIdentifier="ConsoleViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="ConsoleViewController" customModule="PyLeap" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="756"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nPk-lA-Ufu">
@@ -95,7 +138,7 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="zMp-Dm-jgq">
-                                <rect key="frame" x="0.0" y="551" width="414" height="171"/>
+                                <rect key="frame" x="0.0" y="551" width="414" height="257"/>
                                 <color key="backgroundColor" name="TextViewColor"/>
                                 <color key="textColor" systemColor="systemBlueColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -415,11 +458,16 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4TZ-Lf-z7z" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2475.36231884058" y="-77.008928571428569"/>
+            <point key="canvasLocation" x="-2507" y="-538"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="6cR-O2-Ph2"/>
+    </inferredMetricsTieBreakers>
     <resources>
+        <image name="gear" catalog="system" width="128" height="119"/>
         <image name="info.circle.fill" catalog="system" width="128" height="121"/>
+        <image name="stop.fill" catalog="system" width="128" height="113"/>
         <namedColor name="AccentColorBackground">
             <color red="0.99300003051757812" green="0.99300003051757812" blue="0.99300003051757812" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -435,8 +483,8 @@
         <systemColor name="systemBlueColor">
             <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
-        <systemColor name="systemGray4Color">
-            <color red="0.81960784313725488" green="0.81960784313725488" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <systemColor name="systemGray6Color">
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

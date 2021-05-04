@@ -200,10 +200,6 @@ extension ScannerTableViewController: CBCentralManagerDelegate {
     // MARK: - Discover
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         
-      //  print("Function: \(#function),Line: \(#line)")
-        
-       // print("peripheralArray: \(peripheralArray.count)")
-        
         let peripheralID = peripheral.description
         
         let peripheralFound = BlePeripheral(withPeripheral: peripheral, advertisementData: advertisementData, with: centralManager)
