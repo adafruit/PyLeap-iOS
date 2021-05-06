@@ -1,17 +1,15 @@
 //
-//
-//  ScannerTableViewController.swift
+//  CollectionViewController.swift
 //  PyLeap
 //
-//  Created by Trevor Beaton For Adafruit Industries on 3/7/21.
+//  Created by Trevor Beaton on 5/3/21.
 //
-//Main
 
 import UIKit
 import CoreBluetooth
 
 
-class ScannerTableViewController: UITableViewController {
+class CollectionViewController : UIViewController {
     
     // Data
     var centralManager: CBCentralManager!
@@ -22,50 +20,47 @@ class ScannerTableViewController: UITableViewController {
     var tempRxCharacteristic: CBCharacteristic!
     var peripheralArray = [BlePeripheral]()
     
-    // UI
-    @IBOutlet weak var scannerButton: UIButton!
+    @IBOutlet weak var collectionView: UICollectionView!
     
-    @IBAction func scanButtonPressed(_ sender: Any) {
-        //Remove peripherals from TableView
-        restartScan()
+    @IBOutlet weak var scanButton: UIButton!
+    @IBOutlet weak var deviceLabel: UILabel!
+    
+
+    @IBAction func scanAction(_ sender: Any) {
+    startScanning()
     }
     
-    func stopTimer() -> Void {
-        // Stops Timer
-        self.timer.invalidate()
+    var estimateWidth = 160.0
+    var cellMarginSize = 15.0
+    
+    let boldConfig = UIImage.SymbolConfiguration(weight: .bold)
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        centralManager = CBCentralManager(delegate: self, queue: nil)
+        self.collectionView.delegate = self
+        self.collectionView.dataSource = self
+        
+        // Register Reusable Cell
+        self.collectionView.register(UINib(nibName: "ItemCell", bundle: nil), forCellWithReuseIdentifier: "ItemCell")
+        
+        self.setupGridView()
+        
+        deviceLabel.text = "No Devices"
+        
     }
     
-    func restartScan(){
-        // If Timer is running, invalidate.
-        stopTimer()
-        //Remove peripherals from list
+    func setupGridView() {
+        let flow = collectionView?.collectionViewLayout as! UICollectionViewFlowLayout
         
-        // Restart scanning for peripherals
-        //Remove connected peripheral
-        if let connectedPeripheral = BlePeripheral.connectedPeripheral {
-            centralManager.cancelPeripheralConnection(connectedPeripheral)
-        } else {
-            print("Peripheral was not connected.")
-        }
-        // Remove all peripherals found
-        peripheralArray.removeAll()
-        print("started scan")
-        
-        // Start scan for new peripherals
-        
-        
-        centralManager?.scanForPeripherals(withServices: [NUSCBUUID.BLEService_UUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey : false])
-        // Add Timer for this scan ~ 10 seconds
-        Timer.scheduledTimer(withTimeInterval: 10, repeats: false) {_ in
-            self.stopScanning()
-        }
-        
+        flow.minimumInteritemSpacing = CGFloat(self.cellMarginSize)
+        flow.minimumLineSpacing = CGFloat(self.cellMarginSize)
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        tableView.reloadData()
+        collectionView.reloadData()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -74,21 +69,12 @@ class ScannerTableViewController: UITableViewController {
         }
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        print("View Did Load")
-        centralManager = CBCentralManager(delegate: self, queue: nil)
-        tableView.delegate = self
-        tableView.dataSource = self
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        
-    }
-    
     func startScanning() -> Void {
         // Start Scanning
+        let boldStop = UIImage(systemName: "stop.fill", withConfiguration: boldConfig)
+        scanButton.setImage(boldStop, for: .normal)
         
+        timer.invalidate()
         //Remove connected peripheral
         if let periph = BlePeripheral.connectedPeripheral {
             centralManager.cancelPeripheralConnection(periph)
@@ -111,27 +97,21 @@ class ScannerTableViewController: UITableViewController {
     
     func stopScanning() -> Void {
         print("stop scan")
+        let boldPlay = UIImage(systemName: "play.fill", withConfiguration: boldConfig)
+        scanButton.setImage(boldPlay, for: .normal)
         centralManager?.stopScan()
-        scannerButton.setTitle("Scan", for: .normal)
+        
     }
     
-    
-    // MARK:- Navigation
-    
-    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        return identifier == "ConsoleViewController"
-    }
-    
-    // MARK:- Table view
-    
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Nearby devices"
-    }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        blePeripheral = peripheralArray[indexPath.row]
-        blePeripheral.connect()
-        self.performSegue(withIdentifier: "com.segue.console", sender: self)
+//    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        blePeripheral = peripheralArray[indexPath.row]
+//        blePeripheral.connect()
+//        self.performSegue(withIdentifier: "com.segue.console", sender: self)
+//    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+                blePeripheral = peripheralArray[indexPath.row]
+                blePeripheral.connect()
+                self.performSegue(withIdentifier: "com.segue.console", sender: self)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -141,29 +121,60 @@ class ScannerTableViewController: UITableViewController {
         }
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+}
+
+extension CollectionViewController: UICollectionViewDataSource {
+    
+ 
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return peripheralArray.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "blueCell") as! TableCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ItemCell", for: indexPath) as! ItemCell
+        
+       // cell.setData(text: self.dataArray[indexPath.row])
+        
         let selectedPeripheral =  self.peripheralArray[indexPath.row]
         
         if selectedPeripheral != selectedPeripheral {
-            cell.peripheralLabel.text = selectedPeripheral.localName
+            cell.deviceName.text = selectedPeripheral.localName
         }else {
-            cell.peripheralLabel.text = selectedPeripheral.localName
+            cell.deviceName.text = selectedPeripheral.localName
         }
         
         cell.setupView(withPeripheral: selectedPeripheral)
-        
+
         return cell
+    }
+    
+}
+
+extension CollectionViewController: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        let width = self.calculateWith()
+        
+        return CGSize(width: width, height: width + 20)
+    
+    }
+    
+    func calculateWith() -> CGFloat {
+        let estimatedWidth = CGFloat(estimateWidth)
+        let cellCount = floor(CGFloat(self.view.frame.size.width / estimatedWidth))
+        
+        let margin = CGFloat(cellMarginSize * 2)
+        let width = (self.view.frame.size.width - CGFloat(cellMarginSize) * (cellCount - 1) - margin) / cellCount
+        
+        return width
     }
 }
 
 // MARK: - CBCentralManagerDelegate
-extension ScannerTableViewController: CBCentralManagerDelegate {
+extension CollectionViewController: CBCentralManagerDelegate {
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         
@@ -199,6 +210,10 @@ extension ScannerTableViewController: CBCentralManagerDelegate {
     
     // MARK: - Discover
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
+        
+      //  print("Function: \(#function),Line: \(#line)")
+        
+       // print("peripheralArray: \(peripheralArray.count)")
         
         let peripheralID = peripheral.description
         
@@ -260,16 +275,23 @@ extension ScannerTableViewController: CBCentralManagerDelegate {
             }
             addToList = manufacturerID == 0x0822;
         }
-        
+       
         if(addToList && !peripheralArray.contains(peripheralFound)) {
             peripheralArray.append(peripheralFound)
         }
  //filter_device_list
         
-      peripheralArray.sort { $0.localName ?? "Unknown" > $1.localName ?? "Unknown" }
+        peripheralArray.sort { $0.localName ?? "Unknown" > $1.localName ?? "Unknown" }
         peripheralArray.reverse()
-        self.tableView.reloadData()
+        collectionView.reloadData()
         
+        if peripheralArray.count == 1 {
+            deviceLabel.text = "1 Device"
+        } else {
+            deviceLabel.text = "\(peripheralArray.count) Devices"
+        }
+        
+        print(peripheralArray.count)
         print("Manufacterer String: \(manufacturerString ?? "No String Found")\n")
         
         print("Manufacterer Data: \(manufacturerHexDescription ?? "Nothing")\n")
@@ -299,39 +321,4 @@ extension ScannerTableViewController: CBCentralManagerDelegate {
         
     }
     
-}
-
-extension ScannerTableViewController: CBPeripheralDelegate {
-    
-
-    
-    
-}
-
-
-
-
-//// Data extension
-extension Data {
-    var dataToHexString: String {
-        return reduce("") {$0 + String(format: "%02x", $1)}
-    }
-}
-
-extension StringProtocol {
-    var drop0xPrefix: SubSequence { hasPrefix("0x") ? dropFirst(2) : self[...] }
-    var drop0bPrefix: SubSequence { hasPrefix("0b") ? dropFirst(2) : self[...] }
-    var hexaToDecimal: Int { Int(drop0xPrefix, radix: 16) ?? 0 }
-    var hexaToBinary: String { .init(hexaToDecimal, radix: 2) }
-    var decimalToHexa: String { .init(Int(self) ?? 0, radix: 16) }
-    var decimalToBinary: String { .init(Int(self) ?? 0, radix: 2) }
-    var binaryToDecimal: Int { Int(drop0bPrefix, radix: 2) ?? 0 }
-    var binaryToHexa: String { .init(binaryToDecimal, radix: 16) }
-}
-
-extension Sequence where Iterator.Element: Hashable {
-    func unique() -> [Iterator.Element] {
-        var seen: Set<Iterator.Element> = []
-        return filter { seen.insert($0).inserted }
-    }
 }

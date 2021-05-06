@@ -21,7 +21,12 @@
 		D5166C11261AD19B006CF50C /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5166C10261AD19B006CF50C /* RootViewController.swift */; };
 		D5166C19261CB631006CF50C /* ManufacturerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5166C18261CB631006CF50C /* ManufacturerViewController.swift */; };
 		D5451EF32616DB21001757B9 /* HexUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5451EF22616DB21001757B9 /* HexUtil.swift */; };
+		D588531F26404F5F0070FF93 /* FileTransferCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = D588531E26404F5F0070FF93 /* FileTransferCommand.swift */; };
+		D5885321264057EC0070FF93 /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5885320264057EC0070FF93 /* CollectionViewController.swift */; };
+		D58853242640655E0070FF93 /* ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58853222640655E0070FF93 /* ItemCell.swift */; };
+		D58853252640655E0070FF93 /* ItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D58853232640655E0070FF93 /* ItemCell.xib */; };
 		D5A24F33261CD8C30008B61C /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5A24F32261CD8C30008B61C /* Launch Screen.storyboard */; };
+		D5A30BA9263AD458007E69F8 /* BinUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A30BA8263AD458007E69F8 /* BinUtils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,7 +46,12 @@
 		D5166C10261AD19B006CF50C /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		D5166C18261CB631006CF50C /* ManufacturerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManufacturerViewController.swift; sourceTree = "<group>"; };
 		D5451EF22616DB21001757B9 /* HexUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HexUtil.swift; sourceTree = "<group>"; };
+		D588531E26404F5F0070FF93 /* FileTransferCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTransferCommand.swift; sourceTree = "<group>"; };
+		D5885320264057EC0070FF93 /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
+		D58853222640655E0070FF93 /* ItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCell.swift; sourceTree = "<group>"; };
+		D58853232640655E0070FF93 /* ItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ItemCell.xib; sourceTree = "<group>"; };
 		D5A24F32261CD8C30008B61C /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		D5A30BA8263AD458007E69F8 /* BinUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BinUtils.swift; path = ../../../../../.Trash/BinUtils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +107,9 @@
 				292CE10925F13A54009D7261 /* ConsoleViewController.swift */,
 				D5166C18261CB631006CF50C /* ManufacturerViewController.swift */,
 				D5166C10261AD19B006CF50C /* RootViewController.swift */,
+				D5885320264057EC0070FF93 /* CollectionViewController.swift */,
+				D58853222640655E0070FF93 /* ItemCell.swift */,
+				D58853232640655E0070FF93 /* ItemCell.xib */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -105,6 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				2937F11925F8104100C65FC4 /* BlePeripheral.swift */,
+				D588531E26404F5F0070FF93 /* FileTransferCommand.swift */,
 				29F048CE25F171BB00D5C61B /* NUSCBUUID.swift */,
 			);
 			path = Model;
@@ -113,6 +127,7 @@
 		D5A24F40261DEACC0008B61C /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				D5A30BA8263AD458007E69F8 /* BinUtils.swift */,
 				D5451EF22616DB21001757B9 /* HexUtil.swift */,
 			);
 			path = Utilities;
@@ -178,6 +193,7 @@
 				D5A24F33261CD8C30008B61C /* Launch Screen.storyboard in Resources */,
 				2937F11425F8051300C65FC4 /* ProjectTextFile.txt in Resources */,
 				2937F11725F80A2C00C65FC4 /* pytest.py in Resources */,
+				D58853252640655E0070FF93 /* ItemCell.xib in Resources */,
 				292CE10F25F13A56009D7261 /* Assets.xcassets in Resources */,
 				292CE10D25F13A54009D7261 /* Main.storyboard in Resources */,
 			);
@@ -190,7 +206,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5885321264057EC0070FF93 /* CollectionViewController.swift in Sources */,
 				D5166C11261AD19B006CF50C /* RootViewController.swift in Sources */,
+				D58853242640655E0070FF93 /* ItemCell.swift in Sources */,
 				D5166C19261CB631006CF50C /* ManufacturerViewController.swift in Sources */,
 				29F048CF25F171BB00D5C61B /* NUSCBUUID.swift in Sources */,
 				292CE10A25F13A54009D7261 /* ConsoleViewController.swift in Sources */,
@@ -198,6 +216,8 @@
 				D5451EF32616DB21001757B9 /* HexUtil.swift in Sources */,
 				29C08A3E25F58CA9001BFDD9 /* TableCell.swift in Sources */,
 				D5166C0E261ACDAE006CF50C /* ScannerTableViewController.swift in Sources */,
+				D588531F26404F5F0070FF93 /* FileTransferCommand.swift in Sources */,
+				D5A30BA9263AD458007E69F8 /* BinUtils.swift in Sources */,
 				292CE10825F13A54009D7261 /* SceneDelegate.swift in Sources */,
 				2937F11A25F8104100C65FC4 /* BlePeripheral.swift in Sources */,
 			);

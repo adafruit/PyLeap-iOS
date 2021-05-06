@@ -15,11 +15,10 @@ class BlePeripheral: NSObject {
     static var connectedTXChar: CBCharacteristic?
     static var connectedRXChar: CBCharacteristic?
 
-    static let readCharacteristic = CBUUID(string: "ADAF1200-4669-6C65-5461-6E7366657221")
-    static let writeCharacteristic = CBUUID(string: "ADAF0200-4669-6C65-5461-6E7366657221")
+    
     // MARK:- UUID Characteritics
-    var featherWriteUUID = CBUUID(string: "ADAF0100-4669-6C65-5461-6E7366657221")
-    var featherReadUUID = CBUUID(string: "ADAF0200-4669-6C65-5461-6E7366657221")
+    var featherWriteUUID = CBUUID(string: "ADAF0100-4669-6C65-5472-616E73666572")
+    var featherReadUUID = CBUUID(string: "ADAF0200-4669-6C65-5472-616E73666572")
     
     private let centralManager: CBCentralManager
     public  let basePeripheral: CBPeripheral
@@ -74,7 +73,6 @@ class BlePeripheral: NSObject {
         var manufacturerHexDescription: String? {
             guard let manufacturerData = manufacturerData else { return nil }
             return HexUtil.hexDescription(data: manufacturerData)
-//            return String(data: manufacturerData, encoding: .utf8)
         }
         
         var manufacturerIdentifier: Data? {
@@ -151,26 +149,7 @@ class BlePeripheral: NSObject {
         
         return localName
     }
-    
-    let testValue: Data? = "Test123".data(using: .utf8)
-    
-     func writeTxCharcateristic(withValue value: Data) {
-        if let rxCharacteristic = rxCharacteristic {
-            if rxCharacteristic.properties.contains(.write) {
-                print("Writing value (with response)...")
-                basePeripheral.writeValue(value, for: rxCharacteristic, type: .withResponse)
-           
-            } else if rxCharacteristic.properties.contains(.writeWithoutResponse) {
-                print("Writing value... (without response)")
-                basePeripheral.writeValue(value, for: rxCharacteristic, type: .withoutResponse)
-                // peripheral(_:didWriteValueFor,error) will not be called after write without response
-                // we are caling the delegate here
-                
-            } else {
-                print("Characteristic is not writable")
-            }
-        }
-    }
+
     // Location  CIRCUITPY\ 1/code.py 
     func stringToBytes(_ string: String) -> [UInt8]? {
         let length = string.count
@@ -192,58 +171,89 @@ class BlePeripheral: NSObject {
         return bytes
     }
     
-
-
+    let filePath = "/hello.txt"
+    let contents = "Hello World"
+    
+    var blePeripheralTransferMessage = ""
+    
     // Write functions
     public func writeOutgoingValue(data: String){
-        let str = "<BBI/0x02/HelloWorld/CIRCUITPY\\ 1/code.py>"
-        
-        let buf: [UInt8] = [UInt8](str.utf8)
-        let byteArrayData = Data(buf)
-        let bytes = stringToBytes("7661706f72")
-       
-        let unit8: [UInt8] = [67, 97, 102, 195, 169]
-        
-        let strFromUInt8 = String.init(decoding: unit8, as: UTF8.self)
-        
-        
-        // Get an array from the UTF8View.
-        // This is a byte array of character data.
-        var buffer = [UInt8](buf)
 
-        // Change the first byte in the byte array.
-        // ... The byte array is mutable.
-        buffer[0] = buffer[0] + UInt8(1)
-        print("Buffer: \(buffer)")
-        
-        print("Testing! \(String(bytes: buffer, encoding: .utf8))")
-        
-        print("Attempted to write")
-        let valueString = (data as NSString).data(using: String.Encoding.utf8.rawValue)
+       var newFilePath = filePath.data(using: .utf8)
+
+        let offset = 0
+
+        let lengthPath = newFilePath!.count
+        let totalContentLength = contents.count
+        var firstPacket = pack("<BxHII", [FileTransferCommand.Write,lengthPath,offset,totalContentLength])
+        firstPacket.append(newFilePath!)
+        blePeripheralTransferMessage = "\(hexlify(firstPacket))"
+       
+        print("Hexlify Sent: \(hexlify(firstPacket))")
 
         if basePeripheral.canSendWriteWithoutResponse || ((rxCharacteristic?.properties.contains(.writeWithoutResponse)) != nil) {
-            print(basePeripheral.canSendWriteWithoutResponse)
-            
-           basePeripheral.writeValue(byteArrayData, for: rxCharacteristic!, type: CBCharacteristicWriteType.withoutResponse)
+           basePeripheral.writeValue(firstPacket, for: rxCharacteristic!, type: CBCharacteristicWriteType.withoutResponse)
         }
-        
         
     }
     
-//    public func writeOutgoingValue(data: [UInt8]){
-//       print("Attempted to write [UInt8]")
-//        let string: String = "abcd"
-//        let byteArray: [UInt8] = string.utf8.map{UInt8($0)}
-//
-//       // let valueString = (data as NSString).data(using: String.Encoding.utf8.rawValue)
-//        if basePeripheral.canSendWriteWithoutResponse || ((rxCharacteristic?.properties.contains(.writeWithoutResponse)) != nil) {
-//            print(basePeripheral.canSendWriteWithoutResponse)
-//
-//           basePeripheral.writeValue(byteArray, for: rxCharacteristic!, type: CBCharacteristicWriteType.withoutResponse)
-//        }
-//
-//    }
+    var freeSpace = 11
     
+    
+    
+    func secondWrite() {
+        /*
+        Command: Single byte. Always 0x21.
+        Status: Single byte. 0x01 if OK. 0x02 if any parent directory is missing or a file.
+        2 Bytes reserved for padding.
+        
+         Offset: 32-bit number encoding the starting offset to write. (Should match the offset from the previous 0x20 or 0x22 message)
+        
+         Free space: 32-bit number encoding the amount of data the client can send.
+        */
+        
+        let offset = 0
+        
+        var secondPacket = pack("<BBxxII", [FileTransferCommand.WriteData,FileTransferCommand.OK,offset, freeSpace])
+        
+        
+        
+        if basePeripheral.canSendWriteWithoutResponse || ((rxCharacteristic?.properties.contains(.writeWithoutResponse)) != nil) {
+        
+        basePeripheral.writeValue(secondPacket, for: rxCharacteristic!, type: CBCharacteristicWriteType.withoutResponse)
+        }
+    }
+    
+    
+    
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+
+        var characteristicASCIIValue = NSString()
+
+        guard characteristic == rxCharacteristic,
+        
+        let data = characteristic.value,
+        let ASCIIstring = NSString(data: data, encoding: String.Encoding.utf8.rawValue) else { return }
+        
+        characteristicASCIIValue = ASCIIstring
+        
+        //Unpack
+        let a = try? unpack("<BBxxII", data)
+        
+        print("Unpacked: \(a)")
+        
+        //freeSpace = a?.last
+        
+        print("Free Space: \(freeSpace)")
+        
+        print("Value Recieved: \(data)\n")
+
+        print("Hexlify Recieved: \(hexlify(data))\n")
+        
+       
+        
+    }
+
 }
 
 extension BlePeripheral: CBCentralManagerDelegate {
@@ -322,45 +332,29 @@ extension BlePeripheral: CBPeripheralDelegate {
         }
     }
     
-    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
 
-        var characteristicASCIIValue = NSString()
-
-        guard characteristic == rxCharacteristic,
-        let readValueCharacteristic = characteristic.value,
-        
-        let ASCIIstring = NSString(data: readValueCharacteristic, encoding: String.Encoding.utf8.rawValue) else { return }
-        
-        
-        characteristicASCIIValue = ASCIIstring
-
-        print("Value Recieved:\((characteristicASCIIValue as String))")
-
-        print("printing characteristic value:\(characteristic.value?.base64EncodedString())")
-        
-        NotificationCenter.default.post(name:NSNotification.Name(rawValue: "Notify"), object: "\((characteristicASCIIValue as String))")
-        
-        
-        
-//        if characteristic == txCharacteristic {
-//            if let value = characteristic.value{
-//                print("Tx Update Value: \(value)")
-//
-//            } else if characteristic == rxCharacteristic {
-//                if let value = characteristic.value {
-//                print("Rx Update Value: \(value)")
-//                }
-//            }
-//
-//        }
-        
-    }
     
     func peripheral(_ peripheral: CBPeripheral,
     didUpdateNotificationStateFor characteristic: CBCharacteristic,
     error: Error?) {
-        
-        print("didUpdateNotificationStateForCharacteristic:\(characteristic)")
+
+        if let error = error {
+           print("Characteristic update notification error: \(error.localizedDescription)")
+           return
+         }
+
+         // Ensure this characteristic is the one we configured
+         guard characteristic.uuid == featherReadUUID else { return }
+
+         // Check if it is successfully set as notifying
+         if characteristic.isNotifying {
+           print("Characteristic notifications have begun.")
+         } else {
+           print("Characteristic notifications have stopped. Disconnecting.")
+           centralManager.cancelPeripheralConnection(peripheral)
+         }
+
+         // Send any info to the peripheral from the central
       
     }
     
@@ -397,67 +391,31 @@ extension BlePeripheral: CBPeripheralDelegate {
                guard let characteristics = service.characteristics else {
               return
           }
-        print(#function, #line, "------------------------------\n")
-          
         print("Found \(characteristics.count) characteristics.\n")
         
         for element in characteristics {
             print("Characteristic: \(element.uuid)\n")
         }
-        //
-//        print("Found \(characteristics.count) characteristics.")
-//
-//        for characteristic in characteristics {
-//
-//          if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_Rx)  {
-//
-//            rxCharacteristic = characteristic
-//
-//            BlePeripheral.connectedRXChar = rxCharacteristic
-//
-//            peripheral.setNotifyValue(true, for: rxCharacteristic!)
-//            peripheral.readValue(for: characteristic)
-//
-//            print("RX Characteristic: \(rxCharacteristic.uuid)")
-//          }
-//
-//          if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_Tx){
-//            txCharacteristic = characteristic
-//            BlePeripheral.connectedTXChar = txCharacteristic
-//            print("TX Characteristic: \(txCharacteristic.uuid)")
-//          }
-//
-        
-        
-        for characteristic in characteristics {
-print("Loop")
-            if characteristic.uuid.isEqual(featherWriteUUID) {
-               // print("Write without Response characteristic found: \(characteristic.uuid)")
-                txCharacteristic = characteristic
-                
-                print("Write Characteristic Set: \(characteristic.uuid)\n\n")
 
+        for characteristic in characteristics {
+
+            if characteristic.uuid.isEqual(featherWriteUUID) {
+
+                txCharacteristic = characteristic
+                print("Write Characteristic Set: \(characteristic.uuid)")
             }
            
-            if characteristic.uuid.isEqual(featherReadUUID)  {
-               // print("Write without Response characteristic found: \(characteristic.uuid)")
-                DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
-                    self.rxCharacteristic = characteristic
-                    print("Read Characteristic Set: \(characteristic.uuid)\n\n")
+            if characteristic.uuid.isEqual(featherReadUUID) {
+             
+                    rxCharacteristic = characteristic
+                    print("Read Characteristic Set: \(characteristic.uuid)")
                     print("#:\(self.basePeripheral.maximumWriteValueLength(for: .withoutResponse))")
-                    self.basePeripheral.setNotifyValue(true, for: rxCharacteristic!)
+                    basePeripheral.setNotifyValue(true, for: rxCharacteristic!)
                     basePeripheral.readValue(for: rxCharacteristic!)
-                }
                
             }
-           
-            
-           // peripheral.discoverDescriptors(for: characteristics[0])
             basePeripheral.discoverDescriptors(for: characteristics[1])
-            
-
           }
-
     }
     
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
@@ -468,19 +426,6 @@ print("Loop")
                 print("Value writen sucessfully.")
             }
         }
-    
-    func write(value: Data, characteristic: CBCharacteristic) {
-        if basePeripheral.canSendWriteWithoutResponse {
-           basePeripheral.writeValue(value, for: characteristic, type: .withoutResponse)
-        }
-    }
-    
-//    func peripheralIsReady(toSendWriteWithoutResponse peripheral: CBPeripheral) {
-//        // Called when peripheral is ready to send write without response again.
-//        // Write some value to some target characteristic.
-//        write(value: "someValue", characteristic: txCharacteristic)
-//    }
-    
 }
     
 
