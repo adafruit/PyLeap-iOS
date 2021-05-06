@@ -25,8 +25,8 @@
 		D5885321264057EC0070FF93 /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5885320264057EC0070FF93 /* CollectionViewController.swift */; };
 		D58853242640655E0070FF93 /* ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58853222640655E0070FF93 /* ItemCell.swift */; };
 		D58853252640655E0070FF93 /* ItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D58853232640655E0070FF93 /* ItemCell.xib */; };
+		D5885327264476990070FF93 /* BinUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5885326264476990070FF93 /* BinUtils.swift */; };
 		D5A24F33261CD8C30008B61C /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5A24F32261CD8C30008B61C /* Launch Screen.storyboard */; };
-		D5A30BA9263AD458007E69F8 /* BinUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A30BA8263AD458007E69F8 /* BinUtils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,8 +50,8 @@
 		D5885320264057EC0070FF93 /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 		D58853222640655E0070FF93 /* ItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCell.swift; sourceTree = "<group>"; };
 		D58853232640655E0070FF93 /* ItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ItemCell.xib; sourceTree = "<group>"; };
+		D5885326264476990070FF93 /* BinUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinUtils.swift; sourceTree = "<group>"; };
 		D5A24F32261CD8C30008B61C /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
-		D5A30BA8263AD458007E69F8 /* BinUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BinUtils.swift; path = ../../../../../.Trash/BinUtils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,8 +127,8 @@
 		D5A24F40261DEACC0008B61C /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				D5A30BA8263AD458007E69F8 /* BinUtils.swift */,
 				D5451EF22616DB21001757B9 /* HexUtil.swift */,
+				D5885326264476990070FF93 /* BinUtils.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -217,9 +217,9 @@
 				29C08A3E25F58CA9001BFDD9 /* TableCell.swift in Sources */,
 				D5166C0E261ACDAE006CF50C /* ScannerTableViewController.swift in Sources */,
 				D588531F26404F5F0070FF93 /* FileTransferCommand.swift in Sources */,
-				D5A30BA9263AD458007E69F8 /* BinUtils.swift in Sources */,
 				292CE10825F13A54009D7261 /* SceneDelegate.swift in Sources */,
 				2937F11A25F8104100C65FC4 /* BlePeripheral.swift in Sources */,
+				D5885327264476990070FF93 /* BinUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
