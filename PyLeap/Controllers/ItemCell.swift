@@ -10,13 +10,7 @@ import UIKit
 class ItemCell: UICollectionViewCell {
 
     @IBOutlet weak var image: UIImageView!
-    
-
     @IBOutlet weak var deviceName: UILabel!
-    
-    func setData(text: String){
-        self.deviceName.text = text
-    }
     
     public func setupView(withPeripheral advertisedPeripheral: BlePeripheral) {
         deviceName.text = advertisedPeripheral.localName
@@ -34,21 +28,21 @@ class ItemCell: UICollectionViewCell {
     
     override func layoutSubviews() {
             // cell rounded section
-            self.layer.cornerRadius = 15.0
-            self.layer.borderWidth = 5.0
+            self.layer.cornerRadius = 10.0
+            self.layer.borderWidth = 20.0
             self.layer.borderColor = UIColor.clear.cgColor
             self.layer.masksToBounds = true
             
             // cell shadow section
-            self.contentView.layer.cornerRadius = 15.0
+            self.contentView.layer.cornerRadius = 10
             self.contentView.layer.borderWidth = 5.0
             self.contentView.layer.borderColor = UIColor.clear.cgColor
             self.contentView.layer.masksToBounds = true
-            self.layer.shadowColor = UIColor.white.cgColor
-            self.layer.shadowOffset = CGSize(width: 0, height: 0.0)
-            self.layer.shadowRadius = 6.0
-            self.layer.shadowOpacity = 0.6
-            self.layer.cornerRadius = 15.0
+            self.layer.shadowColor = #colorLiteral(red: 0.1411764771, green: 0.3960784376, blue: 0.5647059083, alpha: 1)
+            self.layer.shadowOffset = CGSize(width: 5, height: 5)
+            self.layer.shadowRadius = 6
+            self.layer.shadowOpacity = 0.1
+            self.layer.cornerRadius = 6
             self.layer.masksToBounds = false
             self.layer.shadowPath = UIBezierPath(roundedRect: self.bounds, cornerRadius: self.contentView.layer.cornerRadius).cgPath
         }

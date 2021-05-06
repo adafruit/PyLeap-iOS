@@ -17,22 +17,17 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="P0F-lz-obg">
-                        <rect key="frame" x="30" y="4" width="90" height="90"/>
+                        <rect key="frame" x="23" y="4" width="104" height="90"/>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="qGU-Kw-Z8f">
-                        <rect key="frame" x="2" y="117" width="114" height="18"/>
-                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                        <nil key="textColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="adafriuit industries" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Szw-EF-C4d">
                         <rect key="frame" x="2" y="141" width="146" height="16"/>
-                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="13"/>
+                        <fontDescription key="fontDescription" name="ArialHebrew-Light" family="Arial Hebrew" pointSize="12"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="chart.bar" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="QqY-WU-8mZ">
-                        <rect key="frame" x="117" y="117" width="23" height="17"/>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="chart.bar.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="QqY-WU-8mZ">
+                        <rect key="frame" x="118" y="118" width="30" height="16"/>
+                        <color key="tintColor" red="0.0021903605360000002" green="0.60567797479999996" blue="0.96862745289999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="8" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="J5z-Hx-L3n">
                         <rect key="frame" x="10" y="191" width="180" height="28"/>
@@ -43,28 +38,34 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="qGU-Kw-Z8f">
+                        <rect key="frame" x="2" y="117" width="114" height="18"/>
+                        <fontDescription key="fontDescription" name="ArialRoundedMTBold" family="Arial Rounded MT Bold" pointSize="15"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="Szw-EF-C4d" firstAttribute="top" secondItem="QqY-WU-8mZ" secondAttribute="bottom" constant="6" id="50y-oj-WmC"/>
                 <constraint firstItem="Szw-EF-C4d" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="2" id="BGF-zS-hz9"/>
+                <constraint firstItem="QqY-WU-8mZ" firstAttribute="leading" secondItem="qGU-Kw-Z8f" secondAttribute="trailing" constant="2" id="C4C-cG-TAj"/>
                 <constraint firstAttribute="trailing" secondItem="J5z-Hx-L3n" secondAttribute="trailing" constant="10" id="Hjl-tJ-Ezg"/>
                 <constraint firstAttribute="bottom" secondItem="Szw-EF-C4d" secondAttribute="bottom" constant="23" id="N9A-J9-mTf"/>
-                <constraint firstAttribute="trailing" secondItem="QqY-WU-8mZ" secondAttribute="trailing" constant="10" id="SaK-he-aob"/>
+                <constraint firstAttribute="trailing" secondItem="QqY-WU-8mZ" secondAttribute="trailing" constant="2" id="Pn0-Uh-8M4"/>
+                <constraint firstItem="Szw-EF-C4d" firstAttribute="top" secondItem="QqY-WU-8mZ" secondAttribute="bottom" constant="6" id="PtP-Tf-PHl"/>
                 <constraint firstItem="qGU-Kw-Z8f" firstAttribute="top" secondItem="P0F-lz-obg" secondAttribute="bottom" constant="23" id="UfG-QG-2dI"/>
                 <constraint firstItem="Szw-EF-C4d" firstAttribute="top" secondItem="qGU-Kw-Z8f" secondAttribute="bottom" constant="6" id="UyF-JY-0me"/>
-                <constraint firstItem="QqY-WU-8mZ" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="116" id="Vlx-K4-xL6"/>
                 <constraint firstAttribute="trailing" secondItem="qGU-Kw-Z8f" secondAttribute="trailing" constant="34" id="WjG-kX-wAR"/>
                 <constraint firstItem="J5z-Hx-L3n" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="10" id="Wzr-zs-drO"/>
                 <constraint firstAttribute="bottom" secondItem="qGU-Kw-Z8f" secondAttribute="bottom" constant="45" id="ea3-a9-OEN"/>
                 <constraint firstAttribute="trailing" secondItem="Szw-EF-C4d" secondAttribute="trailing" constant="2" id="eoW-Ti-ggq"/>
-                <constraint firstAttribute="trailing" secondItem="P0F-lz-obg" secondAttribute="trailing" constant="30" id="gYL-Sy-7J0"/>
+                <constraint firstAttribute="trailing" secondItem="P0F-lz-obg" secondAttribute="trailing" constant="23" id="gYL-Sy-7J0"/>
+                <constraint firstItem="QqY-WU-8mZ" firstAttribute="top" secondItem="P0F-lz-obg" secondAttribute="bottom" constant="23" id="jiO-MP-7wO"/>
                 <constraint firstItem="qGU-Kw-Z8f" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="2" id="mGL-mu-gdJ"/>
                 <constraint firstAttribute="trailing" secondItem="J5z-Hx-L3n" secondAttribute="trailing" constant="10" id="o4C-i9-bfl"/>
-                <constraint firstItem="P0F-lz-obg" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="30" id="oWJ-te-SD2"/>
-                <constraint firstItem="QqY-WU-8mZ" firstAttribute="leading" secondItem="qGU-Kw-Z8f" secondAttribute="trailing" constant="1" id="sOU-Ao-V5V"/>
+                <constraint firstItem="P0F-lz-obg" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="23" id="oWJ-te-SD2"/>
                 <constraint firstAttribute="bottom" secondItem="P0F-lz-obg" secondAttribute="bottom" constant="86" id="vAe-7k-NMC"/>
                 <constraint firstItem="P0F-lz-obg" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="4" id="vC9-IO-kVO"/>
                 <constraint firstItem="J5z-Hx-L3n" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="10" id="xXu-X1-wkE"/>
@@ -83,6 +84,6 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="chart.bar" catalog="system" width="128" height="90"/>
+        <image name="chart.bar.fill" catalog="system" width="128" height="92"/>
     </resources>
 </document>

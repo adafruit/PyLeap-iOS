@@ -22,12 +22,18 @@ class CollectionViewController : UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
     
+    @IBOutlet weak var scanButton: UIButton!
     @IBOutlet weak var deviceLabel: UILabel!
-    let dataArray = ["AA","BB","CC","DD","EE"]
     
-    var estimateWidth = 140.0
+
+    @IBAction func scanAction(_ sender: Any) {
+    startScanning()
+    }
+    
+    var estimateWidth = 160.0
     var cellMarginSize = 15.0
     
+    let boldConfig = UIImage.SymbolConfiguration(weight: .bold)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,7 +71,10 @@ class CollectionViewController : UIViewController {
     
     func startScanning() -> Void {
         // Start Scanning
+        let boldStop = UIImage(systemName: "stop.fill", withConfiguration: boldConfig)
+        scanButton.setImage(boldStop, for: .normal)
         
+        timer.invalidate()
         //Remove connected peripheral
         if let periph = BlePeripheral.connectedPeripheral {
             centralManager.cancelPeripheralConnection(periph)
@@ -88,6 +97,8 @@ class CollectionViewController : UIViewController {
     
     func stopScanning() -> Void {
         print("stop scan")
+        let boldPlay = UIImage(systemName: "play.fill", withConfiguration: boldConfig)
+        scanButton.setImage(boldPlay, for: .normal)
         centralManager?.stopScan()
         
     }

@@ -21,4 +21,12 @@ struct FileTransferCommand {
     static let MkDirStatus = 0x41
     static let ListDir = 0x50
     static let ListDirEntry = 0x51
+    
+    static let OK = 0x01  // pylint: disable=invalid-name
+    static let ERROR = 0x02
+    static let ERROR_NO_FILE = 0x03
+    static let ERROR_PROTOCOL = 0x04
+
+    // Flags
+    static let DIRECTORY = 0x01
 }

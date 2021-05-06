@@ -17,6 +17,7 @@ class ConsoleViewController: UIViewController {
    var bluefruitPeripheral: BlePeripheral!
    var txCharacteristic: CBCharacteristic!
    var testString: String?
+   var timer = Timer()
     
   // Params
   var onConnect: (() -> Void)?
@@ -28,22 +29,24 @@ class ConsoleViewController: UIViewController {
   @IBOutlet weak var pyTextView: UITextView!
   @IBOutlet weak var sendButton: UIButton!
   @IBOutlet weak var consoleTextView: UITextView!
-
-    let testValue: Data? = "Wine".data(using: .utf8)
     
   @IBAction func buttonPress(_ sender: Any) {
 
-    print("Button Pressed")
-    
-    
-    
-    consoleTextView.text.append("\n[Sent]: Test \n")
+   
     bluefruitPeripheral.writeOutgoingValue(data: pyTextView.text)
-    //bluefruitPeripheral.writeTxCharcateristic(withValue: testValue!)
+    consoleTextView.text.append("\n[Sent]:\(bluefruitPeripheral.blePeripheralTransferMessage)\n")
+    Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { [self]_ in
+        print("Second Write")
+        bluefruitPeripheral.secondWrite()
+    }
+    
+    
 
   }
 
-
+    override func viewDidDisappear(_ animated: Bool) {
+        bluefruitPeripheral.disconnect()
+    }
     
     @IBAction func displayManufacturerInfo(_ sender: Any) {
         self.performSegue(withIdentifier: "com.segue.manufacturer", sender: self)
@@ -100,7 +103,7 @@ class ConsoleViewController: UIViewController {
      print("File path \(fileUrl.path)")
      //data to write in file.
     let stringData = """
-Testing
+Hello World
 """
 
    do {
