@@ -1,0 +1,15 @@
+{
+  "images" : [
+    {
+      "filename" : "adafruit_pyleap_logo_final.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "properties" : {
+    "template-rendering-intent" : "original"
+  }
+}
