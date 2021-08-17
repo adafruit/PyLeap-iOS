@@ -63,6 +63,7 @@
 		D55D5BFD26C4BE45002B0925 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = D55D5BFC26C4BE45002B0925 /* Project.swift */; };
 		D55D5C0026C4D619002B0925 /* ProjectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D55D5BFF26C4D619002B0925 /* ProjectCell.swift */; };
 		D58D887926CAB6FC0085604A /* SamplePythonCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58D887826CAB6FC0085604A /* SamplePythonCode.swift */; };
+		D58D887B26CC02B60085604A /* OnboardingViewPure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58D887A26CC02B60085604A /* OnboardingViewPure.swift */; };
 		D59DFD8F268A4A4D001737F6 /* BTConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFD8E268A4A4D001737F6 /* BTConnectionView.swift */; };
 		D59DFDB6268CD052001737F6 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFDB5268CD052001737F6 /* AppEnvironment.swift */; };
 		D59DFDB8268CD6A7001737F6 /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFDB7268CD6A7001737F6 /* SplashScreen.swift */; };
@@ -72,7 +73,6 @@
 		D59DFDC2268CFA36001737F6 /* OnboardingStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFDC1268CFA36001737F6 /* OnboardingStepView.swift */; };
 		D59DFDC4268CFAB4001737F6 /* OnboardingDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFDC3268CFAB4001737F6 /* OnboardingDataModel.swift */; };
 		D5C41D6E26C5FDBB004C38E3 /* Void.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C41D6D26C5FDBB004C38E3 /* Void.swift */; };
-		D5E52D8C26A5CD4B0083956B /* OnboardingViewPure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E52D8B26A5CD4B0083956B /* OnboardingViewPure.swift */; };
 		D5E52DC326A659D60083956B /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E52DC226A659C20083956B /* ButtonStyles.swift */; };
 		D5E52DC426A659DB0083956B /* DefaultBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E52DC026A659C20083956B /* DefaultBackground.swift */; };
 		D5E52DC626A71E010083956B /* SplashViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E52DC526A71E010083956B /* SplashViewModel.swift */; };
@@ -145,6 +145,7 @@
 		D55D5BFC26C4BE45002B0925 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		D55D5BFF26C4D619002B0925 /* ProjectCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCell.swift; sourceTree = "<group>"; };
 		D58D887826CAB6FC0085604A /* SamplePythonCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplePythonCode.swift; sourceTree = "<group>"; };
+		D58D887A26CC02B60085604A /* OnboardingViewPure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewPure.swift; sourceTree = "<group>"; };
 		D59DFD8E268A4A4D001737F6 /* BTConnectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTConnectionView.swift; sourceTree = "<group>"; };
 		D59DFDB5268CD052001737F6 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 		D59DFDB7268CD6A7001737F6 /* SplashScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreen.swift; sourceTree = "<group>"; };
@@ -155,7 +156,6 @@
 		D59DFDC3268CFAB4001737F6 /* OnboardingDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingDataModel.swift; sourceTree = "<group>"; };
 		D5C41D6526C59A48004C38E3 /* PyLeap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PyLeap.entitlements; sourceTree = "<group>"; };
 		D5C41D6D26C5FDBB004C38E3 /* Void.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Void.swift; sourceTree = "<group>"; };
-		D5E52D8B26A5CD4B0083956B /* OnboardingViewPure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingViewPure.swift; path = ../../../../.Trash/OnboardingViewPure.swift; sourceTree = "<group>"; };
 		D5E52DC026A659C20083956B /* DefaultBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultBackground.swift; sourceTree = "<group>"; };
 		D5E52DC226A659C20083956B /* ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
 		D5E52DC526A71E010083956B /* SplashViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewModel.swift; sourceTree = "<group>"; };
@@ -452,7 +452,6 @@
 				D5E52DBF26A659C20083956B /* Modifiers */,
 				D5E52DC126A659C20083956B /* Decoration */,
 				D59DFDB3268CCEB9001737F6 /* Onboarding Views */,
-				D5E52D8B26A5CD4B0083956B /* OnboardingViewPure.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -463,6 +462,7 @@
 				D59DFDC1268CFA36001737F6 /* OnboardingStepView.swift */,
 				D59DFDC3268CFAB4001737F6 /* OnboardingDataModel.swift */,
 				D5F53CEC2694B7A9007634C2 /* OnboardingBackgroundView.swift */,
+				D58D887A26CC02B60085604A /* OnboardingViewPure.swift */,
 			);
 			path = "Onboarding Views";
 			sourceTree = "<group>";
@@ -600,7 +600,6 @@
 				D52BE82726A065FC00630900 /* AppState.swift in Sources */,
 				D5597C0426ADDD5E00DF17C0 /* StartupViewModel.swift in Sources */,
 				D5E52DC326A659D60083956B /* ButtonStyles.swift in Sources */,
-				D5E52D8C26A5CD4B0083956B /* OnboardingViewPure.swift in Sources */,
 				D52BE81426A0658600630900 /* ShareViewController.swift in Sources */,
 				D52BE85126A06A9400630900 /* Data+LittleEndianTypes.swift in Sources */,
 				D59DFDC0268CE565001737F6 /* ProjectViewModel.swift in Sources */,
@@ -633,6 +632,7 @@
 				D52BE84A26A068E200630900 /* BlePeripheral.swift in Sources */,
 				D59DFDBC268CE0EB001737F6 /* RootView.swift in Sources */,
 				D59DFD8F268A4A4D001737F6 /* BTConnectionView.swift in Sources */,
+				D58D887B26CC02B60085604A /* OnboardingViewPure.swift in Sources */,
 				D52BE85426A0E39100630900 /* BTConnectionViewModel.swift in Sources */,
 				D52BE81326A0657A00630900 /* DocumentActionViewController.swift in Sources */,
 				D59DFDC2268CFA36001737F6 /* OnboardingStepView.swift in Sources */,
