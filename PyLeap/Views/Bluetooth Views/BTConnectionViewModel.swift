@@ -15,6 +15,7 @@ class BTConnectionViewModel: ObservableObject {
     // Published
     enum Destination {
         case fileTransfer
+        
     }
     
     @Published var destination: Destination? = nil
@@ -48,6 +49,7 @@ class BTConnectionViewModel: ObservableObject {
         // Check if we are reconnecting to a known Peripheral. If AppState.shared.fileTransferClient is not nil, no need to scan, just go to the FileTransfer screen
         if AppState.shared.fileTransferClient != nil {
             destination = .fileTransfer
+           
         }
     }
     
@@ -122,6 +124,11 @@ class BTConnectionViewModel: ObservableObject {
         destination = .fileTransfer
     }
 
+    private func gotoProjectView() {
+        //destination = .projectView
+        print("go to project")
+    }
+    
     // MARK: - Scanning
     private func updateScannedPeripherals() {
         // Update peripheralAutoconnect

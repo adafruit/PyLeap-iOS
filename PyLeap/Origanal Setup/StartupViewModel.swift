@@ -84,10 +84,12 @@ class StartupViewModel: ObservableObject {
     
     // MARK: - Notifications
     private var didUpdateBleStateObserver: NSObjectProtocol?
-
+   
+    
     private func registerBleStateNotifications(enabled: Bool) {
         let notificationCenter = NotificationCenter.default
         if enabled {
+ 
             didUpdateBleStateObserver = notificationCenter.addObserver(forName: .didUpdateBleState, object: nil, queue: nil) { [weak self] _ in
                 // Status received. Continue executing...
                 DLog("Bluetooth status received: \(BleManager.shared.state.rawValue)")

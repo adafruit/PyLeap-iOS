@@ -64,6 +64,8 @@
 		D55D5C0026C4D619002B0925 /* ProjectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D55D5BFF26C4D619002B0925 /* ProjectCell.swift */; };
 		D58D887926CAB6FC0085604A /* SamplePythonCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58D887826CAB6FC0085604A /* SamplePythonCode.swift */; };
 		D58D887B26CC02B60085604A /* OnboardingViewPure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58D887A26CC02B60085604A /* OnboardingViewPure.swift */; };
+		D58D887D26CDF8110085604A /* FileChooserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58D887C26CDF8110085604A /* FileChooserView.swift */; };
+		D58D887F26CDF8310085604A /* FileChooserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58D887E26CDF8310085604A /* FileChooserModel.swift */; };
 		D59DFD8F268A4A4D001737F6 /* BTConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFD8E268A4A4D001737F6 /* BTConnectionView.swift */; };
 		D59DFDB6268CD052001737F6 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFDB5268CD052001737F6 /* AppEnvironment.swift */; };
 		D59DFDB8268CD6A7001737F6 /* SplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFDB7268CD6A7001737F6 /* SplashScreen.swift */; };
@@ -146,6 +148,8 @@
 		D55D5BFF26C4D619002B0925 /* ProjectCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCell.swift; sourceTree = "<group>"; };
 		D58D887826CAB6FC0085604A /* SamplePythonCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplePythonCode.swift; sourceTree = "<group>"; };
 		D58D887A26CC02B60085604A /* OnboardingViewPure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewPure.swift; sourceTree = "<group>"; };
+		D58D887C26CDF8110085604A /* FileChooserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileChooserView.swift; sourceTree = "<group>"; };
+		D58D887E26CDF8310085604A /* FileChooserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileChooserModel.swift; sourceTree = "<group>"; };
 		D59DFD8E268A4A4D001737F6 /* BTConnectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTConnectionView.swift; sourceTree = "<group>"; };
 		D59DFDB5268CD052001737F6 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 		D59DFDB7268CD6A7001737F6 /* SplashScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreen.swift; sourceTree = "<group>"; };
@@ -452,6 +456,8 @@
 				D5E52DBF26A659C20083956B /* Modifiers */,
 				D5E52DC126A659C20083956B /* Decoration */,
 				D59DFDB3268CCEB9001737F6 /* Onboarding Views */,
+				D58D887C26CDF8110085604A /* FileChooserView.swift */,
+				D58D887E26CDF8310085604A /* FileChooserModel.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -602,6 +608,7 @@
 				D5E52DC326A659D60083956B /* ButtonStyles.swift in Sources */,
 				D52BE81426A0658600630900 /* ShareViewController.swift in Sources */,
 				D52BE85126A06A9400630900 /* Data+LittleEndianTypes.swift in Sources */,
+				D58D887F26CDF8310085604A /* FileChooserModel.swift in Sources */,
 				D59DFDC0268CE565001737F6 /* ProjectViewModel.swift in Sources */,
 				D5F53CED2694B7A9007634C2 /* OnboardingBackgroundView.swift in Sources */,
 				D55D5BFD26C4BE45002B0925 /* Project.swift in Sources */,
@@ -617,6 +624,7 @@
 				D52BE84726A068E200630900 /* BleManager.swift in Sources */,
 				D5597C0B26AF018800DF17C0 /* HideKeyboard.swift in Sources */,
 				D52BE80C26A061B100630900 /* FileTransferClient.swift in Sources */,
+				D58D887D26CDF8110085604A /* FileChooserView.swift in Sources */,
 				D5597C0A26AF018800DF17C0 /* TextFieldAlert.swift in Sources */,
 				D52BE84926A068E200630900 /* BlePeripheral+Battery.swift in Sources */,
 				D59DFDB6268CD052001737F6 /* AppEnvironment.swift in Sources */,

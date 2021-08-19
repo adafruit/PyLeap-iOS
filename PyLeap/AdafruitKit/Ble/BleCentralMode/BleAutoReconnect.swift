@@ -9,6 +9,8 @@ import Foundation
 import CoreBluetooth
 
 class BleAutoReconnect {
+   
+    
     // Params
     private var servicesToReconnect: [CBUUID]
     private var reconnectHandler: ((_ peripheral: BlePeripheral, _ completion: @escaping (Result<Void, Error>) -> Void) -> ())?
@@ -70,6 +72,8 @@ class BleAutoReconnect {
         guard let peripheral = BleManager.shared.peripheral(from: notification) else {
             DLog("Connected to an unknown peripheral")
             connected(peripheral: nil)
+            NotificationCenter.default.post(name: NSNotification.fileSent,
+                                                            object: nil, userInfo: nil)
             return
         }
 

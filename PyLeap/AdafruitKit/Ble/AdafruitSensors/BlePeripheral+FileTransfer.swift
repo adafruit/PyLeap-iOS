@@ -59,6 +59,7 @@ extension BlePeripheral {
     private struct FileTransferListDirectoryStatus {
         var entries = [DirectoryEntry]()
         var completion: ((Result<[DirectoryEntry]?, Error>) -> Void)?
+        var deviceContents = [String]()
     }
 
     private struct FileTransferMakeDirectoryStatus {
@@ -521,6 +522,7 @@ extension BlePeripheral {
                         
                         // Add entry
                         self.adafruitFileTransferListDirectoryStatus?.entries.append(entry)
+                        self.adafruitFileTransferListDirectoryStatus?.deviceContents.append(entry.name)
                     }
                     else {
                         self.adafruitFileTransferListDirectoryStatus = nil

@@ -7,16 +7,84 @@
 
 
 import Foundation
+import SwiftUI
 
-class ProjectViewModel: ObservableObject {
+class ProjectViewModel: ObservableObject  {
 
-     var neopixelFile : String = ""
     
+    
+    @Published var entries = [BlePeripheral.DirectoryEntry]()
+    @Published var isTransmiting = false
+    @Published var isRootDirectory = false
+    @Published var directory = ""
+    
+    var counter: Int = 0
+    
+     var fileTransferClient: FileTransferClient?
+    
+    func setup(fileTransferClient: FileTransferClient?, directory: String) {
+        self.fileTransferClient = fileTransferClient
+        
+        // Clean directory name
+        let directoryName = FileTransferUtils.pathRemovingFilename(path: directory)
+      //  self.directory = directoryName
+        
+        // List directory
+        listDirectory(directory: directoryName)
+    }
+    
+    func listDirectory(directory: String) {
+        isRootDirectory = directory == "/"
+        entries.removeAll()
+        isTransmiting = true
+        
+        fileTransferClient?.listDirectory(path: directory) { [weak self] result in
+            guard let self = self else { return }
+            
+            DispatchQueue.main.async {
+                self.isTransmiting = false
+                
+                switch result {
+                case .success(let entries):
+                    if let entries = entries {
+                        self.setEntries(entries)
+//                        self.directory = directory
+                    }
+                    else {
+                        print("listDirectory: nonexistent directory")
+                    }
+                    
+                case .failure(let error):
+                    print("listDirectory \(directory) error: \(error)")
+                }
+            }
+        }
+    }
+    
+    private func setEntries(_ entries: [BlePeripheral.DirectoryEntry]) {
+        // Order by directory and as a second criteria order by name
+        self.entries = entries.sorted(by: {
+            if case .directory = $0.type, case .directory = $1.type  {    // Both directories: order alphabetically
+                return $0.name < $1.name
+            }
+            else if case .file = $0.type, case .file = $1.type {          // Both files: order alphabetically
+                
+                return $0.name < $1.name
+            }
+            else {      // Compare directory and file
+                if case .directory = $0.type { return true } else { return false }
+            }
+        })
+    }
+    
+    var neopixelFile : String = ""
+
+    @Published var bootUpInfo = ""
     @Published var fileArray: [ContentFile] = []
     
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-    
     let cachesPath = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+    
     
     func CPFolder(){
         let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x")
@@ -27,11 +95,26 @@ class ProjectViewModel: ObservableObject {
         } else {
         print("nope!")
         }
-        
-       
     }
     
-    
+    func sendMultipleFiles() {
+        //let group = DispatchGroup()
+//        let semaphore = DispatchSemaphore(value: 0)
+//
+//        let dispatchQueue = DispatchQueue.global(qos: .background)
+//
+//        dispatchQueue.async {
+//
+//        }
+        
+        let dispatchGroup = DispatchGroup()
+        
+        dispatchGroup.enter()
+        sendCPSevenNeopixel ()
+        
+       
+        
+    }
     
     func startup() {
         print("Running Startup")
@@ -57,10 +140,7 @@ class ProjectViewModel: ObservableObject {
         
     }
     
-    
     func makeFileDirectory() {
-        // Creating a File Manager Object
-        print("makeFileDirectory Called.")
         // Creating a folder
         let pyleapProjectFolderURL = directoryPath.appendingPathComponent("PyLeap Project Folder")
         
@@ -83,8 +163,6 @@ class ProjectViewModel: ObservableObject {
     
         var files = [URL]()
      
-       
-        
         if let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: [.isRegularFileKey], options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
             for case let fileURL as URL in enumerator {
                 do {
@@ -93,23 +171,9 @@ class ProjectViewModel: ObservableObject {
                         
                         files.append(fileURL)
                         print("Contents of File: \(fileURL.lastPathComponent) \n")
-                        
-                        if (fileURL.lastPathComponent == "neopixel.mpy") {
-                            print("We got one!!")
-                            
-                            neopixelFile = try String(contentsOf: fileURL)
-                            print(neopixelFile)
-                        }
-                        
+                    
                        //MARK:- Reads Files
-                        
-                        let input = try String(contentsOf: fileURL)
-                        print("""
-                            \(input)
-                            """)
-                        
-                        
-                        
+                         
                     }
                 } catch { print(error, fileURL) }
             }
@@ -117,45 +181,41 @@ class ProjectViewModel: ObservableObject {
         }
     }
     
-    func mypContents () {
-       
-        
-        if let data = neopixelFile.data(using: .utf8) {
-            writeFile(filename: "/neopixel.mpy", data: data)
-        }
-        
-//        do {
-//    // Creating a File Manager Object
-//        let neopixelPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("neopixel.mpy")
-//
-//        let neopixelURL = try FileManager.default.contentsOfDirectory(at: neopixelPath, includingPropertiesForKeys: nil)
-//
-//        let text2 = try String(contentsOf: neopixelPath)
-//
-//            placeholder = text2
-//
-//
-//
-//            if let data = text2.data(using: .utf8) {
-//                writeFile(filename: "/neopixel.mpy", data: data)
-//            }
-//
-//
-//
-//        } catch {
-//            print(error)
-//        }
+    func editableTextExitor (variable double1: Double) -> String{
+
+        var code: String = """
+            Hello \(String(double1))
+            """
+        return code
 }
 
-    var placeholder : String = "?"
-    
-    func sendingMPY() {
+    func sendCPSevenNeopixel() {
         
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+       
+        let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy"))
+        print(documentsURL)
+      
+        writeFile(filename: "/neopixel.mpy", data: data!)
+        
+       
     }
     
+    func sendCPSixNeopixel() {
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 6.x").appendingPathComponent("lib")
+       
+        let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy"))
+        print(documentsURL)
+      
+        writeFile(filename: "/neopixel.mpy", data: data!)
+    }
     
-    // Published
-    @Published var fileTransferClient: FileTransferClient?
+    func sendProjectFile() {
+        if let data = ProjectData.inRainbowsSampleProject.pythonCode.data(using: .utf8) {
+           writeFile(filename: "/code.py", data: data)
+         
+        }
+    }
     
     struct TransmissionProgress {
         var description: String
@@ -196,7 +256,6 @@ class ProjectViewModel: ObservableObject {
         }
     }
     @Published var lastTransmit: TransmissionLog? =  TransmissionLog(type: .write(size: 334))
-    
     
     // Data
     private let bleManager = BleManager.shared
@@ -246,6 +305,9 @@ class ProjectViewModel: ObservableObject {
         return [Self.defaultFileContentePlaceholder, longText, sortedText]
     }()
     
+   
+    
+    
     init() {
         /*
         if AppEnvironment.inXcodePreviewMode {
@@ -291,7 +353,9 @@ class ProjectViewModel: ObservableObject {
                 switch result {
                 case .success(let data):
                     self.lastTransmit = TransmissionLog(type: .read(data: data))
-                    
+                    let str = String(decoding: data, as: UTF8.self)
+                    print("Read: \(str)")
+                    self.bootUpInfo = str
                 case .failure(let error):
                     self.lastTransmit = TransmissionLog(type: .error(message: error.localizedDescription))
                 }
@@ -309,7 +373,7 @@ class ProjectViewModel: ObservableObject {
                 switch result {
                 case .success:
                     self.lastTransmit = TransmissionLog(type: .write(size: data.count))
-                    
+                   
                 case .failure(let error):
                     self.lastTransmit = TransmissionLog(type: .error(message: error.localizedDescription))
                 }
@@ -351,7 +415,7 @@ class ProjectViewModel: ObservableObject {
                 switch result {
                 case .success(let success):
                     self.lastTransmit = TransmissionLog(type: .delete(success: success))
-                    
+         
                 case .failure(let error):
                     self.lastTransmit = TransmissionLog(type: .error(message: error.localizedDescription))
                 }
@@ -429,6 +493,12 @@ class ProjectViewModel: ObservableObject {
                 switch result {
                 case .success:
                     print("writeFile \(path) success. Size: \(data.count)")
+                  
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+//                        NotificationCenter.default.post(name: Notification.Name("Testing"), object: nil, userInfo: nil)
+//                    }
+                    //Maybe post here Saber
+                    
                     
                 case .failure(let error):
                     print("writeFile  \(path) error: \(error)")
@@ -488,16 +558,28 @@ class ProjectViewModel: ObservableObject {
     
     // MARK: - BLE Notifications
     private weak var didDisconnectFromPeripheralObserver: NSObjectProtocol?
-
+    private var didSendFile: NSObjectProtocol?
+    
+    
     private func registerNotifications(enabled: Bool) {
         let notificationCenter = NotificationCenter.default
         if enabled {
+            didSendFile = notificationCenter.addObserver(forName: Notification.Name("Testing"), object: nil, queue: nil, using: {[weak self] notification in self?.didSendFileToPeripheral(notification: notification)})
+                                                         //Saber
+                                                         
           didDisconnectFromPeripheralObserver = notificationCenter.addObserver(forName: .didDisconnectFromPeripheral, object: nil, queue: .main, using: {[weak self] notification in self?.didDisconnectFromPeripheral(notification: notification)})
  
         } else {
             if let didDisconnectFromPeripheralObserver = didDisconnectFromPeripheralObserver {notificationCenter.removeObserver(didDisconnectFromPeripheralObserver)}
         }
     }
+    
+    private func didSendFileToPeripheral(notification: Notification) {
+        print("It works")
+        sendProjectFile()
+        
+    }
+    
     
     private func didDisconnectFromPeripheral(notification: Notification) {
         let peripheral = bleManager.peripheral(from: notification)

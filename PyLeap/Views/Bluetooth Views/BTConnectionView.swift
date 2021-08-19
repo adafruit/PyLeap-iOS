@@ -11,10 +11,14 @@ struct BTConnectionView: View {
     
     @StateObject private var model = BTConnectionViewModel()
     @Binding var isVisible: Bool
+    var projects: [Project] = ProjectData.projects
+    
     
     var body: some View {
         
-        NavigationLink(destination: FilesView(),tag: .fileTransfer, selection: $model.destination) {  }
+        NavigationLink(destination: ProjectCardView(fileTransferClient: AppState.shared.fileTransferClient, project: projects.first!),tag: .fileTransfer, selection: $model.destination) {  }
+        
+        
         
         ZStack{
             

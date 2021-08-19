@@ -28,6 +28,7 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
     @Published var showDownloadProgress = false
     
     
+    
     // MARK:- Download
     func startDownload(urlString: String) {
         
@@ -166,7 +167,7 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
         
         
         // Creating a destination for storing files with a destination URL
-        let destinationURL = cachesPath.appendingPathComponent(url.lastPathComponent)
+        let destinationURL = directoryPath.appendingPathComponent(url.lastPathComponent)
         
         //if that file already exists, replace it.
         

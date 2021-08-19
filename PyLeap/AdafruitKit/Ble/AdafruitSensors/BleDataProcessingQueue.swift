@@ -89,6 +89,7 @@ class DataProcessingQueue {
         }
         else if data.isEmpty {
             DLog("Data queue empty")
+
         }
     }
     
