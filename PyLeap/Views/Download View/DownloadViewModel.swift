@@ -27,7 +27,8 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
     @Published var downloadProgress: CGFloat = 0
     @Published var showDownloadProgress = false
     
-    
+    // Saving Download task refernce for cancelling...
+    @Published var downloadtaskSession : URLSessionDownloadTask!
     
     // MARK:- Download
     func startDownload(urlString: String) {
@@ -65,7 +66,7 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
     }
     
     func unzipProjectFile() {
-        print("Test Func called")
+
         let CPZipName = directoryPath.appendingPathComponent("RainbowBundle.zip")
         
         let pyleapProjectFile = directoryPath.appendingPathComponent("PyLeap Folder")
@@ -264,7 +265,15 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
     }
    
     
-    
+    // cancel Task...
+    func cancelTask(){
+        if let task = downloadtaskSession,task.state == .running{
+            // cancelling...
+            downloadtaskSession.cancel()
+            // closing view...
+         //   withAnimation{self.showDownlodProgress = false}
+        }
+    }
     
     
 }

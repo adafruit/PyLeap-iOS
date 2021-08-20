@@ -11,7 +11,7 @@ import SwiftUI
 
 class ProjectViewModel: ObservableObject  {
 
-    
+    @Published var showingDownloadAlert = false
     
     @Published var entries = [BlePeripheral.DirectoryEntry]()
     @Published var isTransmiting = false
@@ -559,11 +559,13 @@ class ProjectViewModel: ObservableObject  {
     // MARK: - BLE Notifications
     private weak var didDisconnectFromPeripheralObserver: NSObjectProtocol?
     private var didSendFile: NSObjectProtocol?
-    
+    private var didFinishDownload: NSObjectProtocol?
     
     private func registerNotifications(enabled: Bool) {
         let notificationCenter = NotificationCenter.default
         if enabled {
+            didFinishDownload = notificationCenter.addObserver(forName: Notification.Name("onFinishDownload"), object: nil, queue: nil, using: {[weak self] notification in self?.didSendFileToPeripheral(notification: notification)})
+            
             didSendFile = notificationCenter.addObserver(forName: Notification.Name("Testing"), object: nil, queue: nil, using: {[weak self] notification in self?.didSendFileToPeripheral(notification: notification)})
                                                          //Saber
                                                          
@@ -572,6 +574,13 @@ class ProjectViewModel: ObservableObject  {
         } else {
             if let didDisconnectFromPeripheralObserver = didDisconnectFromPeripheralObserver {notificationCenter.removeObserver(didDisconnectFromPeripheralObserver)}
         }
+    }
+    
+     func didFinishedDownloadingToDevice(notification: Notification) {
+        print("Downloaded")
+        showingDownloadAlert.toggle()
+        sendProjectFile()
+        
     }
     
     private func didSendFileToPeripheral(notification: Notification) {

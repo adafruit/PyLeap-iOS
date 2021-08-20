@@ -30,7 +30,7 @@ struct ProjectData {
     
     static var inRainbowsSampleProject = Project(
         title: "Glide on over to some Rainbows",
-        device: "CPB",
+        device: "Circuit Playground Bluefruit",
         pythonCode: SamplePythonCode.inRainbows, downloadLink: "https://learn.adafruit.com/pages/22555/elements/3098569/download?type=zip" )
     
     static var blinky = Project(

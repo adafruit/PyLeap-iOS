@@ -21,10 +21,12 @@ struct ProjectCardView: View {
     @State private var filename = "/code.py"
     @State private var consoleFile = "/boot_out.txt"
     @State private var fileContents = ProjectViewModel.defaultFileContentePlaceholder
-    
+    @State private var showingDownloadAlert = false
     
     @AppStorage("value") var value = 0
     @AppStorage("fileSent") var neopixelFileSent = false
+    
+    
     
     // Params
     let fileTransferClient: FileTransferClient?
@@ -190,14 +192,33 @@ struct ProjectCardView: View {
             }
             
             .navigationBarTitle("Project Card")
+            
         }
         
+        .alert(isPresented: $downloadModel.showAlert, content: {
+            
+            Alert(title: Text("Message"), message: Text(downloadModel.alertMsg), dismissButton: .destructive(Text("Ok"), action: {
+                withAnimation{
+                    downloadModel.showDownloadProgress = false
+                }
+            }))
+        })
+        .overlay(
+        
+            ZStack{
+                if downloadModel.showDownloadProgress{
+                    DownloadProgressView(progress: $downloadModel.downloadProgress)
+                        .environmentObject(downloadModel)
+                }
+            }
+        )
         .onAppear {
             print("View Did Load.")
             model.onAppear(fileTransferClient: fileTransferClient)
             model.startup()
             model.gatherFiles()
             sendingCodeFile()
+            
             print("\(model.bootUpInfo)")
             
             if fileTransferClient == nil {
