@@ -43,7 +43,7 @@ class FileViewModel: ObservableObject {
     //MARK:- Copied From Glider App
     
     // Published
-    @Published var fileTransferClient: FileTransferClient?
+
    
     
 }

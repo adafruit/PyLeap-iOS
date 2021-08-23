@@ -16,7 +16,7 @@ struct BTConnectionView: View {
     
     var body: some View {
         
-        NavigationLink(destination: ProjectCardView(fileTransferClient: AppState.shared.fileTransferClient, project: projects.first!),tag: .fileTransfer, selection: $model.destination) {  }
+        NavigationLink(destination: ProjectCardView(fileTransferClient: AppState.shared.fileTransferClient, project: projects.first!),tag: .fileTransfer, selection: $model.destination) { EmptyView() }
         
         
         
@@ -77,10 +77,6 @@ struct BTConnectionView: View {
         }
         .navigationBarHidden(false)
         .foregroundColor(Color.white)
-        .onAppear(){
-            print("BTConnection View Appeared.")
-             // model.onAppear()
-        }
     }
 }
 

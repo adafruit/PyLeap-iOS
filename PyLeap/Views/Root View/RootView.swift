@@ -39,11 +39,11 @@ struct RootView: View {
         }
         .environmentObject(model)
         .edgesIgnoringSafeArea(.all)
-        .onAppear {
-           print("Root View Appeared.")
-            isBTConnectVisible = true
-
-        }
+//        .onAppear {
+//           print("Root View Appeared.")
+//            isBTConnectVisible = true
+//
+//        }
 
     }
 }

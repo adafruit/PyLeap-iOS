@@ -31,15 +31,15 @@ struct StartupView: View {
         .onChange(of: model.isStartupFinished) { isStartupFinished in
             if isStartupFinished {
                 
+                rootViewModel.goToMain()
                 
-                
-                if onboardingSeen == true {
-                    
-                    rootViewModel.goToMain()
-                    print("Onboarding: \(onboardingSeen)")
-                } else {
-                    rootViewModel.goToOnboarding()
-                }
+//                if onboardingSeen == true {
+//                    
+//                    rootViewModel.goToMain()
+//                    print("Onboarding: \(onboardingSeen)")
+//                } else {
+//                    rootViewModel.goToOnboarding()
+//                }
             }
         }
     }

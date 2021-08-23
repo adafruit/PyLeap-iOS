@@ -47,15 +47,15 @@ struct ProjectCardView: View {
         print(documentsURL)
         
         model.writeFile(filename: "/neopixel.mpy", data: data!)
-        value = 1
+        
     }
     
     func sendingCodeFile() {
-        if value == 1 {
+//        if value == 1 {
             if let data = project.pythonCode.data(using: .utf8) {
                 model.writeFile(filename: filename, data: data)
-                value += 1
-            }
+                
+          //  }
         }
         
     }
@@ -79,6 +79,22 @@ struct ProjectCardView: View {
     //    let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     //        let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy"))
     
+    func fileCheck(){
+        
+        if value == 1{
+            model.fileTransferAction()
+           
+           value += 1
+        }
+        if value == 2 {
+            value = 0
+            
+            
+        }
+        
+    }
+    
+    
     var body: some View {
 
         
@@ -95,6 +111,13 @@ struct ProjectCardView: View {
             //
             //            }
 
+            Button(action: {
+                AppState.shared.startAutoReconnect()
+                AppState.shared.forceReconnect()
+            }, label: {
+                Text("Reset")
+            })
+            
             Form {
                 // Section 1
                 Section {
@@ -168,8 +191,11 @@ struct ProjectCardView: View {
                 // Section 2
                 Section{
                     Button(action: {
-                    sendingNeopixelFile()
-
+                    //sendingNeopixelFile()
+//                        model.fileTransferAction(handleComplete: model.secondQueue)
+                        model.secondQueue()
+                        value = 1
+                        print("value: \(value)")
                     }, label: {
                         Text("Send Project Bundle")
                             .bold()
@@ -212,31 +238,31 @@ struct ProjectCardView: View {
                 }
             }
         )
+        .disabled(model.transmissionProgress != nil)
+        .onChange(of: model.fileTransferClient) { fileTransferClient in
+            if fileTransferClient == nil {
+                self.presentationMode.wrappedValue.dismiss()
+            }
+        }
         .onAppear {
             print("View Did Load.")
             model.onAppear(fileTransferClient: fileTransferClient)
             model.startup()
             model.gatherFiles()
-            sendingCodeFile()
-            
-            print("\(model.bootUpInfo)")
-            
+            print("value: \(value)")
+            fileCheck()
             if fileTransferClient == nil {
                 print("FileTransfer is nil")
             }
         }
 
         .onDisappear {
-            print("ProjectCard - on dissapear")
+            print("ProjectCard - on disappear")
             model.onDissapear()
 
         }
 
-        .onChange(of: model.fileTransferClient) { fileTransferClient in
-            if fileTransferClient == nil {
-                self.presentationMode.wrappedValue.dismiss()
-            }
-        }
+
 
 }
 

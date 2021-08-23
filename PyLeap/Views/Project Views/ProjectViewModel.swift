@@ -10,7 +10,47 @@ import Foundation
 import SwiftUI
 
 class ProjectViewModel: ObservableObject  {
+    
+    // MARK: - Properties
+    
+    private var dispatchQueue = DispatchQueue(label: "serial-dispatch-queue")
+    private var secondDispatchQueue = DispatchQueue(label: "second-serial-dispatch-queue")
+    
+    func fileTransferAction() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy"))
+        print(documentsURL)
+        
+//        dispatchQueue.async { [weak self] in
+//            print("Entered the main thread.")
+//            DispatchQueue.main.async {
+        self.writeFile(filename: "/neopixel.mpy", data: data!)
+            //}
+       // }
 
+       
+       
+
+        
+    }
+    
+    func secondQueue() {
+
+                if let data = SamplePythonCode.inRainbows.data(using: .utf8) {
+                    self.writeFile(filename: "/code.py", data: data)
+            }
+        }
+    
+
+    
+    
+    var neopixelFile : String = ""
+    
+    @Published var bootUpInfo = ""
+    @Published var fileArray: [ContentFile] = []
+    
     @Published var showingDownloadAlert = false
     
     @Published var entries = [BlePeripheral.DirectoryEntry]()
@@ -18,16 +58,20 @@ class ProjectViewModel: ObservableObject  {
     @Published var isRootDirectory = false
     @Published var directory = ""
     
-    var counter: Int = 0
+    @Published var counter: Int = 0
     
-     var fileTransferClient: FileTransferClient?
+    @Published var fileTransferClient: FileTransferClient?
+    
+    let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    let cachesPath = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+    
     
     func setup(fileTransferClient: FileTransferClient?, directory: String) {
         self.fileTransferClient = fileTransferClient
         
         // Clean directory name
         let directoryName = FileTransferUtils.pathRemovingFilename(path: directory)
-      //  self.directory = directoryName
+        //  self.directory = directoryName
         
         // List directory
         listDirectory(directory: directoryName)
@@ -48,7 +92,7 @@ class ProjectViewModel: ObservableObject  {
                 case .success(let entries):
                     if let entries = entries {
                         self.setEntries(entries)
-//                        self.directory = directory
+                        //                        self.directory = directory
                     }
                     else {
                         print("listDirectory: nonexistent directory")
@@ -77,15 +121,6 @@ class ProjectViewModel: ObservableObject  {
         })
     }
     
-    var neopixelFile : String = ""
-
-    @Published var bootUpInfo = ""
-    @Published var fileArray: [ContentFile] = []
-    
-    let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-    let cachesPath = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-    
-    
     func CPFolder(){
         let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x")
         
@@ -93,27 +128,8 @@ class ProjectViewModel: ObservableObject  {
         if FileManager.default.fileExists(atPath: path.absoluteString) {
             print("It does exist!")
         } else {
-        print("nope!")
+            print("nope!")
         }
-    }
-    
-    func sendMultipleFiles() {
-        //let group = DispatchGroup()
-//        let semaphore = DispatchSemaphore(value: 0)
-//
-//        let dispatchQueue = DispatchQueue.global(qos: .background)
-//
-//        dispatchQueue.async {
-//
-//        }
-        
-        let dispatchGroup = DispatchGroup()
-        
-        dispatchGroup.enter()
-        sendCPSevenNeopixel ()
-        
-       
-        
     }
     
     func startup() {
@@ -121,17 +137,17 @@ class ProjectViewModel: ObservableObject  {
         
         print("Directory Path: \(directoryPath.path)")
         print("Caches Directory Path: \(cachesPath.path)")
-
+        
         
         do {
             
             let contents = try FileManager.default.contentsOfDirectory(at: directoryPath, includingPropertiesForKeys: nil,options: [.skipsHiddenFiles])
-           
+            
             for file in contents {
                 print("File Content: \(file.lastPathComponent)")
-
                 
-               let addedFile = ContentFile(title: file.lastPathComponent)
+                
+                let addedFile = ContentFile(title: file.lastPathComponent)
                 self.fileArray.append(addedFile)
             }
         } catch {
@@ -147,22 +163,22 @@ class ProjectViewModel: ObservableObject  {
         do {
             
             try FileManager.default.createDirectory(at: pyleapProjectFolderURL,
-                                        withIntermediateDirectories: true,
-                                        attributes: [:])
+                                                    withIntermediateDirectories: true,
+                                                    attributes: [:])
         } catch {
             print(error)
         }
     }
-
+    
     func gatherFiles() {
         // Creating a File Manager Object
         let manager = FileManager.default
         
         // Creating a path to make a document directory path
         guard let url = manager.urls(for: .documentDirectory,in: .userDomainMask).first else {return}
-    
+        
         var files = [URL]()
-     
+        
         if let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: [.isRegularFileKey], options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
             for case let fileURL as URL in enumerator {
                 do {
@@ -171,9 +187,9 @@ class ProjectViewModel: ObservableObject  {
                         
                         files.append(fileURL)
                         print("Contents of File: \(fileURL.lastPathComponent) \n")
-                    
-                       //MARK:- Reads Files
-                         
+                        
+                        //MARK:- Reads Files
+                        
                     }
                 } catch { print(error, fileURL) }
             }
@@ -182,38 +198,38 @@ class ProjectViewModel: ObservableObject  {
     }
     
     func editableTextExitor (variable double1: Double) -> String{
-
+        
         var code: String = """
             Hello \(String(double1))
             """
         return code
-}
-
+    }
+    
     func sendCPSevenNeopixel() {
         
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
-       
+        
         let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy"))
         print(documentsURL)
-      
+        
         writeFile(filename: "/neopixel.mpy", data: data!)
         
-       
+        
     }
     
     func sendCPSixNeopixel() {
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 6.x").appendingPathComponent("lib")
-       
+        
         let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy"))
         print(documentsURL)
-      
+        
         writeFile(filename: "/neopixel.mpy", data: data!)
     }
     
     func sendProjectFile() {
         if let data = ProjectData.inRainbowsSampleProject.pythonCode.data(using: .utf8) {
-           writeFile(filename: "/code.py", data: data)
-         
+            writeFile(filename: "/code.py", data: data)
+            
         }
     }
     
@@ -259,19 +275,19 @@ class ProjectViewModel: ObservableObject  {
     
     // Data
     private let bleManager = BleManager.shared
-
-
+    
+    
     // MARK: - Placeholders
     var fileNamePlaceholders: [String] = ["/hello.txt"/*, "/bye.txt"*/, "/test.txt"]
-
+    
     static let defaultFileContentePlaceholder = """
         import time
         import board
         import neopixel
-
+        
         pixels = neopixel.NeoPixel(board.NEOPIXEL, 10, brightness=0.2, auto_write=False)
         rainbow_cycle_demo = 1
-
+        
         def wheel(pos):
                     if pos < 0 or pos > 255:
                         return (0, 0, 0)
@@ -282,7 +298,7 @@ class ProjectViewModel: ObservableObject  {
                         return (0, 255 - pos * 3, pos * 3)
                     pos -= 170
                     return (pos * 3, 0, 255 - pos * 3)
-
+        
         def rainbow_cycle(wait):
                     for j in range(255):
                         for i in range(10):
@@ -290,11 +306,11 @@ class ProjectViewModel: ObservableObject  {
                             pixels[i] = wheel(rc_index & 255)
                         pixels.show()
                         time.sleep(wait)
-
+        
         while True:
                     if rainbow_cycle_demo:
                         rainbow_cycle(0.05)
-
+        
         """
     lazy var fileContentPlaceholders: [String] = {
         
@@ -305,16 +321,13 @@ class ProjectViewModel: ObservableObject  {
         return [Self.defaultFileContentePlaceholder, longText, sortedText]
     }()
     
-   
-    
-    
     init() {
         /*
-        if AppEnvironment.inXcodePreviewMode {
-            transmissionProgress = TransmissionProgress(description: "test")
-            transmissionProgress?.transmittedBytes = 33
-            transmissionProgress?.totalBytes = 66
-        }*/
+         if AppEnvironment.inXcodePreviewMode {
+         transmissionProgress = TransmissionProgress(description: "test")
+         transmissionProgress?.transmittedBytes = 33
+         transmissionProgress?.totalBytes = 66
+         }*/
     }
     
     // MARK: - Setup
@@ -373,7 +386,7 @@ class ProjectViewModel: ObservableObject  {
                 switch result {
                 case .success:
                     self.lastTransmit = TransmissionLog(type: .write(size: data.count))
-                   
+                    
                 case .failure(let error):
                     self.lastTransmit = TransmissionLog(type: .error(message: error.localizedDescription))
                 }
@@ -387,7 +400,7 @@ class ProjectViewModel: ObservableObject  {
         let directory = FileTransferUtils.pathRemovingFilename(path: filename)
         
         startCommand(description: "List directory")
-
+        
         listDirectoryCommand(path: directory) { [weak self] result in
             guard let self = self else { return }
             
@@ -415,7 +428,7 @@ class ProjectViewModel: ObservableObject  {
                 switch result {
                 case .success(let success):
                     self.lastTransmit = TransmissionLog(type: .delete(success: success))
-         
+                    
                 case .failure(let error):
                     self.lastTransmit = TransmissionLog(type: .error(message: error.localizedDescription))
                 }
@@ -493,13 +506,11 @@ class ProjectViewModel: ObservableObject  {
                 switch result {
                 case .success:
                     print("writeFile \(path) success. Size: \(data.count)")
-                  
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-//                        NotificationCenter.default.post(name: Notification.Name("Testing"), object: nil, userInfo: nil)
-//                    }
-                    //Maybe post here Saber
                     
-                    
+
+                //Maybe post here Saber
+                
+                
                 case .failure(let error):
                     print("writeFile  \(path) error: \(error)")
                 }
@@ -558,7 +569,9 @@ class ProjectViewModel: ObservableObject  {
     
     // MARK: - BLE Notifications
     private weak var didDisconnectFromPeripheralObserver: NSObjectProtocol?
+    
     private var didSendFile: NSObjectProtocol?
+    
     private var didFinishDownload: NSObjectProtocol?
     
     private func registerNotifications(enabled: Bool) {
@@ -567,16 +580,16 @@ class ProjectViewModel: ObservableObject  {
             didFinishDownload = notificationCenter.addObserver(forName: Notification.Name("onFinishDownload"), object: nil, queue: nil, using: {[weak self] notification in self?.didSendFileToPeripheral(notification: notification)})
             
             didSendFile = notificationCenter.addObserver(forName: Notification.Name("Testing"), object: nil, queue: nil, using: {[weak self] notification in self?.didSendFileToPeripheral(notification: notification)})
-                                                         //Saber
-                                                         
-          didDisconnectFromPeripheralObserver = notificationCenter.addObserver(forName: .didDisconnectFromPeripheral, object: nil, queue: .main, using: {[weak self] notification in self?.didDisconnectFromPeripheral(notification: notification)})
- 
+            //Saber
+            
+            didDisconnectFromPeripheralObserver = notificationCenter.addObserver(forName: .didDisconnectFromPeripheral, object: nil, queue: .main, using: {[weak self] notification in self?.didDisconnectFromPeripheral(notification: notification)})
+            
         } else {
             if let didDisconnectFromPeripheralObserver = didDisconnectFromPeripheralObserver {notificationCenter.removeObserver(didDisconnectFromPeripheralObserver)}
         }
     }
     
-     func didFinishedDownloadingToDevice(notification: Notification) {
+    func didFinishedDownloadingToDevice(notification: Notification) {
         print("Downloaded")
         showingDownloadAlert.toggle()
         sendProjectFile()
@@ -589,15 +602,14 @@ class ProjectViewModel: ObservableObject  {
         
     }
     
-    
     private func didDisconnectFromPeripheral(notification: Notification) {
         let peripheral = bleManager.peripheral(from: notification)
-
+        
         let currentlyConnectedPeripheralsCount = bleManager.connectedPeripherals().count
         guard let selectedPeripheral = fileTransferClient?.blePeripheral, selectedPeripheral.identifier == peripheral?.identifier || currentlyConnectedPeripheralsCount == 0 else {        // If selected peripheral is disconnected or if there are no peripherals connected (after a failed dfu update)
             return
         }
-
+        
         // Disconnect
         fileTransferClient = nil
     }
