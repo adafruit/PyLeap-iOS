@@ -12,42 +12,27 @@ import SwiftUI
 class ProjectViewModel: ObservableObject  {
     
     // MARK: - Properties
-    
-    private var dispatchQueue = DispatchQueue(label: "serial-dispatch-queue")
-    private var secondDispatchQueue = DispatchQueue(label: "second-serial-dispatch-queue")
-    
-    func fileTransferAction() {
+
+    func retrieveCP7xNeopixel() {
         
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
         
         let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy"))
-        print(documentsURL)
+        print("Neopixel File Contents: \(documentsURL)")
         
-//        dispatchQueue.async { [weak self] in
-//            print("Entered the main thread.")
-//            DispatchQueue.main.async {
         self.writeFile(filename: "/neopixel.mpy", data: data!)
-            //}
-       // }
-
-       
-       
-
-        
     }
     
-    func secondQueue() {
-
-                if let data = SamplePythonCode.inRainbows.data(using: .utf8) {
-                    self.writeFile(filename: "/code.py", data: data)
-            }
-        }
+    func retrieveCP7xCode() {
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x")
+        
+        let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py"))
+        print("Code File Contents: \(documentsURL)")
+    
+        self.writeFile(filename: "/code.py", data: data!)
+    }
     
 
-    
-    
-    var neopixelFile : String = ""
-    
     @Published var bootUpInfo = ""
     @Published var fileArray: [ContentFile] = []
     
@@ -186,7 +171,7 @@ class ProjectViewModel: ObservableObject  {
                     if fileAttributes.isRegularFile! {
                         
                         files.append(fileURL)
-                        print("Contents of File: \(fileURL.lastPathComponent) \n")
+                        print("\(fileURL.lastPathComponent) \n")
                         
                         //MARK:- Reads Files
                         

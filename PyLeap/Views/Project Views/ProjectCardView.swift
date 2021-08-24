@@ -9,27 +9,17 @@ import SwiftUI
 
 struct ProjectCardView: View {
     
+    // Params
+    let fileTransferClient: FileTransferClient?
     var project: Project
-    //@AppStorage("onboarding") var onboardingSeen = false
-   
     // Data
     @Environment(\.presentationMode) var presentationMode
     @StateObject var model = ProjectViewModel()
     @StateObject var downloadModel = DownloadViewModel()
     
-    
-    @State private var filename = "/code.py"
-    @State private var consoleFile = "/boot_out.txt"
-    @State private var fileContents = ProjectViewModel.defaultFileContentePlaceholder
-    @State private var showingDownloadAlert = false
+    @State private var fileContents = ""
     
     @AppStorage("value") var value = 0
-    @AppStorage("fileSent") var neopixelFileSent = false
-    
-    
-    
-    // Params
-    let fileTransferClient: FileTransferClient?
     
     
     init(fileTransferClient: FileTransferClient?, project: Project) {
@@ -37,90 +27,33 @@ struct ProjectCardView: View {
         self.project = project
     }
     
-    typealias CompletionHandler = (_ success:Bool) -> Void
-    
-    func sendingNeopixelFile() {
-        
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
-        
-        let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy"))
-        print(documentsURL)
-        
-        model.writeFile(filename: "/neopixel.mpy", data: data!)
-        
-    }
-    
-    func sendingCodeFile() {
-//        if value == 1 {
-            if let data = project.pythonCode.data(using: .utf8) {
-                model.writeFile(filename: filename, data: data)
-                
-          //  }
-        }
-        
-    }
-    
-
-    
-    
-    
-    //Downloads
-    @State private var buttonInteractivity: Bool = false
-    @State private var sendInteractivity: Bool = true
-
-    
-    @State private var downloadAmount = 0.0
-  
-    let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
-    
     let downloadLink: String = "https://learn.adafruit.com/pages/22555/elements/3098569/download?type=zip"
     
-// Note from Antonio
-    //    let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-    //        let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy"))
-    
     func fileCheck(){
-        
         if value == 1{
-            model.fileTransferAction()
-           
-           value += 1
+            model.retrieveCP7xNeopixel()
+            value += 1
         }
         if value == 2 {
             value = 0
-            
-            
         }
-        
     }
     
-    
     var body: some View {
-
         
         VStack {
             
-            //MARK:- List Of Directories
-            //            List {
-            //                Section(header: Text("On Device")) {
-            //                    ForEach(model.fileArray) { file in
-            //                        //    ContentFileRow(title: file.title)
-            //                        Text(file.title)
-            //                    }
-            //                }
-            //
-            //            }
-
-            Button(action: {
-                AppState.shared.startAutoReconnect()
-                AppState.shared.forceReconnect()
-            }, label: {
-                Text("Reset")
-            })
+            //            Button(action: {
+            //                AppState.shared.startAutoReconnect()
+            //                AppState.shared.forceReconnect()
+            //            }, label: {
+            //                Text("Reset")
+            //            })
             
             Form {
                 // Section 1
                 Section {
+                  
                     VStack(alignment: .leading){
                         
                         HStack{
@@ -139,13 +72,11 @@ struct ProjectCardView: View {
                                     .frame(width: 20, height: 20, alignment: .center)
                             }
                             
-                            
                             Text(project.device)
                                 .font(.caption)
                                 .fontWeight(.light)
                                 .foregroundColor(.gray)
                                 .font(.title)
-                            
                             
                             Spacer()
                             
@@ -177,23 +108,17 @@ struct ProjectCardView: View {
                     Button(action: {
                         downloadModel.startDownload(urlString: downloadLink)
                         downloadModel.unzipProjectFile()
-
+                        
                     }, label: {
                         Text("Download Project Bundle")
                             .bold()
                     })
                 }
                 
-                
-
-                
-                
                 // Section 2
                 Section{
                     Button(action: {
-                    //sendingNeopixelFile()
-//                        model.fileTransferAction(handleComplete: model.secondQueue)
-                        model.secondQueue()
+                        model.retrieveCP7xCode()
                         value = 1
                         print("value: \(value)")
                     }, label: {
@@ -203,8 +128,6 @@ struct ProjectCardView: View {
                     })
                 }
                 
-               
-
                 // Section 3
                 Section(header: Text("code.py")){
                     VStack(alignment: .leading){
@@ -212,13 +135,9 @@ struct ProjectCardView: View {
     \(project.pythonCode)
     """)
                     }
-                    
                 }
-                
             }
-            
             .navigationBarTitle("Project Card")
-            
         }
         
         .alert(isPresented: $downloadModel.showAlert, content: {
@@ -230,7 +149,7 @@ struct ProjectCardView: View {
             }))
         })
         .overlay(
-        
+            
             ZStack{
                 if downloadModel.showDownloadProgress{
                     DownloadProgressView(progress: $downloadModel.downloadProgress)
@@ -249,23 +168,25 @@ struct ProjectCardView: View {
             model.onAppear(fileTransferClient: fileTransferClient)
             model.startup()
             model.gatherFiles()
-            print("value: \(value)")
+            
             fileCheck()
+            model.readFile(filename: "/boot_out.txt")
+            print(model.bootUpInfo)
             if fileTransferClient == nil {
                 print("FileTransfer is nil")
             }
         }
-
+        
         .onDisappear {
             print("ProjectCard - on disappear")
             model.onDissapear()
-
+            
         }
-
-
-
-}
-
+        
+        
+        
+    }
+    
 }
 private struct ContentsView: View {
     @Binding var fileContents: String
@@ -274,8 +195,6 @@ private struct ContentsView: View {
     var body: some View {
         Text(fileContents)
     }
-    
-    
 }
 
 

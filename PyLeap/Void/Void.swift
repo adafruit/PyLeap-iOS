@@ -6,11 +6,7 @@
 //
 //
 //
-//    .onTapGesture {
-//        if let data = fileContents.data(using: .utf8) {
-//            fvmodel.writeFile(filename: "/boot.py", data: data)
-//        }
-//    }
+
 //
 //MARK:- List Of Directories
 //List {
@@ -79,3 +75,15 @@
 //
 //                    }
 //                }
+
+
+//MARK:- List Of Directories
+//            List {
+//                Section(header: Text("On Device")) {
+//                    ForEach(model.fileArray) { file in
+//                        //    ContentFileRow(title: file.title)
+//                        Text(file.title)
+//                    }
+//                }
+//
+//            }
