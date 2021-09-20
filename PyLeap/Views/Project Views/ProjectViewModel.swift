@@ -18,9 +18,15 @@ class ProjectViewModel: ObservableObject  {
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
         
         let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy"))
-        print("Neopixel File Contents: \(documentsURL)")
         
-        self.writeFile(filename: "/neopixel.mpy", data: data!)
+        print("Neopixel File Contents: \(documentsURL)")
+     
+        guard let data = data else {
+            print(#function + "Data was not found")
+            return
+        }
+        
+        self.writeFile(filename: "/neopixel.mpy", data: data)
     }
     
     func retrieveCP7xCode() {
@@ -29,7 +35,12 @@ class ProjectViewModel: ObservableObject  {
         let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py"))
         print("Code File Contents: \(documentsURL)")
     
-        self.writeFile(filename: "/code.py", data: data!)
+        guard let data = data else {
+            print(#function + "Data was not found")
+            return
+        }
+        
+        self.writeFile(filename: "/code.py", data: data)
     }
     
 

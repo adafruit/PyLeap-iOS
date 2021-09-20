@@ -24,7 +24,7 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
     @Published var downloadTaskSession: URLSessionDownloadTask!
     
     // Show Progress View
-    @Published var downloadProgress: CGFloat = 0
+    @Published var downloadProgress: CGFloat = 0.0
     @Published var showDownloadProgress = false
     
     // Saving Download task refernce for cancelling...
@@ -49,6 +49,7 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
         downloadTaskSession.resume()
     }
     
+    
     func makeFileDirectory() {
         // Creating a File Manager Object
        
@@ -64,6 +65,7 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
             print(error)
         }
     }
+    
     
     func unzipProjectFile() {
 
@@ -155,7 +157,6 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
     }
     
     
-    
     /// Tells the delegate that a download task has finished downloading.
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         print("Download Location: \(location)")
@@ -240,11 +241,6 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
     }
     
    
-    
-
-
-    
-    
     /// Periodically informs the delegate about the download’s progress - Used for progress UI
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
         // Getting Progress
