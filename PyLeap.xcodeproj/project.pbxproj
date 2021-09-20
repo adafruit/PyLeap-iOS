@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		D517F68126C5771D002996E8 /* FillerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D517F68026C5771D002996E8 /* FillerView.swift */; };
 		D52BE7EE269DF36E00630900 /* DownloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE7EA269DF36E00630900 /* DownloadViewModel.swift */; };
-		D52BE7F0269DF36E00630900 /* DownloadProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE7E9269DF36E00630900 /* DownloadProgressView.swift */; };
 		D52BE7F3269DF62100630900 /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = D52BE7F2269DF62100630900 /* Zip */; };
 		D52BE80C26A061B100630900 /* FileTransferClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54D38C22692044800FBFE47 /* FileTransferClient.swift */; };
 		D52BE80D26A061F800630900 /* GliderClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE801269F03F200630900 /* GliderClient.swift */; };
@@ -46,6 +45,8 @@
 		D52F7E742672F4C400911D43 /* PyLeapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52F7E732672F4C400911D43 /* PyLeapApp.swift */; };
 		D52F7E782672F4C500911D43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D52F7E772672F4C500911D43 /* Assets.xcassets */; };
 		D52F7E7B2672F4C500911D43 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D52F7E7A2672F4C500911D43 /* Preview Assets.xcassets */; };
+		D54EEFE026D6D200002DA555 /* DownloadButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54EEFDF26D6D200002DA555 /* DownloadButtonView.swift */; };
+		D54EEFE226D85904002DA555 /* DownloadButtonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54EEFE126D85904002DA555 /* DownloadButtonViewModel.swift */; };
 		D5507AD026C668BC00512BAA /* FileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACC26C668BC00512BAA /* FileViewModel.swift */; };
 		D5507AD126C668BC00512BAA /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACF26C668BC00512BAA /* SearchBarView.swift */; };
 		D5507AD226C668BC00512BAA /* FileDownloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACD26C668BC00512BAA /* FileDownloadViewModel.swift */; };
@@ -85,7 +86,6 @@
 
 /* Begin PBXFileReference section */
 		D517F68026C5771D002996E8 /* FillerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FillerView.swift; sourceTree = "<group>"; };
-		D52BE7E9269DF36E00630900 /* DownloadProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProgressView.swift; sourceTree = "<group>"; };
 		D52BE7EA269DF36E00630900 /* DownloadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadViewModel.swift; sourceTree = "<group>"; };
 		D52BE7F6269F03F200630900 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		D52BE7F7269F03F200630900 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
@@ -130,6 +130,8 @@
 		D54D38C32692044800FBFE47 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		D54D38C52692044800FBFE47 /* PeripheralList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralList.swift; sourceTree = "<group>"; };
 		D54D38C62692044800FBFE47 /* PeripheralAutoConnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralAutoConnect.swift; sourceTree = "<group>"; };
+		D54EEFDF26D6D200002DA555 /* DownloadButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadButtonView.swift; sourceTree = "<group>"; };
+		D54EEFE126D85904002DA555 /* DownloadButtonViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadButtonViewModel.swift; sourceTree = "<group>"; };
 		D5507ACB26C668BC00512BAA /* FilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
 		D5507ACC26C668BC00512BAA /* FileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileViewModel.swift; sourceTree = "<group>"; };
 		D5507ACD26C668BC00512BAA /* FileDownloadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDownloadViewModel.swift; sourceTree = "<group>"; };
@@ -251,6 +253,7 @@
 			children = (
 				D52BE82E26A067F600630900 /* BleDataProcessingQueue.swift */,
 				D52BE82F26A067F600630900 /* BlePeripheral+AdafruitCommon.swift */,
+				D5C41D6C26C5FDA3004C38E3 /* Void */,
 				D52BE83026A067F600630900 /* BlePeripheral+FileTransfer.swift */,
 				D52BE83126A067F600630900 /* BlePeripheral+ManufacturerAdafruit.swift */,
 			);
@@ -317,7 +320,6 @@
 				D52F7E732672F4C400911D43 /* PyLeapApp.swift */,
 				D59DFDB5268CD052001737F6 /* AppEnvironment.swift */,
 				D5597BF726A9E14B00DF17C0 /* AppDelegate.swift */,
-				D5C41D6C26C5FDA3004C38E3 /* Void */,
 				D517F67F26C56939002996E8 /* Origanal Setup */,
 				D55D5BFB26C4BE0C002B0925 /* Project Model */,
 				D52BE82B26A067F600630900 /* AdafruitKit */,
@@ -477,7 +479,8 @@
 			isa = PBXGroup;
 			children = (
 				D52BE7EA269DF36E00630900 /* DownloadViewModel.swift */,
-				D52BE7E9269DF36E00630900 /* DownloadProgressView.swift */,
+				D54EEFDF26D6D200002DA555 /* DownloadButtonView.swift */,
+				D54EEFE126D85904002DA555 /* DownloadButtonViewModel.swift */,
 			);
 			path = "Download View";
 			sourceTree = "<group>";
@@ -616,11 +619,11 @@
 				D58D887926CAB6FC0085604A /* SamplePythonCode.swift in Sources */,
 				D5F53CEF2694BD51007634C2 /* ScanAnimation.swift in Sources */,
 				D52F7E742672F4C400911D43 /* PyLeapApp.swift in Sources */,
-				D52BE7F0269DF36E00630900 /* DownloadProgressView.swift in Sources */,
 				D5E52DC626A71E010083956B /* SplashViewModel.swift in Sources */,
 				D52BE84626A068DD00630900 /* BlePeripheral+AdafruitCommon.swift in Sources */,
 				D52BE82626A065F700630900 /* Settings.swift in Sources */,
 				D52BE80E26A0656700630900 /* FileProviderItem.swift in Sources */,
+				D54EEFE026D6D200002DA555 /* DownloadButtonView.swift in Sources */,
 				D52BE84726A068E200630900 /* BleManager.swift in Sources */,
 				D5597C0B26AF018800DF17C0 /* HideKeyboard.swift in Sources */,
 				D52BE80C26A061B100630900 /* FileTransferClient.swift in Sources */,
@@ -646,6 +649,7 @@
 				D59DFDC2268CFA36001737F6 /* OnboardingStepView.swift in Sources */,
 				D5597C3926B8B26100DF17C0 /* ProjectCardView.swift in Sources */,
 				D5507AD126C668BC00512BAA /* SearchBarView.swift in Sources */,
+				D54EEFE226D85904002DA555 /* DownloadButtonViewModel.swift in Sources */,
 				D52BE80F26A0656700630900 /* MetadataCache.swift in Sources */,
 				D52BE82526A065F400630900 /* FileTransferUtils.swift in Sources */,
 				D52BE84B26A06A9400630900 /* Int+Bytes.swift in Sources */,

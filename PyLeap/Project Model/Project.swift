@@ -25,7 +25,9 @@ struct Project: Identifiable {
 
 struct ProjectData {
     
-    static let projects = [inRainbowsSampleProject]
+    static let projects = [inRainbowsSampleProject, blinky, helloWorld]
+    static let cpbProjects = [inRainbowsSampleProject]
+    static let clueProjects = [blinky]
     
     
     static var inRainbowsSampleProject = Project(
@@ -36,7 +38,7 @@ struct ProjectData {
     static var blinky = Project(
         title: "Blinky",
         device: "CPB",
-        pythonCode: SamplePythonCode.blinky, downloadLink: "https://learn.adafruit.com/pages/22555/elements/3098569/download?type=zip")
+        pythonCode: SamplePythonCode.blinky, downloadLink: "https://learn.adafruit.com/pages/22920/elements/3103057/download?type=zip")
     
     static var helloWorld = Project(
         title: "Hello World(Wipe)",
