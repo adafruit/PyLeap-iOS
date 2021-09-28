@@ -11,9 +11,7 @@ import FileProvider
 struct FileProviderUtils {
     static func signalFileProviderChanges() {
         NSFileProviderManager.default.signalEnumerator(for: .rootContainer) { error in
-           
-            print("signalFileProviderChanges completed. Error?: \(String(describing: error))")
-            // DLog("signalFileProviderChanges completed. Error?: \(String(describing: error))")
+            DLog("signalFileProviderChanges completed. Error?: \(String(describing: error))")
         }
     }
 }

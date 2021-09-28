@@ -9,8 +9,6 @@ import Foundation
 import CoreBluetooth
 
 class BleAutoReconnect {
-   
-    
     // Params
     private var servicesToReconnect: [CBUUID]
     private var reconnectHandler: ((_ peripheral: BlePeripheral, _ completion: @escaping (Result<Void, Error>) -> Void) -> ())?
@@ -36,26 +34,29 @@ class BleAutoReconnect {
     /// Returns if is trying to reconnect, or false if it is quickly decided that there is not possible
     @discardableResult
     func reconnect() -> Bool {
+        return self.reconnecToPeripheral(withIdentifier: Settings.autoconnectPeripheralUUID)
+        
+        /*
         if let identifier = Settings.autoconnectPeripheralUUID {
             return self.reconnecToPeripheral(withIdentifier: identifier)
         } else {
             DLog("Reconnect finished")
             NotificationCenter.default.post(name: .didFailToReconnectToKnownPeripheral, object: nil)
             return false
-        }
+        }*/
     }
     
     // MARK: - Reconnect previously connnected Ble Peripheral
-    private func reconnecToPeripheral(withIdentifier identifier: UUID) -> Bool {
+    private func reconnecToPeripheral(withIdentifier identifier: UUID?) -> Bool {
         DLog("Reconnecting...")
         isReconnecting = true
         
         // Reconnect
-        let isTryingToReconnect = BleManager.shared.reconnecToPeripherals(peripheralUUIDs: [identifier], withServices: servicesToReconnect, timeout: reconnectTimeout)
+        let isTryingToReconnect = BleManager.shared.reconnecToPeripherals(peripheralUUIDs: identifier == nil ? nil : [identifier!], withServices: servicesToReconnect, timeout: reconnectTimeout)
 
         if !isTryingToReconnect {
             DLog("isTryingToReconnect false. Go to next")
-            connected(peripheral: nil)
+            connected(peripheral: nil, isDisconnected: true)
         }
         
         return isTryingToReconnect
@@ -71,19 +72,17 @@ class BleAutoReconnect {
         
         guard let peripheral = BleManager.shared.peripheral(from: notification) else {
             DLog("Connected to an unknown peripheral")
-            connected(peripheral: nil)
-            NotificationCenter.default.post(name: NSNotification.fileSent,
-                                                            object: nil, userInfo: nil)
+            connected(peripheral: nil, isDisconnected: false)
             return
         }
 
-        connected(peripheral: peripheral)
+        connected(peripheral: peripheral, isDisconnected: false)
     }
 
     private func didDisconnectFromPeripheral() {
         if isReconnecting {
             // Autoconnect failed
-            connected(peripheral: nil)
+            connected(peripheral: nil, isDisconnected: true)
         }
         else if isDisconnectionMonitoringForAutoReconnectEnabled {
             DLog("AutoReconnect: Disconnection detected. Trying to auto reconnect")
@@ -91,18 +90,23 @@ class BleAutoReconnect {
         }
     }
 
-    private func connected(peripheral: BlePeripheral?) {
+    // Note: added an extra parametrer isDisconnected to fix a problem with the FileProvider disconnections. Think how to improve the syntax
+    private func connected(peripheral: BlePeripheral?, isDisconnected: Bool) {
         isReconnecting = false      // Finished reconnection process
 
         //
-        if let peripheral = peripheral {
+        if isDisconnected {
+            Settings.clearAutoconnectPeripheral()
+            NotificationCenter.default.post(name: .didFailToReconnectToKnownPeripheral, object: nil)
+        }
+        else if let peripheral = peripheral {
             // Show restoring connection label
             NotificationCenter.default.post(name: .willReconnectToKnownPeripheral, object: nil, userInfo: [BleManager.NotificationUserInfoKey.uuid.rawValue: peripheral.identifier])
 
             reconnectHandler?(peripheral) { result in
                 switch result {
                 case .success:
-                    DLog("Reconnected to peripheral successfully")                            
+                    DLog("Reconnected to peripheral successfully")
                     NotificationCenter.default.post(name: .didReconnectToKnownPeripheral, object: nil, userInfo: [BleManager.NotificationUserInfoKey.uuid.rawValue: peripheral.identifier])
 
                 case .failure(let error):
@@ -115,8 +119,8 @@ class BleAutoReconnect {
             }
 
         } else {
-            Settings.clearAutoconnectPeripheral()
-            NotificationCenter.default.post(name: .didFailToReconnectToKnownPeripheral, object: nil)
+            // Don't assume that it failed. It could have restored the connection but the internal database in BleManager does not have the BlePeripheral
+            NotificationCenter.default.post(name: .didReconnectToKnownPeripheral, object: nil, userInfo: nil)
         }
     }
     

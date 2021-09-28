@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.com.adafruit.Glider</string>
+		<string>group.com.adafruit.PyLeap</string>
 	</array>
 </dict>
 </plist>

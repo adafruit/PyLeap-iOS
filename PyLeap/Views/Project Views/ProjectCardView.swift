@@ -12,6 +12,8 @@ struct ProjectCardView: View {
     var project: Project
     //@AppStorage("onboarding") var onboardingSeen = false
     
+    @State private var selectedFrameworkIndex = 0
+    
     // Data
     @Environment(\.presentationMode) var presentationMode
     
@@ -29,7 +31,7 @@ struct ProjectCardView: View {
     @AppStorage("value") var value = 0
     @AppStorage("fileSent") var neopixelFileSent = false
     
-    
+    @State private var name = ""
     
     // Params
     let fileTransferClient: FileTransferClient?
@@ -73,6 +75,7 @@ struct ProjectCardView: View {
     
     let downloadLink: String = "https://learn.adafruit.com/pages/22555/elements/3098569/download?type=zip"
     
+
     
     func fileCheck(){
         print("Inital value: \(value)")
@@ -81,10 +84,16 @@ struct ProjectCardView: View {
         }
         
         if value == 1{
-            print("Sending Neopixel Code")
-            model.retrieveCP7xNeopixel()
             
+            if selectedFrameworkIndex == 3 {
+                model.ledGlassesCP7xLib()
+            }else {
+                print("Sending Neopixel Code")
+                model.retrieveCP7xNeopixel()
+                
+            }
             value += 1
+
         }
         if value == 2 {
             print("Restarting")
@@ -93,13 +102,41 @@ struct ProjectCardView: View {
         }
     }
     
+    mutating func changeProj() {
+        if selectedFrameworkIndex == 0 {
+            project.title = projectArray[0].title
+        }
+        if selectedFrameworkIndex == 1 {
+            project.title = projectArray[1].title
+        }
+        if selectedFrameworkIndex == 2 {
+            project.title = projectArray[2].title
+        }
+        if selectedFrameworkIndex == 3 {
+            project.title = projectArray[3].title
+        }
+    }
+    
+    var frameworks = ["UIKit", "Core Data", "CloudKit", "SwiftUI"]
+    var projectNames = ["Glide on over some rainbows!","Blink!", "LED Glasses", "Hello World"]
+    
+    let projectArray = ProjectData.projects
+    
     
     var body: some View {
         
         VStack {
             
             Form {
-                // Section 1
+                Section {
+                    Picker(selection: $selectedFrameworkIndex, label: Text("Select")) {
+                        ForEach(0 ..< projectNames.count) {
+                            Text(self.projectNames[$0])
+                            
+                        }
+                    }
+                }
+                // Section 2
                 Section {
                     
                     VStack(alignment: .leading){
@@ -121,7 +158,7 @@ struct ProjectCardView: View {
                             }
                             
                             
-                            Text(project.device)
+                            Text("Circuit Playground Bluefruit")
                                 .font(.caption)
                                 .fontWeight(.light)
                                 .foregroundColor(.gray)
@@ -132,7 +169,7 @@ struct ProjectCardView: View {
                             
                         }
                         
-                        Text(project.title)
+                        Text(projectArray[selectedFrameworkIndex].title)
                             .fontWeight(.semibold)
                         Divider()
                         
@@ -156,9 +193,9 @@ struct ProjectCardView: View {
                 
                 Section{
                     Button(action: {
-                        downloadModel.startDownload(urlString: project.downloadLink )
-                        downloadModel.unzipProjectFile()
-                        
+                        downloadModel.startDownload(urlString: projectArray[selectedFrameworkIndex].downloadLink)
+
+                        print(projectArray[selectedFrameworkIndex].downloadLink)
                     }, label: {
                         HStack{
                             DownloadButtonViewModel(percentage: $progress)
@@ -176,7 +213,24 @@ struct ProjectCardView: View {
                 // Section 2
                 Section{
                     Button(action: {
-                        model.retrieveCP7xCode()
+                        if selectedFrameworkIndex == 0 {
+                            model.retrieveCP7xCode()
+                            
+                        }
+                        if selectedFrameworkIndex == 1 {
+                            model.retrieveBlinkCP7xCode()
+                            
+                        }
+                        if selectedFrameworkIndex == 2 {
+                            model.ledGlassesCP7xCode()
+                            print("Glasses example sent")
+                        }
+                        if selectedFrameworkIndex == 3 {
+                            model.retrieveCP7xCode()
+                            
+                        }
+                        
+                     //   model.retrieveCP7xCode()
                         value = 1
                         print("value: \(value)")
                     }, label: {
@@ -186,20 +240,10 @@ struct ProjectCardView: View {
                     })
                 }
                 
-                // Section 3
-                //                Section(header: Text("code.py")){
-                //                    VStack(alignment: .leading){
-                //                        Text("""
-                //    \(project.pythonCode)
-                //    """)
-                //                    }
-                //
-                //                }
-                
             }
             
             .navigationBarTitle("Project Card")
-            
+            .navigationBarBackButtonHidden(true)
         }
         
         
@@ -210,6 +254,7 @@ struct ProjectCardView: View {
             }
         }
         .onAppear {
+            
             print("View Did Load.")
             model.onAppear(fileTransferClient: fileTransferClient)
             model.startup()
@@ -226,8 +271,6 @@ struct ProjectCardView: View {
             model.onDissapear()
             
         }
-        
-        
         
     }
     
@@ -249,3 +292,4 @@ struct ProjectCardView_Previews: PreviewProvider {
         ProjectCardView(fileTransferClient: nil, project: ProjectData.projects.first!)
     }
 }
+

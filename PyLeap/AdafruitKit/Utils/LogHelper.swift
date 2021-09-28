@@ -14,4 +14,9 @@ func DLog(_ message: String, function: String = #function) {
     if _isDebugAssertConfiguration() {
         NSLog("%@, %@", function, message)
     }
+    
+    
+   // LogManager.shared.log(.init(level: .debug, text: message, category: .app))
+    
 }
+

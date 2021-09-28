@@ -9,44 +9,25 @@
 /* Begin PBXBuildFile section */
 		D517F68126C5771D002996E8 /* FillerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D517F68026C5771D002996E8 /* FillerView.swift */; };
 		D52BE7EE269DF36E00630900 /* DownloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE7EA269DF36E00630900 /* DownloadViewModel.swift */; };
+		D52BE7F0269DF36E00630900 /* DownloadProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE7E9269DF36E00630900 /* DownloadProgressView.swift */; };
 		D52BE7F3269DF62100630900 /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = D52BE7F2269DF62100630900 /* Zip */; };
 		D52BE80C26A061B100630900 /* FileTransferClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54D38C22692044800FBFE47 /* FileTransferClient.swift */; };
 		D52BE80D26A061F800630900 /* GliderClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE801269F03F200630900 /* GliderClient.swift */; };
 		D52BE80E26A0656700630900 /* FileProviderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE7FD269F03F200630900 /* FileProviderItem.swift */; };
 		D52BE80F26A0656700630900 /* MetadataCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE7FC269F03F200630900 /* MetadataCache.swift */; };
 		D52BE81026A0656700630900 /* FileProviderExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE7FA269F03F200630900 /* FileProviderExtension.swift */; };
-		D52BE81126A0656700630900 /* String+DeletingPrefix.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE7FB269F03F200630900 /* String+DeletingPrefix.swift */; };
 		D52BE81226A0657000630900 /* FileProviderEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE7FF269F03F200630900 /* FileProviderEnumerator.swift */; };
 		D52BE81326A0657A00630900 /* DocumentActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE803269F03F200630900 /* DocumentActionViewController.swift */; };
 		D52BE81426A0658600630900 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE7F7269F03F200630900 /* ShareViewController.swift */; };
-		D52BE82426A065F400630900 /* FileProviderUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54D38BE2691E0DA00FBFE47 /* FileProviderUtils.swift */; };
-		D52BE82526A065F400630900 /* FileTransferUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54D38BD2691E0DA00FBFE47 /* FileTransferUtils.swift */; };
 		D52BE82626A065F700630900 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54D38C32692044800FBFE47 /* Settings.swift */; };
 		D52BE82726A065FC00630900 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54D38C02692044800FBFE47 /* AppState.swift */; };
 		D52BE82A26A0660200630900 /* KeyboardUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54D38B82691E0D000FBFE47 /* KeyboardUtils.swift */; };
-		D52BE84326A068DD00630900 /* BleDataProcessingQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE82E26A067F600630900 /* BleDataProcessingQueue.swift */; };
-		D52BE84426A068DD00630900 /* BlePeripheral+ManufacturerAdafruit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE83126A067F600630900 /* BlePeripheral+ManufacturerAdafruit.swift */; };
-		D52BE84526A068DD00630900 /* BlePeripheral+FileTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE83026A067F600630900 /* BlePeripheral+FileTransfer.swift */; };
-		D52BE84626A068DD00630900 /* BlePeripheral+AdafruitCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE82F26A067F600630900 /* BlePeripheral+AdafruitCommon.swift */; };
-		D52BE84726A068E200630900 /* BleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE83426A067F600630900 /* BleManager.swift */; };
-		D52BE84826A068E200630900 /* BleAutoReconnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE83526A067F600630900 /* BleAutoReconnect.swift */; };
-		D52BE84926A068E200630900 /* BlePeripheral+Battery.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE83626A067F600630900 /* BlePeripheral+Battery.swift */; };
-		D52BE84A26A068E200630900 /* BlePeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE83326A067F600630900 /* BlePeripheral.swift */; };
-		D52BE84B26A06A9400630900 /* Int+Bytes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE83A26A067F600630900 /* Int+Bytes.swift */; };
-		D52BE84C26A06A9400630900 /* Types+Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE83D26A067F600630900 /* Types+Data.swift */; };
-		D52BE84D26A06A9400630900 /* LogHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE83C26A067F600630900 /* LogHelper.swift */; };
-		D52BE84E26A06A9400630900 /* Data+ScanValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE83E26A067F600630900 /* Data+ScanValue.swift */; };
-		D52BE84F26A06A9400630900 /* HexUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE83926A067F600630900 /* HexUtils.swift */; };
-		D52BE85026A06A9400630900 /* CommandQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE83B26A067F600630900 /* CommandQueue.swift */; };
-		D52BE85126A06A9400630900 /* Data+LittleEndianTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE83826A067F600630900 /* Data+LittleEndianTypes.swift */; };
 		D52BE85426A0E39100630900 /* BTConnectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE85326A0E39100630900 /* BTConnectionViewModel.swift */; };
 		D52BE85526A0E5A400630900 /* PeripheralList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54D38C52692044800FBFE47 /* PeripheralList.swift */; };
 		D52BE85626A0E5A700630900 /* PeripheralAutoConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54D38C62692044800FBFE47 /* PeripheralAutoConnect.swift */; };
 		D52F7E742672F4C400911D43 /* PyLeapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52F7E732672F4C400911D43 /* PyLeapApp.swift */; };
 		D52F7E782672F4C500911D43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D52F7E772672F4C500911D43 /* Assets.xcassets */; };
 		D52F7E7B2672F4C500911D43 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D52F7E7A2672F4C500911D43 /* Preview Assets.xcassets */; };
-		D54EEFE026D6D200002DA555 /* DownloadButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54EEFDF26D6D200002DA555 /* DownloadButtonView.swift */; };
-		D54EEFE226D85904002DA555 /* DownloadButtonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54EEFE126D85904002DA555 /* DownloadButtonViewModel.swift */; };
 		D5507AD026C668BC00512BAA /* FileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACC26C668BC00512BAA /* FileViewModel.swift */; };
 		D5507AD126C668BC00512BAA /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACF26C668BC00512BAA /* SearchBarView.swift */; };
 		D5507AD226C668BC00512BAA /* FileDownloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACD26C668BC00512BAA /* FileDownloadViewModel.swift */; };
@@ -63,6 +44,28 @@
 		D5597C3B26B98E1E00DF17C0 /* NumbersOnly.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5597C3A26B98E1E00DF17C0 /* NumbersOnly.swift */; };
 		D55D5BFD26C4BE45002B0925 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = D55D5BFC26C4BE45002B0925 /* Project.swift */; };
 		D55D5C0026C4D619002B0925 /* ProjectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D55D5BFF26C4D619002B0925 /* ProjectCell.swift */; };
+		D56F63F8270240DB000E5975 /* BleDataProcessingQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F63E7270240A4000E5975 /* BleDataProcessingQueue.swift */; };
+		D56F63F9270240DB000E5975 /* BlePeripheral+AdafruitCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F63E8270240A4000E5975 /* BlePeripheral+AdafruitCommon.swift */; };
+		D56F63FA270240DB000E5975 /* BlePeripheral+FileTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F63E9270240A4000E5975 /* BlePeripheral+FileTransfer.swift */; };
+		D56F63FB270240DB000E5975 /* BlePeripheral+ManufacturerAdafruit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F63EA270240A4000E5975 /* BlePeripheral+ManufacturerAdafruit.swift */; };
+		D56F63FC270240E1000E5975 /* BleAutoReconnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F63EE270240A4000E5975 /* BleAutoReconnect.swift */; };
+		D56F63FD270240E1000E5975 /* BlePeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F63EC270240A4000E5975 /* BlePeripheral.swift */; };
+		D56F63FE270240E1000E5975 /* BlePeripheral+Battery.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F63EF270240A4000E5975 /* BlePeripheral+Battery.swift */; };
+		D56F63FF270240E1000E5975 /* BleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F63ED270240A4000E5975 /* BleManager.swift */; };
+		D56F6400270240E7000E5975 /* LogHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F63F5270240A4000E5975 /* LogHelper.swift */; };
+		D56F6401270240E7000E5975 /* Int+Bytes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F63F3270240A4000E5975 /* Int+Bytes.swift */; };
+		D56F6402270240E7000E5975 /* HexUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F63F2270240A4000E5975 /* HexUtils.swift */; };
+		D56F6403270240E7000E5975 /* CommandQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F63F4270240A4000E5975 /* CommandQueue.swift */; };
+		D56F6404270240E7000E5975 /* Types+Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F63F6270240A4000E5975 /* Types+Data.swift */; };
+		D56F6405270240E7000E5975 /* Data+LittleEndianTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F63F1270240A4000E5975 /* Data+LittleEndianTypes.swift */; };
+		D56F6406270240E7000E5975 /* Data+ScanValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F63F7270240A4000E5975 /* Data+ScanValue.swift */; };
+		D56F640B270242CA000E5975 /* FileProviderUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F6409270242CA000E5975 /* FileProviderUtils.swift */; };
+		D56F640C270242CA000E5975 /* UIColor+LightAndDark.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F6407270242CA000E5975 /* UIColor+LightAndDark.swift */; };
+		D56F640D270242CA000E5975 /* FileTransferPathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F640A270242CA000E5975 /* FileTransferPathUtils.swift */; };
+		D56F640E270242CA000E5975 /* String+DeletingPrefix.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F6408270242CA000E5975 /* String+DeletingPrefix.swift */; };
+		D56F64102702A6E9000E5975 /* DownloadButtonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F640F2702A6E9000E5975 /* DownloadButtonViewModel.swift */; };
+		D56F64122702A7E3000E5975 /* DownloadButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F64112702A7E3000E5975 /* DownloadButtonView.swift */; };
+		D56F64142702D270000E5975 /* LogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F64132702D270000E5975 /* LogManager.swift */; };
 		D58D887926CAB6FC0085604A /* SamplePythonCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58D887826CAB6FC0085604A /* SamplePythonCode.swift */; };
 		D58D887B26CC02B60085604A /* OnboardingViewPure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58D887A26CC02B60085604A /* OnboardingViewPure.swift */; };
 		D58D887D26CDF8110085604A /* FileChooserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58D887C26CDF8110085604A /* FileChooserView.swift */; };
@@ -86,12 +89,12 @@
 
 /* Begin PBXFileReference section */
 		D517F68026C5771D002996E8 /* FillerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FillerView.swift; sourceTree = "<group>"; };
+		D52BE7E9269DF36E00630900 /* DownloadProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProgressView.swift; sourceTree = "<group>"; };
 		D52BE7EA269DF36E00630900 /* DownloadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadViewModel.swift; sourceTree = "<group>"; };
 		D52BE7F6269F03F200630900 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		D52BE7F7269F03F200630900 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		D52BE7F8269F03F200630900 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D52BE7FA269F03F200630900 /* FileProviderExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProviderExtension.swift; sourceTree = "<group>"; };
-		D52BE7FB269F03F200630900 /* String+DeletingPrefix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+DeletingPrefix.swift"; sourceTree = "<group>"; };
 		D52BE7FC269F03F200630900 /* MetadataCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataCache.swift; sourceTree = "<group>"; };
 		D52BE7FD269F03F200630900 /* FileProviderItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProviderItem.swift; sourceTree = "<group>"; };
 		D52BE7FE269F03F200630900 /* GliderFileProvider.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GliderFileProvider.entitlements; sourceTree = "<group>"; };
@@ -101,21 +104,6 @@
 		D52BE803269F03F200630900 /* DocumentActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentActionViewController.swift; sourceTree = "<group>"; };
 		D52BE805269F03F200630900 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		D52BE806269F03F200630900 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D52BE82E26A067F600630900 /* BleDataProcessingQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleDataProcessingQueue.swift; sourceTree = "<group>"; };
-		D52BE82F26A067F600630900 /* BlePeripheral+AdafruitCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BlePeripheral+AdafruitCommon.swift"; sourceTree = "<group>"; };
-		D52BE83026A067F600630900 /* BlePeripheral+FileTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BlePeripheral+FileTransfer.swift"; sourceTree = "<group>"; };
-		D52BE83126A067F600630900 /* BlePeripheral+ManufacturerAdafruit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BlePeripheral+ManufacturerAdafruit.swift"; sourceTree = "<group>"; };
-		D52BE83326A067F600630900 /* BlePeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlePeripheral.swift; sourceTree = "<group>"; };
-		D52BE83426A067F600630900 /* BleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleManager.swift; sourceTree = "<group>"; };
-		D52BE83526A067F600630900 /* BleAutoReconnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleAutoReconnect.swift; sourceTree = "<group>"; };
-		D52BE83626A067F600630900 /* BlePeripheral+Battery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BlePeripheral+Battery.swift"; sourceTree = "<group>"; };
-		D52BE83826A067F600630900 /* Data+LittleEndianTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+LittleEndianTypes.swift"; sourceTree = "<group>"; };
-		D52BE83926A067F600630900 /* HexUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HexUtils.swift; sourceTree = "<group>"; };
-		D52BE83A26A067F600630900 /* Int+Bytes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Bytes.swift"; sourceTree = "<group>"; };
-		D52BE83B26A067F600630900 /* CommandQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandQueue.swift; sourceTree = "<group>"; };
-		D52BE83C26A067F600630900 /* LogHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogHelper.swift; sourceTree = "<group>"; };
-		D52BE83D26A067F600630900 /* Types+Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Types+Data.swift"; sourceTree = "<group>"; };
-		D52BE83E26A067F600630900 /* Data+ScanValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+ScanValue.swift"; sourceTree = "<group>"; };
 		D52BE85326A0E39100630900 /* BTConnectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTConnectionViewModel.swift; sourceTree = "<group>"; };
 		D52F7E702672F4C400911D43 /* PyLeap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PyLeap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D52F7E732672F4C400911D43 /* PyLeapApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PyLeapApp.swift; sourceTree = "<group>"; };
@@ -123,15 +111,11 @@
 		D52F7E7A2672F4C500911D43 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D52F7E7C2672F4C500911D43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D54D38B82691E0D000FBFE47 /* KeyboardUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardUtils.swift; sourceTree = "<group>"; };
-		D54D38BD2691E0DA00FBFE47 /* FileTransferUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTransferUtils.swift; sourceTree = "<group>"; };
-		D54D38BE2691E0DA00FBFE47 /* FileProviderUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProviderUtils.swift; sourceTree = "<group>"; };
 		D54D38C02692044800FBFE47 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		D54D38C22692044800FBFE47 /* FileTransferClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTransferClient.swift; sourceTree = "<group>"; };
 		D54D38C32692044800FBFE47 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		D54D38C52692044800FBFE47 /* PeripheralList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralList.swift; sourceTree = "<group>"; };
 		D54D38C62692044800FBFE47 /* PeripheralAutoConnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralAutoConnect.swift; sourceTree = "<group>"; };
-		D54EEFDF26D6D200002DA555 /* DownloadButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadButtonView.swift; sourceTree = "<group>"; };
-		D54EEFE126D85904002DA555 /* DownloadButtonViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadButtonViewModel.swift; sourceTree = "<group>"; };
 		D5507ACB26C668BC00512BAA /* FilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
 		D5507ACC26C668BC00512BAA /* FileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileViewModel.swift; sourceTree = "<group>"; };
 		D5507ACD26C668BC00512BAA /* FileDownloadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDownloadViewModel.swift; sourceTree = "<group>"; };
@@ -148,6 +132,28 @@
 		D5597C3A26B98E1E00DF17C0 /* NumbersOnly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumbersOnly.swift; sourceTree = "<group>"; };
 		D55D5BFC26C4BE45002B0925 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		D55D5BFF26C4D619002B0925 /* ProjectCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCell.swift; sourceTree = "<group>"; };
+		D56F63E7270240A4000E5975 /* BleDataProcessingQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleDataProcessingQueue.swift; sourceTree = "<group>"; };
+		D56F63E8270240A4000E5975 /* BlePeripheral+AdafruitCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BlePeripheral+AdafruitCommon.swift"; sourceTree = "<group>"; };
+		D56F63E9270240A4000E5975 /* BlePeripheral+FileTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BlePeripheral+FileTransfer.swift"; sourceTree = "<group>"; };
+		D56F63EA270240A4000E5975 /* BlePeripheral+ManufacturerAdafruit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BlePeripheral+ManufacturerAdafruit.swift"; sourceTree = "<group>"; };
+		D56F63EC270240A4000E5975 /* BlePeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlePeripheral.swift; sourceTree = "<group>"; };
+		D56F63ED270240A4000E5975 /* BleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleManager.swift; sourceTree = "<group>"; };
+		D56F63EE270240A4000E5975 /* BleAutoReconnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleAutoReconnect.swift; sourceTree = "<group>"; };
+		D56F63EF270240A4000E5975 /* BlePeripheral+Battery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BlePeripheral+Battery.swift"; sourceTree = "<group>"; };
+		D56F63F1270240A4000E5975 /* Data+LittleEndianTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+LittleEndianTypes.swift"; sourceTree = "<group>"; };
+		D56F63F2270240A4000E5975 /* HexUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HexUtils.swift; sourceTree = "<group>"; };
+		D56F63F3270240A4000E5975 /* Int+Bytes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Bytes.swift"; sourceTree = "<group>"; };
+		D56F63F4270240A4000E5975 /* CommandQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandQueue.swift; sourceTree = "<group>"; };
+		D56F63F5270240A4000E5975 /* LogHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogHelper.swift; sourceTree = "<group>"; };
+		D56F63F6270240A4000E5975 /* Types+Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Types+Data.swift"; sourceTree = "<group>"; };
+		D56F63F7270240A4000E5975 /* Data+ScanValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+ScanValue.swift"; sourceTree = "<group>"; };
+		D56F6407270242CA000E5975 /* UIColor+LightAndDark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+LightAndDark.swift"; sourceTree = "<group>"; };
+		D56F6408270242CA000E5975 /* String+DeletingPrefix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+DeletingPrefix.swift"; sourceTree = "<group>"; };
+		D56F6409270242CA000E5975 /* FileProviderUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProviderUtils.swift; sourceTree = "<group>"; };
+		D56F640A270242CA000E5975 /* FileTransferPathUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTransferPathUtils.swift; sourceTree = "<group>"; };
+		D56F640F2702A6E9000E5975 /* DownloadButtonViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadButtonViewModel.swift; sourceTree = "<group>"; };
+		D56F64112702A7E3000E5975 /* DownloadButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadButtonView.swift; sourceTree = "<group>"; };
+		D56F64132702D270000E5975 /* LogManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LogManager.swift; path = "../../../../Documents/GitHub/Glider-for-iOS/Glider/Models/LogManager.swift"; sourceTree = "<group>"; };
 		D58D887826CAB6FC0085604A /* SamplePythonCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplePythonCode.swift; sourceTree = "<group>"; };
 		D58D887A26CC02B60085604A /* OnboardingViewPure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewPure.swift; sourceTree = "<group>"; };
 		D58D887C26CDF8110085604A /* FileChooserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileChooserView.swift; sourceTree = "<group>"; };
@@ -209,7 +215,6 @@
 			isa = PBXGroup;
 			children = (
 				D52BE7FA269F03F200630900 /* FileProviderExtension.swift */,
-				D52BE7FB269F03F200630900 /* String+DeletingPrefix.swift */,
 				D52BE7FC269F03F200630900 /* MetadataCache.swift */,
 				D52BE7FD269F03F200630900 /* FileProviderItem.swift */,
 				D52BE7FE269F03F200630900 /* GliderFileProvider.entitlements */,
@@ -228,61 +233,6 @@
 				D52BE806269F03F200630900 /* Info.plist */,
 			);
 			path = GliderFileProviderUI;
-			sourceTree = "<group>";
-		};
-		D52BE82B26A067F600630900 /* AdafruitKit */ = {
-			isa = PBXGroup;
-			children = (
-				D52BE82C26A067F600630900 /* Ble */,
-				D52BE83726A067F600630900 /* Utils */,
-			);
-			path = AdafruitKit;
-			sourceTree = "<group>";
-		};
-		D52BE82C26A067F600630900 /* Ble */ = {
-			isa = PBXGroup;
-			children = (
-				D52BE82D26A067F600630900 /* AdafruitSensors */,
-				D52BE83226A067F600630900 /* BleCentralMode */,
-			);
-			path = Ble;
-			sourceTree = "<group>";
-		};
-		D52BE82D26A067F600630900 /* AdafruitSensors */ = {
-			isa = PBXGroup;
-			children = (
-				D52BE82E26A067F600630900 /* BleDataProcessingQueue.swift */,
-				D52BE82F26A067F600630900 /* BlePeripheral+AdafruitCommon.swift */,
-				D5C41D6C26C5FDA3004C38E3 /* Void */,
-				D52BE83026A067F600630900 /* BlePeripheral+FileTransfer.swift */,
-				D52BE83126A067F600630900 /* BlePeripheral+ManufacturerAdafruit.swift */,
-			);
-			path = AdafruitSensors;
-			sourceTree = "<group>";
-		};
-		D52BE83226A067F600630900 /* BleCentralMode */ = {
-			isa = PBXGroup;
-			children = (
-				D52BE83326A067F600630900 /* BlePeripheral.swift */,
-				D52BE83426A067F600630900 /* BleManager.swift */,
-				D52BE83526A067F600630900 /* BleAutoReconnect.swift */,
-				D52BE83626A067F600630900 /* BlePeripheral+Battery.swift */,
-			);
-			path = BleCentralMode;
-			sourceTree = "<group>";
-		};
-		D52BE83726A067F600630900 /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-				D52BE83826A067F600630900 /* Data+LittleEndianTypes.swift */,
-				D52BE83926A067F600630900 /* HexUtils.swift */,
-				D52BE83A26A067F600630900 /* Int+Bytes.swift */,
-				D52BE83B26A067F600630900 /* CommandQueue.swift */,
-				D52BE83C26A067F600630900 /* LogHelper.swift */,
-				D52BE83D26A067F600630900 /* Types+Data.swift */,
-				D52BE83E26A067F600630900 /* Data+ScanValue.swift */,
-			);
-			path = Utils;
 			sourceTree = "<group>";
 		};
 		D52BE85226A0E22C00630900 /* Root View */ = {
@@ -319,14 +269,14 @@
 				D5C41D6526C59A48004C38E3 /* PyLeap.entitlements */,
 				D52F7E732672F4C400911D43 /* PyLeapApp.swift */,
 				D59DFDB5268CD052001737F6 /* AppEnvironment.swift */,
+				D56F63E4270240A4000E5975 /* AdafruitKit */,
 				D5597BF726A9E14B00DF17C0 /* AppDelegate.swift */,
+				D5C41D6C26C5FDA3004C38E3 /* Void */,
 				D517F67F26C56939002996E8 /* Origanal Setup */,
 				D55D5BFB26C4BE0C002B0925 /* Project Model */,
-				D52BE82B26A067F600630900 /* AdafruitKit */,
 				D59DFDB2268CCEAC001737F6 /* Views */,
 				D54D38B72691E0D000FBFE47 /* Utils */,
 				D54D38BF2692044800FBFE47 /* Models */,
-				D54D38BB2691E0DA00FBFE47 /* Utils */,
 				D52F7E772672F4C500911D43 /* Assets.xcassets */,
 				D52F7E7C2672F4C500911D43 /* Info.plist */,
 				D5597BFD26AB1A0B00DF17C0 /* Resources */,
@@ -346,19 +296,14 @@
 		D54D38B72691E0D000FBFE47 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				D56F6409270242CA000E5975 /* FileProviderUtils.swift */,
+				D56F640A270242CA000E5975 /* FileTransferPathUtils.swift */,
+				D56F6408270242CA000E5975 /* String+DeletingPrefix.swift */,
+				D56F6407270242CA000E5975 /* UIColor+LightAndDark.swift */,
 				D54D38B82691E0D000FBFE47 /* KeyboardUtils.swift */,
 			);
 			name = Utils;
 			path = ViewModels/Utils;
-			sourceTree = "<group>";
-		};
-		D54D38BB2691E0DA00FBFE47 /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-				D54D38BD2691E0DA00FBFE47 /* FileTransferUtils.swift */,
-				D54D38BE2691E0DA00FBFE47 /* FileProviderUtils.swift */,
-			);
-			path = Utils;
 			sourceTree = "<group>";
 		};
 		D54D38BF2692044800FBFE47 /* Models */ = {
@@ -368,6 +313,7 @@
 				D54D38C32692044800FBFE47 /* Settings.swift */,
 				D54D38C42692044800FBFE47 /* Scanner */,
 				D54D38C02692044800FBFE47 /* AppState.swift */,
+				D56F64132702D270000E5975 /* LogManager.swift */,
 				D5597C3A26B98E1E00DF17C0 /* NumbersOnly.swift */,
 			);
 			path = Models;
@@ -446,6 +392,60 @@
 			path = "Project Views";
 			sourceTree = "<group>";
 		};
+		D56F63E4270240A4000E5975 /* AdafruitKit */ = {
+			isa = PBXGroup;
+			children = (
+				D56F63E5270240A4000E5975 /* Ble */,
+				D56F63F0270240A4000E5975 /* Utils */,
+			);
+			path = AdafruitKit;
+			sourceTree = "<group>";
+		};
+		D56F63E5270240A4000E5975 /* Ble */ = {
+			isa = PBXGroup;
+			children = (
+				D56F63E6270240A4000E5975 /* AdafruitSensors */,
+				D56F63EB270240A4000E5975 /* BleCentralMode */,
+			);
+			path = Ble;
+			sourceTree = "<group>";
+		};
+		D56F63E6270240A4000E5975 /* AdafruitSensors */ = {
+			isa = PBXGroup;
+			children = (
+				D56F63E7270240A4000E5975 /* BleDataProcessingQueue.swift */,
+				D56F63E8270240A4000E5975 /* BlePeripheral+AdafruitCommon.swift */,
+				D56F63E9270240A4000E5975 /* BlePeripheral+FileTransfer.swift */,
+				D56F63EA270240A4000E5975 /* BlePeripheral+ManufacturerAdafruit.swift */,
+			);
+			path = AdafruitSensors;
+			sourceTree = "<group>";
+		};
+		D56F63EB270240A4000E5975 /* BleCentralMode */ = {
+			isa = PBXGroup;
+			children = (
+				D56F63EC270240A4000E5975 /* BlePeripheral.swift */,
+				D56F63ED270240A4000E5975 /* BleManager.swift */,
+				D56F63EE270240A4000E5975 /* BleAutoReconnect.swift */,
+				D56F63EF270240A4000E5975 /* BlePeripheral+Battery.swift */,
+			);
+			path = BleCentralMode;
+			sourceTree = "<group>";
+		};
+		D56F63F0270240A4000E5975 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				D56F63F1270240A4000E5975 /* Data+LittleEndianTypes.swift */,
+				D56F63F2270240A4000E5975 /* HexUtils.swift */,
+				D56F63F3270240A4000E5975 /* Int+Bytes.swift */,
+				D56F63F4270240A4000E5975 /* CommandQueue.swift */,
+				D56F63F5270240A4000E5975 /* LogHelper.swift */,
+				D56F63F6270240A4000E5975 /* Types+Data.swift */,
+				D56F63F7270240A4000E5975 /* Data+ScanValue.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		D59DFDB2268CCEAC001737F6 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -479,8 +479,9 @@
 			isa = PBXGroup;
 			children = (
 				D52BE7EA269DF36E00630900 /* DownloadViewModel.swift */,
-				D54EEFDF26D6D200002DA555 /* DownloadButtonView.swift */,
-				D54EEFE126D85904002DA555 /* DownloadButtonViewModel.swift */,
+				D56F64112702A7E3000E5975 /* DownloadButtonView.swift */,
+				D52BE7E9269DF36E00630900 /* DownloadProgressView.swift */,
+				D56F640F2702A6E9000E5975 /* DownloadButtonViewModel.swift */,
 			);
 			path = "Download View";
 			sourceTree = "<group>";
@@ -596,22 +597,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D56F64102702A6E9000E5975 /* DownloadButtonViewModel.swift in Sources */,
+				D56F63FB270240DB000E5975 /* BlePeripheral+ManufacturerAdafruit.swift in Sources */,
 				D52BE82A26A0660200630900 /* KeyboardUtils.swift in Sources */,
-				D52BE84826A068E200630900 /* BleAutoReconnect.swift in Sources */,
+				D56F640D270242CA000E5975 /* FileTransferPathUtils.swift in Sources */,
 				D5507AD326C668BC00512BAA /* FilesView.swift in Sources */,
+				D56F6401270240E7000E5975 /* Int+Bytes.swift in Sources */,
+				D56F6406270240E7000E5975 /* Data+ScanValue.swift in Sources */,
 				D59DFDC4268CFAB4001737F6 /* OnboardingDataModel.swift in Sources */,
-				D52BE85026A06A9400630900 /* CommandQueue.swift in Sources */,
-				D52BE84D26A06A9400630900 /* LogHelper.swift in Sources */,
-				D52BE84526A068DD00630900 /* BlePeripheral+FileTransfer.swift in Sources */,
+				D56F6402270240E7000E5975 /* HexUtils.swift in Sources */,
 				D5C41D6E26C5FDBB004C38E3 /* Void.swift in Sources */,
-				D52BE84326A068DD00630900 /* BleDataProcessingQueue.swift in Sources */,
 				D5597C1426AF751B00DF17C0 /* MainView.swift in Sources */,
+				D56F63FD270240E1000E5975 /* BlePeripheral.swift in Sources */,
 				D52BE82726A065FC00630900 /* AppState.swift in Sources */,
 				D5597C0426ADDD5E00DF17C0 /* StartupViewModel.swift in Sources */,
 				D5E52DC326A659D60083956B /* ButtonStyles.swift in Sources */,
 				D52BE81426A0658600630900 /* ShareViewController.swift in Sources */,
-				D52BE85126A06A9400630900 /* Data+LittleEndianTypes.swift in Sources */,
+				D56F6404270240E7000E5975 /* Types+Data.swift in Sources */,
 				D58D887F26CDF8310085604A /* FileChooserModel.swift in Sources */,
+				D56F64142702D270000E5975 /* LogManager.swift in Sources */,
+				D56F640C270242CA000E5975 /* UIColor+LightAndDark.swift in Sources */,
 				D59DFDC0268CE565001737F6 /* ProjectViewModel.swift in Sources */,
 				D5F53CED2694B7A9007634C2 /* OnboardingBackgroundView.swift in Sources */,
 				D55D5BFD26C4BE45002B0925 /* Project.swift in Sources */,
@@ -619,54 +624,53 @@
 				D58D887926CAB6FC0085604A /* SamplePythonCode.swift in Sources */,
 				D5F53CEF2694BD51007634C2 /* ScanAnimation.swift in Sources */,
 				D52F7E742672F4C400911D43 /* PyLeapApp.swift in Sources */,
+				D56F640B270242CA000E5975 /* FileProviderUtils.swift in Sources */,
+				D52BE7F0269DF36E00630900 /* DownloadProgressView.swift in Sources */,
 				D5E52DC626A71E010083956B /* SplashViewModel.swift in Sources */,
-				D52BE84626A068DD00630900 /* BlePeripheral+AdafruitCommon.swift in Sources */,
 				D52BE82626A065F700630900 /* Settings.swift in Sources */,
 				D52BE80E26A0656700630900 /* FileProviderItem.swift in Sources */,
-				D54EEFE026D6D200002DA555 /* DownloadButtonView.swift in Sources */,
-				D52BE84726A068E200630900 /* BleManager.swift in Sources */,
 				D5597C0B26AF018800DF17C0 /* HideKeyboard.swift in Sources */,
 				D52BE80C26A061B100630900 /* FileTransferClient.swift in Sources */,
+				D56F6405270240E7000E5975 /* Data+LittleEndianTypes.swift in Sources */,
+				D56F63F9270240DB000E5975 /* BlePeripheral+AdafruitCommon.swift in Sources */,
 				D58D887D26CDF8110085604A /* FileChooserView.swift in Sources */,
 				D5597C0A26AF018800DF17C0 /* TextFieldAlert.swift in Sources */,
-				D52BE84926A068E200630900 /* BlePeripheral+Battery.swift in Sources */,
 				D59DFDB6268CD052001737F6 /* AppEnvironment.swift in Sources */,
 				D52BE85626A0E5A700630900 /* PeripheralAutoConnect.swift in Sources */,
-				D52BE82426A065F400630900 /* FileProviderUtils.swift in Sources */,
 				D59DFDB8268CD6A7001737F6 /* SplashScreen.swift in Sources */,
 				D517F68126C5771D002996E8 /* FillerView.swift in Sources */,
 				D5F53CEB2694B524007634C2 /* ScanningView.swift in Sources */,
 				D5597BF826A9E14B00DF17C0 /* AppDelegate.swift in Sources */,
+				D56F640E270242CA000E5975 /* String+DeletingPrefix.swift in Sources */,
 				D5507AD026C668BC00512BAA /* FileViewModel.swift in Sources */,
-				D52BE84426A068DD00630900 /* BlePeripheral+ManufacturerAdafruit.swift in Sources */,
 				D5597C3B26B98E1E00DF17C0 /* NumbersOnly.swift in Sources */,
-				D52BE84A26A068E200630900 /* BlePeripheral.swift in Sources */,
 				D59DFDBC268CE0EB001737F6 /* RootView.swift in Sources */,
 				D59DFD8F268A4A4D001737F6 /* BTConnectionView.swift in Sources */,
 				D58D887B26CC02B60085604A /* OnboardingViewPure.swift in Sources */,
 				D52BE85426A0E39100630900 /* BTConnectionViewModel.swift in Sources */,
+				D56F63FF270240E1000E5975 /* BleManager.swift in Sources */,
 				D52BE81326A0657A00630900 /* DocumentActionViewController.swift in Sources */,
 				D59DFDC2268CFA36001737F6 /* OnboardingStepView.swift in Sources */,
+				D56F6400270240E7000E5975 /* LogHelper.swift in Sources */,
 				D5597C3926B8B26100DF17C0 /* ProjectCardView.swift in Sources */,
+				D56F6403270240E7000E5975 /* CommandQueue.swift in Sources */,
 				D5507AD126C668BC00512BAA /* SearchBarView.swift in Sources */,
-				D54EEFE226D85904002DA555 /* DownloadButtonViewModel.swift in Sources */,
 				D52BE80F26A0656700630900 /* MetadataCache.swift in Sources */,
-				D52BE82526A065F400630900 /* FileTransferUtils.swift in Sources */,
-				D52BE84B26A06A9400630900 /* Int+Bytes.swift in Sources */,
+				D56F63FC270240E1000E5975 /* BleAutoReconnect.swift in Sources */,
 				D59DFDBA268CDEEC001737F6 /* RootViewModel.swift in Sources */,
-				D52BE81126A0656700630900 /* String+DeletingPrefix.swift in Sources */,
-				D52BE84C26A06A9400630900 /* Types+Data.swift in Sources */,
+				D56F63F8270240DB000E5975 /* BleDataProcessingQueue.swift in Sources */,
 				D52BE81026A0656700630900 /* FileProviderExtension.swift in Sources */,
 				D52BE85526A0E5A400630900 /* PeripheralList.swift in Sources */,
 				D5597C0226ADDCE300DF17C0 /* StartupView.swift in Sources */,
 				D5E52DC426A659DB0083956B /* DefaultBackground.swift in Sources */,
-				D52BE84E26A06A9400630900 /* Data+ScanValue.swift in Sources */,
 				D52BE81226A0657000630900 /* FileProviderEnumerator.swift in Sources */,
 				D5597C0C26AF018800DF17C0 /* View+If.swift in Sources */,
+				D56F64122702A7E3000E5975 /* DownloadButtonView.swift in Sources */,
+				D56F63FA270240DB000E5975 /* BlePeripheral+FileTransfer.swift in Sources */,
 				D52BE7EE269DF36E00630900 /* DownloadViewModel.swift in Sources */,
 				D55D5C0026C4D619002B0925 /* ProjectCell.swift in Sources */,
 				D5507AD226C668BC00512BAA /* FileDownloadViewModel.swift in Sources */,
-				D52BE84F26A06A9400630900 /* HexUtils.swift in Sources */,
+				D56F63FE270240E1000E5975 /* BlePeripheral+Battery.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -138,12 +138,12 @@ class FileTransferClient {
     }
 
     ///  Writes the content to the given full path. If the file exists, it will be overwritten
-    func writeFile(path: String, data: Data, progress: ProgressHandler? = nil, completion: ((Result<Void, Error>) -> Void)?) {
+    func writeFile(path: String, data: Data, progress: ProgressHandler? = nil, completion: ((Result<Date?, Error>) -> Void)?) {
         blePeripheral?.writeFile(path: path, data: data, progress: progress, completion: completion)
     }
     
     /// Deletes the file or directory at the given full path. Directories must be empty to be deleted
-    func deleteFile(path: String, completion: ((Result<Bool, Error>) -> Void)?) {
+    func deleteFile(path: String, completion: ((Result<Void, Error>) -> Void)?) {
         blePeripheral?.deleteFile(path: path, completion: completion)
     }
 
@@ -151,8 +151,8 @@ class FileTransferClient {
      Creates a new directory at the given full path. If a parent directory does not exist, then it will also be created. If any name conflicts with an existing file, an error will be returned
         - Parameter path: Full path. It should use a trailing slash.
     */
-    func makeDirectory(path: String, completion: ((Result<Bool, Error>) -> Void)?) {
-        blePeripheral?.makeDirectory(path: path, completion: completion)
+    func makeDirectory(path: String, completion: ((Result<Date?, Error>) -> Void)?) {
+        blePeripheral?.makeDirectory(path: FileTransferPathUtils.pathWithTrailingSeparator(path: path), completion: completion)
     }
 
     /// Lists all of the contents in a directory given a full path. Returned paths are relative to the given path to reduce duplication
