@@ -65,7 +65,7 @@
 		D56F640E270242CA000E5975 /* String+DeletingPrefix.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F6408270242CA000E5975 /* String+DeletingPrefix.swift */; };
 		D56F64102702A6E9000E5975 /* DownloadButtonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F640F2702A6E9000E5975 /* DownloadButtonViewModel.swift */; };
 		D56F64122702A7E3000E5975 /* DownloadButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F64112702A7E3000E5975 /* DownloadButtonView.swift */; };
-		D56F64142702D270000E5975 /* LogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F64132702D270000E5975 /* LogManager.swift */; };
+		D56F641627035D16000E5975 /* LogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F641527035D16000E5975 /* LogManager.swift */; };
 		D58D887926CAB6FC0085604A /* SamplePythonCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58D887826CAB6FC0085604A /* SamplePythonCode.swift */; };
 		D58D887B26CC02B60085604A /* OnboardingViewPure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58D887A26CC02B60085604A /* OnboardingViewPure.swift */; };
 		D58D887D26CDF8110085604A /* FileChooserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58D887C26CDF8110085604A /* FileChooserView.swift */; };
@@ -153,7 +153,7 @@
 		D56F640A270242CA000E5975 /* FileTransferPathUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTransferPathUtils.swift; sourceTree = "<group>"; };
 		D56F640F2702A6E9000E5975 /* DownloadButtonViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadButtonViewModel.swift; sourceTree = "<group>"; };
 		D56F64112702A7E3000E5975 /* DownloadButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadButtonView.swift; sourceTree = "<group>"; };
-		D56F64132702D270000E5975 /* LogManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LogManager.swift; path = "../../../../Documents/GitHub/Glider-for-iOS/Glider/Models/LogManager.swift"; sourceTree = "<group>"; };
+		D56F641527035D16000E5975 /* LogManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogManager.swift; sourceTree = "<group>"; };
 		D58D887826CAB6FC0085604A /* SamplePythonCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplePythonCode.swift; sourceTree = "<group>"; };
 		D58D887A26CC02B60085604A /* OnboardingViewPure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewPure.swift; sourceTree = "<group>"; };
 		D58D887C26CDF8110085604A /* FileChooserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileChooserView.swift; sourceTree = "<group>"; };
@@ -313,7 +313,7 @@
 				D54D38C32692044800FBFE47 /* Settings.swift */,
 				D54D38C42692044800FBFE47 /* Scanner */,
 				D54D38C02692044800FBFE47 /* AppState.swift */,
-				D56F64132702D270000E5975 /* LogManager.swift */,
+				D56F641527035D16000E5975 /* LogManager.swift */,
 				D5597C3A26B98E1E00DF17C0 /* NumbersOnly.swift */,
 			);
 			path = Models;
@@ -615,7 +615,7 @@
 				D52BE81426A0658600630900 /* ShareViewController.swift in Sources */,
 				D56F6404270240E7000E5975 /* Types+Data.swift in Sources */,
 				D58D887F26CDF8310085604A /* FileChooserModel.swift in Sources */,
-				D56F64142702D270000E5975 /* LogManager.swift in Sources */,
+				D56F641627035D16000E5975 /* LogManager.swift in Sources */,
 				D56F640C270242CA000E5975 /* UIColor+LightAndDark.swift in Sources */,
 				D59DFDC0268CE565001737F6 /* ProjectViewModel.swift in Sources */,
 				D5F53CED2694B7A9007634C2 /* OnboardingBackgroundView.swift in Sources */,
