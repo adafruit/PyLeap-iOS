@@ -12,7 +12,7 @@ struct ProjectCardView: View {
     var project: Project
     //@AppStorage("onboarding") var onboardingSeen = false
     
-    @State var selectedProjectIndex = 0
+    @AppStorage("index") var selectedProjectIndex = 0
     
     // Data
     @Environment(\.presentationMode) var presentationMode
@@ -78,23 +78,32 @@ struct ProjectCardView: View {
     
     
     func fileCheck(){
-        print("Inital value: \(value)")
-        if value == 0 {
-            print("Ready to transmit...")
-        }
-        
-        if value == 1{
-            model.retrieveCP7xNeopixel()
+            print("Inital value: \(value)")
+            if value == 0 {
+                print("Ready to transmit...")
+            }
             
-            value += 1
-            
+            if value == 1{
+                print("In file checker - step 1")
+                if selectedProjectIndex == 1 {
+                    model.blinkCP7xLib()
+                    print("Sending Blink Lib")
+                    print("Proj. Index \(selectedProjectIndex)")
+                }else {
+                    print("Sending Neopixel Lib")
+                    print("Proj. Index \(selectedProjectIndex)")
+                    model.retrieveCP7xNeopixel()
+                    
+                }
+                value += 1
+
+            }
+            if value == 2 {
+                print("Restarting")
+                value = 0
+                
+            }
         }
-        if value == 2 {
-            print("Restarting")
-            value = 0
-            
-        }
-    }
     
     var frameworks = ["UIKit", "Core Data", "CloudKit", "SwiftUI"]
     var projectNames = ["Glide on over some rainbows!","Blink!", "LED Glasses", "Hello World"]
@@ -196,23 +205,23 @@ struct ProjectCardView: View {
                     Button(action: {
                         if selectedProjectIndex == 0 {
                             model.retrieveCP7xCode()
-                            
+                            print("Rainbow")
                         }
                         if selectedProjectIndex == 1 {
                             model.retrieveBlinkCP7xCode()
-                            
+                            print("Blink")
                         }
-                        if selectedProjectIndex == 2 {
-                            model.ledGlassesCP7xCode()
-                            print("Glasses example sent")
-                        }
-                        if selectedProjectIndex == 3 {
-                            model.retrieveCP7xCode()
-                            
-                        }
+//                        if selectedProjectIndex == 2 {
+//                            model.ledGlassesCP7xCode()
+//                            print("Glasses")
+//                        }
+//                        if selectedProjectIndex == 3 {
+//                            model.retrieveCP7xCode()
+//
+//                        }
                         
                         //   model.retrieveCP7xCode()
-                        model.counterFunc()
+                        //model.counterFunc()
                         value = 1
                         print("value: \(value)")
                     }, label: {

@@ -28,10 +28,23 @@ class ProjectViewModel: ObservableObject  {
 
     // MARK: - Properties
 
-    func counterFunc(){
-        index += 1
-        print("Index: \(index)")
+//    func counterFunc(){
+//        index += 1
+//        print("Index: \(index)")
+//    }
+    
+    
+    func blinkCP7xLib() {
+        print("blinkCP7xLib")
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_Blinky_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("error retrieving blink neopixel")
+            return
+        }
+        self.writeFile(filename: "/neopixel.mpy", data: data)
     }
+    
     
     func retrieveCP7xNeopixel() {
         
@@ -66,7 +79,7 @@ class ProjectViewModel: ObservableObject  {
                     if fileAttributes.isRegularFile! {
                         
                         files.append(fileURL)
-                        counterFunc()
+                       // counterFunc()
                         
                         print("File name: \(fileURL.deletingPathExtension().lastPathComponent)")
                         print("Path Extention: .\(fileURL.pathExtension)\n")
@@ -123,6 +136,8 @@ class ProjectViewModel: ObservableObject  {
         makeDirectory(path: "adafruit_register")
         
     }
+    
+    
     
     func testFunction(completion: @escaping ()-> Void){
         
