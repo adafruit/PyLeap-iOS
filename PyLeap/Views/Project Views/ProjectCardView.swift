@@ -75,7 +75,7 @@ struct ProjectCardView: View {
     
     let downloadLink: String = "https://learn.adafruit.com/pages/22555/elements/3098569/download?type=zip"
     
-
+    
     
     func fileCheck(){
         print("Inital value: \(value)")
@@ -84,46 +84,15 @@ struct ProjectCardView: View {
         }
         
         if value == 1{
-            print("Entered Value 1")
             model.retrieveCP7xNeopixel()
-          //  model.ledGlassesCP7xLib()
-            
-            
-            if selectedProjectIndex == 0 {
-                print("Sending LED GLasses Lib")
-            }
-            
-            if selectedProjectIndex == 1 {
-                print("Sending blink Lib")
-            }
-            
-            if selectedProjectIndex == 2 {
-                print("Sending LED GLasses Lib")
-            }
             
             value += 1
-
+            
         }
         if value == 2 {
-            print("Entered Value 2")
             print("Restarting")
             value = 0
             
-        }
-    }
-    
-    mutating func changeProj() {
-        if selectedProjectIndex == 0 {
-            project.title = projectArray[0].title
-        }
-        if selectedProjectIndex == 1 {
-            project.title = projectArray[1].title
-        }
-        if selectedProjectIndex == 2 {
-            project.title = projectArray[2].title
-        }
-        if selectedProjectIndex == 3 {
-            project.title = projectArray[3].title
         }
     }
     
@@ -206,7 +175,7 @@ struct ProjectCardView: View {
                 Section{
                     Button(action: {
                         downloadModel.startDownload(urlString: projectArray[selectedProjectIndex].downloadLink)
-
+                        
                         print(projectArray[selectedProjectIndex].downloadLink)
                     }, label: {
                         HStack{
@@ -225,29 +194,24 @@ struct ProjectCardView: View {
                 // Section 2
                 Section{
                     Button(action: {
-                        // model.createLEDGlassesLib()
                         if selectedProjectIndex == 0 {
                             model.retrieveCP7xCode()
-
+                            
                         }
                         if selectedProjectIndex == 1 {
                             model.retrieveBlinkCP7xCode()
-
+                            
                         }
                         if selectedProjectIndex == 2 {
-                         //   model.ledGlassesCP7xCode()
+                            model.ledGlassesCP7xCode()
                             print("Glasses example sent")
                         }
                         if selectedProjectIndex == 3 {
-                         //   model.retrieveCP7xCode()
-
+                            model.retrieveCP7xCode()
+                            
                         }
-                      //  model.ledGlassesCP7xLib()
-                     //   model.retrieveCP7xCode()
-//                        model.testFunction {
-//                            model.secondTest()
-//                        }
-                        model.retrieveCP7xCode()
+                        
+                        //   model.retrieveCP7xCode()
                         model.counterFunc()
                         value = 1
                         print("value: \(value)")
@@ -276,8 +240,8 @@ struct ProjectCardView: View {
             print("View Did Load.")
             model.onAppear(fileTransferClient: fileTransferClient)
             model.startup()
-           // model.gatherFiles()
-           // model.retrieveCP7xNeopixel()
+            // model.gatherFiles()
+            // model.retrieveCP7xNeopixel()
             fileCheck()
             print("value: \(value)")
             

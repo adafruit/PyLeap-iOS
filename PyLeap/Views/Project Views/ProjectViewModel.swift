@@ -153,22 +153,23 @@ class ProjectViewModel: ObservableObject  {
     }
     
     func retrieveCP7xCode() {
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x")
+            let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x")
+            
+            let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py"))
+            print("Code File Contents: \(documentsURL)")
         
-        let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py"))
-        print("Code File Contents: \(documentsURL)")
-    
-        self.writeFile(filename: "/code.py", data: data!)
-    }
-    
-    func retrieveBlinkCP7xCode() {
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_Blinky_demo").appendingPathComponent("CircuitPython 7.x")
+            self.writeFile(filename: "/code.py", data: data!)
+        }
         
-        let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py"))
-        print("Code File Contents: \(documentsURL)")
-    
-        self.writeFile(filename: "/code.py", data: data!)
-    }
+        func retrieveBlinkCP7xCode() {
+            let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_Blinky_demo").appendingPathComponent("CircuitPython 7.x")
+            
+            let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py"))
+            print("Code File Contents: \(documentsURL)")
+        
+            self.writeFile(filename: "/code.py", data: data!)
+        }
+
 
     func ledGlassesCP7xCode() {
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("example").appendingPathComponent("CircuitPython 7.x")
