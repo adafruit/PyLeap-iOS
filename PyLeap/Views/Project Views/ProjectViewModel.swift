@@ -11,8 +11,28 @@ import SwiftUI
 
 class ProjectViewModel: ObservableObject  {
     
+    @AppStorage("index") var index = 0
+    
+    @Published var bootUpInfo = ""
+    @Published var fileArray: [ContentFile] = []
+    @Published var showingDownloadAlert = false
+    @Published var entries = [BlePeripheral.DirectoryEntry]()
+    @Published var isTransmiting = false
+    @Published var isRootDirectory = false
+    @Published var directory = ""
+    @Published var counter: Int = 0
+    @Published var fileTransferClient: FileTransferClient?
+    let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    let cachesPath = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+    
+
     // MARK: - Properties
 
+    func counterFunc(){
+        index += 1
+        print("Index: \(index)")
+    }
+    
     func retrieveCP7xNeopixel() {
         
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
@@ -24,20 +44,112 @@ class ProjectViewModel: ObservableObject  {
         
         self.writeFile(filename: "/neopixel.mpy", data: data)
     }
+
+    
+    func gatherFiles() {
+       print("Gather Files Function Called!")
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        // Creating a File Manager Object
+        let manager = FileManager.default
+        
+        // Creating a path to make a document directory path
+        guard let url = manager.urls(for: .documentDirectory,in: .userDomainMask).first else {return}
+        
+        var files = [URL]()
+        
+        if let enumerator = FileManager.default.enumerator(at: documentsURL, includingPropertiesForKeys: [.isRegularFileKey], options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
+            for case let fileURL as URL in enumerator {
+                do {
+                    let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey])
+                    
+                    if fileAttributes.isRegularFile! {
+                        
+                        files.append(fileURL)
+                        counterFunc()
+                        
+                        print("File name: \(fileURL.deletingPathExtension().lastPathComponent)")
+                        print("Path Extention: .\(fileURL.pathExtension)\n")
+                        
+                        guard let data = try? Data(contentsOf: URL(fileURLWithPath: fileURL.deletingPathExtension().lastPathComponent, relativeTo: documentsURL).appendingPathExtension(fileURL.pathExtension)) else {
+                            return
+                        }
+                        
+                        index += 1
+                        
+                        self.writeFile(filename: "/\(fileURL.deletingPathExtension().lastPathComponent).\(fileURL.pathExtension)", data: data)
+
+                        //MARK:- Reads Files
+                        
+                    }
+                } catch { print(error, fileURL) }
+            }
+           // print(files)
+        }
+    }
+    
+    func fileLoader(fileURL: URL, documentURL: URL){
+        
+        print("File name: \(fileURL.deletingPathExtension().lastPathComponent)")
+        print("Path Extention: .\(fileURL.pathExtension) \n")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: fileURL.deletingPathExtension().lastPathComponent, relativeTo: documentURL).appendingPathExtension(fileURL.pathExtension)) else {
+            return
+        }
+        
+        index += 1
+        
+        self.writeFile(filename: "/\(fileURL.deletingPathExtension().lastPathComponent).\(fileURL.pathExtension)", data: data)
+        
+    }
     
     func ledGlassesCP7xLib() {
         
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("example").appendingPathComponent("CircuitPython 7.x")
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x")
         
-        let appFolder = documentsURL.appendingPathComponent("lib")
+      //  let appFolder = documentsURL.appendingPathComponent("lib")
         
-        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "lib", relativeTo: documentsURL)) else {
-            print("Transfer ERROR")
-            return
+     
+     //   guard let data = try? Data(contentsOf: URL(fileURLWithPath: "lib", relativeTo: documentsURL)) else {
+     //       print("Transfer ERROR")
+      //      return
+     //   }
+        
+     //   self.writeFile(filename: "/lib", data: data)
+    }
+    
+    func createLEDGlassesLib(){
+        makeDirectory(path: "adafruit_is31fl3741")
+        makeDirectory(path: "adafruit_register")
+        
+    }
+    
+    func testFunction(completion: @escaping ()-> Void){
+        
+        // SEnding first batch
+        DispatchQueue.main.asyncAfter(deadline: .now()){
+            let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+            
+            guard let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+                return
+            }
+            print("Neopixel File Contents: \(documentsURL)")
+            
+            self.writeFile(filename: "/neopixel.mpy", data: data)
+            completion()
         }
-        print("Lib File Contents: \(documentsURL)")
         
-        self.writeFile(filename: "/lib", data: data)
+    }
+    
+    func secondTest(){
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5){
+            let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x")
+            
+            let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py"))
+            print("Code File Contents: \(documentsURL)")
+        
+            self.writeFile(filename: "/code.py", data: data!)
+        }
     }
     
     func retrieveCP7xCode() {
@@ -69,8 +181,6 @@ class ProjectViewModel: ObservableObject  {
         self.writeFile(filename: "/code.py", data: data)
     }
     
-    
-    
     func retrieveHWCP7xCode() {
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_Blinky_demo").appendingPathComponent("CircuitPython 7.x")
         
@@ -80,25 +190,7 @@ class ProjectViewModel: ObservableObject  {
         self.writeFile(filename: "/code.py", data: data!)
     }
     
-    
-    
-    @Published var bootUpInfo = ""
-    @Published var fileArray: [ContentFile] = []
-    
-    @Published var showingDownloadAlert = false
-    
-    @Published var entries = [BlePeripheral.DirectoryEntry]()
-    @Published var isTransmiting = false
-    @Published var isRootDirectory = false
-    @Published var directory = ""
-    
-    @Published var counter: Int = 0
-    
-    @Published var fileTransferClient: FileTransferClient?
-    
-    let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-    let cachesPath = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-    
+
     func startup() {
         print("Running Startup")
         
@@ -123,32 +215,7 @@ class ProjectViewModel: ObservableObject  {
         
     }
     
-    func gatherFiles() {
-        // Creating a File Manager Object
-        let manager = FileManager.default
-        
-        // Creating a path to make a document directory path
-        guard let url = manager.urls(for: .documentDirectory,in: .userDomainMask).first else {return}
-        
-        var files = [URL]()
-        
-        if let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: [.isRegularFileKey], options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
-            for case let fileURL as URL in enumerator {
-                do {
-                    let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey])
-                    if fileAttributes.isRegularFile! {
-                        
-                        files.append(fileURL)
-                        print("\(fileURL.lastPathComponent) \n")
-                        
-                        //MARK:- Reads Files
-                        
-                    }
-                } catch { print(error, fileURL) }
-            }
-            print(files)
-        }
-    }
+
     
     struct TransmissionProgress {
         var description: String
@@ -273,6 +340,8 @@ class ProjectViewModel: ObservableObject  {
         }
     }
     
+    
+    
     func writeFile(filename: String, data: Data) {
         startCommand(description: "Writing \(filename)")
         writeFileCommand(path: filename, data: data) { [weak self] result in
@@ -333,22 +402,23 @@ class ProjectViewModel: ObservableObject  {
         }
     }
     
-    func makeDirectory(filename: String) {
-        startCommand(description: "Creating \(filename)")
-        
-        makeDirectoryCommand(path: filename) { [weak self]  result in
+    func makeDirectory(path: String) {
+        // Make sure that the path ends with the separator
+        DLog("makeDirectory: \(path)")
+        isTransmiting = true
+        fileTransferClient?.makeDirectory(path: path) { [weak self] result in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
+                self.isTransmiting = false
+                
                 switch result {
                 case .success(_ /*let date*/):
-                    self.lastTransmit = TransmissionLog(type: .makeDirectory)
+                  print("Success! Path made!")
                     
                 case .failure(let error):
-                    self.lastTransmit = TransmissionLog(type: .error(message: error.localizedDescription))
+                    DLog("makeDirectory \(path) error: \(error)")
                 }
-                
-                self.endCommand()
             }
         }
     }

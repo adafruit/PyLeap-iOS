@@ -1,5 +1,4 @@
 //
-//  ScanningAnimation.swift
 //  PyLeap
 //
 //  Created by Trevor Beaton on 6/28/21.

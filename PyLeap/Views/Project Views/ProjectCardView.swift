@@ -12,7 +12,7 @@ struct ProjectCardView: View {
     var project: Project
     //@AppStorage("onboarding") var onboardingSeen = false
     
-    @State private var selectedFrameworkIndex = 0
+    @State var selectedProjectIndex = 0
     
     // Data
     @Environment(\.presentationMode) var presentationMode
@@ -84,18 +84,28 @@ struct ProjectCardView: View {
         }
         
         if value == 1{
+            print("Entered Value 1")
+            model.retrieveCP7xNeopixel()
+          //  model.ledGlassesCP7xLib()
             
-            if selectedFrameworkIndex == 3 {
-                model.ledGlassesCP7xLib()
-            }else {
-                print("Sending Neopixel Code")
-                model.retrieveCP7xNeopixel()
-                
+            
+            if selectedProjectIndex == 0 {
+                print("Sending LED GLasses Lib")
             }
+            
+            if selectedProjectIndex == 1 {
+                print("Sending blink Lib")
+            }
+            
+            if selectedProjectIndex == 2 {
+                print("Sending LED GLasses Lib")
+            }
+            
             value += 1
 
         }
         if value == 2 {
+            print("Entered Value 2")
             print("Restarting")
             value = 0
             
@@ -103,16 +113,16 @@ struct ProjectCardView: View {
     }
     
     mutating func changeProj() {
-        if selectedFrameworkIndex == 0 {
+        if selectedProjectIndex == 0 {
             project.title = projectArray[0].title
         }
-        if selectedFrameworkIndex == 1 {
+        if selectedProjectIndex == 1 {
             project.title = projectArray[1].title
         }
-        if selectedFrameworkIndex == 2 {
+        if selectedProjectIndex == 2 {
             project.title = projectArray[2].title
         }
-        if selectedFrameworkIndex == 3 {
+        if selectedProjectIndex == 3 {
             project.title = projectArray[3].title
         }
     }
@@ -129,11 +139,13 @@ struct ProjectCardView: View {
             
             Form {
                 Section {
-                    Picker(selection: $selectedFrameworkIndex, label: Text("Select")) {
+                    Picker(selection: $selectedProjectIndex, label: Text("Select")) {
                         ForEach(0 ..< projectNames.count) {
                             Text(self.projectNames[$0])
-                            
                         }
+                    }
+                    .onAppear(){
+                        print("selectedFrameworkIndex: \(selectedProjectIndex)")
                     }
                 }
                 // Section 2
@@ -169,7 +181,7 @@ struct ProjectCardView: View {
                             
                         }
                         
-                        Text(projectArray[selectedFrameworkIndex].title)
+                        Text(projectArray[selectedProjectIndex].title)
                             .fontWeight(.semibold)
                         Divider()
                         
@@ -193,9 +205,9 @@ struct ProjectCardView: View {
                 
                 Section{
                     Button(action: {
-                        downloadModel.startDownload(urlString: projectArray[selectedFrameworkIndex].downloadLink)
+                        downloadModel.startDownload(urlString: projectArray[selectedProjectIndex].downloadLink)
 
-                        print(projectArray[selectedFrameworkIndex].downloadLink)
+                        print(projectArray[selectedProjectIndex].downloadLink)
                     }, label: {
                         HStack{
                             DownloadButtonViewModel(percentage: $progress)
@@ -213,24 +225,30 @@ struct ProjectCardView: View {
                 // Section 2
                 Section{
                     Button(action: {
-                        if selectedFrameworkIndex == 0 {
+                        // model.createLEDGlassesLib()
+                        if selectedProjectIndex == 0 {
                             model.retrieveCP7xCode()
-                            
+
                         }
-                        if selectedFrameworkIndex == 1 {
+                        if selectedProjectIndex == 1 {
                             model.retrieveBlinkCP7xCode()
-                            
+
                         }
-                        if selectedFrameworkIndex == 2 {
-                            model.ledGlassesCP7xCode()
+                        if selectedProjectIndex == 2 {
+                         //   model.ledGlassesCP7xCode()
                             print("Glasses example sent")
                         }
-                        if selectedFrameworkIndex == 3 {
-                            model.retrieveCP7xCode()
-                            
+                        if selectedProjectIndex == 3 {
+                         //   model.retrieveCP7xCode()
+
                         }
-                        
+                      //  model.ledGlassesCP7xLib()
                      //   model.retrieveCP7xCode()
+//                        model.testFunction {
+//                            model.secondTest()
+//                        }
+                        model.retrieveCP7xCode()
+                        model.counterFunc()
                         value = 1
                         print("value: \(value)")
                     }, label: {
@@ -258,9 +276,11 @@ struct ProjectCardView: View {
             print("View Did Load.")
             model.onAppear(fileTransferClient: fileTransferClient)
             model.startup()
-            model.gatherFiles()
-            print("value: \(value)")
+           // model.gatherFiles()
+           // model.retrieveCP7xNeopixel()
             fileCheck()
+            print("value: \(value)")
+            
             if fileTransferClient == nil {
                 print("FileTransfer is nil")
             }

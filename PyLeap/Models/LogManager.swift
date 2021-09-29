@@ -13,7 +13,7 @@ class LogManager: ObservableObject {
     private static let fileProviderFilename = "fileprovider_log.json"
 
     // Singleton
-    static let shared = LogManager()
+  //  static let shared = LogManager()
 
     // Data
     private var isFileProvider: Bool

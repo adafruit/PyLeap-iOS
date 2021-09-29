@@ -59,7 +59,6 @@
 		D56F6404270240E7000E5975 /* Types+Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F63F6270240A4000E5975 /* Types+Data.swift */; };
 		D56F6405270240E7000E5975 /* Data+LittleEndianTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F63F1270240A4000E5975 /* Data+LittleEndianTypes.swift */; };
 		D56F6406270240E7000E5975 /* Data+ScanValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F63F7270240A4000E5975 /* Data+ScanValue.swift */; };
-		D56F640B270242CA000E5975 /* FileProviderUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F6409270242CA000E5975 /* FileProviderUtils.swift */; };
 		D56F640C270242CA000E5975 /* UIColor+LightAndDark.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F6407270242CA000E5975 /* UIColor+LightAndDark.swift */; };
 		D56F640D270242CA000E5975 /* FileTransferPathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F640A270242CA000E5975 /* FileTransferPathUtils.swift */; };
 		D56F640E270242CA000E5975 /* String+DeletingPrefix.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F6408270242CA000E5975 /* String+DeletingPrefix.swift */; };
@@ -78,7 +77,6 @@
 		D59DFDC0268CE565001737F6 /* ProjectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFDBF268CE565001737F6 /* ProjectViewModel.swift */; };
 		D59DFDC2268CFA36001737F6 /* OnboardingStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFDC1268CFA36001737F6 /* OnboardingStepView.swift */; };
 		D59DFDC4268CFAB4001737F6 /* OnboardingDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFDC3268CFAB4001737F6 /* OnboardingDataModel.swift */; };
-		D5C41D6E26C5FDBB004C38E3 /* Void.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C41D6D26C5FDBB004C38E3 /* Void.swift */; };
 		D5E52DC326A659D60083956B /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E52DC226A659C20083956B /* ButtonStyles.swift */; };
 		D5E52DC426A659DB0083956B /* DefaultBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E52DC026A659C20083956B /* DefaultBackground.swift */; };
 		D5E52DC626A71E010083956B /* SplashViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E52DC526A71E010083956B /* SplashViewModel.swift */; };
@@ -149,7 +147,6 @@
 		D56F63F7270240A4000E5975 /* Data+ScanValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+ScanValue.swift"; sourceTree = "<group>"; };
 		D56F6407270242CA000E5975 /* UIColor+LightAndDark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+LightAndDark.swift"; sourceTree = "<group>"; };
 		D56F6408270242CA000E5975 /* String+DeletingPrefix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+DeletingPrefix.swift"; sourceTree = "<group>"; };
-		D56F6409270242CA000E5975 /* FileProviderUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProviderUtils.swift; sourceTree = "<group>"; };
 		D56F640A270242CA000E5975 /* FileTransferPathUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTransferPathUtils.swift; sourceTree = "<group>"; };
 		D56F640F2702A6E9000E5975 /* DownloadButtonViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadButtonViewModel.swift; sourceTree = "<group>"; };
 		D56F64112702A7E3000E5975 /* DownloadButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadButtonView.swift; sourceTree = "<group>"; };
@@ -167,7 +164,6 @@
 		D59DFDC1268CFA36001737F6 /* OnboardingStepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStepView.swift; sourceTree = "<group>"; };
 		D59DFDC3268CFAB4001737F6 /* OnboardingDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingDataModel.swift; sourceTree = "<group>"; };
 		D5C41D6526C59A48004C38E3 /* PyLeap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PyLeap.entitlements; sourceTree = "<group>"; };
-		D5C41D6D26C5FDBB004C38E3 /* Void.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Void.swift; sourceTree = "<group>"; };
 		D5E52DC026A659C20083956B /* DefaultBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultBackground.swift; sourceTree = "<group>"; };
 		D5E52DC226A659C20083956B /* ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
 		D5E52DC526A71E010083956B /* SplashViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewModel.swift; sourceTree = "<group>"; };
@@ -271,7 +267,6 @@
 				D59DFDB5268CD052001737F6 /* AppEnvironment.swift */,
 				D56F63E4270240A4000E5975 /* AdafruitKit */,
 				D5597BF726A9E14B00DF17C0 /* AppDelegate.swift */,
-				D5C41D6C26C5FDA3004C38E3 /* Void */,
 				D517F67F26C56939002996E8 /* Origanal Setup */,
 				D55D5BFB26C4BE0C002B0925 /* Project Model */,
 				D59DFDB2268CCEAC001737F6 /* Views */,
@@ -296,7 +291,6 @@
 		D54D38B72691E0D000FBFE47 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				D56F6409270242CA000E5975 /* FileProviderUtils.swift */,
 				D56F640A270242CA000E5975 /* FileTransferPathUtils.swift */,
 				D56F6408270242CA000E5975 /* String+DeletingPrefix.swift */,
 				D56F6407270242CA000E5975 /* UIColor+LightAndDark.swift */,
@@ -486,14 +480,6 @@
 			path = "Download View";
 			sourceTree = "<group>";
 		};
-		D5C41D6C26C5FDA3004C38E3 /* Void */ = {
-			isa = PBXGroup;
-			children = (
-				D5C41D6D26C5FDBB004C38E3 /* Void.swift */,
-			);
-			path = Void;
-			sourceTree = "<group>";
-		};
 		D5E52DBF26A659C20083956B /* Modifiers */ = {
 			isa = PBXGroup;
 			children = (
@@ -606,7 +592,6 @@
 				D56F6406270240E7000E5975 /* Data+ScanValue.swift in Sources */,
 				D59DFDC4268CFAB4001737F6 /* OnboardingDataModel.swift in Sources */,
 				D56F6402270240E7000E5975 /* HexUtils.swift in Sources */,
-				D5C41D6E26C5FDBB004C38E3 /* Void.swift in Sources */,
 				D5597C1426AF751B00DF17C0 /* MainView.swift in Sources */,
 				D56F63FD270240E1000E5975 /* BlePeripheral.swift in Sources */,
 				D52BE82726A065FC00630900 /* AppState.swift in Sources */,
@@ -624,7 +609,6 @@
 				D58D887926CAB6FC0085604A /* SamplePythonCode.swift in Sources */,
 				D5F53CEF2694BD51007634C2 /* ScanAnimation.swift in Sources */,
 				D52F7E742672F4C400911D43 /* PyLeapApp.swift in Sources */,
-				D56F640B270242CA000E5975 /* FileProviderUtils.swift in Sources */,
 				D52BE7F0269DF36E00630900 /* DownloadProgressView.swift in Sources */,
 				D5E52DC626A71E010083956B /* SplashViewModel.swift in Sources */,
 				D52BE82626A065F700630900 /* Settings.swift in Sources */,

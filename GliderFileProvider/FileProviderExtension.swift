@@ -22,13 +22,13 @@ class FileProviderExtension: NSFileProviderExtension {
         
         if AppEnvironment.isDebug && false {
             DLog("Debug: force resync")
-            FileProviderUtils.signalFileProviderChanges()
+         //   FileProviderUtils.signalFileProviderChanges()
         }
     }
     
     deinit {
         DLog("FileProviderExtension deinit")
-        LogManager.shared.save()
+       // LogManager.shared.save()
     }
     
     /*
