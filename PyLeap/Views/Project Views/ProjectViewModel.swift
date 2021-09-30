@@ -13,9 +13,9 @@ class ProjectViewModel: ObservableObject  {
     
     @AppStorage("index") var index = 0
     
-    @Published var bootUpInfo = ""
+
     @Published var fileArray: [ContentFile] = []
-    @Published var showingDownloadAlert = false
+
     @Published var entries = [BlePeripheral.DirectoryEntry]()
     @Published var isTransmiting = false
     @Published var isRootDirectory = false
@@ -33,6 +33,11 @@ class ProjectViewModel: ObservableObject  {
 //        print("Index: \(index)")
 //    }
     
+    func makeLEDGlassesDirectory(){
+        makeDirectory(path: "/adafruit_is31fl3741")
+        makeDirectory(path: "/adafruit_register")
+        
+    }
     
     func blinkCP7xLib() {
         print("blinkCP7xLib")
@@ -44,7 +49,6 @@ class ProjectViewModel: ObservableObject  {
         }
         self.writeFile(filename: "/neopixel.mpy", data: data)
     }
-    
     
     func retrieveCP7xNeopixel() {
         
@@ -58,6 +62,34 @@ class ProjectViewModel: ObservableObject  {
         self.writeFile(filename: "/neopixel.mpy", data: data)
     }
 
+    func filesDownloaded(){
+        print("Files downloaded")
+        // Creating a File Manager Object
+              let manager = FileManager.default
+              
+              // Creating a path to make a document directory path
+              guard let url = manager.urls(for: .documentDirectory,in: .userDomainMask).first else {return}
+              
+              var files = [URL]()
+              
+              if let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: [.isRegularFileKey], options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
+                  for case let fileURL as URL in enumerator {
+                      do {
+                          let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey])
+                          if fileAttributes.isRegularFile! {
+                              
+                              files.append(fileURL)
+                            print("File name: \(fileURL.deletingPathExtension().lastPathComponent)")
+                            print("Path Extention: .\(fileURL.pathExtension)\n")
+                              
+                              //MARK:- Reads Files
+                              
+                          }
+                      } catch { print(error, fileURL) }
+                  }
+                  print(files)
+              }
+    }
     
     func gatherFiles() {
        print("Gather Files Function Called!")
@@ -131,13 +163,138 @@ class ProjectViewModel: ObservableObject  {
      //   self.writeFile(filename: "/lib", data: data)
     }
     
+    //MARK:- LED Glasses - adafruit_is31fl3741 Files
+    
+    func ledGinit_File() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_is31fl3741")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "__init__", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            return
+        }
+        self.writeFile(filename: "/adafruit_is31fl3741/__init__.mpy", data: data)
+    }
+    
+    func ledGMain_File() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_is31fl3741")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_ledglasses", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            return
+        }
+        self.writeFile(filename: "/adafruit_is31fl3741/adafruit_ledglasses.mpy", data: data)
+    }
+     
+    func ledGrgbmatrixFile() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_is31fl3741")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_rgbmatrixqt", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            return
+        }
+        self.writeFile(filename: "/adafruit_is31fl3741/adafruit_rgbmatrixqt.mpy", data: data)
+    }
+    
+    func ledGIssi_evb_File() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_is31fl3741")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "issi_evb", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            return
+        }
+        self.writeFile(filename: "/adafruit_is31fl3741/issi_evb.mpy", data: data)
+    }
+    
+    //MARK:- LED Glasses - adafruit_register Files
+    
+    func ledGinit_Reg() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "__init__", relativeTo: documentsURL).appendingPathExtension("py")) else {
+            return
+        }
+        self.writeFile(filename: "/adafruit_register/__init__.py", data: data)
+    }
+    
+    func ledGbcd_Reg() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "i2c_bcd_alarm", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            return
+        }
+        self.writeFile(filename: "/adafruit_register/i2c_bcd_alarm.mpy", data: data)
+    }
+    
+    func ledGbcd_DaytimeReg() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "i2c_bcd_datetime", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            return
+        }
+        self.writeFile(filename: "/adafruit_register/i2c_bcd_datetime.mpy", data: data)
+    }
+    
+    func ledGi2c_bit_Reg() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "i2c_bit", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            return
+        }
+        self.writeFile(filename: "/adafruit_register/i2c_bit.mpy", data: data)
+    }
+    
+    
+    func ledGi2c_bits_Reg() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "i2c_bits", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            return
+        }
+        self.writeFile(filename: "/adafruit_register/i2c_bits.mpy", data: data)
+    }
+    
+    
+    //i2c_struct_array.mpy
+    func ledGi2c_struct_array_Reg() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "i2c_struct_array", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            return
+        }
+        self.writeFile(filename: "/adafruit_register/i2c_struct_array.mpy", data: data)
+    }
+    
+    
+    func ledGi2c_struct_Reg() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "i2c_struct", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            return
+        }
+        self.writeFile(filename: "/adafruit_register/i2c_struct.mpy", data: data)
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     func createLEDGlassesLib(){
         makeDirectory(path: "adafruit_is31fl3741")
         makeDirectory(path: "adafruit_register")
         
     }
-    
-    
     
     func testFunction(completion: @escaping ()-> Void){
         
@@ -176,20 +333,21 @@ class ProjectViewModel: ObservableObject  {
             self.writeFile(filename: "/code.py", data: data!)
         }
         
-        func retrieveBlinkCP7xCode() {
-            let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_Blinky_demo").appendingPathComponent("CircuitPython 7.x")
-            
-            let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py"))
-            print("Code File Contents: \(documentsURL)")
+    func retrieveBlinkCP7xCode() {
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_Blinky_demo").appendingPathComponent("CircuitPython 7.x")
         
-            self.writeFile(filename: "/code.py", data: data!)
-        }
-
+        let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py"))
+        print("Code File Contents: \(documentsURL)")
+    
+        self.writeFile(filename: "/code.py", data: data!)
+    }
 
     func ledGlassesCP7xCode() {
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("example").appendingPathComponent("CircuitPython 7.x")
+     print("LED Glasses code attempt")
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x")
         
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py")) else {
+            print("LED code not found")
             return
         }
         print("Code File Contents: \(documentsURL)")
