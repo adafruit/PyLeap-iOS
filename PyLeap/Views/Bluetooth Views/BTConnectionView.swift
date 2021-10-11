@@ -1,5 +1,4 @@
 //
-//  ScanningAnimation.swift
 //  PyLeap
 //
 //  Created by Trevor Beaton on 6/28/21.
@@ -13,23 +12,17 @@ struct BTConnectionView: View {
     @Binding var isVisible: Bool
     var projects: [Project] = ProjectData.projects
     
+    
     var body: some View {
+        
+        NavigationLink(destination: ProjectCardView(fileTransferClient: AppState.shared.fileTransferClient, project: projects.first!),tag: .fileTransfer, selection: $model.destination) { EmptyView() }
+        
+        
         
         ZStack{
             
-            NavigationLink(destination: ProjectCardView(fileTransferClient: AppState.shared.fileTransferClient,
-                           project: projects.first!),
-                           tag: .fileTransfer,
-                           selection: $model.destination) { EmptyView() }
-            
-//            NavigationLink(
-//                destination: FilesView(fileTransferClient: AppState.shared.fileTransferClient),
-//                tag: .selection,
-//                selection: $model.destination) {
-//                EmptyView()
-//            }
-            
             Color(#colorLiteral(red: 0.5275210142, green: 0.4204645753, blue: 0.6963143945, alpha: 1)).edgesIgnoringSafeArea(.all)
+            
             
             VStack{
                 
@@ -40,13 +33,14 @@ struct BTConnectionView: View {
                         .bold()
                         .font(.custom("SF Pro", size: 15))
                         .padding(.top, 90)
+                    
                 }
                 
                 Spacer()
                 
                 ZStack{
                     
-                    Text("")
+                    Text("  ")
                         .fontWeight(.semibold)
                         .font(.system(size: 55))
                 }
@@ -66,10 +60,11 @@ struct BTConnectionView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
             }
+            
         }
         .onChange(of: isVisible) { isVisible in
             // onAppear doesn't work on navigationItem so pass the onAppear/onDissapear via binding variable: https://developer.apple.com/forums/thread/655338
-            
+
             if isVisible {
                 model.onAppear()
                 print("is Visible")
@@ -84,8 +79,12 @@ struct BTConnectionView: View {
     }
 }
 
+
+
 struct ScanningAnimation_Previews: PreviewProvider {
     static var previews: some View {
         BTConnectionView(isVisible: .constant(true))
     }
 }
+
+

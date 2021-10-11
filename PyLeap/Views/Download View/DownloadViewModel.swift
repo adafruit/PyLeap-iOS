@@ -24,7 +24,7 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
     @Published var downloadTaskSession: URLSessionDownloadTask!
     
     // Show Progress View
-    @Published var downloadProgress: CGFloat = 0.0
+    @Published var downloadProgress: CGFloat = 0
     @Published var showDownloadProgress = false
     
     // Saving Download task refernce for cancelling...
@@ -47,8 +47,9 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
         
         downloadTaskSession = session.downloadTask(with: validURL)
         downloadTaskSession.resume()
+        
+        unzipProjectFile(urlString: urlString)
     }
-    
     
     func makeFileDirectory() {
         // Creating a File Manager Object
@@ -66,15 +67,11 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
         }
     }
     
-    
-    func unzipProjectFile() {
+    func unzipProjectFile(urlString: String) {
 
         let CPZipName = directoryPath.appendingPathComponent("RainbowBundle.zip")
         
         let pyleapProjectFile = directoryPath.appendingPathComponent("PyLeap Folder")
-        
-        // Download Site...
-        let urlString = "https://learn.adafruit.com/pages/22555/elements/3098569/download?type=zip"
         
         
         if let zipFileUrl = URL(string: urlString) {
@@ -155,6 +152,7 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
             }
         }
     }
+    
     
     
     /// Tells the delegate that a download task has finished downloading.
@@ -241,6 +239,11 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
     }
     
    
+    
+
+
+    
+    
     /// Periodically informs the delegate about the download’s progress - Used for progress UI
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
         // Getting Progress

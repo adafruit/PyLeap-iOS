@@ -9,6 +9,8 @@ import SwiftUI
 
 struct FilesView: View {
     
+
+    
     var projects: [Project] = ProjectData.projects
     
     let layout = [
@@ -19,54 +21,39 @@ struct FilesView: View {
     
     @StateObject var viewModel = FileViewModel()
     
-    // Params
-    let fileTransferClient: FileTransferClient?
-    
-    init(fileTransferClient: FileTransferClient?){
-        self.fileTransferClient = fileTransferClient
-
-    }
-    
     var body: some View {
         
+       
             
             VStack {
                 SearchBarView()
-             //   MARK:- Project Grid Stack
+                //MARK:- Project Grid Stack
                 
                 ScrollView {
-
+                    
                     LazyVGrid(columns: layout, spacing: 20) {
-
+                        
                         ForEach(projects,id: \.id) { item in
-
+                            
                             ZStack {
-
+                                
                                 NavigationLink(destination: ProjectCardView(fileTransferClient: AppState.shared.fileTransferClient, project: item)) {
                                     ProjectCell(title: item.title, deviceName: item.device)
-
                                 }
-
                             }
-
                         }
-
+                        
                     }.ignoresSafeArea(.all)
                 }
                 
                 .background(Color.init(red: 240/255, green: 240/255, blue: 240/255))
-                
-                    .navigationTitle("PyLeap Demo")
             }
-            .onAppear(){
-                
-                viewModel.startup()
-            }
-
+            
+            .navigationTitle("PyLeap Demo")
         }
+        
     }
-
-
+    
 struct ContentFile: Identifiable {
     var id = UUID()
     var title: String
@@ -75,6 +62,6 @@ struct ContentFile: Identifiable {
 
 struct FileView_Previews: PreviewProvider {
     static var previews: some View {
-        FilesView(fileTransferClient: nil)
+        FilesView()
     }
 }

@@ -15,7 +15,6 @@ class BTConnectionViewModel: ObservableObject {
     // Published
     enum Destination {
         case fileTransfer
-        case selection
     }
     
     @Published var destination: Destination? = nil
@@ -39,8 +38,6 @@ class BTConnectionViewModel: ObservableObject {
     @Published var numAdafruitPeripheralsWithFileTranferServiceNearby = 0
     @Published var isRestoringConnection = false
     
-    
-    
     // Data
     private let bleManager = BleManager.shared
     private var peripheralList = PeripheralList(bleManager: BleManager.shared)
@@ -55,8 +52,6 @@ class BTConnectionViewModel: ObservableObject {
     }
     
     func onAppear() {
-       
-        
         registerNotifications(enabled: true)
         let wasConnected = disconnectPeripheralAndResetAutoConnect()
         
@@ -125,10 +120,6 @@ class BTConnectionViewModel: ObservableObject {
     // MARK: - Destinations
     private func gotoFileTransfer() {
         destination = .fileTransfer
-    }
-    
-    private func goToSelection() {
-        destination = .selection
     }
 
     // MARK: - Scanning
@@ -253,8 +244,6 @@ class BTConnectionViewModel: ObservableObject {
                 self.detailText = "FileTransfer service ready"
                 self.gotoFileTransfer()
 
-
-                
             case .failure(let error):
                 DLog("setupPeripheral error: \(error.localizedDescription)")
 

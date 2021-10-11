@@ -58,7 +58,7 @@ class DataProcessingQueue {
         // Append received data
         if let receivedData = receivedData {
             data.append(receivedData)
-            DLog("Data received. Queue size: \(data.count) bytes")
+            //DLog("Data received. Queue size: \(data.count) bytes")
         }
         
         // Process chunks
@@ -78,18 +78,17 @@ class DataProcessingQueue {
             data = Data(data.dropFirst(processedDataCount))
         }
         else {
-            DLog("Queue size: \(data.count) bytes. Waiting for more data to process packet...")
+            //DLog("Queue size: \(data.count) bytes. Waiting for more data to process packet...")
         }
         
         // If there is still unprocessed chunks in the queue, process the next one
         let isStillUnprocessedDataInQueue = processedDataCount > 0  && data.count > 0
         if  isStillUnprocessedDataInQueue {
-            DLog("Unprocessed data still in queue (\(data.count) bytes). Try to process next packet")
+            //DLog("Unprocessed data still in queue (\(data.count) bytes). Try to process next packet")
             processQueuedChunks(processingHandler: processingHandler)
         }
         else if data.isEmpty {
-            DLog("Data queue empty")
-
+            //DLog("Data queue empty")
         }
     }
     

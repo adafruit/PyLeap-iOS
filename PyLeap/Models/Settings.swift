@@ -23,9 +23,11 @@ class Settings {
         }
         
         set {
-            if newValue == nil && autoconnectPeripheralUUID != nil {
-                FileProviderUtils.signalFileProviderChanges()
-            }
+            #if canImport(FileProviderUtils)
+                  if newValue == nil && autoconnectPeripheralUUID != nil {
+                    FileProviderUtils.signalFileProviderChanges()
+                  }
+                  #endif
             
             let uuidString = newValue?.uuidString
             DLog("Set autoconnect peripheral: \(uuidString ?? "<nil>")")

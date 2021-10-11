@@ -23,17 +23,17 @@ extension BlePeripheral {
     }
     
     
-    
+    /*
     // MARK: - Adafruit Specific Data
     struct AdafruitManufacturerData {
-      //   Types
+        // Types
         enum BoardModel: CaseIterable {
             case circuitPlaygroundBluefruit
             case clue_nRF52840
             case feather_nRF52840_express
             case feather_nRF52832
             
-            var identifier: [[UInt8]] {   //Board identifiers used on the advertisement packet (USB PID)
+            var identifier: [[UInt8]] {  // Board identifiers used on the advertisement packet (USB PID)
                 switch self {
                 case .circuitPlaygroundBluefruit: return [[0x45, 0x80], [0x46, 0x80]]
                 case .clue_nRF52840: return [[0x71, 0x80], [0x72, 0x80]]
@@ -56,7 +56,7 @@ extension BlePeripheral {
         var color: UIColor?
         var boardModel: BoardModel?
         
-      //   Utils
+        // Utils
         static func board(withBoardTypeData data: Data) -> BoardModel? {
             let bytes = [UInt8](data)
             
@@ -119,5 +119,5 @@ extension BlePeripheral {
         
         return adafruitManufacturerData
     }
- 
+ */
 }

@@ -15,7 +15,6 @@ struct DownloadButtonViewModel: View {
         ZStack {
             DownloadButtonView(percentage: $percentage)
         }
-       
     }
 }
 

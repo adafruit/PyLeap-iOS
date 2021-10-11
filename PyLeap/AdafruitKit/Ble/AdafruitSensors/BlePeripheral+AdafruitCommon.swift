@@ -130,8 +130,7 @@ extension BlePeripheral {
         } else {
             self.updateNotifyHandler(for: characteristic, handler: notifyHandler)
             completion?(.success(()))
-        }
-        
+        }        
     }
     
     private func checkVersionResult(expectedVersion: Int, result: Result<(Int, CBCharacteristic), Error>, completion: ((Result<CBCharacteristic, Error>) -> Void)?) {

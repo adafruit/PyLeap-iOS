@@ -12,6 +12,10 @@ struct ProjectCardView: View {
     var project: Project
     //@AppStorage("onboarding") var onboardingSeen = false
     
+    @AppStorage("index") var selectedProjectIndex = 0
+    
+    @AppStorage("LED") var selectedLEDIndex = 0
+    
     // Data
     @Environment(\.presentationMode) var presentationMode
     
@@ -29,7 +33,9 @@ struct ProjectCardView: View {
     @AppStorage("value") var value = 0
     @AppStorage("fileSent") var neopixelFileSent = false
     
+    @State private var name = ""
     
+    @State private var fileTransferStatus = ""
     
     // Params
     let fileTransferClient: FileTransferClient?
@@ -66,13 +72,11 @@ struct ProjectCardView: View {
     @State private var buttonInteractivity: Bool = false
     @State private var sendInteractivity: Bool = true
     
-    
     @State private var downloadAmount = 0.0
     
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     
     let downloadLink: String = "https://learn.adafruit.com/pages/22555/elements/3098569/download?type=zip"
-    
     
     func fileCheck(){
         print("Inital value: \(value)")
@@ -81,17 +85,185 @@ struct ProjectCardView: View {
         }
         
         if value == 1{
-            print("Sending Neopixel Code")
-            model.retrieveCP7xNeopixel()
             
-            value += 1
+            print("In file checker - step 1")
+            
+            if selectedProjectIndex == 0 {
+                value = 0
+                model.retrieveCP7xNeopixel()
+                print("Sending Rainbow Lib")
+                print("Proj. Index \(selectedProjectIndex)")
+            }
+            
+            if selectedProjectIndex == 1 {
+                model.blinkCP7xLib()
+                print("Sending Blink Lib")
+                print("Proj. Index \(selectedProjectIndex)")
+            }
+            
+            if selectedProjectIndex == 2 {
+                print("Do nothing...LED GLasses lib isnt available yet!")
+                
+                if selectedLEDIndex == 0 {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2){
+                        selectedLEDIndex += 1
+                        print("File 1")
+                        value += 1
+                        model.ledGinit_File()
+                    }
+                    
+                }
+                
+            }
+            
         }
         if value == 2 {
-            print("Restarting")
-            value = 0
+            if selectedProjectIndex == 2 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
+                    if selectedLEDIndex == 1 {
+                        selectedLEDIndex += 1
+                        print("File 2")
+                        value += 1
+                        model.ledGMain_File()
+                    }
+                }
+            }
+            //print("Restarting")
+            //value = 0
             
         }
+        
+        if value == 3 {
+            if selectedProjectIndex == 2 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
+                    if selectedLEDIndex == 2 {
+                        selectedLEDIndex += 1
+                        print("File 3")
+                        value += 1
+                        model.ledGrgbmatrixFile()
+                    }
+                }
+            }
+        }
+        //Here
+        if value == 4 {
+            if selectedProjectIndex == 2 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
+                    if selectedLEDIndex == 3 {
+                        selectedLEDIndex += 1
+                        print("File 4")
+                        value += 1
+                        model.ledGIssi_evb_File()
+                    }
+                }
+            }
+        }
+        
+        if value == 5 {
+            if selectedProjectIndex == 2 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
+                    if selectedLEDIndex == 4 {
+                        selectedLEDIndex += 1
+                        print("File 5")
+                        value += 1
+                        model.ledGinit_Reg()
+                    }
+                }
+            }
+        }
+        
+        if value == 6 {
+            if selectedProjectIndex == 2 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
+                    if selectedLEDIndex == 5 {
+                        selectedLEDIndex += 1
+                        print("File 6")
+                        value += 1
+                        model.ledGbcd_Reg()
+                    }
+                }
+            }
+        }
+        
+        if value == 7 {
+            if selectedProjectIndex == 2 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
+                    if selectedLEDIndex == 6 {
+                        selectedLEDIndex += 1
+                        print("File 7")
+                        value += 1
+                        model.ledGbcd_DaytimeReg()
+                    }
+                }
+            }
+        }
+        
+        if value == 8 {
+            if selectedProjectIndex == 2 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
+                    if selectedLEDIndex == 7 {
+                        selectedLEDIndex += 1
+                        print("File 8")
+                        value += 1
+                        model.ledGi2c_bit_Reg()
+                    }
+                }
+            }
+        }
+        
+        if value == 9 {
+            if selectedProjectIndex == 2 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
+                    if selectedLEDIndex == 8 {
+                        selectedLEDIndex += 1
+                        print("File 9")
+                        value += 1
+                        model.ledGi2c_bits_Reg()
+                    }
+                }
+            }
+        }
+        
+        
+        if value == 10 {
+            if selectedProjectIndex == 2 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
+                    if selectedLEDIndex == 9 {
+                        selectedLEDIndex += 1
+                        print("File 10!")
+                        value += 1
+                        model.ledGi2c_struct_Reg()
+                    }
+                }
+            }
+        }
+        
+        if value == 11 {
+            if selectedProjectIndex == 2 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
+                    if selectedLEDIndex == 10 {
+                        selectedLEDIndex += 1
+                        print("File 11!")
+                        value += 1
+                        model.ledGi2c_struct_array_Reg()
+                    }
+                }
+            }
+        }
+        
+        
+        if value == 12{
+            print("Restart")
+            selectedLEDIndex = 0
+            value = 0
+        }
+        
     }
+    
+    var frameworks = ["UIKit", "Core Data", "CloudKit", "SwiftUI"]
+    var projectNames = ["Glide on over some rainbows!","Blink!", "LED Glasses", "Hello World"]
+    
+    let projectArray = ProjectData.projects
     
     
     var body: some View {
@@ -99,7 +271,17 @@ struct ProjectCardView: View {
         VStack {
             
             Form {
-                // Section 1
+                Section {
+                    Picker(selection: $selectedProjectIndex, label: Text("Select")) {
+                        ForEach(0 ..< projectNames.count) {
+                            Text(self.projectNames[$0])
+                        }
+                    }
+                    .onAppear(){
+                        print("selectedFrameworkIndex: \(selectedProjectIndex)")
+                    }
+                }
+                // Section 2
                 Section {
                     
                     VStack(alignment: .leading){
@@ -121,7 +303,7 @@ struct ProjectCardView: View {
                             }
                             
                             
-                            Text(project.device)
+                            Text("Circuit Playground Bluefruit")
                                 .font(.caption)
                                 .fontWeight(.light)
                                 .foregroundColor(.gray)
@@ -132,7 +314,7 @@ struct ProjectCardView: View {
                             
                         }
                         
-                        Text(project.title)
+                        Text(projectArray[selectedProjectIndex].title)
                             .fontWeight(.semibold)
                         Divider()
                         
@@ -156,9 +338,9 @@ struct ProjectCardView: View {
                 
                 Section{
                     Button(action: {
-                        downloadModel.startDownload(urlString: project.downloadLink )
-                        downloadModel.unzipProjectFile()
+                        downloadModel.startDownload(urlString: projectArray[selectedProjectIndex].downloadLink)
                         
+                        print(projectArray[selectedProjectIndex].downloadLink)
                     }, label: {
                         HStack{
                             DownloadButtonViewModel(percentage: $progress)
@@ -176,7 +358,20 @@ struct ProjectCardView: View {
                 // Section 2
                 Section{
                     Button(action: {
-                        model.retrieveCP7xCode()
+                        if selectedProjectIndex == 0 {
+                            model.retrieveCP7xCode()
+                            print("Rainbow")
+                        }
+                        if selectedProjectIndex == 1 {
+                            model.retrieveBlinkCP7xCode()
+                            print("Blink")
+                        }
+                        if selectedProjectIndex == 2 {
+                            model.createLEDGlassesLib()
+                            model.ledGlassesCP7xCode()
+                            print("Glasses")
+                        }
+                        
                         value = 1
                         print("value: \(value)")
                     }, label: {
@@ -185,21 +380,13 @@ struct ProjectCardView: View {
                             .foregroundColor(.purple)
                     })
                 }
-                
-                // Section 3
-                //                Section(header: Text("code.py")){
-                //                    VStack(alignment: .leading){
-                //                        Text("""
-                //    \(project.pythonCode)
-                //    """)
-                //                    }
-                //
-                //                }
-                
+                if selectedProjectIndex == 2 {
+                    Text("\(selectedLEDIndex)/10 Files Transferred")
+                }
             }
             
             .navigationBarTitle("Project Card")
-            
+            .navigationBarBackButtonHidden(true)
         }
         
         
@@ -210,12 +397,15 @@ struct ProjectCardView: View {
             }
         }
         .onAppear {
+            
             print("View Did Load.")
             model.onAppear(fileTransferClient: fileTransferClient)
             model.startup()
-            model.gatherFiles()
-            print("value: \(value)")
+            // model.gatherFiles()
+            // model.retrieveCP7xNeopixel()
             fileCheck()
+            print("value: \(value)")
+            
             if fileTransferClient == nil {
                 print("FileTransfer is nil")
             }
@@ -226,8 +416,6 @@ struct ProjectCardView: View {
             model.onDissapear()
             
         }
-        
-        
         
     }
     
@@ -249,3 +437,4 @@ struct ProjectCardView_Previews: PreviewProvider {
         ProjectCardView(fileTransferClient: nil, project: ProjectData.projects.first!)
     }
 }
+

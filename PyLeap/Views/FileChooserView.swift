@@ -39,7 +39,7 @@ struct FileChooserView: View {
                 List {
                     if !model.isRootDirectory {
                         Button(action: {
-                            let path = FileTransferUtils.upPath(from: model.directory)
+                            let path = FileTransferPathUtils.upPath(from: model.directory)
                             let _ = print("Up directory: \(path)")
                             $directory.wrappedValue = path
                             model.listDirectory(directory: path)

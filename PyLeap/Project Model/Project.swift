@@ -8,8 +8,9 @@
 import Foundation
 
 struct Project: Identifiable {
+
     let id = UUID()
-    let title: String
+    var title: String
     let device: String
     var pythonCode: String
     let downloadLink: String
@@ -20,29 +21,38 @@ struct Project: Identifiable {
         self.pythonCode = pythonCode
         self.downloadLink = downloadLink
     }
-    
 }
 
 struct ProjectData {
     
-    static let projects = [inRainbowsSampleProject, blinky, helloWorld]
+    static var projects = [inRainbowsSampleProject, blinky,ledGlasses, helloWorld]
     static let cpbProjects = [inRainbowsSampleProject]
     static let clueProjects = [blinky]
     
-    
     static var inRainbowsSampleProject = Project(
         title: "Glide on over to some Rainbows",
-        device: "Circuit Playground Bluefruit",
-        pythonCode: SamplePythonCode.inRainbows, downloadLink: "https://learn.adafruit.com/pages/22555/elements/3098569/download?type=zip" )
+        device: "CPB",
+        pythonCode: SamplePythonCode.inRainbows,
+        downloadLink: "https://learn.adafruit.com/pages/22555/elements/3098569/download?type=zip")
     
     static var blinky = Project(
         title: "Blinky",
         device: "CPB",
-        pythonCode: SamplePythonCode.blinky, downloadLink: "https://learn.adafruit.com/pages/22920/elements/3103057/download?type=zip")
+        pythonCode: SamplePythonCode.blinky,
+        downloadLink: "https://learn.adafruit.com/pages/22920/elements/3103057/download?type=zip")
+    
+    static var ledGlasses = Project(
+        title: "LED Glasses",
+        device: "CPB",
+        pythonCode: SamplePythonCode.ledGlasses,
+        downloadLink: "https://learn.adafruit.com/pages/22957/elements/3103276/download?type=zip")
     
     static var helloWorld = Project(
         title: "Hello World(Wipe)",
         device: "CPB",
-        pythonCode: SamplePythonCode.helloWorld, downloadLink: "https://learn.adafruit.com/pages/22555/elements/3098569/download?type=zip")
+        pythonCode: SamplePythonCode.helloWorld,
+        downloadLink: "https://learn.adafruit.com/pages/22555/elements/3098569/download?type=zip")
+    
+    
     
 }
