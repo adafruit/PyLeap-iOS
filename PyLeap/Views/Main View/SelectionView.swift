@@ -50,10 +50,22 @@ struct SelectionView: View {
                     
                 }.ignoresSafeArea(.all)
             }
-            
+                
             .background(Color.init(red: 240/255, green: 240/255, blue: 240/255))
         }
-        
+        .onAppear {
+            viewModel.onAppear(fileTransferClient: fileTransferClient)
+            viewModel.startup()
+           
+            if fileTransferClient == nil {
+                print("FileTransfer is nil")
+            }
+        }
+        .onDisappear {
+            print("Selection - on disappear")
+            viewModel.onDissapear()
+            
+        }
         .navigationTitle("PyLeap")
 
     }
