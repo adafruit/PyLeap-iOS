@@ -415,7 +415,7 @@ extension BleManager: CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         DLog("didDisconnectPeripheral")
-        
+        print("HERE")
         // Clean
         peripheralsFound[peripheral.identifier]?.reset()
         

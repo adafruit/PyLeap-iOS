@@ -327,10 +327,12 @@ class ProjectViewModel: ObservableObject  {
     func retrieveCP7xCode() {
             let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x")
             
-            let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py"))
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py")) else {
+            return
+        }
             print("Code File Contents: \(documentsURL)")
         
-            self.writeFile(filename: "/code.py", data: data!)
+            self.writeFile(filename: "/code.py", data: data)
         }
         
     func retrieveBlinkCP7xCode() {

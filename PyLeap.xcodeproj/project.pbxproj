@@ -28,10 +28,10 @@
 		D52F7E742672F4C400911D43 /* PyLeapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52F7E732672F4C400911D43 /* PyLeapApp.swift */; };
 		D52F7E782672F4C500911D43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D52F7E772672F4C500911D43 /* Assets.xcassets */; };
 		D52F7E7B2672F4C500911D43 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D52F7E7A2672F4C500911D43 /* Preview Assets.xcassets */; };
-		D5507AD026C668BC00512BAA /* FileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACC26C668BC00512BAA /* FileViewModel.swift */; };
+		D5507AD026C668BC00512BAA /* SelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACC26C668BC00512BAA /* SelectionViewModel.swift */; };
 		D5507AD126C668BC00512BAA /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACF26C668BC00512BAA /* SearchBarView.swift */; };
 		D5507AD226C668BC00512BAA /* FileDownloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACD26C668BC00512BAA /* FileDownloadViewModel.swift */; };
-		D5507AD326C668BC00512BAA /* FilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACB26C668BC00512BAA /* FilesView.swift */; };
+		D5507AD326C668BC00512BAA /* SelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACB26C668BC00512BAA /* SelectionView.swift */; };
 		D5597BF826A9E14B00DF17C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5597BF726A9E14B00DF17C0 /* AppDelegate.swift */; };
 		D5597BFC26AB1A0300DF17C0 /* DefaultPreferences.plist in Resources */ = {isa = PBXBuildFile; fileRef = D5597BFB26AB1A0300DF17C0 /* DefaultPreferences.plist */; };
 		D5597C0226ADDCE300DF17C0 /* StartupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5597C0126ADDCE300DF17C0 /* StartupView.swift */; };
@@ -77,6 +77,7 @@
 		D59DFDC0268CE565001737F6 /* ProjectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFDBF268CE565001737F6 /* ProjectViewModel.swift */; };
 		D59DFDC2268CFA36001737F6 /* OnboardingStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFDC1268CFA36001737F6 /* OnboardingStepView.swift */; };
 		D59DFDC4268CFAB4001737F6 /* OnboardingDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFDC3268CFAB4001737F6 /* OnboardingDataModel.swift */; };
+		D5A4E5FB2715F47F00A6937F /* ProjectState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A4E5FA2715F47F00A6937F /* ProjectState.swift */; };
 		D5E52DC326A659D60083956B /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E52DC226A659C20083956B /* ButtonStyles.swift */; };
 		D5E52DC426A659DB0083956B /* DefaultBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E52DC026A659C20083956B /* DefaultBackground.swift */; };
 		D5E52DC626A71E010083956B /* SplashViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E52DC526A71E010083956B /* SplashViewModel.swift */; };
@@ -114,8 +115,8 @@
 		D54D38C32692044800FBFE47 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		D54D38C52692044800FBFE47 /* PeripheralList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralList.swift; sourceTree = "<group>"; };
 		D54D38C62692044800FBFE47 /* PeripheralAutoConnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralAutoConnect.swift; sourceTree = "<group>"; };
-		D5507ACB26C668BC00512BAA /* FilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
-		D5507ACC26C668BC00512BAA /* FileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileViewModel.swift; sourceTree = "<group>"; };
+		D5507ACB26C668BC00512BAA /* SelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionView.swift; sourceTree = "<group>"; };
+		D5507ACC26C668BC00512BAA /* SelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionViewModel.swift; sourceTree = "<group>"; };
 		D5507ACD26C668BC00512BAA /* FileDownloadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDownloadViewModel.swift; sourceTree = "<group>"; };
 		D5507ACF26C668BC00512BAA /* SearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
 		D5597BF726A9E14B00DF17C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -163,6 +164,7 @@
 		D59DFDBF268CE565001737F6 /* ProjectViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectViewModel.swift; sourceTree = "<group>"; };
 		D59DFDC1268CFA36001737F6 /* OnboardingStepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStepView.swift; sourceTree = "<group>"; };
 		D59DFDC3268CFAB4001737F6 /* OnboardingDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingDataModel.swift; sourceTree = "<group>"; };
+		D5A4E5FA2715F47F00A6937F /* ProjectState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectState.swift; sourceTree = "<group>"; };
 		D5C41D6526C59A48004C38E3 /* PyLeap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PyLeap.entitlements; sourceTree = "<group>"; };
 		D5E52DC026A659C20083956B /* DefaultBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultBackground.swift; sourceTree = "<group>"; };
 		D5E52DC226A659C20083956B /* ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
@@ -334,8 +336,8 @@
 			isa = PBXGroup;
 			children = (
 				D5507ACE26C668BC00512BAA /* UI Components */,
-				D5507ACB26C668BC00512BAA /* FilesView.swift */,
-				D5507ACC26C668BC00512BAA /* FileViewModel.swift */,
+				D5507ACB26C668BC00512BAA /* SelectionView.swift */,
+				D5507ACC26C668BC00512BAA /* SelectionViewModel.swift */,
 				D5507ACD26C668BC00512BAA /* FileDownloadViewModel.swift */,
 			);
 			path = "Main View";
@@ -371,6 +373,7 @@
 			isa = PBXGroup;
 			children = (
 				D55D5BFC26C4BE45002B0925 /* Project.swift */,
+				D5A4E5FA2715F47F00A6937F /* ProjectState.swift */,
 				D58D887826CAB6FC0085604A /* SamplePythonCode.swift */,
 			);
 			path = "Project Model";
@@ -587,7 +590,7 @@
 				D56F63FB270240DB000E5975 /* BlePeripheral+ManufacturerAdafruit.swift in Sources */,
 				D52BE82A26A0660200630900 /* KeyboardUtils.swift in Sources */,
 				D56F640D270242CA000E5975 /* FileTransferPathUtils.swift in Sources */,
-				D5507AD326C668BC00512BAA /* FilesView.swift in Sources */,
+				D5507AD326C668BC00512BAA /* SelectionView.swift in Sources */,
 				D56F6401270240E7000E5975 /* Int+Bytes.swift in Sources */,
 				D56F6406270240E7000E5975 /* Data+ScanValue.swift in Sources */,
 				D59DFDC4268CFAB4001737F6 /* OnboardingDataModel.swift in Sources */,
@@ -622,11 +625,12 @@
 				D59DFDB6268CD052001737F6 /* AppEnvironment.swift in Sources */,
 				D52BE85626A0E5A700630900 /* PeripheralAutoConnect.swift in Sources */,
 				D59DFDB8268CD6A7001737F6 /* SplashScreen.swift in Sources */,
+				D5A4E5FB2715F47F00A6937F /* ProjectState.swift in Sources */,
 				D517F68126C5771D002996E8 /* FillerView.swift in Sources */,
 				D5F53CEB2694B524007634C2 /* ScanningView.swift in Sources */,
 				D5597BF826A9E14B00DF17C0 /* AppDelegate.swift in Sources */,
 				D56F640E270242CA000E5975 /* String+DeletingPrefix.swift in Sources */,
-				D5507AD026C668BC00512BAA /* FileViewModel.swift in Sources */,
+				D5507AD026C668BC00512BAA /* SelectionViewModel.swift in Sources */,
 				D5597C3B26B98E1E00DF17C0 /* NumbersOnly.swift in Sources */,
 				D59DFDBC268CE0EB001737F6 /* RootView.swift in Sources */,
 				D59DFD8F268A4A4D001737F6 /* BTConnectionView.swift in Sources */,

@@ -37,11 +37,14 @@ struct ProjectCardView: View {
     
     @State private var fileTransferStatus = ""
     
+    var testIn = 1
+     
     // Params
     let fileTransferClient: FileTransferClient?
     
     init(fileTransferClient: FileTransferClient?, project: Project) {
         self.fileTransferClient = fileTransferClient
+    
         self.project = project
     }
     
@@ -58,15 +61,15 @@ struct ProjectCardView: View {
         
     }
     
-    func sendingCodeFile() {
-        //        if value == 1 {
-        if let data = project.pythonCode.data(using: .utf8) {
-            model.writeFile(filename: filename, data: data)
-            
-            //  }
-        }
-        
-    }
+//    func sendingCodeFile() {
+//        //        if value == 1 {
+//        if let data = project.pythonCode.data(using: .utf8) {
+//            model.writeFile(filename: filename, data: data)
+//
+//            //  }
+//        }
+//
+//    }
     
     //Downloads
     @State private var buttonInteractivity: Bool = false
@@ -88,21 +91,19 @@ struct ProjectCardView: View {
             
             print("In file checker - step 1")
             
-            if selectedProjectIndex == 0 {
+            if project.index == 0 {
                 value = 0
                 model.retrieveCP7xNeopixel()
                 print("Sending Rainbow Lib")
-                print("Proj. Index \(selectedProjectIndex)")
             }
             
-            if selectedProjectIndex == 1 {
+            if project.index == 1 {
                 model.blinkCP7xLib()
                 print("Sending Blink Lib")
-                print("Proj. Index \(selectedProjectIndex)")
             }
             
-            if selectedProjectIndex == 2 {
-                print("Do nothing...LED GLasses lib isnt available yet!")
+            if project.index == 2 {
+                print("Sending first lib file.")
                 
                 if selectedLEDIndex == 0 {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2){
@@ -118,7 +119,7 @@ struct ProjectCardView: View {
             
         }
         if value == 2 {
-            if selectedProjectIndex == 2 {
+            if project.index == 2 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                     if selectedLEDIndex == 1 {
                         selectedLEDIndex += 1
@@ -128,13 +129,11 @@ struct ProjectCardView: View {
                     }
                 }
             }
-            //print("Restarting")
-            //value = 0
-            
+    
         }
         
         if value == 3 {
-            if selectedProjectIndex == 2 {
+            if project.index == 2 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                     if selectedLEDIndex == 2 {
                         selectedLEDIndex += 1
@@ -145,9 +144,9 @@ struct ProjectCardView: View {
                 }
             }
         }
-        //Here
+        
         if value == 4 {
-            if selectedProjectIndex == 2 {
+            if project.index == 2 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                     if selectedLEDIndex == 3 {
                         selectedLEDIndex += 1
@@ -160,7 +159,7 @@ struct ProjectCardView: View {
         }
         
         if value == 5 {
-            if selectedProjectIndex == 2 {
+            if project.index == 2 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                     if selectedLEDIndex == 4 {
                         selectedLEDIndex += 1
@@ -173,7 +172,7 @@ struct ProjectCardView: View {
         }
         
         if value == 6 {
-            if selectedProjectIndex == 2 {
+            if project.index == 2 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                     if selectedLEDIndex == 5 {
                         selectedLEDIndex += 1
@@ -186,7 +185,7 @@ struct ProjectCardView: View {
         }
         
         if value == 7 {
-            if selectedProjectIndex == 2 {
+            if project.index == 2 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                     if selectedLEDIndex == 6 {
                         selectedLEDIndex += 1
@@ -199,7 +198,7 @@ struct ProjectCardView: View {
         }
         
         if value == 8 {
-            if selectedProjectIndex == 2 {
+            if project.index == 2 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                     if selectedLEDIndex == 7 {
                         selectedLEDIndex += 1
@@ -212,7 +211,7 @@ struct ProjectCardView: View {
         }
         
         if value == 9 {
-            if selectedProjectIndex == 2 {
+            if project.index == 2 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                     if selectedLEDIndex == 8 {
                         selectedLEDIndex += 1
@@ -226,7 +225,7 @@ struct ProjectCardView: View {
         
         
         if value == 10 {
-            if selectedProjectIndex == 2 {
+            if project.index == 2 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                     if selectedLEDIndex == 9 {
                         selectedLEDIndex += 1
@@ -239,7 +238,7 @@ struct ProjectCardView: View {
         }
         
         if value == 11 {
-            if selectedProjectIndex == 2 {
+            if project.index == 2 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                     if selectedLEDIndex == 10 {
                         selectedLEDIndex += 1
@@ -314,7 +313,7 @@ struct ProjectCardView: View {
                             
                         }
                         
-                        Text(projectArray[selectedProjectIndex].title)
+                        Text(project.title)
                             .fontWeight(.semibold)
                         Divider()
                         
@@ -338,9 +337,9 @@ struct ProjectCardView: View {
                 
                 Section{
                     Button(action: {
-                        downloadModel.startDownload(urlString: projectArray[selectedProjectIndex].downloadLink)
+                        downloadModel.startDownload(urlString: project.downloadLink)
                         
-                        print(projectArray[selectedProjectIndex].downloadLink)
+                        print(project.downloadLink)
                     }, label: {
                         HStack{
                             DownloadButtonViewModel(percentage: $progress)
@@ -358,15 +357,15 @@ struct ProjectCardView: View {
                 // Section 2
                 Section{
                     Button(action: {
-                        if selectedProjectIndex == 0 {
+                        if project.index == 0 {
                             model.retrieveCP7xCode()
                             print("Rainbow")
                         }
-                        if selectedProjectIndex == 1 {
+                        if project.index == 1 {
                             model.retrieveBlinkCP7xCode()
                             print("Blink")
                         }
-                        if selectedProjectIndex == 2 {
+                        if project.index == 2 {
                             model.createLEDGlassesLib()
                             model.ledGlassesCP7xCode()
                             print("Glasses")
@@ -380,13 +379,13 @@ struct ProjectCardView: View {
                             .foregroundColor(.purple)
                     })
                 }
-                if selectedProjectIndex == 2 {
+                if project.index == 2 {
                     Text("\(selectedLEDIndex)/10 Files Transferred")
                 }
             }
             
             .navigationBarTitle("Project Card")
-            .navigationBarBackButtonHidden(true)
+
         }
         
         
@@ -397,7 +396,7 @@ struct ProjectCardView: View {
             }
         }
         .onAppear {
-            
+            print("Project index: \(project.index)")
             print("View Did Load.")
             model.onAppear(fileTransferClient: fileTransferClient)
             model.startup()
@@ -434,7 +433,7 @@ private struct ContentsView: View {
 
 struct ProjectCardView_Previews: PreviewProvider {
     static var previews: some View {
-        ProjectCardView(fileTransferClient: nil, project: ProjectData.projects.first!)
+        ProjectCardView(fileTransferClient: nil, project: ProjectData.blinkCPB)
     }
 }
 

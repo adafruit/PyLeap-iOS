@@ -15,7 +15,11 @@ struct BTConnectionView: View {
     
     var body: some View {
         
-        NavigationLink(destination: ProjectCardView(fileTransferClient: AppState.shared.fileTransferClient, project: projects.first!),tag: .fileTransfer, selection: $model.destination) { EmptyView() }
+       // NavigationLink(destination: ProjectCardView(fileTransferClient: AppState.shared.fileTransferClient, project: projects.first!),tag: .fileTransfer, selection: $model.destination) { EmptyView() }
+        
+        NavigationLink(destination: SelectionView(fileTransferClient: AppState.shared.fileTransferClient),tag: .selectionView,selection: $model.destination) { EmptyView()}
+        
+        
         
         
         
@@ -28,7 +32,7 @@ struct BTConnectionView: View {
                 
                 Group{
                     
-                    Text("Hold your device closey to your mobile device")
+                    Text("Hold your device closey to your mobile device.")
                         .foregroundColor(.white)
                         .bold()
                         .font(.custom("SF Pro", size: 15))

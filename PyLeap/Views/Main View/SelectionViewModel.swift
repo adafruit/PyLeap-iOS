@@ -9,7 +9,7 @@ import SwiftUI
 import Zip
 
 
-class FileViewModel: ObservableObject {
+class SelectionViewModel: ObservableObject {
     
     @Published var fileArray: [ContentFile] = []
     @Published var projects: [Project] = []

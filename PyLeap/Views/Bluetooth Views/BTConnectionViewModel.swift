@@ -15,6 +15,8 @@ class BTConnectionViewModel: ObservableObject {
     // Published
     enum Destination {
         case fileTransfer
+        case selectionView
+        case projectView
     }
     
     @Published var destination: Destination? = nil
@@ -46,8 +48,13 @@ class BTConnectionViewModel: ObservableObject {
     
     init() {
         // Check if we are reconnecting to a known Peripheral. If AppState.shared.fileTransferClient is not nil, no need to scan, just go to the FileTransfer screen
-        if AppState.shared.fileTransferClient != nil {
-            destination = .fileTransfer
+        ///Edit - we want to head to the Selection View
+//        if AppState.shared.fileTransferClient != nil {
+//            destination = .fileTransfer
+//        }
+
+        if ProjectState.shared.projectSingleton != nil {
+            destination = .projectView
         }
     }
     
@@ -122,6 +129,10 @@ class BTConnectionViewModel: ObservableObject {
         destination = .fileTransfer
     }
 
+    private func gotoSelectionView(){
+        destination = .selectionView
+    }
+    
     // MARK: - Scanning
     private func updateScannedPeripherals() {
         // Update peripheralAutoconnect
@@ -242,8 +253,14 @@ class BTConnectionViewModel: ObservableObject {
                 
                 // Finished setup
                 self.detailText = "FileTransfer service ready"
+                
                 self.gotoFileTransfer()
 
+                ///Go to Selection View
+                self.gotoSelectionView()
+                
+                
+                
             case .failure(let error):
                 DLog("setupPeripheral error: \(error.localizedDescription)")
 
