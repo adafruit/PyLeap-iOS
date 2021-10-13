@@ -133,6 +133,10 @@ class BTConnectionViewModel: ObservableObject {
         destination = .selectionView
     }
     
+    private func gotoProjectView(){
+        destination = .projectView
+    }
+    
     // MARK: - Scanning
     private func updateScannedPeripherals() {
         // Update peripheralAutoconnect
