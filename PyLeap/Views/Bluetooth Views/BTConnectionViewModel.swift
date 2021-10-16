@@ -50,12 +50,12 @@ class BTConnectionViewModel: ObservableObject {
         // Check if we are reconnecting to a known Peripheral. If AppState.shared.fileTransferClient is not nil, no need to scan, just go to the FileTransfer screen
         ///Edit - we want to head to the Selection View
         if AppState.shared.fileTransferClient != nil {
-            destination = .selectionView
+            destination = .fileTransfer
         }
 
-        if ProjectState.shared.projectSingleton != nil {
-            destination = .projectView
-        }
+//        if ProjectState.shared.projectSingleton != nil {
+//            destination = .projectView
+//        }
     }
     
     func onAppear() {
@@ -261,7 +261,7 @@ class BTConnectionViewModel: ObservableObject {
                 self.gotoFileTransfer()
 
                 ///Go to Selection View
-                self.gotoSelectionView()
+               // self.gotoSelectionView()
                 
                 
                 

@@ -44,6 +44,8 @@
 		D5597C3B26B98E1E00DF17C0 /* NumbersOnly.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5597C3A26B98E1E00DF17C0 /* NumbersOnly.swift */; };
 		D55D5BFD26C4BE45002B0925 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = D55D5BFC26C4BE45002B0925 /* Project.swift */; };
 		D55D5C0026C4D619002B0925 /* ProjectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D55D5BFF26C4D619002B0925 /* ProjectCell.swift */; };
+		D5640216271B54BF00AE1519 /* MainSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5640215271B54BF00AE1519 /* MainSelectionView.swift */; };
+		D5640218271B577F00AE1519 /* MainSelectionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5640217271B577F00AE1519 /* MainSelectionDetailView.swift */; };
 		D56F63F8270240DB000E5975 /* BleDataProcessingQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F63E7270240A4000E5975 /* BleDataProcessingQueue.swift */; };
 		D56F63F9270240DB000E5975 /* BlePeripheral+AdafruitCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F63E8270240A4000E5975 /* BlePeripheral+AdafruitCommon.swift */; };
 		D56F63FA270240DB000E5975 /* BlePeripheral+FileTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F63E9270240A4000E5975 /* BlePeripheral+FileTransfer.swift */; };
@@ -131,6 +133,8 @@
 		D5597C3A26B98E1E00DF17C0 /* NumbersOnly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumbersOnly.swift; sourceTree = "<group>"; };
 		D55D5BFC26C4BE45002B0925 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		D55D5BFF26C4D619002B0925 /* ProjectCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCell.swift; sourceTree = "<group>"; };
+		D5640215271B54BF00AE1519 /* MainSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSelectionView.swift; sourceTree = "<group>"; };
+		D5640217271B577F00AE1519 /* MainSelectionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSelectionDetailView.swift; sourceTree = "<group>"; };
 		D56F63E7270240A4000E5975 /* BleDataProcessingQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleDataProcessingQueue.swift; sourceTree = "<group>"; };
 		D56F63E8270240A4000E5975 /* BlePeripheral+AdafruitCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BlePeripheral+AdafruitCommon.swift"; sourceTree = "<group>"; };
 		D56F63E9270240A4000E5975 /* BlePeripheral+FileTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BlePeripheral+FileTransfer.swift"; sourceTree = "<group>"; };
@@ -457,6 +461,8 @@
 				D59DFDB3268CCEB9001737F6 /* Onboarding Views */,
 				D58D887C26CDF8110085604A /* FileChooserView.swift */,
 				D58D887E26CDF8310085604A /* FileChooserModel.swift */,
+				D5640215271B54BF00AE1519 /* MainSelectionView.swift */,
+				D5640217271B577F00AE1519 /* MainSelectionDetailView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -624,6 +630,7 @@
 				D5597C0A26AF018800DF17C0 /* TextFieldAlert.swift in Sources */,
 				D59DFDB6268CD052001737F6 /* AppEnvironment.swift in Sources */,
 				D52BE85626A0E5A700630900 /* PeripheralAutoConnect.swift in Sources */,
+				D5640218271B577F00AE1519 /* MainSelectionDetailView.swift in Sources */,
 				D59DFDB8268CD6A7001737F6 /* SplashScreen.swift in Sources */,
 				D5A4E5FB2715F47F00A6937F /* ProjectState.swift in Sources */,
 				D517F68126C5771D002996E8 /* FillerView.swift in Sources */,
@@ -658,6 +665,7 @@
 				D52BE7EE269DF36E00630900 /* DownloadViewModel.swift in Sources */,
 				D55D5C0026C4D619002B0925 /* ProjectCell.swift in Sources */,
 				D5507AD226C668BC00512BAA /* FileDownloadViewModel.swift in Sources */,
+				D5640216271B54BF00AE1519 /* MainSelectionView.swift in Sources */,
 				D56F63FE270240E1000E5975 /* BlePeripheral+Battery.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

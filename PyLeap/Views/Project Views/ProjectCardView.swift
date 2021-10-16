@@ -16,6 +16,7 @@ struct ProjectCardView: View {
     
     @AppStorage("LED") var selectedLEDIndex = 0
     
+    @AppStorage("selection") var showSelection = true
     // Data
     @Environment(\.presentationMode) var presentationMode
     
@@ -37,14 +38,11 @@ struct ProjectCardView: View {
     
     @State private var fileTransferStatus = ""
     
-    var testIn = 1
-     
     // Params
     let fileTransferClient: FileTransferClient?
     
     init(fileTransferClient: FileTransferClient?, project: Project) {
         self.fileTransferClient = fileTransferClient
-    
         self.project = project
     }
     
@@ -61,15 +59,15 @@ struct ProjectCardView: View {
         
     }
     
-//    func sendingCodeFile() {
-//        //        if value == 1 {
-//        if let data = project.pythonCode.data(using: .utf8) {
-//            model.writeFile(filename: filename, data: data)
-//
-//            //  }
-//        }
-//
-//    }
+    func sendingCodeFile() {
+        //        if value == 1 {
+        if let data = project.pythonCode.data(using: .utf8) {
+            model.writeFile(filename: filename, data: data)
+            
+            //  }
+        }
+        
+    }
     
     //Downloads
     @State private var buttonInteractivity: Bool = false
@@ -81,7 +79,7 @@ struct ProjectCardView: View {
     
     let downloadLink: String = "https://learn.adafruit.com/pages/22555/elements/3098569/download?type=zip"
     
-    func fileCheck(){
+    func fileCheck() {
         print("Inital value: \(value)")
         if value == 0 {
             print("Ready to transmit...")
@@ -91,19 +89,22 @@ struct ProjectCardView: View {
             
             print("In file checker - step 1")
             
-            if project.index == 0 {
+            if selectedProjectIndex == 0 {
                 value = 0
                 model.retrieveCP7xNeopixel()
                 print("Sending Rainbow Lib")
+                print("Proj. Index \(selectedProjectIndex)")
             }
             
-            if project.index == 1 {
+            if selectedProjectIndex == 1 {
+                value = 0
                 model.blinkCP7xLib()
                 print("Sending Blink Lib")
+                print("Proj. Index \(selectedProjectIndex)")
             }
             
-            if project.index == 2 {
-                print("Sending first lib file.")
+            if selectedProjectIndex == 2 {
+
                 
                 if selectedLEDIndex == 0 {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2){
@@ -119,7 +120,7 @@ struct ProjectCardView: View {
             
         }
         if value == 2 {
-            if project.index == 2 {
+            if selectedProjectIndex == 2 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                     if selectedLEDIndex == 1 {
                         selectedLEDIndex += 1
@@ -129,11 +130,13 @@ struct ProjectCardView: View {
                     }
                 }
             }
-    
+            //print("Restarting")
+            //value = 0
+            
         }
         
         if value == 3 {
-            if project.index == 2 {
+            if selectedProjectIndex == 2 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                     if selectedLEDIndex == 2 {
                         selectedLEDIndex += 1
@@ -144,9 +147,9 @@ struct ProjectCardView: View {
                 }
             }
         }
-        
+        //Here
         if value == 4 {
-            if project.index == 2 {
+            if selectedProjectIndex == 2 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                     if selectedLEDIndex == 3 {
                         selectedLEDIndex += 1
@@ -159,7 +162,7 @@ struct ProjectCardView: View {
         }
         
         if value == 5 {
-            if project.index == 2 {
+            if selectedProjectIndex == 2 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                     if selectedLEDIndex == 4 {
                         selectedLEDIndex += 1
@@ -172,7 +175,7 @@ struct ProjectCardView: View {
         }
         
         if value == 6 {
-            if project.index == 2 {
+            if selectedProjectIndex == 2 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                     if selectedLEDIndex == 5 {
                         selectedLEDIndex += 1
@@ -185,7 +188,7 @@ struct ProjectCardView: View {
         }
         
         if value == 7 {
-            if project.index == 2 {
+            if selectedProjectIndex == 2 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                     if selectedLEDIndex == 6 {
                         selectedLEDIndex += 1
@@ -198,7 +201,7 @@ struct ProjectCardView: View {
         }
         
         if value == 8 {
-            if project.index == 2 {
+            if selectedProjectIndex == 2 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                     if selectedLEDIndex == 7 {
                         selectedLEDIndex += 1
@@ -211,7 +214,7 @@ struct ProjectCardView: View {
         }
         
         if value == 9 {
-            if project.index == 2 {
+            if selectedProjectIndex == 2 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                     if selectedLEDIndex == 8 {
                         selectedLEDIndex += 1
@@ -225,7 +228,7 @@ struct ProjectCardView: View {
         
         
         if value == 10 {
-            if project.index == 2 {
+            if selectedProjectIndex == 2 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                     if selectedLEDIndex == 9 {
                         selectedLEDIndex += 1
@@ -238,7 +241,7 @@ struct ProjectCardView: View {
         }
         
         if value == 11 {
-            if project.index == 2 {
+            if selectedProjectIndex == 2 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                     if selectedLEDIndex == 10 {
                         selectedLEDIndex += 1
@@ -263,131 +266,175 @@ struct ProjectCardView: View {
     var projectNames = ["Glide on over some rainbows!","Blink!", "LED Glasses", "Hello World"]
     
     let projectArray = ProjectData.projects
+    var projects: [Project] = ProjectData.projects
     
+    let layout = [
+        GridItem(.adaptive(minimum: 180))
+    ]
+    
+    var columns = Array(repeating: GridItem(.flexible(), spacing:20), count: 2)
+
     
     var body: some View {
         
-        VStack {
+        ZStack {
             
-            Form {
-                Section {
-                    Picker(selection: $selectedProjectIndex, label: Text("Select")) {
-                        ForEach(0 ..< projectNames.count) {
-                            Text(self.projectNames[$0])
-                        }
-                    }
-                    .onAppear(){
-                        print("selectedFrameworkIndex: \(selectedProjectIndex)")
-                    }
-                }
-                // Section 2
-                Section {
-                    
-                    VStack(alignment: .leading){
+            if showSelection == true {
+               
+                ScrollView {
+                    LazyVGrid(columns: layout, spacing: 20) {
                         
-                        HStack{
+                        ForEach(projects.indices,id: \.self) { item in
                             
                             ZStack {
-                                
-                                Rectangle()
-                                    .frame(width: 22, height: 22, alignment: .center)
-                                    .cornerRadius(5.0)
-                                    .foregroundColor(Color(#colorLiteral(red: 0.2156862745, green: 0.6745098039, blue: 1, alpha: 1)))
-                                
-                                Image("logo")
-                                    .resizable(resizingMode: .stretch)
-                                    .aspectRatio(contentMode: .fit)
-                                    .foregroundColor(.white)
-                                    .frame(width: 20, height: 20, alignment: .center)
+                                Button {
+                                    selectedProjectIndex = projects[item].index
+                                    showSelection.toggle()
+                                    
+                                } label: {
+                                   
+                                      ProjectCell(title: projects[item].title, deviceName: projects[item].device)
+                                }
+
                             }
-                            
-                            
-                            Text("Circuit Playground Bluefruit")
-                                .font(.caption)
-                                .fontWeight(.light)
-                                .foregroundColor(.gray)
-                                .font(.title)
-                            
-                            
-                            Spacer()
-                            
                         }
                         
-                        Text(project.title)
-                            .fontWeight(.semibold)
-                        Divider()
+                    }
+                    
+                    .navigationBarBackButtonHidden(true)
+                    .ignoresSafeArea(.all)
+                }
+                
+                .padding(.top,20)
+                .navigationBarTitle("PyLeap")
+                
+            } else {
+                
+                
+                VStack {
+                    
+                    Form {
+//                        Section {
+//                            Picker(selection: $selectedProjectIndex, label: Text("Select")) {
+//                                ForEach(0 ..< projectNames.count) {
+//                                    Text(self.projectNames[$0])
+//                                }
+//                            }
+//                        }
+                        // Section 2
+                        Section {
+                            
+                            VStack(alignment: .leading){
+                                
+                                HStack{
+                                    
+                                    ZStack {
+                                        
+                                        Rectangle()
+                                            .frame(width: 22, height: 22, alignment: .center)
+                                            .cornerRadius(5.0)
+                                            .foregroundColor(Color(#colorLiteral(red: 0.2156862745, green: 0.6745098039, blue: 1, alpha: 1)))
+                                        
+                                        Image("logo")
+                                            .resizable(resizingMode: .stretch)
+                                            .aspectRatio(contentMode: .fit)
+                                            .foregroundColor(.white)
+                                            .frame(width: 20, height: 20, alignment: .center)
+                                    }
+                                    
+                                    
+                                    Text(projectArray[selectedProjectIndex].device)
+                                        .font(.caption)
+                                        .fontWeight(.light)
+                                        .foregroundColor(.gray)
+                                        .font(.title)
+                                    
+                                    
+                                    Spacer()
+                                    
+                                }
+                                
+                                Text(projectArray[selectedProjectIndex].title)
+                                    .fontWeight(.semibold)
+                                Divider()
+                                
+                                Text("""
+                                    \(projectArray[selectedProjectIndex].description)
+                                    """)
+                                    .fontWeight(.medium)
+                                    .font(.footnote)
+                                    .multilineTextAlignment(.leading)
+
+                            }
+                        }
                         
-                        Text("""
-                            PyLeap will list the device enabled guides. Our first stop is using Glider (wireless file transfer) inside of PyLeap to work with BundlFly on the Adafruit Learning System to bundle up and send the files on over!
-                            """)
-                            .fontWeight(.medium)
-                            .font(.footnote)
-                            .multilineTextAlignment(.leading)
-                        Divider()
-                        Text("""
-        Download the Project Bundle.
-        Then, press Send Project Bundle.
-        """)
-                            .fontWeight(.bold)
-                            .font(.system(size: 15))
-                            .foregroundColor(.red)
-                            .multilineTextAlignment(.leading)
+                        Section{
+                            Button(action: {
+                                downloadModel.startDownload(urlString: projectArray[selectedProjectIndex].downloadLink)
+                                
+                                print(projectArray[selectedProjectIndex].downloadLink)
+                            }, label: {
+                                HStack{
+                                    DownloadButtonViewModel(percentage: $progress)
+                                    Text("Download Project Bundle")
+                                        .bold()
+                                        .onChange(of: downloadModel.downloadProgress, perform: { value in
+                                            progress = downloadModel.downloadProgress
+                                        })
+                                    
+                                }
+                                
+                            })
+                        }
+                        
+                        // Section 2
+                        Section{
+                            Button(action: {
+                                if selectedProjectIndex == 0 {
+                                    model.retrieveCP7xCode()
+                                    print("Rainbow")
+                                }
+                                if selectedProjectIndex == 1 {
+                                    model.retrieveBlinkCP7xCode()
+                                    print("Blink")
+                                }
+                                if selectedProjectIndex == 2 {
+                                    model.createLEDGlassesLib()
+                                    model.ledGlassesCP7xCode()
+                                    print("Glasses")
+                                }
+                                
+                                value = 1
+                                print("value: \(value)")
+                            }, label: {
+                                Text("\(sendLabel)")
+                                    .bold()
+                                    .foregroundColor(.purple)
+                            })
+                        }
+                        if selectedProjectIndex == 2 {
+                            Text("\(selectedLEDIndex)/10 Files Transferred")
+                        }
+                    }
+                    
+                  
+                }
+                .navigationBarTitle("Project Card")
+                .navigationBarBackButtonHidden(true)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+
+                    Button("Back") {
+                        showSelection.toggle()
                     }
                 }
-                
-                Section{
-                    Button(action: {
-                        downloadModel.startDownload(urlString: project.downloadLink)
-                        
-                        print(project.downloadLink)
-                    }, label: {
-                        HStack{
-                            DownloadButtonViewModel(percentage: $progress)
-                            Text("Download Project Bundle")
-                                .bold()
-                                .onChange(of: downloadModel.downloadProgress, perform: { value in
-                                    progress = downloadModel.downloadProgress
-                                })
-                            
-                        }
-                        
-                    })
                 }
                 
-                // Section 2
-                Section{
-                    Button(action: {
-                        if project.index == 0 {
-                            model.retrieveCP7xCode()
-                            print("Rainbow")
-                        }
-                        if project.index == 1 {
-                            model.retrieveBlinkCP7xCode()
-                            print("Blink")
-                        }
-                        if project.index == 2 {
-                            model.createLEDGlassesLib()
-                            model.ledGlassesCP7xCode()
-                            print("Glasses")
-                        }
-                        
-                        value = 1
-                        print("value: \(value)")
-                    }, label: {
-                        Text("\(sendLabel)")
-                            .bold()
-                            .foregroundColor(.purple)
-                    })
-                }
-                if project.index == 2 {
-                    Text("\(selectedLEDIndex)/10 Files Transferred")
-                }
+                
             }
             
-            .navigationBarTitle("Project Card")
-
+            
         }
-        
         
         .disabled(model.transmissionProgress != nil)
         .onChange(of: model.fileTransferClient) { fileTransferClient in
@@ -396,12 +443,10 @@ struct ProjectCardView: View {
             }
         }
         .onAppear {
-            print("Project index: \(project.index)")
+            
             print("View Did Load.")
             model.onAppear(fileTransferClient: fileTransferClient)
             model.startup()
-            // model.gatherFiles()
-            // model.retrieveCP7xNeopixel()
             fileCheck()
             print("value: \(value)")
             
@@ -416,7 +461,11 @@ struct ProjectCardView: View {
             
         }
         
+        
     }
+    
+    
+    
     
 }
 private struct ContentsView: View {
@@ -433,7 +482,7 @@ private struct ContentsView: View {
 
 struct ProjectCardView_Previews: PreviewProvider {
     static var previews: some View {
-        ProjectCardView(fileTransferClient: nil, project: ProjectData.blinkCPB)
+        ProjectCardView(fileTransferClient: nil, project: ProjectData.projects.first!)
     }
 }
 

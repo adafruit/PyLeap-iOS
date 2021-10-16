@@ -17,9 +17,9 @@ struct BTConnectionView: View {
         
         NavigationLink(destination: ProjectCardView(fileTransferClient: AppState.shared.fileTransferClient, project: projects.first!),tag: .fileTransfer, selection: $model.destination) { EmptyView() }
         
-        NavigationLink(destination: SelectionView(fileTransferClient: AppState.shared.fileTransferClient),tag: .selectionView,selection: $model.destination) { EmptyView()}
+    //    NavigationLink(destination: SelectionView(fileTransferClient: AppState.shared.fileTransferClient),tag: .selectionView,selection: $model.destination) { EmptyView()}
         
-        NavigationLink(destination: ProjectCardView(fileTransferClient: AppState.shared.fileTransferClient, project: ProjectState.shared.projectSingleton ?? ProjectData.helloWorld),tag: .projectView,selection: $model.destination) { EmptyView()}
+     //   NavigationLink(destination: ProjectCardView(fileTransferClient: AppState.shared.fileTransferClient, project: ProjectState.shared.projectSingleton ?? ProjectData.helloWorld),tag: .projectView,selection: $model.destination) { EmptyView()}
         
         
         
