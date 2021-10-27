@@ -34,7 +34,7 @@ struct StartupView: View {
                 rootViewModel.goToMain()
                 
 //                if onboardingSeen == true {
-//                    
+//
 //                    rootViewModel.goToMain()
 //                    print("Onboarding: \(onboardingSeen)")
 //                } else {

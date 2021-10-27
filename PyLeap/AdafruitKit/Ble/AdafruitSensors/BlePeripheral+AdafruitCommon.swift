@@ -79,7 +79,7 @@ extension BlePeripheral {
         
         // Time period
         if let timePeriod = timePeriod {    // Set timePeriod if not nil
-            let serviceUuid = characteristic.service.uuid
+            let serviceUuid = characteristic.service!.uuid
             self.adafruitSetPeriod(timePeriod, serviceUuid: serviceUuid) { [weak self] _ in
                 guard let self = self else { return }
                 

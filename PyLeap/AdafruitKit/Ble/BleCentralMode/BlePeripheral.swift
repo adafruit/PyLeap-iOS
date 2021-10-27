@@ -398,11 +398,11 @@ class BlePeripheral: NSObject {
     }
 
     private func handlerIdentifier(from characteristic: CBCharacteristic) -> String {
-        return "\(characteristic.service.uuid.uuidString)-\(characteristic.uuid.uuidString)"
+        return "\(characteristic.service!.uuid.uuidString)-\(characteristic.uuid.uuidString)"
     }
 
     private func handlerIdentifier(from descriptor: CBDescriptor) -> String {
-        return "\(descriptor.characteristic.service.uuid.uuidString)-\(descriptor.characteristic.uuid.uuidString)-\(descriptor.uuid.uuidString)"
+        return "\(descriptor.characteristic!.service!.uuid.uuidString)-\(descriptor.characteristic!.uuid.uuidString)-\(descriptor.uuid.uuidString)"
     }
 
     internal func finishedExecutingCommand(error: Error?) {

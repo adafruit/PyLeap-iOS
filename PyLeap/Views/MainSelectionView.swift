@@ -30,7 +30,7 @@ struct MainSelectionView: View {
                         ZStack {
                             
                             NavigationLink(destination: ProjectCardView(fileTransferClient: AppState.shared.fileTransferClient,project: self.projects[item])) {
-                                ProjectCell(title: projects[item].title, deviceName: projects[item].device)
+                                ProjectCell(title: projects[item].title, deviceName: projects[item].device, image: projects[item].image)
                             }
                             
                         }
@@ -51,3 +51,4 @@ struct MainSelectionView_Previews: PreviewProvider {
         MainSelectionView()
     }
 }
+    

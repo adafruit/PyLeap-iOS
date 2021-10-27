@@ -22,10 +22,8 @@ struct ProjectCardView: View {
     
     @StateObject var model = ProjectViewModel()
     @StateObject var downloadModel = DownloadViewModel()
-    
-    @State private var filename = "/code.py"
-    @State private var consoleFile = "/boot_out.txt"
-    @State private var fileContents = ProjectViewModel.defaultFileContentePlaceholder
+
+
     @State private var showingDownloadAlert = false
     @State private var sendLabel = "Send Bundle"
     
@@ -33,11 +31,8 @@ struct ProjectCardView: View {
     
     @AppStorage("value") var value = 0
     @AppStorage("fileSent") var neopixelFileSent = false
-    
-    @State private var name = ""
-    
-    @State private var fileTransferStatus = ""
-    
+
+    @State private var downloadedBundle = false
     // Params
     let fileTransferClient: FileTransferClient?
     
@@ -45,40 +40,7 @@ struct ProjectCardView: View {
         self.fileTransferClient = fileTransferClient
         self.project = project
     }
-    
-    typealias CompletionHandler = (_ success:Bool) -> Void
-    
-    func sendingNeopixelFile() {
-        
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
-        
-        let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy"))
-        print(documentsURL)
-        
-        model.writeFile(filename: "/neopixel.mpy", data: data!)
-        
-    }
-    
-    func sendingCodeFile() {
-        //        if value == 1 {
-        if let data = project.pythonCode.data(using: .utf8) {
-            model.writeFile(filename: filename, data: data)
-            
-            //  }
-        }
-        
-    }
-    
-    //Downloads
-    @State private var buttonInteractivity: Bool = false
-    @State private var sendInteractivity: Bool = true
-    
-    @State private var downloadAmount = 0.0
-    
-    let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
-    
-    let downloadLink: String = "https://learn.adafruit.com/pages/22555/elements/3098569/download?type=zip"
-    
+
     func fileCheck() {
         print("Inital value: \(value)")
         if value == 0 {
@@ -262,7 +224,28 @@ struct ProjectCardView: View {
         
     }
     
-    var frameworks = ["UIKit", "Core Data", "CloudKit", "SwiftUI"]
+    func downloadCheck(at filePath: URL){
+        
+        do {
+            let documentDirectory = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            
+           
+            
+            if FileManager.default.fileExists(atPath: filePath.path) {
+                print("FILE AVAILABLE")
+                downloadedBundle = true
+            } else {
+                print("FILE NOT AVAILABLE")
+                downloadedBundle = false
+            }
+        } catch {
+            print(error)
+        }
+        
+       
+    }
+    
+
     var projectNames = ["Glide on over some rainbows!","Blink!", "LED Glasses", "Hello World"]
     
     let projectArray = ProjectData.projects
@@ -289,11 +272,12 @@ struct ProjectCardView: View {
                             ZStack {
                                 Button {
                                     selectedProjectIndex = projects[item].index
+                                    downloadCheck(at: projects[item].filePath)
                                     showSelection.toggle()
                                     
                                 } label: {
                                    
-                                      ProjectCell(title: projects[item].title, deviceName: projects[item].device)
+                                    ProjectCell(title: projects[item].title, deviceName: projects[item].device, image: projects[item].image)
                                 }
 
                             }
@@ -314,13 +298,7 @@ struct ProjectCardView: View {
                 VStack {
                     
                     Form {
-//                        Section {
-//                            Picker(selection: $selectedProjectIndex, label: Text("Select")) {
-//                                ForEach(0 ..< projectNames.count) {
-//                                    Text(self.projectNames[$0])
-//                                }
-//                            }
-//                        }
+
                         // Section 2
                         Section {
                             
@@ -368,6 +346,8 @@ struct ProjectCardView: View {
                             }
                         }
                         
+                        if downloadedBundle == false{
+                        
                         Section{
                             Button(action: {
                                 downloadModel.startDownload(urlString: projectArray[selectedProjectIndex].downloadLink)
@@ -385,6 +365,10 @@ struct ProjectCardView: View {
                                 }
                                 
                             })
+                        }
+                        //Download Button
+                        } else {
+                            
                         }
                         
                         // Section 2
@@ -447,6 +431,7 @@ struct ProjectCardView: View {
             print("View Did Load.")
             model.onAppear(fileTransferClient: fileTransferClient)
             model.startup()
+            downloadCheck(at: projects[selectedProjectIndex].filePath)
             fileCheck()
             print("value: \(value)")
             
@@ -468,16 +453,7 @@ struct ProjectCardView: View {
     
     
 }
-private struct ContentsView: View {
-    @Binding var fileContents: String
-    @Binding var filename: String
-    
-    var body: some View {
-        Text(fileContents)
-    }
-    
-    
-}
+
 
 
 struct ProjectCardView_Previews: PreviewProvider {

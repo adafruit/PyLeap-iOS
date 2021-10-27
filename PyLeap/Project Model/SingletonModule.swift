@@ -15,3 +15,10 @@ class ProjectState: ObservableObject {
     @Published var projectSingleton: Project? = nil
     
 }
+
+
+class ConnectionState: ObservableObject {
+    static let shared = ProjectState()
+    
+    @Published var connectionSingleton: Bool? = false
+}

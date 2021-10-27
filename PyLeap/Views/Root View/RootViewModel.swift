@@ -18,6 +18,7 @@ class RootViewModel: ObservableObject {
         case filesView
         case fileTransfer
         case test
+        case mainSelection
     }
     
     @Published var destination: Destination = AppEnvironment.isRunningTests ? .test : .startup
@@ -25,6 +26,10 @@ class RootViewModel: ObservableObject {
     
     func goToSplash(){
         destination = .splash
+    }
+    
+    func goToMainSelection(){
+        destination = .mainSelection
     }
     
     func goToMain(){
