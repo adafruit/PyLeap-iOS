@@ -18,7 +18,7 @@ struct FillerView: View {
         }
         .padding(.horizontal, 20)
         .edgesIgnoringSafeArea(.all)
-        .background(Color.red)
+       
     }
 }
 

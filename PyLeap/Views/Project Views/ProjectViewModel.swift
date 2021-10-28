@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftUI
+import FileTransferClient
 
 class ProjectViewModel: ObservableObject  {
     
@@ -21,7 +22,7 @@ class ProjectViewModel: ObservableObject  {
     @Published var isRootDirectory = false
     @Published var directory = ""
     @Published var counter: Int = 0
-    @Published var fileTransferClient: FileTransferClient?
+    private var fileTransferClient: FileTransferClient? = FileTransferConnectionManager.shared.selectedClient
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     let cachesPath = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
     
@@ -327,10 +328,12 @@ class ProjectViewModel: ObservableObject  {
     func retrieveCP7xCode() {
             let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x")
             
-            let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py"))
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py")) else {
+            return
+        }
             print("Code File Contents: \(documentsURL)")
         
-            self.writeFile(filename: "/code.py", data: data!)
+            self.writeFile(filename: "/code.py", data: data)
         }
         
     func retrieveBlinkCP7xCode() {
@@ -446,6 +449,7 @@ class ProjectViewModel: ObservableObject  {
     private let bleManager = BleManager.shared
 
 
+    /*
     // MARK: - Placeholders
     var fileNamePlaceholders: [String] = ["/hello.txt"/*, "/bye.txt"*/, "/test.txt"]
 
@@ -457,7 +461,7 @@ class ProjectViewModel: ObservableObject  {
         let sortedText = (1...500).map{"\($0)"}.joined(separator: ", ")
         
         return [Self.defaultFileContentePlaceholder, longText, sortedText]
-    }()
+    }()*/
     
     init() {
         /*
@@ -469,15 +473,16 @@ class ProjectViewModel: ObservableObject  {
     }
     
     // MARK: - Setup
-    func onAppear(fileTransferClient: FileTransferClient?) {
-        registerNotifications(enabled: true)
-        setup(fileTransferClient: fileTransferClient)
+    func onAppear(/*fileTransferClient: FileTransferClient?*/) {
+        //registerNotifications(enabled: true)
+        //setup(fileTransferClient: fileTransferClient)
     }
     
     func onDissapear() {
-        registerNotifications(enabled: false)
+        //registerNotifications(enabled: false)
     }
     
+    /*
     private func setup(fileTransferClient: FileTransferClient?) {
         guard let fileTransferClient = fileTransferClient else {
             DLog("Error: undefined fileTransferClient")
@@ -485,15 +490,9 @@ class ProjectViewModel: ObservableObject  {
         }
         
         self.fileTransferClient = fileTransferClient
-    }
+    }*/
     
     // MARK: - Actions
-    func disconnectAndForgetPairing() {
-        Settings.clearAutoconnectPeripheral()
-        if let blePeripheral = fileTransferClient?.blePeripheral {
-            bleManager.disconnect(from: blePeripheral)
-        }
-    }
     
     func readFile(filename: String) {
         startCommand(description: "Reading \(filename)")
@@ -608,8 +607,10 @@ class ProjectViewModel: ObservableObject  {
     }
     
     private func readFileCommand(path: String, completion: ((Result<Data, Error>) -> Void)?) {
+        guard let fileTransferClient = fileTransferClient else { return }
+
         DLog("start readFile \(path)")
-        fileTransferClient?.readFile(path: path, progress: { [weak self] read, total in
+        fileTransferClient.readFile(path: path, progress: { [weak self] read, total in
             DLog("reading progress: \( String(format: "%.1f%%", Float(read) * 100 / Float(total)) )")
             guard let self = self else { return }
             DispatchQueue.main.async {
@@ -632,8 +633,10 @@ class ProjectViewModel: ObservableObject  {
     }
     
     private func writeFileCommand(path: String, data: Data, completion: ((Result<Date?, Error>) -> Void)?) {
+        guard let fileTransferClient = fileTransferClient else { return }
+
         DLog("start writeFile \(path)")
-        fileTransferClient?.writeFile(path: path, data: data, progress: { [weak self] written, total in
+        fileTransferClient.writeFile(path: path, data: data, progress: { [weak self] written, total in
             DLog("writing progress: \( String(format: "%.1f%%", Float(written) * 100 / Float(total)) )")
             guard let self = self else { return }
             DispatchQueue.main.async {
@@ -656,8 +659,10 @@ class ProjectViewModel: ObservableObject  {
     }
     
     private func deleteFileCommand(path: String, completion: ((Result<Void, Error>) -> Void)?) {
+        guard let fileTransferClient = fileTransferClient else { return }
+
         DLog("start deleteFile \(path)")
-        fileTransferClient?.deleteFile(path: path) { result in
+        fileTransferClient.deleteFile(path: path) { result in
             if AppEnvironment.isDebug {
                 switch result {
                 case .success:
@@ -673,8 +678,10 @@ class ProjectViewModel: ObservableObject  {
     }
     
     private func listDirectoryCommand(path: String, completion: ((Result<[BlePeripheral.DirectoryEntry]?, Error>) -> Void)?) {
+        guard let fileTransferClient = fileTransferClient else { return }
+
         DLog("start listDirectory \(path)")
-        fileTransferClient?.listDirectory(path: path) { result in
+        fileTransferClient.listDirectory(path: path) { result in
             switch result {
             case .success(let entries):
                 DLog("listDirectory \(path). \(entries != nil ? "Entries: \(entries!.count)" : "Directory does not exist")")
@@ -688,8 +695,10 @@ class ProjectViewModel: ObservableObject  {
     }
     
     private func makeDirectoryCommand(path: String, completion: ((Result<Date?, Error>) -> Void)?) {
+        guard let fileTransferClient = fileTransferClient else { return }
+
         DLog("start makeDirectory \(path)")
-        fileTransferClient?.makeDirectory(path: path) { result in
+        fileTransferClient.makeDirectory(path: path) { result in
             switch result {
             case .success(_ /*let date*/):
                 DLog("makeDirectory \(path)")
@@ -702,6 +711,7 @@ class ProjectViewModel: ObservableObject  {
         }
     }
     
+    /*
     // MARK: - BLE Notifications
     private weak var didDisconnectFromPeripheralObserver: NSObjectProtocol?
 
@@ -725,5 +735,5 @@ class ProjectViewModel: ObservableObject  {
 
         // Disconnect
         fileTransferClient = nil
-    }
+    }*/
 }

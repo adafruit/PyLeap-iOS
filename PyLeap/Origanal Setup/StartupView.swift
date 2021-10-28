@@ -23,7 +23,7 @@ struct StartupView: View {
                 .scaleEffect(1.5)
                 .progressViewStyle(CircularProgressViewStyle(tint: Color.white))
         }
-        .modifier(StartupAlerts(model: model))
+        .modifier(Alerts(activeAlert: $model.activeAlert, model: model))
         .onAppear {
             print("Startup View Appeared.")
             model.setupBluetooth()
@@ -34,7 +34,7 @@ struct StartupView: View {
                 rootViewModel.goToMain()
                 
 //                if onboardingSeen == true {
-//                    
+//
 //                    rootViewModel.goToMain()
 //                    print("Onboarding: \(onboardingSeen)")
 //                } else {
@@ -45,19 +45,14 @@ struct StartupView: View {
     }
     
     
-    private struct StartupAlerts: ViewModifier {
+    private struct Alerts: ViewModifier {
+        @Binding var activeAlert: StartupViewModel.ActiveAlert?
         @ObservedObject var model: StartupViewModel
-        
-        private var isAlertPresented: Binding<Bool> { Binding(
-            get: { self.model.activeAlert.isActive },
-            set: { if !$0 { self.model.activeAlert.setInactive() } }
-        )
-        }
-        
+
         func body(content: Content) -> some View {
             content
-                .alert(isPresented: isAlertPresented, content: {
-                    switch model.activeAlert {
+                .alert(item: $activeAlert, content:  { alert in
+                    switch alert {
                     case .bluetoothUnsupported:
                         return Alert(
                             title: Text("Error"),
@@ -73,9 +68,6 @@ struct StartupView: View {
                             dismissButton: .cancel(Text("Ok")) {
                                 model.setupBluetooth()
                             })
-                        
-                    case .none:
-                        return Alert(title: Text("undefined"))
                     }
                 })
         }
