@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import FileTransferClient
 
 struct RootView: View {
     
     @StateObject private var model = RootViewModel()
+    @ObservedObject private var connectionManager = FileTransferConnectionManager.shared
     @AppStorage("onboarding") var onboardingSeen = true
     
     var data = OnboardingDataModel.data
@@ -31,13 +33,28 @@ struct RootView: View {
                 StartupView()
                 
             case .main:
-                MainView()
+                BTConnectionView()
 
+            case .fileTransfer:
+                ProjectCardView(project: ProjectData.projects.first!)
+                
             default:
                 FillerView()
             }
         }
+        .onChange(of: connectionManager.isConnectedOrReconnecting) { isConnectedOrReconnecting in
+            //DLog("isConnectedOrReconnecting: \(isConnectedOrReconnecting)")
+            
+            if !isConnectedOrReconnecting, model.destination == .fileTransfer {
+                model.destination = .main
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+            DLog("App moving to the foreground. Force reconnect")
+            FileTransferConnectionManager.shared.reconnect()
+        }
         .environmentObject(model)
+        .environmentObject(connectionManager)
         .edgesIgnoringSafeArea(.all)
 
     }

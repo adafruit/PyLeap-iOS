@@ -6,6 +6,7 @@
 //
 ///FileTransferView
 import SwiftUI
+import FileTransferClient
 
 struct SelectionView: View {
     
@@ -41,7 +42,7 @@ struct SelectionView: View {
                         
                         ZStack {
                             
-                            NavigationLink(destination: ProjectCardView(fileTransferClient: AppState.shared.fileTransferClient,project: self.projects[item])) {
+                            NavigationLink(destination: ProjectCardView(project: self.projects[item])) {
                                 ProjectCell(title: projects[item].title, deviceName: projects[item].device, image: projects[item].image)
                             }
                             

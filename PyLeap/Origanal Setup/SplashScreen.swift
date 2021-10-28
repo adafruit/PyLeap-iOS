@@ -5,6 +5,7 @@
 //  Created by Trevor Beaton on 6/30/21.
 //
 
+/*
 import SwiftUI
 
 struct SplashScreen: View {
@@ -97,3 +98,4 @@ struct SplashScreen_Previews: PreviewProvider {
         SplashScreen()
     }
 }
+*/

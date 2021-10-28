@@ -5,7 +5,9 @@
 //  Created by Antonio García on 13/5/21.
 //
 
+/*
 import UIKit
+import FileTransferClient
 
 class SplashViewModel: ObservableObject {
     // Config
@@ -128,3 +130,4 @@ class SplashViewModel: ObservableObject {
         self.isStartupFinished = true
     }
 }
+*/

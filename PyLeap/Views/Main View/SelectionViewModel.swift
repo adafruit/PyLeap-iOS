@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Zip
-
+import FileTransferClient
 
 class SelectionViewModel: ObservableObject {
     
@@ -41,18 +41,19 @@ class SelectionViewModel: ObservableObject {
     }
     
     // Data
-    private let bleManager = BleManager.shared
-    @Published var fileTransferClient: FileTransferClient?
+    //private let bleManager = BleManager.shared
+    //@Published var fileTransferClient: FileTransferClient?
     // MARK: - Setup
     func onAppear(fileTransferClient: FileTransferClient?) {
-        registerNotifications(enabled: true)
-        setup(fileTransferClient: fileTransferClient)
+        //registerNotifications(enabled: true)
+        //setup(fileTransferClient: fileTransferClient)
     }
     
     func onDissapear() {
-        registerNotifications(enabled: false)
+        //registerNotifications(enabled: false)
     }
     
+    /*
     private func setup(fileTransferClient: FileTransferClient?) {
         guard let fileTransferClient = fileTransferClient else {
             DLog("Error: undefined fileTransferClient")
@@ -60,17 +61,10 @@ class SelectionViewModel: ObservableObject {
         }
         
         self.fileTransferClient = fileTransferClient
-    }
+    }*/
+      
     
-    // MARK: - Actions
-    func disconnectAndForgetPairing() {
-        Settings.clearAutoconnectPeripheral()
-        if let blePeripheral = fileTransferClient?.blePeripheral {
-            bleManager.disconnect(from: blePeripheral)
-        }
-    }
-    
-    
+    /*
     // MARK: - BLE Notifications
     private weak var didDisconnectFromPeripheralObserver: NSObjectProtocol?
 
@@ -95,6 +89,6 @@ class SelectionViewModel: ObservableObject {
         // Disconnect
         fileTransferClient = nil
     }
-   
+   */
     
 }

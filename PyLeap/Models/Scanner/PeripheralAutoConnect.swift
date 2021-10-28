@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import FileTransferClient
 
 /**
  Manages the logic for autoconnecting to a peripheral
