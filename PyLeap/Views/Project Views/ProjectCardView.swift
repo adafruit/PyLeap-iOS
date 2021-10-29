@@ -20,7 +20,8 @@ struct ProjectCardView: View {
     @AppStorage("selection") var showSelection = true
     // Data
     @Environment(\.presentationMode) var presentationMode
-    
+    @EnvironmentObject private var connectionManager: FileTransferConnectionManager
+
     @StateObject var model = ProjectViewModel()
     @StateObject var downloadModel = DownloadViewModel()
     
@@ -427,7 +428,8 @@ struct ProjectCardView: View {
         .onAppear {
             
             print("View Did Load.")
-            model.onAppear(/*fileTransferClient: fileTransferClient*/)
+            //model.onAppear()
+            model.setup(fileTransferClient: connectionManager.selectedClient)
             model.startup()
             downloadCheck(at: projects[selectedProjectIndex].filePath)
             fileCheck()
@@ -438,12 +440,15 @@ struct ProjectCardView: View {
                 print("FileTransfer is nil")
             }*/
         }
-        
         .onDisappear {
             print("ProjectCard - on disappear")
-            model.onDissapear()
+            //model.onDissapear()
             
         }
+        .onChange(of: connectionManager.selectedClient) { selectedClient in
+            model.setup(fileTransferClient: selectedClient)
+        }
+        
         
         
     }

@@ -22,11 +22,16 @@ class ProjectViewModel: ObservableObject  {
     @Published var isRootDirectory = false
     @Published var directory = ""
     @Published var counter: Int = 0
-    private var fileTransferClient: FileTransferClient? = FileTransferConnectionManager.shared.selectedClient
+    private weak var fileTransferClient: FileTransferClient?
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     let cachesPath = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
     
 
+    
+    enum ProjectViewError: LocalizedError {
+        case fileTransferUndefined
+    }
+    
     // MARK: - Properties
 
 //    func counterFunc(){
@@ -473,6 +478,7 @@ class ProjectViewModel: ObservableObject  {
     }
     
     // MARK: - Setup
+    /*
     func onAppear(/*fileTransferClient: FileTransferClient?*/) {
         //registerNotifications(enabled: true)
         //setup(fileTransferClient: fileTransferClient)
@@ -480,17 +486,16 @@ class ProjectViewModel: ObservableObject  {
     
     func onDissapear() {
         //registerNotifications(enabled: false)
-    }
+    }*/
     
-    /*
-    private func setup(fileTransferClient: FileTransferClient?) {
+    func setup(fileTransferClient: FileTransferClient?) {
         guard let fileTransferClient = fileTransferClient else {
             DLog("Error: undefined fileTransferClient")
             return
         }
         
         self.fileTransferClient = fileTransferClient
-    }*/
+    }
     
     // MARK: - Actions
     
@@ -576,10 +581,12 @@ class ProjectViewModel: ObservableObject  {
     }
     
     func makeDirectory(path: String) {
+        guard let fileTransferClient = fileTransferClient else { DLog("Error: makeDirectory called with nil fileTransferClient"); return }
+
         // Make sure that the path ends with the separator
         DLog("makeDirectory: \(path)")
         isTransmiting = true
-        fileTransferClient?.makeDirectory(path: path) { [weak self] result in
+        fileTransferClient.makeDirectory(path: path) { [weak self] result in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
@@ -607,7 +614,7 @@ class ProjectViewModel: ObservableObject  {
     }
     
     private func readFileCommand(path: String, completion: ((Result<Data, Error>) -> Void)?) {
-        guard let fileTransferClient = fileTransferClient else { return }
+        guard let fileTransferClient = fileTransferClient else { completion?(.failure(ProjectViewError.fileTransferUndefined)); return }
 
         DLog("start readFile \(path)")
         fileTransferClient.readFile(path: path, progress: { [weak self] read, total in
@@ -633,7 +640,7 @@ class ProjectViewModel: ObservableObject  {
     }
     
     private func writeFileCommand(path: String, data: Data, completion: ((Result<Date?, Error>) -> Void)?) {
-        guard let fileTransferClient = fileTransferClient else { return }
+        guard let fileTransferClient = fileTransferClient else { completion?(.failure(ProjectViewError.fileTransferUndefined)); return }
 
         DLog("start writeFile \(path)")
         fileTransferClient.writeFile(path: path, data: data, progress: { [weak self] written, total in
@@ -659,7 +666,7 @@ class ProjectViewModel: ObservableObject  {
     }
     
     private func deleteFileCommand(path: String, completion: ((Result<Void, Error>) -> Void)?) {
-        guard let fileTransferClient = fileTransferClient else { return }
+        guard let fileTransferClient = fileTransferClient else { completion?(.failure(ProjectViewError.fileTransferUndefined)); return }
 
         DLog("start deleteFile \(path)")
         fileTransferClient.deleteFile(path: path) { result in
@@ -678,7 +685,7 @@ class ProjectViewModel: ObservableObject  {
     }
     
     private func listDirectoryCommand(path: String, completion: ((Result<[BlePeripheral.DirectoryEntry]?, Error>) -> Void)?) {
-        guard let fileTransferClient = fileTransferClient else { return }
+        guard let fileTransferClient = fileTransferClient else { completion?(.failure(ProjectViewError.fileTransferUndefined)); return }
 
         DLog("start listDirectory \(path)")
         fileTransferClient.listDirectory(path: path) { result in
@@ -695,7 +702,7 @@ class ProjectViewModel: ObservableObject  {
     }
     
     private func makeDirectoryCommand(path: String, completion: ((Result<Date?, Error>) -> Void)?) {
-        guard let fileTransferClient = fileTransferClient else { return }
+        guard let fileTransferClient = fileTransferClient else { completion?(.failure(ProjectViewError.fileTransferUndefined)); return }
 
         DLog("start makeDirectory \(path)")
         fileTransferClient.makeDirectory(path: path) { result in
