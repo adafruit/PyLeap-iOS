@@ -29,9 +29,7 @@ struct ProjectCardView: View {
     @State private var sendLabel = "Send Bundle"
     
     @State private var progress : CGFloat = 0
-    
-    @AppStorage("value") var value = 0
-    @AppStorage("fileSent") var neopixelFileSent = false
+
     
     @State private var downloadedBundle = false
     // Params
@@ -41,188 +39,7 @@ struct ProjectCardView: View {
         self.project = project
     }
     
-    func fileCheck() {
-        print("Inital value: \(value)")
-        if value == 0 {
-            print("Ready to transmit...")
-        }
-        
-        if value == 1{
-            
-            print("In file checker - step 1")
-            
-            if selectedProjectIndex == 0 {
-                value = 0
-                model.retrieveCP7xNeopixel()
-                print("Sending Rainbow Lib")
-                print("Proj. Index \(selectedProjectIndex)")
-            }
-            
-            if selectedProjectIndex == 1 {
-                value = 0
-                model.blinkCP7xLib()
-                print("Sending Blink Lib")
-                print("Proj. Index \(selectedProjectIndex)")
-            }
-            
-            if selectedProjectIndex == 2 {
-                
-                
-                if selectedLEDIndex == 0 {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                        selectedLEDIndex += 1
-                        print("File 1")
-                        value += 1
-                        model.ledGinit_File()
-                    }
-                    
-                }
-                
-            }
-            
-        }
-        if value == 2 {
-            if selectedProjectIndex == 2 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                    if selectedLEDIndex == 1 {
-                        selectedLEDIndex += 1
-                        print("File 2")
-                        value += 1
-                        model.ledGMain_File()
-                    }
-                }
-            }
-            //print("Restarting")
-            //value = 0
-            
-        }
-        
-        if value == 3 {
-            if selectedProjectIndex == 2 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                    if selectedLEDIndex == 2 {
-                        selectedLEDIndex += 1
-                        print("File 3")
-                        value += 1
-                        model.ledGrgbmatrixFile()
-                    }
-                }
-            }
-        }
-        //Here
-        if value == 4 {
-            if selectedProjectIndex == 2 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                    if selectedLEDIndex == 3 {
-                        selectedLEDIndex += 1
-                        print("File 4")
-                        value += 1
-                        model.ledGIssi_evb_File()
-                    }
-                }
-            }
-        }
-        
-        if value == 5 {
-            if selectedProjectIndex == 2 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                    if selectedLEDIndex == 4 {
-                        selectedLEDIndex += 1
-                        print("File 5")
-                        value += 1
-                        model.ledGinit_Reg()
-                    }
-                }
-            }
-        }
-        
-        if value == 6 {
-            if selectedProjectIndex == 2 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                    if selectedLEDIndex == 5 {
-                        selectedLEDIndex += 1
-                        print("File 6")
-                        value += 1
-                        model.ledGbcd_Reg()
-                    }
-                }
-            }
-        }
-        
-        if value == 7 {
-            if selectedProjectIndex == 2 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                    if selectedLEDIndex == 6 {
-                        selectedLEDIndex += 1
-                        print("File 7")
-                        value += 1
-                        model.ledGbcd_DaytimeReg()
-                    }
-                }
-            }
-        }
-        
-        if value == 8 {
-            if selectedProjectIndex == 2 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                    if selectedLEDIndex == 7 {
-                        selectedLEDIndex += 1
-                        print("File 8")
-                        value += 1
-                        model.ledGi2c_bit_Reg()
-                    }
-                }
-            }
-        }
-        
-        if value == 9 {
-            if selectedProjectIndex == 2 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                    if selectedLEDIndex == 8 {
-                        selectedLEDIndex += 1
-                        print("File 9")
-                        value += 1
-                        model.ledGi2c_bits_Reg()
-                    }
-                }
-            }
-        }
-        
-        
-        if value == 10 {
-            if selectedProjectIndex == 2 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                    if selectedLEDIndex == 9 {
-                        selectedLEDIndex += 1
-                        print("File 10!")
-                        value += 1
-                        model.ledGi2c_struct_Reg()
-                    }
-                }
-            }
-        }
-        
-        if value == 11 {
-            if selectedProjectIndex == 2 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                    if selectedLEDIndex == 10 {
-                        selectedLEDIndex += 1
-                        print("File 11!")
-                        value += 1
-                        model.ledGi2c_struct_array_Reg()
-                    }
-                }
-            }
-        }
-        
-        
-        if value == 12{
-            print("Restart")
-            selectedLEDIndex = 0
-            value = 0
-        }
-        
-    }
+
     
     func downloadCheck(at filePath: URL){
         
@@ -332,6 +149,9 @@ struct ProjectCardView: View {
                                         
                                     }
                                     
+
+                                    
+                                    
                                     Text(projectArray[selectedProjectIndex].title)
                                         .fontWeight(.semibold)
                                     Divider()
@@ -353,6 +173,7 @@ struct ProjectCardView: View {
                                         downloadModel.startDownload(urlString: projectArray[selectedProjectIndex].downloadLink)
                                         
                                         print(projectArray[selectedProjectIndex].downloadLink)
+                                        print("Download type: \(projectArray[selectedProjectIndex].title)")
                                     }, label: {
                                         HStack{
                                             DownloadButtonViewModel(percentage: $progress)
@@ -375,21 +196,18 @@ struct ProjectCardView: View {
                             Section{
                                 Button(action: {
                                     if selectedProjectIndex == 0 {
-                                        model.retrieveCP7xCode()
-                                        print("Rainbow")
+                                        model.sendRainbowCode()
+                                        print("Start Rainbow File Transfer")
                                     }
                                     if selectedProjectIndex == 1 {
-                                        model.retrieveBlinkCP7xCode()
-                                        print("Blink")
+                                        model.sendBlinkCode()
+                                        print("Start Blink File Transfer")
                                     }
                                     if selectedProjectIndex == 2 {
-                                        model.createLEDGlassesLib()
-                                        model.ledGlassesCP7xCode()
-                                        print("Glasses")
+                                        model.sendLEDGlassesFiles()
+                                        print("Start LED Glasses File Transfer")
                                     }
-                                    
-                                    value = 1
-                                    print("value: \(value)")
+   
                                 }, label: {
                                     Text("\(sendLabel)")
                                         .bold()
@@ -399,9 +217,28 @@ struct ProjectCardView: View {
                             if selectedProjectIndex == 2 {
                                 Text("\(selectedLEDIndex)/10 Files Transferred")
                             }
+                            
+                            // TEST BUTTON
+                            Section{
+                                Button {
+                                    model.ledGlassesCP7xCode()
+                                } label: {
+                                    Text("Send Over All Files")
+                                }
+                            }
+                            
+                            List {
+                                Section(header: Text("Files")) {
+                                    ForEach(model.fileArray) { file in
+                                        
+                                        ContentFileRow(title: file.title)
+                                        
+                                    }
+                                }
+                            }
+                            
+                            
                         }
-                        
-                        
                     }
                     .navigationBarTitle("Project Card")
                     .navigationBarBackButtonHidden(true)
@@ -413,11 +250,7 @@ struct ProjectCardView: View {
                             }
                         }
                     }
-                    
-                    
                 }
-                
-                
             }
             
             .disabled(model.transmissionProgress != nil)
@@ -430,13 +263,9 @@ struct ProjectCardView: View {
             model.onAppear(/*fileTransferClient: fileTransferClient*/)
             model.startup()
             downloadCheck(at: projects[selectedProjectIndex].filePath)
-            fileCheck()
-            print("value: \(value)")
-            
-            /*
-            if fileTransferClient == nil {
-                print("FileTransfer is nil")
-            }*/
+            model.check()
+           // model.gatherFiles()
+            model.new()
         }
         
         .onDisappear {
@@ -448,6 +277,18 @@ struct ProjectCardView: View {
         
     }
 }
+
+
+struct ContentFileRow: View {
+    let title : String
+    
+    var body: some View {
+        Label(
+            title: { Text(title) },
+            icon: { Image(systemName: "folder") })
+    }
+}
+
 
 
 struct ProjectCardView_Previews: PreviewProvider {
