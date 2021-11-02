@@ -20,6 +20,8 @@ struct ProjectCardView: View {
     @AppStorage("selection") var showSelection = true
     // Data
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject private var connectionManager: FileTransferConnectionManager
+    
     
     @StateObject var model = ProjectViewModel()
     @StateObject var downloadModel = DownloadViewModel()
@@ -196,11 +198,11 @@ struct ProjectCardView: View {
                             Section{
                                 Button(action: {
                                     if selectedProjectIndex == 0 {
-                                        model.sendRainbowCode()
+                                        model.sendCPBRainbowFiles()
                                         print("Start Rainbow File Transfer")
                                     }
                                     if selectedProjectIndex == 1 {
-                                        model.sendBlinkCode()
+                                        model.sendCPBBlinkFiles()
                                         print("Start Blink File Transfer")
                                     }
                                     if selectedProjectIndex == 2 {
@@ -240,6 +242,7 @@ struct ProjectCardView: View {
                             
                         }
                     }
+                    
                     .navigationBarTitle("Project Card")
                     .navigationBarBackButtonHidden(true)
                     .toolbar {
@@ -256,25 +259,22 @@ struct ProjectCardView: View {
             .disabled(model.transmissionProgress != nil)
             
         }
+        .onChange(of: connectionManager.selectedClient) { selectedClient in
+                   model.setup(fileTransferClient: selectedClient)
+               }
         .navigationViewStyle(StackNavigationViewStyle())
         .onAppear {
             
             print("View Did Load.")
-            model.onAppear(/*fileTransferClient: fileTransferClient*/)
+
             model.startup()
-            downloadCheck(at: projects[selectedProjectIndex].filePath)
-            model.check()
-           // model.gatherFiles()
-            model.new()
-        }
-        
-        .onDisappear {
-            print("ProjectCard - on disappear")
-            model.onDissapear()
             
+            model.setup(fileTransferClient: connectionManager.selectedClient)
+            downloadCheck(at: projects[selectedProjectIndex].filePath)
+            model.listDirectory(filename: "")
+
+            model.gatherGlassesBundle()
         }
-        
-        
     }
 }
 
