@@ -31,7 +31,7 @@ struct ProjectCardView: View {
     @State private var sendLabel = "Send Bundle"
     
     @State private var progress : CGFloat = 0
-
+    
     
     @State private var downloadedBundle = false
     // Params
@@ -41,7 +41,7 @@ struct ProjectCardView: View {
         self.project = project
     }
     
-
+    
     
     func downloadCheck(at filePath: URL){
         
@@ -79,200 +79,216 @@ struct ProjectCardView: View {
     
     var body: some View {
         NavigationView {
-            ZStack {
+            
+            TabView{
                 
-                if showSelection == true {
+                ZStack {
                     
-                    ScrollView {
-                        LazyVGrid(columns: layout, spacing: 20) {
-                            
-                            ForEach(projects.indices,id: \.self) { item in
+                    if showSelection == true {
+                        
+                        ScrollView {
+                            LazyVGrid(columns: layout, spacing: 20) {
                                 
-                                ZStack {
-                                    Button {
-                                        selectedProjectIndex = projects[item].index
-                                        downloadCheck(at: projects[item].filePath)
-                                        showSelection.toggle()
-                                        
-                                    } label: {
-                                        
-                                        ProjectCell(title: projects[item].title, deviceName: projects[item].device, image: projects[item].image)
-                                    }
+                                ForEach(projects.indices,id: \.self) { item in
                                     
+                                    ZStack {
+                                        Button {
+                                            selectedProjectIndex = projects[item].index
+                                            downloadCheck(at: projects[item].filePath)
+                                            showSelection.toggle()
+                                            
+                                        } label: {
+                                            
+                                            ProjectCell(title: projects[item].title, deviceName: projects[item].device, image: projects[item].image)
+                                        }
+                                        
+                                    }
                                 }
+                                
                             }
                             
+                            .navigationBarBackButtonHidden(true)
+                            .ignoresSafeArea(.all)
                         }
                         
-                        .navigationBarBackButtonHidden(true)
-                        .ignoresSafeArea(.all)
-                    }
-                    
-                    .padding(.top,20)
-                    .navigationBarTitle("PyLeap")
-                    
-                } else {
-                    
-                    
-                    VStack {
+                        .padding(.top,20)
+                        .navigationBarTitle("PyLeap")
                         
-                        Form {
+                    } else {
+                        
+                        
+                        VStack {
                             
-                            // Section 2
-                            Section {
+                            Form {
                                 
-                                VStack(alignment: .leading){
+                                // Section 2
+                                Section {
                                     
-                                    HStack{
+                                    VStack(alignment: .leading){
                                         
-                                        ZStack {
+                                        HStack{
                                             
-                                            Rectangle()
-                                                .frame(width: 22, height: 22, alignment: .center)
-                                                .cornerRadius(5.0)
-                                                .foregroundColor(Color(#colorLiteral(red: 0.2156862745, green: 0.6745098039, blue: 1, alpha: 1)))
+                                            ZStack {
+                                                
+                                                Rectangle()
+                                                    .frame(width: 22, height: 22, alignment: .center)
+                                                    .cornerRadius(5.0)
+                                                    .foregroundColor(Color(#colorLiteral(red: 0.2156862745, green: 0.6745098039, blue: 1, alpha: 1)))
+                                                
+                                                Image("logo")
+                                                    .resizable(resizingMode: .stretch)
+                                                    .aspectRatio(contentMode: .fit)
+                                                    .foregroundColor(.white)
+                                                    .frame(width: 20, height: 20, alignment: .center)
+                                            }
                                             
-                                            Image("logo")
-                                                .resizable(resizingMode: .stretch)
-                                                .aspectRatio(contentMode: .fit)
-                                                .foregroundColor(.white)
-                                                .frame(width: 20, height: 20, alignment: .center)
+                                            
+                                            Text(projectArray[selectedProjectIndex].device)
+                                                .font(.caption)
+                                                .fontWeight(.light)
+                                                .foregroundColor(.gray)
+                                                .font(.title)
+                                            
+                                            
+                                            Spacer()
+                                            
                                         }
                                         
                                         
-                                        Text(projectArray[selectedProjectIndex].device)
-                                            .font(.caption)
-                                            .fontWeight(.light)
-                                            .foregroundColor(.gray)
-                                            .font(.title)
                                         
                                         
-                                        Spacer()
+                                        Text(projectArray[selectedProjectIndex].title)
+                                            .fontWeight(.semibold)
+                                        Divider()
                                         
-                                    }
-                                    
-
-                                    
-                                    
-                                    Text(projectArray[selectedProjectIndex].title)
-                                        .fontWeight(.semibold)
-                                    Divider()
-                                    
-                                    Text("""
+                                        Text("""
                                     \(projectArray[selectedProjectIndex].description)
                                     """)
-                                        .fontWeight(.medium)
-                                        .font(.footnote)
-                                        .multilineTextAlignment(.leading)
+                                            .fontWeight(.medium)
+                                            .font(.footnote)
+                                            .multilineTextAlignment(.leading)
+                                        
+                                    }
+                                }
+                                
+                                if downloadedBundle == false{
+                                    
+                                    Section{
+                                        Button(action: {
+                                            downloadModel.startDownload(urlString: projectArray[selectedProjectIndex].downloadLink)
+                                            
+                                            print(projectArray[selectedProjectIndex].downloadLink)
+                                            print("Download type: \(projectArray[selectedProjectIndex].title)")
+                                        }, label: {
+                                            HStack{
+                                                DownloadButtonViewModel(percentage: $progress)
+                                                Text("Download Project Bundle")
+                                                    .bold()
+                                                    .onChange(of: downloadModel.downloadProgress, perform: { value in
+                                                        progress = downloadModel.downloadProgress
+                                                    })
+                                                
+                                            }
+                                            
+                                        })
+                                    }
+                                    //Download Button
+                                } else {
                                     
                                 }
-                            }
-                            
-                            if downloadedBundle == false{
                                 
+                                // Section 2
                                 Section{
                                     Button(action: {
-                                        downloadModel.startDownload(urlString: projectArray[selectedProjectIndex].downloadLink)
-                                        
-                                        print(projectArray[selectedProjectIndex].downloadLink)
-                                        print("Download type: \(projectArray[selectedProjectIndex].title)")
-                                    }, label: {
-                                        HStack{
-                                            DownloadButtonViewModel(percentage: $progress)
-                                            Text("Download Project Bundle")
-                                                .bold()
-                                                .onChange(of: downloadModel.downloadProgress, perform: { value in
-                                                    progress = downloadModel.downloadProgress
-                                                })
-                                            
+                                        if selectedProjectIndex == 0 {
+                                            model.sendCPBRainbowFiles()
+                                            print("Start Rainbow File Transfer")
+                                        }
+                                        if selectedProjectIndex == 1 {
+                                            model.sendCPBBlinkFiles()
+                                            print("Start Blink File Transfer")
+                                        }
+                                        if selectedProjectIndex == 2 {
+                                            model.checkForDirectory()
+                                            print("Start LED Glasses File Transfer")
                                         }
                                         
+                                    }, label: {
+                                        Text("\(sendLabel)")
+                                            .bold()
+                                            .foregroundColor(.purple)
                                     })
                                 }
-                                //Download Button
-                            } else {
+                                if selectedProjectIndex == 2 {
+                                    Text("\(selectedLEDIndex)/10 Files Transferred")
+                                }
+                                
+                                // TEST BUTTON
+                                Section{
+                                    Button {
+                                        model.ledGlassesCP7xCode()
+                                    } label: {
+                                        Text("Send Over All Files")
+                                    }
+                                }
+                                
+                                List {
+                                    Section(header: Text("Downloaded Files")) {
+                                        ForEach(model.fileArray) { file in
+                                            
+                                            ContentFileRow(title: file.title)
+                                            
+                                        }
+                                    }
+                                }
+                                
                                 
                             }
-                            
-                            // Section 2
-                            Section{
-                                Button(action: {
-                                    if selectedProjectIndex == 0 {
-                                        model.sendCPBRainbowFiles()
-                                        print("Start Rainbow File Transfer")
-                                    }
-                                    if selectedProjectIndex == 1 {
-                                        model.sendCPBBlinkFiles()
-                                        print("Start Blink File Transfer")
-                                    }
-                                    if selectedProjectIndex == 2 {
-                                        model.sendLEDGlassesFiles()
-                                        print("Start LED Glasses File Transfer")
-                                    }
-   
-                                }, label: {
-                                    Text("\(sendLabel)")
-                                        .bold()
-                                        .foregroundColor(.purple)
-                                })
-                            }
-                            if selectedProjectIndex == 2 {
-                                Text("\(selectedLEDIndex)/10 Files Transferred")
-                            }
-                            
-                            // TEST BUTTON
-                            Section{
-                                Button {
-                                    model.ledGlassesCP7xCode()
-                                } label: {
-                                    Text("Send Over All Files")
-                                }
-                            }
-                            
-                            List {
-                                Section(header: Text("Files")) {
-                                    ForEach(model.fileArray) { file in
-                                        
-                                        ContentFileRow(title: file.title)
-                                        
-                                    }
-                                }
-                            }
-                            
-                            
                         }
-                    }
-                    
-                    .navigationBarTitle("Project Card")
-                    .navigationBarBackButtonHidden(true)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarLeading) {
-                            
-                            Button("Back") {
-                                showSelection.toggle()
+                        
+                        .navigationBarTitle("Project Card")
+                        .navigationBarBackButtonHidden(true)
+                        .toolbar {
+                            ToolbarItem(placement: .navigationBarLeading) {
+                                
+                                Button("Back") {
+                                    showSelection.toggle()
+                                }
                             }
                         }
                     }
                 }
+                .tabItem {
+                    Label("Main", systemImage: "list.dash")
+                        
+                }
+                .disabled(model.transmissionProgress != nil)
+                
+              //  BundleDownloadView()
+                EmptyView()
+                    .tabItem {
+                        Label("Downloads", systemImage: "list.dash")
+                            .foregroundColor(.purple)
+                    }
+                    .onAppear {
+                        print("Ello'!")
+                    }
             }
             
-            .disabled(model.transmissionProgress != nil)
             
         }
         .onChange(of: connectionManager.selectedClient) { selectedClient in
-                   model.setup(fileTransferClient: selectedClient)
-               }
+            model.setup(fileTransferClient: selectedClient)
+        }
         .navigationViewStyle(StackNavigationViewStyle())
         .onAppear {
             
             print("View Did Load.")
-
+            
             model.startup()
             
             model.setup(fileTransferClient: connectionManager.selectedClient)
             downloadCheck(at: projects[selectedProjectIndex].filePath)
-            model.listDirectory(filename: "")
-
             model.gatherGlassesBundle()
         }
     }

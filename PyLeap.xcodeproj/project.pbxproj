@@ -19,6 +19,8 @@
 		D52F7E742672F4C400911D43 /* PyLeapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52F7E732672F4C400911D43 /* PyLeapApp.swift */; };
 		D52F7E782672F4C500911D43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D52F7E772672F4C500911D43 /* Assets.xcassets */; };
 		D52F7E7B2672F4C500911D43 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D52F7E7A2672F4C500911D43 /* Preview Assets.xcassets */; };
+		D545DE1527323AE6001E915A /* BundleDownloadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D545DE1427323AE6001E915A /* BundleDownloadView.swift */; };
+		D545DE1727323CE1001E915A /* BundleDownloadVModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D545DE1627323CE1001E915A /* BundleDownloadVModel.swift */; };
 		D5507AD026C668BC00512BAA /* SelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACC26C668BC00512BAA /* SelectionViewModel.swift */; };
 		D5507AD126C668BC00512BAA /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACF26C668BC00512BAA /* SearchBarView.swift */; };
 		D5507AD226C668BC00512BAA /* FileDownloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACD26C668BC00512BAA /* FileDownloadViewModel.swift */; };
@@ -68,6 +70,8 @@
 		D52F7E772672F4C500911D43 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D52F7E7A2672F4C500911D43 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D52F7E7C2672F4C500911D43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D545DE1427323AE6001E915A /* BundleDownloadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleDownloadView.swift; sourceTree = "<group>"; };
+		D545DE1627323CE1001E915A /* BundleDownloadVModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleDownloadVModel.swift; sourceTree = "<group>"; };
 		D54D38B82691E0D000FBFE47 /* KeyboardUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardUtils.swift; sourceTree = "<group>"; };
 		D54D38C52692044800FBFE47 /* PeripheralList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralList.swift; sourceTree = "<group>"; };
 		D54D38C62692044800FBFE47 /* PeripheralAutoConnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralAutoConnect.swift; sourceTree = "<group>"; };
@@ -287,6 +291,8 @@
 				D5597C3826B8B26100DF17C0 /* ProjectCardView.swift */,
 				D59DFDBF268CE565001737F6 /* ProjectViewModel.swift */,
 				D55D5BFF26C4D619002B0925 /* ProjectCell.swift */,
+				D545DE1427323AE6001E915A /* BundleDownloadView.swift */,
+				D545DE1627323CE1001E915A /* BundleDownloadVModel.swift */,
 			);
 			path = "Project Views";
 			sourceTree = "<group>";
@@ -436,6 +442,7 @@
 				D59DFDB6268CD052001737F6 /* AppEnvironment.swift in Sources */,
 				D52BE85626A0E5A700630900 /* PeripheralAutoConnect.swift in Sources */,
 				D5640218271B577F00AE1519 /* MainSelectionDetailView.swift in Sources */,
+				D545DE1727323CE1001E915A /* BundleDownloadVModel.swift in Sources */,
 				D59DFDB8268CD6A7001737F6 /* SplashScreen.swift in Sources */,
 				D5A4E5FB2715F47F00A6937F /* SingletonModule.swift in Sources */,
 				D517F68126C5771D002996E8 /* FillerView.swift in Sources */,
@@ -457,6 +464,7 @@
 				D5597C0C26AF018800DF17C0 /* View+If.swift in Sources */,
 				D56F64122702A7E3000E5975 /* DownloadButtonView.swift in Sources */,
 				D52BE7EE269DF36E00630900 /* DownloadViewModel.swift in Sources */,
+				D545DE1527323AE6001E915A /* BundleDownloadView.swift in Sources */,
 				D55D5C0026C4D619002B0925 /* ProjectCell.swift in Sources */,
 				D5507AD226C668BC00512BAA /* FileDownloadViewModel.swift in Sources */,
 				D5640216271B54BF00AE1519 /* MainSelectionView.swift in Sources */,

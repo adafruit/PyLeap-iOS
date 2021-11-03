@@ -29,6 +29,35 @@ class ProjectViewModel: ObservableObject  {
     enum ProjectViewError: LocalizedError {
           case fileTransferUndefined
       }
+    
+    func checkForDirectory(){
+        listDirectoryCommand(path: "") { result in
+            
+            
+            switch result {
+                
+            case .success(let contents):
+                    //  print(contents.first)
+                
+                if contents!.contains(where: { name in name.name == "adafruit_is31fl3741"}) {
+                    print("1 exists in the array")
+                        self.ledGlassesCode()
+                    
+                } else {
+                    print("1 does not exists in the array")
+                        self.sendLEDGlassesFiles()
+                }
+                
+            case .failure:
+                print("nothing")
+                
+            }
+
+            }
+        }
+    
+    
+    
     // MARK: - Properties
     
     //    func counterFunc(){
