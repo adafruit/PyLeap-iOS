@@ -30,14 +30,13 @@ class ProjectViewModel: ObservableObject  {
           case fileTransferUndefined
       }
     
-    func checkForDirectory(){
+    func checkForDirectory() {
         listDirectoryCommand(path: "") { result in
             
             
             switch result {
                 
             case .success(let contents):
-                    //  print(contents.first)
                 
                 if contents!.contains(where: { name in name.name == "adafruit_is31fl3741"}) {
                     print("1 exists in the array")
@@ -59,19 +58,14 @@ class ProjectViewModel: ObservableObject  {
     
     
     // MARK: - Properties
-    
-    //    func counterFunc(){
-    //        index += 1
-    //        print("Index: \(index)")
-    //    }
-    
+
     func makeLEDGlassesDirectory(){
         makeDirectory(path: "/adafruit_is31fl3741")
         makeDirectory(path: "/adafruit_register")
         
     }
     
-    func startup() {
+    func startup(url: URL) {
         print("Running Startup")
         
         print("Directory Path: \(directoryPath.path)")
@@ -80,9 +74,11 @@ class ProjectViewModel: ObservableObject  {
         
         do {
             
-            let contents = try FileManager.default.contentsOfDirectory(at: directoryPath, includingPropertiesForKeys: nil,options: [.skipsHiddenFiles])
+            let contents = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil,options: [])
+            let subDirs = contents.filter{ $0.isFileURL }
+            fileArray.removeAll()
             
-            for file in contents {
+            for file in subDirs {
                 print("File Content: \(file.lastPathComponent)")
                 
                 
@@ -93,6 +89,31 @@ class ProjectViewModel: ObservableObject  {
             print("Error: \(error)")
         }
         
+    }
+    
+    func filesDownloaded(url: URL){
+        print("Files downloaded")
+        fileArray.removeAll()
+        
+        var files = [URL]()
+        
+        if let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
+            for case let fileURL as URL in enumerator {
+                do {
+                    let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey])
+                    if fileAttributes.isRegularFile! {
+                        
+                        files.append(fileURL)
+                        let addedFile = ContentFile(title: fileURL.lastPathComponent)
+                        fileArray.append(addedFile)
+                        print("File name: \(fileURL.deletingPathExtension().lastPathComponent)")
+                        print("Path Extention:.\(fileURL.pathExtension)\n")
+                        
+                    }
+                } catch { print(error, fileURL) }
+            }
+            print("xxFiles: \(files)")
+        }
     }
     
     
@@ -106,8 +127,6 @@ class ProjectViewModel: ObservableObject  {
         }
         self.writeFile(filename: "/neopixel.mpy", data: data)
     }
-    
-    
     
     func retrieveCP7xNeopixel() {
         
@@ -133,7 +152,6 @@ class ProjectViewModel: ObservableObject  {
         }
     }
     
-    
     func sendRainbowCode() {
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x")
         
@@ -144,8 +162,6 @@ class ProjectViewModel: ObservableObject  {
         
         self.writeFile(filename: "/code.py", data: data)
     }
-    
-    
     
     func sendBlinkCode() {
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_Blinky_demo").appendingPathComponent("CircuitPython 7.x")
@@ -181,9 +197,6 @@ class ProjectViewModel: ObservableObject  {
             }
     }
     
-    
-    
-    
     func sendCPBBlinkFiles() {
         print("blinkCP7xLib")
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_Blinky_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
@@ -205,9 +218,6 @@ class ProjectViewModel: ObservableObject  {
         }
     }
     
-    
-
-    
     func sendLEDGlassesFiles(){
         self.makeDirectoryCommand(path: "adafruit_is31fl3741") { result in
             switch result {
@@ -222,10 +232,6 @@ class ProjectViewModel: ObservableObject  {
             }
         }
     }
-    
-    
-
-    
     
     func ledGlassesCP7xLib() {
         
@@ -260,9 +266,6 @@ class ProjectViewModel: ObservableObject  {
         
     }
     
-
-    
-
     func makeRegisterDirectory() {
        
         self.makeDirectoryCommand(path: "adafruit_register") { result in
@@ -276,6 +279,8 @@ class ProjectViewModel: ObservableObject  {
         
     }
     // End of directory creation -- Beginning of file transfers
+    
+    //MARK: - LED Glasses
     
     func ledGlassesCode() {
         print("LED Glasses code attempt")
@@ -303,8 +308,7 @@ class ProjectViewModel: ObservableObject  {
         
     }
     
-    
-    //MARK:- LED Glasses - adafruit_is31fl3741 Files
+    //MARK: - LED Glasses - adafruit_is31fl3741 Files
     
     func ledGinit_File() {
         
@@ -393,8 +397,7 @@ class ProjectViewModel: ObservableObject  {
         
     }
     
-    
-    //MARK:- LED Glasses - adafruit_register Files
+    //MARK: - LED Glasses - adafruit_register Files
     
     func ledGinit_Reg() {
         
@@ -596,19 +599,6 @@ class ProjectViewModel: ObservableObject  {
 
     
 
-    
-    func retrieveHWCP7xCode() {
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_Blinky_demo").appendingPathComponent("CircuitPython 7.x")
-        
-        let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py"))
-        print("Code File Contents: \(documentsURL)")
-        
-        self.writeFile(filename: "/code.py", data: data!)
-    }
-    
-    
-
-    
     
     
     struct TransmissionProgress {
@@ -959,34 +949,7 @@ class ProjectViewModel: ObservableObject  {
      fileTransferClient = nil
      }*/
     
-    func filesDownloaded(){
-        print("Files downloaded")
-        // Creating a File Manager Object
-        let manager = FileManager.default
-        
-        // Creating a path to make a document directory path
-        guard let url = manager.urls(for: .documentDirectory,in: .userDomainMask).first else {return}
-        
-        var files = [URL]()
-        
-        if let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: [.isRegularFileKey], options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
-            for case let fileURL as URL in enumerator {
-                do {
-                    let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey])
-                    if fileAttributes.isRegularFile! {
-                        
-                        files.append(fileURL)
-                        print("File name: \(fileURL.deletingPathExtension().lastPathComponent)")
-                        print("Path Extention: .\(fileURL.pathExtension)\n")
-                        
-                        //MARK:- Reads Files
-                        
-                    }
-                } catch { print(error, fileURL) }
-            }
-            print(files)
-        }
-    }
+
     
     func gatherGlassesBundle() {
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_is31fl3741")
@@ -997,7 +960,8 @@ class ProjectViewModel: ObservableObject  {
             // Get the directory contents urls (including subfolders urls)
             let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl, includingPropertiesForKeys: nil)
             let secondDireCont = try FileManager.default.contentsOfDirectory(at: documentsUrlSecond, includingPropertiesForKeys: nil)
-             for t in secondDireCont {
+            
+            for t in secondDireCont {
                 let addItem = ContentFile(title: t.lastPathComponent)
                 
                  
@@ -1005,19 +969,12 @@ class ProjectViewModel: ObservableObject  {
                 
             }
             
-            
             for i in directoryContents {
                 let addItem = ContentFile(title: i.lastPathComponent)
                 
                 fileArray.append(addItem)
                 
             }
-            
-            // if you want to filter the directory contents you can do like this:
-//            let mp3Files = directoryContents.filter{ $0.pathExtension == "mp3" }
-//            print("mp3 urls:",mp3Files)
-//            let mp3FileNames = mp3Files.map{ $0.deletingPathExtension().lastPathComponent }
-//            print("mp3 list:", mp3FileNames)
 
         } catch {
             print(error)
@@ -1026,67 +983,5 @@ class ProjectViewModel: ObservableObject  {
     
     
     
-    func gatherFiles() {
 
-        //let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
-        
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
-        
-        // Creating a File Manager Object
-        let manager = FileManager.default
-        
-        // Creating a path to make a document directory path
-        guard let url = manager.urls(for: .documentDirectory,in: .userDomainMask).first else {return}
-        
-        var files = [URL]()
-        
-        if let enumerator = FileManager.default.enumerator(at: documentsURL, includingPropertiesForKeys: [.isRegularFileKey], options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
-            for case let fileURL as URL in enumerator {
-                do {
-                    let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey])
-                    
-                    if fileAttributes.isRegularFile! {
-                        
-                        //files.append(fileURL)
-                        
-                        let addItem = ContentFile(title: fileURL.lastPathComponent)
-                        
-                        fileArray.append(addItem)
-                        
-                        
-                        print("File name: \(fileURL.deletingPathExtension().lastPathComponent)")
-                        print("Path Extention: .\(fileURL.pathExtension)\n")
-                        
-                        guard let data = try? Data(contentsOf: URL(fileURLWithPath: fileURL.deletingPathExtension().lastPathComponent, relativeTo: documentsURL).appendingPathExtension(fileURL.pathExtension)) else {
-                            return
-                        }
-                        
-                        index += 1
-                        
-                       // self.writeFile(filename: "/\(fileURL.deletingPathExtension().lastPathComponent).\(fileURL.pathExtension)", data: data)
-                        
-                        //MARK:- Reads Files
-                        
-                    }
-                } catch { print(error, fileURL) }
-            }
-            // print(files)
-        }
-    }
-    
-    func fileLoader(fileURL: URL, documentURL: URL){
-        
-        print("File name: \(fileURL.deletingPathExtension().lastPathComponent)")
-        print("Path Extention: .\(fileURL.pathExtension) \n")
-        
-        guard let data = try? Data(contentsOf: URL(fileURLWithPath: fileURL.deletingPathExtension().lastPathComponent, relativeTo: documentURL).appendingPathExtension(fileURL.pathExtension)) else {
-            return
-        }
-        
-        index += 1
-        
-        self.writeFile(filename: "/\(fileURL.deletingPathExtension().lastPathComponent).\(fileURL.pathExtension)", data: data)
-        
-    }
-    
 }

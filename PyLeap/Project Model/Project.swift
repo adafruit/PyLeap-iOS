@@ -55,9 +55,9 @@ For this proof-of-concept we're going to toss a rainbow on over to a Circuit Pla
 """,
         downloadLink: "https://learn.adafruit.com/pages/22555/elements/3098569/download?type=zip",
         downloadedContents: false,
-        filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo"))
+        filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x"))
     
-    
+ 
     
     static var blinkCPB = Project(
         index:1,

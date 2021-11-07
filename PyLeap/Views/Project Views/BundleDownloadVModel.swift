@@ -9,14 +9,10 @@ import SwiftUI
 
 class BundleDownloadVModel: NSObject, ObservableObject {
     
-    
     @Published var fileArray: [ContentFile] = []
     
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-    
     let cachesPath = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-    
-    
     
     func startup() {
         print("Directory Path: \(directoryPath.path)")
@@ -40,12 +36,9 @@ class BundleDownloadVModel: NSObject, ObservableObject {
             
             let fileURLs = try FileManager.default.contentsOfDirectory(at: path, includingPropertiesForKeys: nil)
             
-            
-            
             for i in fileURLs {
                 print("Folder: \(i.lastPathComponent)")
             }
-            
             
             let libPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
            
@@ -65,50 +58,11 @@ class BundleDownloadVModel: NSObject, ObservableObject {
             
             print("CONTENT: \(text2)")
             
-            
-            
-//            let todos = try String(contentsOf: neopixelPath)
-//
-//            for todo in todos {
-//                    print(todo)
-//                }
-            
+
         } catch {
             print("Error: \(error)")
         }
         
     }
-    
-    func gatherFiles() {
-        
-        // Creating a File Manager Object
-        let manager = FileManager.default
-        
-        // Creating a path to make a document directory path
-        guard let url = manager.urls(
-                for: .documentDirectory,
-                in: .userDomainMask).first else {return}
-        
-       
-        var files = [URL]()
-       
-        if let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: [.isRegularFileKey], options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
-            for case let fileURL as URL in enumerator {
-                do {
-                    let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey])
-                    if fileAttributes.isRegularFile! {
-                        files.append(fileURL)
-                        
-                    }
-                } catch { print(error, fileURL) }
-            }
-            
-            
-            
-            print(files)
-        }
-    }
-    
-    
     
 }

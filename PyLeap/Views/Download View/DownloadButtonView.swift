@@ -11,7 +11,6 @@ struct DownloadButtonView: View {
     @StateObject var model = DownloadViewModel()
     
    
-    
     @State var circleOpacity: Double = 1
     @State var iconSize : Int = 20
     @State var test: Double = 0.0
