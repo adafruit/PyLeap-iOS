@@ -11,15 +11,10 @@ import FileTransferClient
 struct ProjectCardView: View {
     
     var project: Project
-    //@AppStorage("onboarding") var onboardingSeen = false
-    
-    @AppStorage("index") var selectedProjectIndex = 0
-    
-    @AppStorage("LED") var selectedLEDIndex = 0
-    
-    @AppStorage("selection") var showSelection = true
+
     // Data
     @Environment(\.presentationMode) var presentationMode
+    
     @EnvironmentObject private var connectionManager: FileTransferConnectionManager
     
     
@@ -29,11 +24,13 @@ struct ProjectCardView: View {
     
     @State private var showDownloadButton = false
     @State private var sendLabel = "Send Bundle"
-    
     @State private var progress : CGFloat = 0
-    
-    
     @State private var downloadedBundle = false
+   // Download Button
+    @State private var disableDownload = false
+    @State private var downloadLabel = "Download Bundle"
+    
+    
     // Params
     //let fileTransferClient: FileTransferClient? = FileTransferConnectionManager.shared.selectedClient
     
@@ -41,25 +38,26 @@ struct ProjectCardView: View {
         self.project = project
     }
     
-    
-    
     func downloadCheck(at filePath: URL){
         
         do {
             
             if FileManager.default.fileExists(atPath: filePath.path) {
+                DispatchQueue.main.async {
                 print("FILE AVAILABLE")
-               // downloadedBundle = true
-                downloadedBundle = false
                 downloadedBundle = true
-                model.filesDownloaded(url: projects[selectedProjectIndex].filePath)
+               // downloadedBundle = false
+               // downloadedBundle = true
+                model.filesDownloaded(url: project.filePath)
                 
                 //model.startup(url: projects[selectedProjectIndex].filePath)
-                
+                }
             } else {
+                DispatchQueue.main.async {
                 print("FILE NOT AVAILABLE")
                 downloadedBundle = false
                 progress = 0
+                }
             }
         } catch {
             print(error)
@@ -67,13 +65,7 @@ struct ProjectCardView: View {
         
         
     }
-    
-    
-    var projectNames = ["Glide on over some rainbows!","Blink!", "LED Glasses", "Hello World"]
-    
-    let projectArray = ProjectData.projects
-    var projects: [Project] = ProjectData.projects
-    
+
     let layout = [
         GridItem(.adaptive(minimum: 180))
     ]
@@ -82,218 +74,201 @@ struct ProjectCardView: View {
     
     
     var body: some View {
-        NavigationView {
+        
+        
+        
+        
+        ZStack {
             
             
-            
-            ZStack {
+            VStack {
                 
-                if showSelection == true {
+                Form {
                     
-                    ScrollView {
-                      
-                        LazyVGrid(columns: layout, spacing: 20) {
+                    // Section 2
+                    Section {
+                        
+                        VStack(alignment: .leading){
                             
-                            ForEach(projects.indices,id: \.self) { item in
+                            HStack{
                                 
                                 ZStack {
-                                  
-                                    Button {
-                                        selectedProjectIndex = projects[item].index
-                                        
-                                        downloadCheck(at: projects[selectedProjectIndex].filePath)
-                                        showSelection.toggle()
-                                        
-                                    } label: {
-                                        
-                                        ProjectCell(title: projects[item].title, deviceName: projects[item].device, image: projects[item].image)
-                                    }
                                     
+                                    Rectangle()
+                                        .frame(width: 22, height: 22, alignment: .center)
+                                        .cornerRadius(5.0)
+                                        .foregroundColor(Color(#colorLiteral(red: 0.2156862745, green: 0.6745098039, blue: 1, alpha: 1)))
+                                    
+                                    Image("logo")
+                                        .resizable(resizingMode: .stretch)
+                                        .aspectRatio(contentMode: .fit)
+                                        .foregroundColor(.white)
+                                        .frame(width: 20, height: 20, alignment: .center)
                                 }
+                                
+                                
+                                Text(project.device)
+                                    .font(.caption)
+                                    .fontWeight(.light)
+                                    .foregroundColor(.gray)
+                                    .font(.title)
+                                
+                                
+                                Spacer()
+                                
                             }
+                            
+                            
+                            
+                            
+                            Text(project.title)
+                                .fontWeight(.semibold)
+                            Divider()
+                            
+                            Text("""
+                                    \(project.description)
+                                    """)
+                                .fontWeight(.medium)
+                                .font(.footnote)
+                                .multilineTextAlignment(.leading)
                             
                         }
-                        
-                        .navigationBarBackButtonHidden(true)
-                        .ignoresSafeArea(.all)
                     }
-                   
-                    .padding(.top,20)
-                    .navigationBarTitle("PyLeap")
                     
-                } else {
-                    
-                    
-                    VStack {
+                    if downloadedBundle == false {
                         
-                        Form {
-                            
-                            // Section 2
-                            Section {
+                        Section {
+                            Button(action: {
+                                downloadModel.startDownload(urlString: project.downloadLink)
+                              
+                                disableDownload = true
+                                downloadLabel = "Downloading..."
                                 
-                                VStack(alignment: .leading){
-                                    
-                                    HStack{
-                                        
-                                        ZStack {
+                                print(project.downloadLink)
+                                print("Download type: \(project.title)")
+                            }, label: {
+                                
+                                    HStack {
+                                        // DownloadButtonViewModel(percentage: $progress)
+                                        // ProgressBar(progress: self.$progress)
+                                        Text(downloadLabel)
+                                            .bold()
                                             
-                                            Rectangle()
-                                                .frame(width: 22, height: 22, alignment: .center)
-                                                .cornerRadius(5.0)
-                                                .foregroundColor(Color(#colorLiteral(red: 0.2156862745, green: 0.6745098039, blue: 1, alpha: 1)))
-                                            
-                                            Image("logo")
-                                                .resizable(resizingMode: .stretch)
-                                                .aspectRatio(contentMode: .fit)
-                                                .foregroundColor(.white)
-                                                .frame(width: 20, height: 20, alignment: .center)
-                                        }
+                                            .onAppear {
+                                                print("on awake: \(downloadedBundle)")
+                                            }
                                         
-                                        
-                                        Text(projectArray[selectedProjectIndex].device)
-                                            .font(.caption)
-                                            .fontWeight(.light)
-                                            .foregroundColor(.gray)
-                                            .font(.title)
-                                        
-                                        
-                                        Spacer()
-                                        
-                                    }
-                                    
-                                    
-                                    
-                                    
-                                    Text(projectArray[selectedProjectIndex].title)
-                                        .fontWeight(.semibold)
-                                    Divider()
-                                    
-                                    Text("""
-                                    \(projectArray[selectedProjectIndex].description)
-                                    """)
-                                        .fontWeight(.medium)
-                                        .font(.footnote)
-                                        .multilineTextAlignment(.leading)
-                                    
-                                }
-                            }
-                            
-                            if downloadedBundle == false {
-                     
-                                Section{
-                                    Button(action: {
-                                        downloadModel.startDownload(urlString: projectArray[selectedProjectIndex].downloadLink)
-                                        
-                                        print(projectArray[selectedProjectIndex].downloadLink)
-                                        print("Download type: \(projectArray[selectedProjectIndex].title)")
-                                    }, label: {
-                                        VStack{
-                                        HStack {
-                                            //DownloadButtonViewModel(percentage: $progress)
-                                          //  ProgressBar(progress: self.$progress)
-                                            Text("Download Project Bundle")
-                                                .bold()
-                                                .onChange(of: downloadModel.downloadProgress, perform: { value in
-                                                   
-                                                    print("pro: \(progress)")
-                                                    print("NEW VALUE: \(value)")
+                                            .onChange(of: downloadModel.downloadProgress) { newValue in
+                                                print("Current Download Progress: \(newValue)")
+
+
+                                                if newValue == 1.0 {
+
+                                                    
+                                                    downloadLabel = "Download Bundle"
+                                                   // downloadedBundle = false
+                                                    downloadedBundle = true
+                                                    disableDownload = false
                                                     
                                                     DispatchQueue.main.async {
-                                                        progress = downloadModel.downloadProgress
-                                                    }
-                                                    
-                                                    if value == 1.0 {
-                                                        downloadedBundle = false
-                                                        downloadedBundle = true
-                                                       // downloadCheck(at: projects[selectedProjectIndex].filePath)
-                                                        print("PASS")
-                                                        print("Current Download Status: \(downloadedBundle)")
+                                                        downloadCheck(at: project.filePath)
                                                     }
                                                     
                                                     
-                                                })
-                                            
-                                        }
-                                        
-                                           // ProgressView("Download Progress", value: downloadModel.downloadProgress, total: 1)
-                                    }
-                                    })
-                                    
-                                }
-                                .onAppear {
-                                    print("on awake: \(downloadedBundle)")
-                                }
-                                
-                                
-                                //Download Button
-                            } else {
+                                                    print("Status: \(downloadedBundle)")
+                                                    print("PASS")
+                                                    print("Current Download Status: \(downloadedBundle)")
+                                                }
 
-                            }
-                            
-                            // Section 2
-                            Section{
-                                Button(action: {
-                                    if selectedProjectIndex == 0 {
-                                        model.sendCPBRainbowFiles()
-                                        print("Start Rainbow File Transfer")
-                                    }
-                                    if selectedProjectIndex == 1 {
-                                        model.sendCPBBlinkFiles()
-                                        print("Start Blink File Transfer")
-                                    }
-                                    if selectedProjectIndex == 2 {
-                                        model.checkForDirectory()
-                                        print("Start LED Glasses File Transfer")
+                                            }
+                                            .onChange(of: downloadModel.isDownloading, perform: { value in
+                                                
+                                                DispatchQueue.main.async {
+                                                print("Download Status: \(value)")
+                                                
+                                                
+                                                    progress = downloadModel.downloadProgress
+                                                }
+                                                
+
+                                            })
+
                                     }
                                     
-                                }, label: {
-                                    Text("\(sendLabel)")
-                                        .bold()
-                                        .foregroundColor(.purple)
-                                })
+                                    // ProgressView("Download Progress", value: downloadModel.downloadProgress, total: 1)
                                 
-                            }
-                            
-                            if downloadedBundle == true {
-
-                                Section(header: Text("Files Downloaded")) {
-                                    List {
-
-                                        ForEach(model.fileArray) { file in
-
-                                            ContentFileRow(title: file.title)
-
-                                        }
-                                    }
-                                }
-
-                            } else {
-
-                            }
-                            
+                            })
+                                
                         }
+                        .disabled(disableDownload)
+                        
+                        
+                        //Download Button
+                    } else {
+                        // Section 2
+                        Section{
+                            Button(action: {
+                                if project.index == 0 {
+                                    model.sendCPBRainbowFiles()
+                                    print("Start Rainbow File Transfer")
+                                }
+                                if project.index == 1 {
+                                    model.sendCPBBlinkFiles()
+                                    print("Start Blink File Transfer")
+                                }
+                                if project.index == 2 {
+                                    model.checkForDirectory()
+                                    print("Start LED Glasses File Transfer")
+                                }
+
+                            }, label: {
+                                Text("\(sendLabel)")
+                                    .bold()
+                                    .foregroundColor(.purple)
+                            })
+
+                        }
+                        
+                        
+
+                        
                     }
                     
-                    .navigationBarTitle("Project Card")
-                    .navigationBarBackButtonHidden(true)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarLeading) {
+                    
+
+
+                    
+                    
+                    
+                    Section(header: Text("Files Downloaded")) {
+                        List {
                             
-                            Button("Back") {
-                               // downloadedBundle = false
-                                showSelection.toggle()
+                            ForEach(model.fileArray) { file in
+                                
+                                ContentFileRow(title: file.title)
+                                
                             }
                         }
+                        
                     }
+                    
                 }
+                .navigationBarTitle("Project Card")
+                //    .navigationBarBackButtonHidden(true)
             }
-            
-            .disabled(model.transmissionProgress != nil)
-            
             
             
         }
-
+        
+        
+        
+        
+        .disabled(model.transmissionProgress != nil)
+        
+        
+        
+        
+        
         .onChange(of: connectionManager.selectedClient) { selectedClient in
             model.setup(fileTransferClient: selectedClient)
         }
@@ -302,10 +277,10 @@ struct ProjectCardView: View {
             
             print("View Did Load.")
             
-          //  model.startup(url: projects[selectedProjectIndex].filePath)
-            model.gatherGlassesBundle()
+            //  model.startup(url: projects[selectedProjectIndex].filePath)
+          //  model.gatherGlassesBundle()
             model.setup(fileTransferClient: connectionManager.selectedClient)
-            downloadCheck(at: projects[selectedProjectIndex].filePath)
+            downloadCheck(at: project.filePath)
         }
     }
 }

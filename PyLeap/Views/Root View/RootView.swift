@@ -36,7 +36,7 @@ struct RootView: View {
                 BTConnectionView()
 
             case .fileTransfer:
-                ProjectCardView(project: ProjectData.projects.first!)
+                SelectionView()
                 
             default:
                 FillerView()

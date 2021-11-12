@@ -10,6 +10,8 @@ import FileTransferClient
 
 struct SelectionView: View {
     
+    @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject private var connectionManager: FileTransferConnectionManager
     
     
     var projects: [Project] = ProjectData.projects
@@ -19,56 +21,54 @@ struct SelectionView: View {
     ]
     
     var columns = Array(repeating: GridItem(.flexible(), spacing:20), count: 2)
-    let fileTransferClient: FileTransferClient?
+    
     @StateObject var viewModel = SelectionViewModel()
     
-    init(fileTransferClient: FileTransferClient?){
-        self.fileTransferClient = fileTransferClient
-    }
     
     var body: some View {
-        
-        
-        
-        VStack {
-          //  SearchBarView()
-            //MARK:- Project Grid Stack
+       
+        NavigationView {
             
-            ScrollView {
+            
+            VStack {
                 
-                LazyVGrid(columns: layout, spacing: 20) {
+                ScrollView {
                     
-                    ForEach(projects.indices,id: \.self) { item in
+                    LazyVGrid(columns: layout, spacing: 20) {
                         
-                        ZStack {
+                        ForEach(projects.indices,id: \.self) { item in
                             
-                            NavigationLink(destination: ProjectCardView(project: self.projects[item])) {
-                                ProjectCell(title: projects[item].title, deviceName: projects[item].device, image: projects[item].image)
+                            ZStack {
+                                
+                                NavigationLink(destination: ProjectCardView(project: self.projects[item])) {
+                                    
+                                    ProjectCell(title: projects[item].title, deviceName: projects[item].device, image: projects[item].image)
+                                }
+                                
                             }
-                            
                         }
+                        
                     }
+                    .navigationBarBackButtonHidden(true)
+                    .ignoresSafeArea(.all)
                     
-                }.ignoresSafeArea(.all)
-            }
+                }
+                .padding(.top,20)
+                .navigationBarTitle("PyLeap")
                 
-            .background(Color.init(red: 240/255, green: 240/255, blue: 240/255))
-        }
-        .onAppear {
-            viewModel.onAppear(fileTransferClient: fileTransferClient)
-            viewModel.startup()
-           
-            if fileTransferClient == nil {
-                print("FileTransfer is nil")
             }
+            
+        }
+        
+        
+        .onAppear {
+            
         }
         .onDisappear {
-            print("Selection - on disappear")
-            viewModel.onDissapear()
             
         }
-        .navigationTitle("PyLeap")
-
+        
+        
     }
     
 }
@@ -81,6 +81,6 @@ struct ContentFile: Identifiable {
 
 struct FileView_Previews: PreviewProvider {
     static var previews: some View {
-        SelectionView(fileTransferClient: nil)
+        SelectionView()
     }
 }

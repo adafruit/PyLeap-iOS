@@ -24,22 +24,23 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
     // Show Progress View
     @Published var downloadProgress: CGFloat = 0
     @Published var showDownloadProgress = false
-    
     @Published var didDownloadBundle = false
+    
+    @Published var isDownloading = false
     
     // Saving Download task refernce for cancelling...
     @Published var downloadtaskSession : URLSessionDownloadTask!
     
     // MARK:- Download
     func startDownload(urlString: String) {
-        
+         isDownloading = true
         // Check for valid URL
         guard let validURL = URL(string: urlString) else {
             self.reportError(error: "Invalid URL!")
             return
         }
         downloadProgress = 0
-        withAnimation{showDownloadProgress = true}
+       // withAnimation{showDownloadProgress = true}
         
         // Download Task...
         // Since were going to get the progress as well as location of the File, I'm going to use a delegate...
@@ -190,12 +191,13 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
             
             // If Success
             print("Successful Download")
+            isDownloading = false
             print("Download Location: \(location)")
-            downloadProgress = 0
+            self.downloadProgress = 1.0
             
             // Closing Progress View
             DispatchQueue.main.async {
-                
+                //self.downloadProgress = 0
                 withAnimation{self.showDownloadProgress = false}
             }
             
@@ -203,6 +205,7 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
         } catch {
             print(error)
             self.reportError(error: "Try again later")
+            isDownloading = false
         }
         
     }

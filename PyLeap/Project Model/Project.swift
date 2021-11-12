@@ -35,7 +35,7 @@ struct Project: Identifiable {
 
 struct ProjectData {
     
-    static var projects = [rainbowCPB,blinkCPB,ledGlassesCPB]
+    static var projects = [rainbowCPB,blinkCPB,ledGlassesCPB,soundCPB]
     static let cpbProjects = [rainbowCPB, blinkCPB,ledGlassesCPB]
     static let clueProjects = [rainbowClue,blinkClue, helloWorldClue]
     static let ledGlasses = [ledGlassesCPB]
@@ -53,7 +53,7 @@ PyLeap will list the device enabled guides, including this one. Our first stop i
 
 For this proof-of-concept we're going to toss a rainbow on over to a Circuit Playground Bluefruit Express.
 """,
-        downloadLink: "https://learn.adafruit.com/pages/22555/elements/3098569/download?type=zip",
+        downloadLink: "https://learn.adafruit.com/pages/22555/elements/3105809/download?type=zip",
         downloadedContents: false,
         filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x"))
     
@@ -68,7 +68,7 @@ For this proof-of-concept we're going to toss a rainbow on over to a Circuit Pla
         description: """
 A simple example code that flashes the 10 Neopixel LEDs Purple and Pink!
 """,
-        downloadLink: "https://learn.adafruit.com/pages/22920/elements/3103057/download?type=zip",
+        downloadLink: "https://learn.adafruit.com/pages/22920/elements/3105810/download?type=zip",
         downloadedContents: false,
         filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_Blinky_demo"))
     
@@ -81,17 +81,17 @@ A simple example code that flashes the 10 Neopixel LEDs Purple and Pink!
         description: """
 Let's send over some rainbows to our Adafruit LED Glasses! This example requires 10 library files to be sent.
 """,
-        downloadLink: "https://learn.adafruit.com/pages/22957/elements/3103276/download?type=zip",
+        downloadLink: "https://learn.adafruit.com/pages/22957/elements/3105811/download?type=zip",
         downloadedContents: false,
         filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples"))
     
-    static var helloWorld = Project(
+    static var soundCPB = Project(
         index:3,
-        title: "Hello World(Wipe)",
+        title: "Sound?",
         image: "rainbow-cpb",
         device: "Circuit Playground Bluefruit",
-        pythonCode: SamplePythonCode.helloWorld, description: "Wipe",
-        downloadLink: "https://learn.adafruit.com/pages/22555/elements/3098569/download?type=zip", downloadedContents: false, filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo"))
+        pythonCode: SamplePythonCode.helloWorld, description: "Sound test",
+        downloadLink: "https://learn.adafruit.com/pages/12271/elements/2989687/download?type=zip", downloadedContents: false, filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples"))
     
     
     
