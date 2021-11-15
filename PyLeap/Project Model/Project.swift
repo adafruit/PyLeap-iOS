@@ -91,7 +91,7 @@ Let's send over some rainbows to our Adafruit LED Glasses! This example requires
         image: "rainbow-cpb",
         device: "Circuit Playground Bluefruit",
         pythonCode: SamplePythonCode.helloWorld, description: "Sound test",
-        downloadLink: "https://learn.adafruit.com/pages/12271/elements/2989687/download?type=zip", downloadedContents: false, filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples"))
+        downloadLink: "https://learn.adafruit.com/pages/23248/elements/3106070/download?type=zip", downloadedContents: false, filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Tone_Piano"))
     
     
     
