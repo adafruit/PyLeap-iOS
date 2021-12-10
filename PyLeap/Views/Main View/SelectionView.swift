@@ -59,7 +59,7 @@ struct SelectionView: View {
             }
             
         }
-        
+        .preferredColorScheme(.dark)
         
         .onAppear {
             
@@ -76,6 +76,7 @@ struct SelectionView: View {
 struct ContentFile: Identifiable {
     var id = UUID()
     var title: String
+    var fileSize: Int
 }
 
 

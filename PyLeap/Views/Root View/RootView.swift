@@ -30,7 +30,7 @@ struct RootView: View {
                 })
             
             case .startup:
-                StartupView()
+                FillerView()
                 
             case .main:
                 BTConnectionView()

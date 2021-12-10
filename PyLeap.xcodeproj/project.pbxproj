@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		A95E4587272A1CD4002895B0 /* FileTransferClient in Frameworks */ = {isa = PBXBuildFile; productRef = A95E4586272A1CD4002895B0 /* FileTransferClient */; };
+		D505B99C2755323C00386E9F /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D505B99B2755323C00386E9F /* NetworkMonitor.swift */; };
+		D505B99E2756894300386E9F /* ViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D505B99D2756894300386E9F /* ViewModifier.swift */; };
+		D50D06B0274681F80029A483 /* InfoModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50D06AF274681F80029A483 /* InfoModalView.swift */; };
 		D517807E273449E700108212 /* CustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D517807D273449E700108212 /* CustomView.swift */; };
 		D517F68126C5771D002996E8 /* FillerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D517F68026C5771D002996E8 /* FillerView.swift */; };
 		D52BE7EE269DF36E00630900 /* DownloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE7EA269DF36E00630900 /* DownloadViewModel.swift */; };
@@ -62,6 +65,9 @@
 
 /* Begin PBXFileReference section */
 		A9AD8723272A18D400322CF8 /* FileTransferClient */ = {isa = PBXFileReference; lastKnownFileType = folder; path = FileTransferClient; sourceTree = "<group>"; };
+		D505B99B2755323C00386E9F /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
+		D505B99D2756894300386E9F /* ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifier.swift; sourceTree = "<group>"; };
+		D50D06AF274681F80029A483 /* InfoModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoModalView.swift; sourceTree = "<group>"; };
 		D517807D273449E700108212 /* CustomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomView.swift; sourceTree = "<group>"; };
 		D517F68026C5771D002996E8 /* FillerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FillerView.swift; sourceTree = "<group>"; };
 		D52BE7E9269DF36E00630900 /* DownloadProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProgressView.swift; sourceTree = "<group>"; };
@@ -293,6 +299,8 @@
 				D5597C3826B8B26100DF17C0 /* ProjectCardView.swift */,
 				D59DFDBF268CE565001737F6 /* ProjectViewModel.swift */,
 				D55D5BFF26C4D619002B0925 /* ProjectCell.swift */,
+				D505B99D2756894300386E9F /* ViewModifier.swift */,
+				D505B99B2755323C00386E9F /* NetworkMonitor.swift */,
 				D545DE1427323AE6001E915A /* BundleDownloadView.swift */,
 				D545DE1627323CE1001E915A /* BundleDownloadVModel.swift */,
 			);
@@ -342,6 +350,7 @@
 			isa = PBXGroup;
 			children = (
 				D59DFD8E268A4A4D001737F6 /* BTConnectionView.swift */,
+				D50D06AF274681F80029A483 /* InfoModalView.swift */,
 				D52BE85326A0E39100630900 /* BTConnectionViewModel.swift */,
 				D5F53CEA2694B524007634C2 /* ScanningView.swift */,
 				D5F53CEE2694BD51007634C2 /* ScanAnimation.swift */,
@@ -427,6 +436,7 @@
 			files = (
 				D56F64102702A6E9000E5975 /* DownloadButtonViewModel.swift in Sources */,
 				D52BE82A26A0660200630900 /* KeyboardUtils.swift in Sources */,
+				D50D06B0274681F80029A483 /* InfoModalView.swift in Sources */,
 				D56F640D270242CA000E5975 /* FileTransferPathUtils.swift in Sources */,
 				D5507AD326C668BC00512BAA /* SelectionView.swift in Sources */,
 				D59DFDC4268CFAB4001737F6 /* OnboardingDataModel.swift in Sources */,
@@ -447,6 +457,7 @@
 				D52BE85626A0E5A700630900 /* PeripheralAutoConnect.swift in Sources */,
 				D5640218271B577F00AE1519 /* MainSelectionDetailView.swift in Sources */,
 				D545DE1727323CE1001E915A /* BundleDownloadVModel.swift in Sources */,
+				D505B99E2756894300386E9F /* ViewModifier.swift in Sources */,
 				D59DFDB8268CD6A7001737F6 /* SplashScreen.swift in Sources */,
 				D5A4E5FB2715F47F00A6937F /* SingletonModule.swift in Sources */,
 				D517F68126C5771D002996E8 /* FillerView.swift in Sources */,
@@ -472,6 +483,7 @@
 				D55D5C0026C4D619002B0925 /* ProjectCell.swift in Sources */,
 				D5507AD226C668BC00512BAA /* FileDownloadViewModel.swift in Sources */,
 				D5640216271B54BF00AE1519 /* MainSelectionView.swift in Sources */,
+				D505B99C2755323C00386E9F /* NetworkMonitor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -601,7 +613,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
@@ -611,11 +623,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.adafruit.PyLeap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -626,7 +638,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
@@ -636,11 +648,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.adafruit.PyLeap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

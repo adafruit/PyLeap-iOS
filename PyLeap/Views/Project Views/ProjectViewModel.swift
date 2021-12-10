@@ -12,59 +12,117 @@ import FileTransferClient
 
 class ProjectViewModel: ObservableObject  {
     
+    var networkMonitor = NetworkMonitor()
+    
+    @Published var sendingBundle = false
+    
     @AppStorage("index") var index = 0
     private weak var fileTransferClient: FileTransferClient?
     
     @Published var fileArray: [ContentFile] = []
+    @Published var directoryArray: [ContentFile] = []
+    
+    @Published var bootUpInfo = ""
     
     @Published var entries = [BlePeripheral.DirectoryEntry]()
     @Published var isTransmiting = false
     @Published var isRootDirectory = false
     @Published var directory = ""
-    @Published var counter: Int = 0
-
+    
+    @Published var numOfFiles = 0
+    @Published var counter = 0
+    @Published var showAlert = false
+    
+    @Published var didDownload = false
+    
+    @Published var isConnectedToInternet = false
+    
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     let cachesPath = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
     
-    enum ProjectViewError: LocalizedError {
-          case fileTransferUndefined
-      }
+    @Published var newBundleDownloaded = false
+    @Published var didCompleteTranfer = false
     
-    func checkForDirectory() {
-        listDirectoryCommand(path: "") { result in
+    func completedTransfer() {
+        
+        didCompleteTranfer = true
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            self.didCompleteTranfer = false
             
-            
-            switch result {
+        }
+    }
+    
+    func downloadCheck(at filePath: URL){
+       
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            print("Download Check!")
+            do {
                 
-            case .success(let contents):
-                
-                if contents!.contains(where: { name in name.name == "adafruit_is31fl3741"}) {
-                    print("1 exists in the array")
-                        self.ledGlassesCode()
+                if FileManager.default.fileExists(atPath: filePath.path) {
+                    self.didDownload = true
                     
+                    
+                    DispatchQueue.main.async {
+                        print("FILES AVAILABLE")
+                        self.didDownload = false
+                        self.didDownload = true
+                        self.filesDownloaded(url: filePath)
+                        
+                    }
                 } else {
-                    print("1 does not exists in the array")
-                        self.sendLEDGlassesFiles()
+                    DispatchQueue.main.async {
+                        print("FILES NOT DOWNLOADED")
+                       
+                        
+                    }
                 }
-                
-            case .failure:
-                print("nothing")
-                
-            }
-
+            } catch {
+                print(error)
             }
         }
-    
-    
-    
-    // MARK: - Properties
-
-    func makeLEDGlassesDirectory(){
-        makeDirectory(path: "/adafruit_is31fl3741")
-        makeDirectory(path: "/adafruit_register")
+       
+        
         
     }
     
+    func internetMonitoring() {
+
+        networkMonitor.startMonitoring()
+        
+            networkMonitor.monitor.pathUpdateHandler = { path in
+            if path.status == .satisfied {
+                print("We're connected!")
+                
+                DispatchQueue.main.async {
+                    self.showAlert = false
+                    self.isConnectedToInternet = true
+                }
+                
+                
+                
+            } else {
+                print("No connection.")
+                DispatchQueue.main.async {
+                    self.showAlert = true
+                    self.isConnectedToInternet = false
+                }
+                
+            }
+
+            print("isExpensive :\(path.isExpensive)")
+        }
+        
+    }
+    
+    enum ProjectViewError: LocalizedError {
+        case fileTransferUndefined
+    }
+    
+    
+    
+    var num = Int()
+    // MARK: - View Startup
     func startup(url: URL) {
         print("Running Startup")
         
@@ -82,13 +140,120 @@ class ProjectViewModel: ObservableObject  {
                 print("File Content: \(file.lastPathComponent)")
                 
                 
-                let addedFile = ContentFile(title: file.lastPathComponent)
+                let addedFile = ContentFile(title: file.lastPathComponent, fileSize: 0)
                 self.fileArray.append(addedFile)
             }
         } catch {
             print("Error: \(error)")
         }
         
+    }
+    
+    // Deletes all files and dic. on Bluefruit device *Except boot_out.txt*
+    func removeAllFiles(){
+        self.listDirectoryCommand(path: "") { result in
+            
+            switch result {
+                
+            case .success(let contents):
+                
+                print("Listed Content")
+                
+                for i in contents! where i.name != "boot_out.txt" {
+                    self.deleteFileCommand(path: i.name) { deletionResult in
+                        switch deletionResult {
+                        case .success:
+                            print("Successfully Deleted")
+                        case .failure:
+                            print("Failed to delete.")
+                        }
+                    }
+                }
+                
+            case .failure:
+                print("No content listed")
+            }
+        }
+    }
+    
+    // MARK: - Test Functions
+    /*
+     Function takes in a URL path of files downloaded
+     Enumerate through the files and sending each one
+     - using a result completion handler
+     
+     */
+    let group = DispatchGroup()
+    
+    
+    
+    func fileTransferTest2(url: URL) {
+        print("Start fileTransferTest")
+        
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_Blinky_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        var files = [URL]()
+        
+        if let enumerator = FileManager.default.enumerator(at: documentsURL, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
+            for case let fileURL as URL in enumerator {
+                do {
+                    let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey])
+                    if fileAttributes.isRegularFile! {
+                        
+                        print(files.count)
+                        files.append(fileURL)
+                        print("TEST")
+                        print("File name: \(fileURL.deletingPathExtension().lastPathComponent)")
+                        print("Path Extention:.\(fileURL.pathExtension)\n")
+                        
+                        //                        guard let data = try? Data(contentsOf: URL(fileURLWithPath: fileURL.deletingPathExtension().lastPathComponent, relativeTo: url).appendingPathExtension(fileURL.pathExtension)) else {
+                        //                             print("error retrieving file")
+                        //                             return
+                        //                         }
+                        //
+                        
+                        //                        self.writeFileCommand(path: "/\(fileURL.deletingPathExtension().lastPathComponent).\(fileURL.pathExtension)", data: data) { result in
+                        //
+                        //                            switch result {
+                        //                            case .success:
+                        //
+                        //                                    print("Success")
+                        //
+                        //
+                        //                               // self.sendBlinkCode()
+                        //                            case .failure:
+                        //                                print("Faliure")
+                        //                            }
+                        //                        }
+                        
+                    }
+                } catch { print(error, fileURL) }
+                
+                for index in files {
+                    
+                    
+                    guard let data = try? Data(contentsOf: URL(fileURLWithPath: fileURL.deletingPathExtension().lastPathComponent, relativeTo: documentsURL ).appendingPathExtension(fileURL.pathExtension)) else {
+                        print("error retrieving file")
+                        return
+                    }
+                    group.enter()
+                    //async function
+                    writeFileCommand(path: "/\(index.deletingPathExtension().lastPathComponent).\(fileURL.pathExtension)", data: data) { result in
+                        switch result {
+                            
+                        case .success(_):
+                            do { self.group.leave() }
+                        case .failure(_):
+                            print("Failed to write \(index.deletingPathExtension().lastPathComponent)")
+                        }
+                    }
+                }
+                
+                print("xxFiles: \(files)")
+            }
+            
+        }
     }
     
     func filesDownloaded(url: URL){
@@ -100,55 +265,2955 @@ class ProjectViewModel: ObservableObject  {
         if let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
             for case let fileURL as URL in enumerator {
                 do {
-                    let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey])
-                    if fileAttributes.isRegularFile! {
+                    let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey, .addedToDirectoryDateKey,.isDirectoryKey])
+                    if fileAttributes.isRegularFile!  {
                         
                         files.append(fileURL)
-                        let addedFile = ContentFile(title: fileURL.lastPathComponent)
-                        fileArray.append(addedFile)
+                        
                         print("File name: \(fileURL.deletingPathExtension().lastPathComponent)")
                         print("Path Extention:.\(fileURL.pathExtension)\n")
                         
+                        let resources = try fileURL.resourceValues(forKeys:[.fileSizeKey])
+                        let fileSize = resources.fileSize!
+                        
+                        print("Path Size:\(fileSize) kb\n")
+                        
+                        let addedFile = ContentFile(title: fileURL.lastPathComponent, fileSize: fileSize)
+                        fileArray.append(addedFile)
                     }
+                    
+                    if fileAttributes.isDirectory! {
+                        
+                        
+                        //                        let resources = try fileURL.resourceValues(forKeys:[.fileSizeKey])
+                        //                        let fileSize = resources.fileSize!
+                        
+                        let addedFile = ContentFile(title: fileURL.lastPathComponent, fileSize: 0)
+                        directoryArray.append(addedFile)
+                        print("directory name: \(fileURL.deletingPathExtension().lastPathComponent)")
+                    }
+                    
                 } catch { print(error, fileURL) }
             }
-            print("xxFiles: \(files)")
+            numOfFiles = fileArray.count
+            print("File Count: \(self.fileArray.count)")
+            print("\(files)")
+        }
+    }
+    
+    func filesTest(url: URL){
+        print("Files downloaded at this URL...")
+        
+        if let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
+            for case let fileURL as URL in enumerator {
+                do {
+                    let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey, .addedToDirectoryDateKey,.isDirectoryKey])
+                    if fileAttributes.isRegularFile!  {
+                        
+                        num += 1
+                        print("File name: \(fileURL.deletingPathExtension().lastPathComponent)")
+                        print("Path Extention:.\(fileURL.pathExtension)\n")
+                        print("Number: \(num)")
+                        
+                        
+                        
+                        guard let data = try? Data(contentsOf: URL(fileURLWithPath: fileURL.deletingPathExtension().lastPathComponent, relativeTo: url).appendingPathExtension(fileURL.pathExtension)) else {
+                            print("Failed to get file from path.")
+                            return
+                        }
+                        
+                        
+                        writeFileCommand(path: "/\(fileURL.deletingPathExtension().lastPathComponent).\(fileURL.pathExtension)", data: data) { result in
+                            switch result {
+                            case .success:
+                                
+                                
+                                print("Successful File Transfer: \(fileURL.lastPathComponent)")
+                                
+                                
+                                
+                            case .failure:
+                                print("Failure - File Transfer")
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                    if fileAttributes.isDirectory! {
+                        
+                        print("Directory name: \(fileURL.deletingPathExtension().lastPathComponent)")
+                    }
+                    
+                } catch { print(error, fileURL) }
+            }
+            
+        }
+    }
+    
+    func fileTransferTest(){
+        print("Start fileTransferTest")
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_WAV").appendingPathComponent("CircuitPython 7.x")
+        
+        
+        var files = [URL]()
+        
+        if let enumerator = FileManager.default.enumerator(at: documentsURL, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
+            for case let fileURL as URL in enumerator {
+                do {
+                    let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey])
+                    if fileAttributes.isRegularFile! {
+                        
+                        print(files.count)
+                        files.append(fileURL)
+                        print("TEST")
+                        print("File name: \(fileURL.deletingPathExtension().lastPathComponent)")
+                        print("Path Extention:.\(fileURL.pathExtension)\n")
+                        
+                        guard let data = try? Data(contentsOf: URL(fileURLWithPath: fileURL.deletingPathExtension().lastPathComponent, relativeTo: documentsURL).appendingPathExtension(fileURL.pathExtension)) else {
+                            print("error retrieving file")
+                            return
+                        }
+                        
+                        
+                        self.writeFileCommand(path: "/\(fileURL.deletingPathExtension().lastPathComponent).\(fileURL.pathExtension)", data: data) { result in
+                            
+                            switch result {
+                            case .success:
+                                
+                                print("Success")
+                                
+                                
+                                // self.sendBlinkCode()
+                            case .failure:
+                                print("Faliure")
+                            }
+                        }
+                        
+                        
+                        
+                        
+                    }
+                } catch { print(error, fileURL) }
+                print("xxFiles: \(files)")
+            }
+            
         }
     }
     
     
-    func blinkCP7xLib() {
-        print("blinkCP7xLib")
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_Blinky_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+    
+    
+    
+    
+    
+    // MARK: - Bluefruit Playback MP3
+    
+    func MP3ProjCheck() {
+        listDirectoryCommand(path: "") { result in
+            
+            switch result {
+                
+            case .success(let contents):
+                
+                if contents!.contains(where: { name in name.name == "lib"}) {
+                    print("lib directory exist")
+                    self.sendPlayMP3Code()
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                } else {
+                    print("lib directory does not exist")
+                    self.sendPlayMP3Proj()
+                }
+                
+            case .failure:
+                print("failure")
+                
+            }
+            
+        }
+    }
+    
+    
+    func sendPlayMP3Proj() {
         
-        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
-            print("error retrieving blink neopixel")
+        self.makeDirectoryCommand(path: "lib") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.createAdafruitCPPlayMP3()
+            case .failure:
+                print("")
+            }
+        }
+        
+    }
+    
+    
+    func createAdafruitCPPlayMP3(){
+        //adafruit_bus_device
+        self.makeDirectoryCommand(path: "lib/adafruit_circuitplayground") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.createAdafruitBusDevicePlayMP3()
+            case .failure:
+                print("")
+            }
+        }
+        
+    }
+    
+    
+    func createAdafruitBusDevicePlayMP3(){
+        //adafruit_bus_device
+        self.makeDirectoryCommand(path: "lib/adafruit_bus_device") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.sendPlayMP3Code()
+            case .failure:
+                print("")
+            }
+        }
+        
+    }
+    
+    
+    func sendPlayMP3Code(){
+        
+        
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_MP3").appendingPathComponent("CircuitPython 7.x")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py")) else {
+            print("error retrieving wav project")
             return
         }
-        self.writeFile(filename: "/neopixel.mpy", data: data)
+        
+        DispatchQueue.main.async {
+            self.sendingBundle = true
+        }
+        
+        self.writeFileCommand(path: "/code.py", data: data) { result in
+            
+            switch result {
+            case .success:
+                print("Success")
+                self.sendBeatsPlayMP3()
+            case .failure:
+                print("Faliure")
+            }
+        }
+        
+        
     }
     
-    func retrieveCP7xNeopixel() {
+    
+    func sendBeatsPlayMP3(){
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_MP3").appendingPathComponent("CircuitPython 7.x")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "beats", relativeTo: documentsURL).appendingPathExtension("mp3")) else {
+            print("error retrieving wav project")
+            return
+        }
+        
+        self.writeFileCommand(path: "/beats.mp3", data: data) { result in
+            
+            switch result {
+            case .success:
+                print("Success")
+                self.sendHappyPlayMP3()
+            case .failure:
+                print("Faliure")
+            }
+        }
+    }
+    
+    
+    func sendHappyPlayMP3(){
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_MP3").appendingPathComponent("CircuitPython 7.x")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "happy", relativeTo: documentsURL).appendingPathExtension("mp3")) else {
+            print("error retrieving mp3 project")
+            return
+        }
+        
+        self.writeFileCommand(path: "/happy.mp3", data: data) { result in
+            
+            switch result {
+            case .success:
+                print("Success")
+                self.mp3init_File()
+            case .failure:
+                print("Faliure")
+            }
+        }
+    }
+    
+    
+    // MARK: - Adafruit Bus
+    func mp3init_File() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_MP3").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_bus_device")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "__init__", relativeTo: documentsURL).appendingPathExtension("py")) else {
+            print("Fail wavinit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_bus_device/__init__.py", data: data) { result in
+            switch result {
+            case .success:
+                self.mp3i2c_device_File()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func mp3i2c_device_File() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_MP3").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_bus_device")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "i2c_device", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail i2c_device_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_bus_device/i2c_device.mpy", data: data) { result in
+            switch result {
+            case .success:
+                
+                self.mp3spi_device_File()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func mp3spi_device_File() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_MP3").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_bus_device")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "spi_device", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail i2c_device_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_bus_device/spi_device.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPinit_FilePlayMP3()
+                //self.createAdafruitCP()
+                print("Success")
+                
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    // MARK: - Adafruit CircuitPlayground
+    
+    func adafruitCPinit_FilePlayMP3() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_MP3").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "__init__", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPinit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/__init__.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPBluefruit_FilePlayMP3()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruitCPBluefruit_FilePlayMP3() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_MP3").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "bluefruit", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPBluefruit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/bluefruit.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPbase_FilePlayMP3()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruitCPbase_FilePlayMP3() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_MP3").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "circuit_playground_base", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPBluefruit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/circuit_playground_base.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPExpress_FilePlayMP3()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruitCPExpress_FilePlayMP3() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_MP3").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "express", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPBluefruit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/express.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_lis3dh_FilePlayMP3()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_lis3dh_FilePlayMP3() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_MP3").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_lis3dh", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruit_lis3dh")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_lis3dh.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_pixelBuf_FilePlayMP3()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_pixelBuf_FilePlayMP3() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_MP3").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_pixelbuf", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruit_lis3dh")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_pixelbuf.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_thermistor_FilePlayMP3()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_thermistor_FilePlayMP3() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_MP3").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_thermistor", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail thermistor")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_thermistor.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_neopixelPlayMP3()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_neopixelPlayMP3() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_MP3").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail neopixel")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/neopixel.mpy", data: data) { result in
+            switch result {
+            case .success:
+                
+                print("All Done - Play MP3")
+                self.completedTransfer()
+                DispatchQueue.main.async {
+                    self.sendingBundle = false
+                    self.counter = 0
+                }
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // MARK: - Bluefruit Sound Meter
+    
+    
+    func soundMeterProjCheck() {
+        listDirectoryCommand(path: "") { result in
+            
+            switch result {
+                
+            case .success(let contents):
+                
+                if contents!.contains(where: { name in name.name == "lib"}) {
+                    print("lib directory exist")
+                    self.sendSoundMeterCode()
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                    
+                } else {
+                    print("lib directory does not exist")
+                    self.sendSoundMeterProj()
+                }
+                
+            case .failure:
+                print("failure")
+                
+            }
+            
+        }
+    }
+    
+    func sendSoundMeterProj() {
+        self.makeDirectoryCommand(path: "lib") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.createAdafruitCPSoundMeter()
+            case .failure:
+                print("")
+            }
+        }
+    }
+    
+    
+    func createAdafruitCPSoundMeter(){
+        //adafruit_bus_device
+        self.makeDirectoryCommand(path: "lib/adafruit_circuitplayground") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.createAdafruitBusDeviceSoundMeter()
+            case .failure:
+                print("")
+            }
+        }
+        
+    }
+    
+    
+    func createAdafruitBusDeviceSoundMeter(){
+        //adafruit_bus_device
+        self.makeDirectoryCommand(path: "lib/adafruit_bus_device") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.sendSoundMeterCode()
+            case .failure:
+                print("")
+            }
+        }
+        
+    }
+    
+    
+    func sendSoundMeterCode(){
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Sound_Meter").appendingPathComponent("CircuitPython 7.x")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py")) else {
+            print("error retrieving light meter project")
+            return
+        }
+        
+        DispatchQueue.main.async {
+            self.sendingBundle = true
+        }
+        
+        
+        self.writeFileCommand(path: "/code.py", data: data) { result in
+            
+            switch result {
+            case .success:
+                print("Success")
+                self.wavinit_FileSoundMeter()
+            case .failure:
+                print("Faliure")
+            }
+        }
+        
+        
+    }
+    
+    
+    // MARK: - Adafruit Bus
+    
+    func wavinit_FileSoundMeter() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Sound_Meter").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_bus_device")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "__init__", relativeTo: documentsURL).appendingPathExtension("py")) else {
+            print("Fail wavinit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_bus_device/__init__.py", data: data) { result in
+            switch result {
+            case .success:
+                self.wavi2c_device_FileSoundMeter()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func wavi2c_device_FileSoundMeter() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Sound_Meter").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_bus_device")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "i2c_device", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail i2c_device_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_bus_device/i2c_device.mpy", data: data) { result in
+            switch result {
+            case .success:
+                
+                self.wavspi_device_FileSoundMeter()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func wavspi_device_FileSoundMeter() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Sound_Meter").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_bus_device")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "spi_device", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail i2c_device_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_bus_device/spi_device.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPinit_FileSoundMeter()
+                //self.createAdafruitCP()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    // MARK: - Adafruit CircuitPlayground
+    
+    
+    func adafruitCPinit_FileSoundMeter() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Sound_Meter").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "__init__", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPinit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/__init__.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPBluefruit_FileSoundMeter()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruitCPBluefruit_FileSoundMeter() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Sound_Meter").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "bluefruit", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPBluefruit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/bluefruit.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPbase_FileSoundMeter()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruitCPbase_FileSoundMeter() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Sound_Meter").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "circuit_playground_base", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPBluefruit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/circuit_playground_base.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPExpress_FileSoundMeter()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruitCPExpress_FileSoundMeter() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Sound_Meter").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "express", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPBluefruit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/express.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_lis3dh_FileSoundMeter()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_lis3dh_FileSoundMeter() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Sound_Meter").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_lis3dh", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruit_lis3dh")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_lis3dh.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_pixelBuf_FileSoundMeter()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_pixelBuf_FileSoundMeter() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Sound_Meter").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_pixelbuf", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruit_lis3dh")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_pixelbuf.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_thermistor_FileSoundMeter()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_thermistor_FileSoundMeter() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Sound_Meter").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_thermistor", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail thermistor")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_thermistor.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_neopixelSoundMeter()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_neopixelSoundMeter() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Sound_Meter").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail neopixel")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/neopixel.mpy", data: data) { result in
+            switch result {
+            case .success:
+                
+                print("All Done - Sound Meter")
+                self.completedTransfer()
+                DispatchQueue.main.async {
+                    self.sendingBundle = false
+                    self.counter = 0
+                }
+                
+                
+                
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    // MARK: End
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // MARK: - Bluefruit Touch Tone Piano
+    
+    func pianoNeoPixelProjCheck() {
+        listDirectoryCommand(path: "") { result in
+            
+            switch result {
+                
+            case .success(let contents):
+                
+                if contents!.contains(where: { name in name.name == "lib"}) {
+                    print("lib directory exist")
+                    self.sendPianoNeoPixelCode()
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                } else {
+                    print("lib directory does not exist")
+                    self.sendPianoNeoPixelProj()
+                }
+                
+            case .failure:
+                print("failure")
+                
+            }
+            
+        }
+    }
+    
+    func sendPianoNeoPixelProj() {
+        self.makeDirectoryCommand(path: "lib") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.createAdafruitCPPianoNeoPixel()
+            case .failure:
+                print("")
+            }
+        }
+    }
+    
+    
+    func createAdafruitCPPianoNeoPixel(){
+        //adafruit_bus_device
+        self.makeDirectoryCommand(path: "lib/adafruit_circuitplayground") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.createAdafruitBusDevicePianoNeoPixel()
+            case .failure:
+                print("")
+            }
+        }
+        
+    }
+    
+    
+    func createAdafruitBusDevicePianoNeoPixel(){
+        //adafruit_bus_device
+        self.makeDirectoryCommand(path: "lib/adafruit_bus_device") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.sendPianoNeoPixelCode()
+            case .failure:
+                print("")
+            }
+        }
+        
+    }
+    
+    
+    func sendPianoNeoPixelCode(){
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Tone_Piano").appendingPathComponent("CircuitPython 7.x")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py")) else {
+            print("error retrieving light meter project")
+            return
+        }
+        
+        self.writeFileCommand(path: "/code.py", data: data) { result in
+            
+            switch result {
+            case .success:
+                print("Success")
+                
+                DispatchQueue.main.async {
+                    self.sendingBundle = true
+                }
+                
+                self.wavinit_FilePianoNeoPixel()
+            case .failure:
+                print("Faliure")
+            }
+        }
+        
+        
+    }
+    
+    
+    // MARK: - Adafruit Bus
+    
+    func wavinit_FilePianoNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Tone_Piano").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_bus_device")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "__init__", relativeTo: documentsURL).appendingPathExtension("py")) else {
+            print("Fail wavinit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_bus_device/__init__.py", data: data) { result in
+            switch result {
+            case .success:
+                self.wavi2c_device_FilePianoNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func wavi2c_device_FilePianoNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Tone_Piano").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_bus_device")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "i2c_device", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail i2c_device_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_bus_device/i2c_device.mpy", data: data) { result in
+            switch result {
+            case .success:
+                
+                self.wavspi_device_FilePianoNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func wavspi_device_FilePianoNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Tone_Piano").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_bus_device")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "spi_device", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail i2c_device_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_bus_device/spi_device.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPinit_FilePianoNeoPixel()
+                //self.createAdafruitCP()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    // MARK: - Adafruit CircuitPlayground
+    
+    
+    func adafruitCPinit_FilePianoNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Tone_Piano").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "__init__", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPinit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/__init__.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPBluefruit_FilePianoNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruitCPBluefruit_FilePianoNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Tone_Piano").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "bluefruit", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPBluefruit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/bluefruit.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPbase_FilePianoNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruitCPbase_FilePianoNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Tone_Piano").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "circuit_playground_base", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPBluefruit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/circuit_playground_base.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPExpress_FilePianoNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruitCPExpress_FilePianoNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Tone_Piano").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "express", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPBluefruit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/express.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_lis3dh_FilePianoNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_lis3dh_FilePianoNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Tone_Piano").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_lis3dh", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruit_lis3dh")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_lis3dh.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_pixelBuf_FilePianoNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_pixelBuf_FilePianoNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Tone_Piano").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_pixelbuf", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruit_lis3dh")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_pixelbuf.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_thermistor_FilePianoNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_thermistor_FilePianoNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Tone_Piano").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_thermistor", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail thermistor")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_thermistor.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_neopixelPianoNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_neopixelPianoNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Tone_Piano").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail neopixel")
+            return
+        }
+        
+       
+        
+        self.writeFileCommand(path: "/lib/neopixel.mpy", data: data) { result in
+            switch result {
+            case .success:
+                
+                print("All Done - Bluefruit Touch Tone Piano")
+                self.completedTransfer()
+                
+                DispatchQueue.main.async {
+                    self.sendingBundle = false
+                    self.counter = 0
+                }
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    // MARK: End
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // MARK: - Button Controlled NeoPixels
+    
+    func controlledNeoPixelProjCheck() {
+        listDirectoryCommand(path: "") { result in
+            
+            switch result {
+                
+            case .success(let contents):
+                
+                if contents!.contains(where: { name in name.name == "lib"}) {
+                    print("lib directory exist")
+                    self.sendControlledNeoPixelCode()
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                } else {
+                    print("lib directory does not exist")
+                    self.sendControlledNeoPixelProj()
+                }
+                
+            case .failure:
+                print("failure")
+                
+            }
+            
+        }
+    }
+    
+    func sendControlledNeoPixelProj() {
+        self.makeDirectoryCommand(path: "lib") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.createAdafruitCPControlledNeoPixel()
+            case .failure:
+                print("")
+            }
+        }
+    }
+    
+    
+    func createAdafruitCPControlledNeoPixel(){
+        //adafruit_bus_device
+        self.makeDirectoryCommand(path: "lib/adafruit_circuitplayground") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.createAdafruitBusDeviceControlledNeoPixel()
+            case .failure:
+                print("")
+            }
+        }
+        
+    }
+    
+    
+    func createAdafruitBusDeviceControlledNeoPixel(){
+        //adafruit_bus_device
+        self.makeDirectoryCommand(path: "lib/adafruit_bus_device") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.sendControlledNeoPixelCode()
+            case .failure:
+                print("")
+            }
+        }
+        
+    }
+    
+    
+    func sendControlledNeoPixelCode(){
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Button_Half_NeoPixel_Control").appendingPathComponent("CircuitPython 7.x")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py")) else {
+            print("error retrieving light meter project")
+            return
+        }
+        
+        DispatchQueue.main.async {
+            self.sendingBundle = true
+        }
+        
+        self.writeFileCommand(path: "/code.py", data: data) { result in
+            
+            switch result {
+            case .success:
+                print("Success")
+                self.wavinit_FileControlledNeoPixel()
+            case .failure:
+                print("Faliure")
+            }
+        }
+        
+        
+    }
+    
+    
+    // MARK: - Adafruit Bus
+    
+    func wavinit_FileControlledNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Button_Half_NeoPixel_Control").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_bus_device")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "__init__", relativeTo: documentsURL).appendingPathExtension("py")) else {
+            print("Fail wavinit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_bus_device/__init__.py", data: data) { result in
+            switch result {
+            case .success:
+                self.wavi2c_device_FileControlledNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func wavi2c_device_FileControlledNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Button_Half_NeoPixel_Control").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_bus_device")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "i2c_device", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail i2c_device_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_bus_device/i2c_device.mpy", data: data) { result in
+            switch result {
+            case .success:
+                
+                self.wavspi_device_FileControlledNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func wavspi_device_FileControlledNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Button_Half_NeoPixel_Control").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_bus_device")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "spi_device", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail i2c_device_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_bus_device/spi_device.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPinit_FileControlledNeoPixel()
+                //self.createAdafruitCP()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    // MARK: - Adafruit CircuitPlayground
+    
+    
+    func adafruitCPinit_FileControlledNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Button_Half_NeoPixel_Control").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "__init__", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPinit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/__init__.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPBluefruit_FileControlledNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruitCPBluefruit_FileControlledNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Button_Half_NeoPixel_Control").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "bluefruit", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPBluefruit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/bluefruit.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPbase_FileControlledNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruitCPbase_FileControlledNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Button_Half_NeoPixel_Control").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "circuit_playground_base", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPBluefruit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/circuit_playground_base.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPExpress_FileControlledNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruitCPExpress_FileControlledNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Button_Half_NeoPixel_Control").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "express", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPBluefruit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/express.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_lis3dh_FileControlledNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_lis3dh_FileControlledNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Button_Half_NeoPixel_Control").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_lis3dh", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruit_lis3dh")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_lis3dh.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_pixelBuf_FileControlledNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_pixelBuf_FileControlledNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Button_Half_NeoPixel_Control").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_pixelbuf", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruit_lis3dh")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_pixelbuf.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_thermistor_FileControlledNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_thermistor_FileControlledNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Button_Half_NeoPixel_Control").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_thermistor", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail thermistor")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_thermistor.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_neopixelControlledNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_neopixelControlledNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Button_Half_NeoPixel_Control").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail neopixel")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/neopixel.mpy", data: data) { result in
+            switch result {
+            case .success:
+                
+                print("All Done - Button Control")
+                self.completedTransfer()
+                DispatchQueue.main.async {
+                    self.sendingBundle = false
+                    self.counter = 0
+                }
+                
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    // MARK: End
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // MARK: - Touch NeoPixel Rainbow
+    
+    func touchNeoPixelProjCheck() {
+        listDirectoryCommand(path: "") { result in
+            
+            switch result {
+                
+            case .success(let contents):
+                
+                if contents!.contains(where: { name in name.name == "lib"}) {
+                    print("lib directory exist")
+                    self.sendTouchNeoPixelCode()
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                } else {
+                    print("lib directory does not exist")
+                    self.sendTouchNeoPixelProj()
+                }
+                
+            case .failure:
+                print("failure")
+                
+            }
+            
+        }
+    }
+    
+    func sendTouchNeoPixelProj() {
+        self.makeDirectoryCommand(path: "lib") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.createAdafruitCPTouchNeoPixel()
+            case .failure:
+                print("")
+            }
+        }
+    }
+    
+    
+    func createAdafruitCPTouchNeoPixel(){
+        //adafruit_bus_device
+        self.makeDirectoryCommand(path: "lib/adafruit_circuitplayground") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.createAdafruitBusDeviceTouchNeoPixel()
+            case .failure:
+                print("")
+            }
+        }
+        
+    }
+    
+    
+    func createAdafruitBusDeviceTouchNeoPixel(){
+        //adafruit_bus_device
+        self.makeDirectoryCommand(path: "lib/adafruit_bus_device") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.sendTouchNeoPixelCode()
+            case .failure:
+                print("")
+            }
+        }
+        
+    }
+    
+    
+    func sendTouchNeoPixelCode(){
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Touch_NeoPixel_Rainbow").appendingPathComponent("CircuitPython 7.x")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py")) else {
+            print("error retrieving light meter project")
+            return
+        }
+        
+        DispatchQueue.main.async {
+            self.sendingBundle = true
+        }
+        
+        self.writeFileCommand(path: "/code.py", data: data) { result in
+            
+            switch result {
+            case .success:
+                print("Success")
+                self.wavinit_FileTouchNeoPixel()
+            case .failure:
+                print("Faliure")
+            }
+        }
+        
+        
+    }
+    
+    
+    // MARK: - Adafruit Bus
+    
+    func wavinit_FileTouchNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Touch_NeoPixel_Rainbow").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_bus_device")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "__init__", relativeTo: documentsURL).appendingPathExtension("py")) else {
+            print("Fail wavinit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_bus_device/__init__.py", data: data) { result in
+            switch result {
+            case .success:
+                self.wavi2c_device_FileTouchNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func wavi2c_device_FileTouchNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Touch_NeoPixel_Rainbow").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_bus_device")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "i2c_device", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail i2c_device_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_bus_device/i2c_device.mpy", data: data) { result in
+            switch result {
+            case .success:
+                
+                self.wavspi_device_FileTouchNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func wavspi_device_FileTouchNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Touch_NeoPixel_Rainbow").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_bus_device")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "spi_device", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail i2c_device_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_bus_device/spi_device.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPinit_FileTouchNeoPixel()
+                //self.createAdafruitCP()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    // MARK: - Adafruit CircuitPlayground
+    
+    
+    func adafruitCPinit_FileTouchNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Touch_NeoPixel_Rainbow").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "__init__", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPinit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/__init__.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPBluefruit_FileTouchNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruitCPBluefruit_FileTouchNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Touch_NeoPixel_Rainbow").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "bluefruit", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPBluefruit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/bluefruit.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPbase_FileTouchNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruitCPbase_FileTouchNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Touch_NeoPixel_Rainbow").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "circuit_playground_base", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPBluefruit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/circuit_playground_base.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPExpress_FileTouchNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruitCPExpress_FileTouchNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Touch_NeoPixel_Rainbow").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "express", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPBluefruit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/express.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_lis3dh_FileTouchNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_lis3dh_FileTouchNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Touch_NeoPixel_Rainbow").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_lis3dh", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruit_lis3dh")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_lis3dh.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_pixelBuf_FileLM()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_pixelBuf_FileTouchNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Touch_NeoPixel_Rainbow").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_pixelbuf", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruit_lis3dh")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_pixelbuf.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_thermistor_FileTouchNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_thermistor_FileTouchNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Touch_NeoPixel_Rainbow").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_thermistor", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail thermistor")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_thermistor.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_neopixelTouchNeoPixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_neopixelTouchNeoPixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Touch_NeoPixel_Rainbow").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail neopixel")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/neopixel.mpy", data: data) { result in
+            switch result {
+            case .success:
+                
+                print("All Done - Touch Rainbow")
+                self.completedTransfer()
+                DispatchQueue.main.async {
+                    self.sendingBundle = false
+                    self.counter = 0
+                }
+                
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    // MARK: End
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // MARK: - NeoPixel Light Meter
+    
+    func lightMeterProjCheck() {
+        listDirectoryCommand(path: "") { result in
+            
+            switch result {
+                
+            case .success(let contents):
+                
+                if contents!.contains(where: { name in name.name == "lib"}) {
+                    print("lib directory exist")
+                    self.sendLightMeterCode()
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                    
+                } else {
+                    print("lib directory does not exist")
+                    self.sendLightMeterProj()
+                }
+                
+            case .failure:
+                print("failure")
+                
+            }
+            
+        }
+    }
+    
+    func sendLightMeterProj() {
+        self.makeDirectoryCommand(path: "lib") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.createAdafruitCPLightMeter()
+            case .failure:
+                print("")
+            }
+        }
+    }
+    
+    
+    func createAdafruitCPLightMeter(){
+        //adafruit_bus_device
+        self.makeDirectoryCommand(path: "lib/adafruit_circuitplayground") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.createAdafruitBusDeviceLightMeter()
+            case .failure:
+                print("")
+            }
+        }
+        
+    }
+    
+    
+    func createAdafruitBusDeviceLightMeter(){
+        //adafruit_bus_device
+        self.makeDirectoryCommand(path: "lib/adafruit_bus_device") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.sendLightMeterCode()
+            case .failure:
+                print("")
+            }
+        }
+        
+    }
+    
+    
+    func sendLightMeterCode(){
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Light_Meter").appendingPathComponent("CircuitPython 7.x")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py")) else {
+            print("error retrieving light meter project")
+            return
+        }
+        
+        DispatchQueue.main.async {
+            self.sendingBundle = true
+        }
+        
+        self.writeFileCommand(path: "/code.py", data: data) { result in
+            
+            switch result {
+            case .success:
+                print("Success")
+                self.wavinit_FileLM()
+            case .failure:
+                print("Faliure")
+            }
+        }
+        
+        
+    }
+    
+    
+    // MARK: - Adafruit Bus
+    
+    func wavinit_FileLM() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Light_Meter").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_bus_device")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "__init__", relativeTo: documentsURL).appendingPathExtension("py")) else {
+            print("Fail wavinit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_bus_device/__init__.py", data: data) { result in
+            switch result {
+            case .success:
+                self.wavi2c_device_FileLM()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func wavi2c_device_FileLM() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Light_Meter").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_bus_device")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "i2c_device", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail i2c_device_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_bus_device/i2c_device.mpy", data: data) { result in
+            switch result {
+            case .success:
+                
+                self.wavspi_device_FileLM()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func wavspi_device_FileLM() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Light_Meter").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_bus_device")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "spi_device", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail i2c_device_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_bus_device/spi_device.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPinit_FileLM()
+                //self.createAdafruitCP()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    // MARK: - Adafruit CircuitPlayground
+    
+    
+    func adafruitCPinit_FileLM() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Light_Meter").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "__init__", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPinit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/__init__.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPBluefruit_FileLM()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruitCPBluefruit_FileLM() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Light_Meter").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "bluefruit", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPBluefruit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/bluefruit.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPbase_FileLM()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruitCPbase_FileLM() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Light_Meter").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "circuit_playground_base", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPBluefruit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/circuit_playground_base.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPExpress_FileLM()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruitCPExpress_FileLM() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Light_Meter").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "express", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPBluefruit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/express.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_lis3dh_FileLM()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_lis3dh_FileLM() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Light_Meter").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_lis3dh", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruit_lis3dh")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_lis3dh.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_pixelBuf_FileLM()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_pixelBuf_FileLM() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Light_Meter").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_pixelbuf", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruit_lis3dh")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_pixelbuf.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_thermistor_FileLM()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_thermistor_FileLM() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Light_Meter").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_thermistor", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail thermistor")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_thermistor.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_neopixelLM()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_neopixelLM() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Light_Meter").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail neopixel")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/neopixel.mpy", data: data) { result in
+            switch result {
+            case .success:
+                
+                print("All Done - Light Meter")
+                self.completedTransfer()
+                DispatchQueue.main.async {
+                    self.sendingBundle = false
+                    self.counter = 0
+                }
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    // MARK: - End
+    
+    
+    
+    
+    
+    
+    
+    
+    // MARK: - Bluefruit Playback WAV
+    
+    func playWAVProjCheck() {
+        listDirectoryCommand(path: "") { result in
+            
+            switch result {
+                
+            case .success(let contents):
+                
+                if contents!.contains(where: { name in name.name == "lib"}) {
+                    print("lib directory exist")
+                    self.sendwavCode()
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                } else {
+                    print("lib directory does not exist")
+                    self.sendPlayWAVProj()
+                }
+                
+            case .failure:
+                print("failure")
+                
+            }
+            
+        }
+    }
+    
+    
+    func sendPlayWAVProj() {
+        
+        self.makeDirectoryCommand(path: "lib") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.createAdafruitCP()
+            case .failure:
+                print("")
+            }
+        }
+        
+    }
+    
+    
+    func createAdafruitCP(){
+        //adafruit_bus_device
+        self.makeDirectoryCommand(path: "lib/adafruit_circuitplayground") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.createAdafruitBusDevice()
+            case .failure:
+                print("")
+            }
+        }
+        
+    }
+    
+    
+    func createAdafruitBusDevice(){
+        //adafruit_bus_device
+        self.makeDirectoryCommand(path: "lib/adafruit_bus_device") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.sendwavCode()
+            case .failure:
+                print("")
+            }
+        }
+        
+    }
+    
+    
+    func sendwavCode(){
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_WAV").appendingPathComponent("CircuitPython 7.x")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py")) else {
+            print("error retrieving wav project")
+            return
+        }
+        
+        DispatchQueue.main.async {
+            self.sendingBundle = true
+        }
+        
+        self.writeFileCommand(path: "/code.py", data: data) { result in
+            
+            switch result {
+            case .success:
+                print("Success")
+                self.sendDipWav()
+            case .failure:
+                print("Faliure")
+            }
+        }
+        
+        
+    }
+    
+    
+    func sendDipWav(){
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_WAV").appendingPathComponent("CircuitPython 7.x")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "dip", relativeTo: documentsURL).appendingPathExtension("wav")) else {
+            print("error retrieving wav project")
+            return
+        }
+        
+        self.writeFileCommand(path: "/dip.wav", data: data) { result in
+            
+            switch result {
+            case .success:
+                print("Success")
+                self.sendRiseWav()
+            case .failure:
+                print("Faliure")
+            }
+        }
+    }
+    
+    
+    func sendRiseWav(){
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_WAV").appendingPathComponent("CircuitPython 7.x")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "rise", relativeTo: documentsURL).appendingPathExtension("wav")) else {
+            print("error retrieving wav project")
+            return
+        }
+        
+        self.writeFileCommand(path: "/rise.wav", data: data) { result in
+            
+            switch result {
+            case .success:
+                print("Success")
+                self.wavinit_File()
+            case .failure:
+                print("Faliure")
+            }
+        }
+    }
+    
+    
+    // MARK: - Adafruit Bus
+    func wavinit_File() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_WAV").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_bus_device")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "__init__", relativeTo: documentsURL).appendingPathExtension("py")) else {
+            print("Fail wavinit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_bus_device/__init__.py", data: data) { result in
+            switch result {
+            case .success:
+                self.wavi2c_device_File()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func wavi2c_device_File() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_WAV").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_bus_device")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "i2c_device", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail i2c_device_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_bus_device/i2c_device.mpy", data: data) { result in
+            switch result {
+            case .success:
+                
+                self.wavspi_device_File()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func wavspi_device_File() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_WAV").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_bus_device")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "spi_device", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail i2c_device_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_bus_device/spi_device.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPinit_File()
+                //self.createAdafruitCP()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    // MARK: - Adafruit CircuitPlayground
+    
+    func adafruitCPinit_File() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_WAV").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "__init__", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPinit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/__init__.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPBluefruit_File()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruitCPBluefruit_File() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_WAV").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "bluefruit", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPBluefruit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/bluefruit.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPbase_File()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruitCPbase_File() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_WAV").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "circuit_playground_base", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPBluefruit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/circuit_playground_base.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruitCPExpress_File()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruitCPExpress_File() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_WAV").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_circuitplayground")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "express", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruitCPBluefruit_File")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_circuitplayground/express.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_lis3dh_File()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_lis3dh_File() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_WAV").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_lis3dh", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruit_lis3dh")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_lis3dh.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_pixelBuf_File()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_pixelBuf_File() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_WAV").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_pixelbuf", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail adafruit_lis3dh")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_pixelbuf.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_thermistor_File()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_thermistor_File() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_WAV").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_thermistor", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail thermistor")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/adafruit_thermistor.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_neopixel()
+                print("Success")
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    
+    func adafruit_neopixel() {
+        
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_WAV").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Fail neopixel")
+            return
+        }
+        
+        self.writeFileCommand(path: "/lib/neopixel.mpy", data: data) { result in
+            switch result {
+            case .success:
+                
+                print("All Done - Bluefruit WAV")
+                self.completedTransfer()
+                DispatchQueue.main.async {
+                    self.sendingBundle = false
+                    self.counter = 0
+                }
+                
+            case .failure:
+                print("Failure - ledGinit_File")
+                
+            }
+            
+        }
+    }
+    
+    // MARK: - End
+    
+    
+    
+    
+    // MARK: - Glide on over some rainbows code
+    
+    func sendCPBRainbowFiles() {
         
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
         
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
             return
         }
-        print("Neopixel File Contents: \(documentsURL)")
         
-        //self.writeFile(filename: "/neopixel.mpy", data: data)
+        DispatchQueue.main.async {
+            self.sendingBundle = true
+        }
         
-        writeFileCommand(path: "/neopixel.mpy", data: data) { result in
+        self.writeFileCommand(path: "/neopixel.mpy", data: data) { result in
             
             switch result {
             case .success:
                 print("Success")
-                
+                self.sendRainbowCode()
             case .failure:
                 print("Faliure")
             }
-            
         }
     }
     
@@ -160,42 +3225,78 @@ class ProjectViewModel: ObservableObject  {
         }
         print("Code File Contents: \(documentsURL)")
         
-        self.writeFile(filename: "/code.py", data: data)
+        DispatchQueue.main.async {
+            self.sendingBundle = false
+        }
+        
+        self.writeFileCommand(path: "/code.py", data: data) { result in
+            
+            switch result {
+            case .success:
+                print("Success 1")
+                self.sendRainbowPixelbuf()
+            case .failure:
+                print("Faliure")
+            }
+        }
+        
+        
+        
     }
+    
+    
+    func sendRainbowPixelbuf() {
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_pixelbuf", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            return
+        }
+        
+        self.writeFileCommand(path: "/adafruit_pixelbuf.mpy", data: data) { result in
+            
+            switch result {
+            case .success:
+                print("All Done - Sent over those rainbows!")
+                self.completedTransfer()
+                DispatchQueue.main.async {
+                    self.sendingBundle = false
+                    self.counter = 0
+                }
+            case .failure:
+                print("Faliure")
+            }
+        }
+        
+    }
+    // MARK: - End
+    
+    
+    // MARK: - Blink
     
     func sendBlinkCode() {
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_Blinky_demo").appendingPathComponent("CircuitPython 7.x")
         
-        let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py"))
-        print("Code File Contents: \(documentsURL)")
-        
-        self.writeFile(filename: "/code.py", data: data!)
-    }
-    
-    func sendJustCPBCode(){
-        
-    }
-    
-    func sendCPBRainbowFiles() {
-        
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
-        
-        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py")) else {
             return
         }
-        print("Neopixel File Contents: \(documentsURL)")
-
-            self.writeFileCommand(path: "/neopixel.mpy", data: data) { result in
-                
-                switch result {
-                case .success:
-                    print("Success")
-                    self.sendRainbowCode()
-                case .failure:
-                    print("Faliure")
-                }
+        
+        DispatchQueue.main.async {
+            self.sendingBundle = false
+        }
+        
+        self.writeFileCommand(path: "/code.py", data: data) { result in
+            
+            switch result {
+            case .success:
+                print("Success 1")
+                self.sendBlinkPixelbuf()
+            case .failure:
+                print("Faliure")
             }
+        }
+        
     }
+    
     
     func sendCPBBlinkFiles() {
         print("blinkCP7xLib")
@@ -205,12 +3306,16 @@ class ProjectViewModel: ObservableObject  {
             print("error retrieving blink neopixel")
             return
         }
-       
+        
+        DispatchQueue.main.async {
+            self.sendingBundle = true
+        }
+        
         self.writeFileCommand(path: "/neopixel.mpy", data: data) { result in
             
             switch result {
             case .success:
-                print("Success")
+                print("Success 2")
                 self.sendBlinkCode()
             case .failure:
                 print("Faliure")
@@ -218,60 +3323,44 @@ class ProjectViewModel: ObservableObject  {
         }
     }
     
-    func sendLEDGlassesFiles(){
-        self.makeDirectoryCommand(path: "adafruit_is31fl3741") { result in
-            switch result {
-            case .success:
-               
-                    self.makeRegisterDirectory()
-                
-                
-                
-            case .failure:
-                print("Failure - adafruit_is31fl3741")
-            }
-        }
-    }
-    
-    func ledGlassesCP7xLib() {
+    func sendBlinkPixelbuf() {
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_Blinky_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
         
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x")
-        
-    }
-    
-    func ledGlassesCP7xCode() {
-        print("LED Glasses code attempt")
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x")
-        
-        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py")) else {
-            print("LED code not found")
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_pixelbuf", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
             return
         }
-        print("Code File Contents: \(documentsURL)")
         
-       // self.writeFile(filename: "/code.py", data: data)
-        
-        self.writeFileCommand(path: "/code.py", data: data) { result in
+        self.writeFileCommand(path: "/adafruit_pixelbuf.mpy", data: data) { result in
             
             switch result {
             case .success:
-                print("Success")
-                self.ledGinit_File()
-            case .failure(let error):
-                print("Failure - code.py")
+                print("Success 3")
+                self.completedTransfer()
+                DispatchQueue.main.async {
+                    self.sendingBundle = false
+                    self.counter = 0
+                }
+            case .failure:
+                print("Faliure")
             }
         }
         
-        
-        
     }
     
+    
+    
+    
+    
+    
+    
+    
+    
     func makeRegisterDirectory() {
-       
+        
         self.makeDirectoryCommand(path: "adafruit_register") { result in
             switch result {
             case .success:
-            self.ledGlassesCode()
+                self.ledGlassesCode()
             case .failure:
                 print("Failure - adafruit_register")
             }
@@ -281,6 +3370,77 @@ class ProjectViewModel: ObservableObject  {
     // End of directory creation -- Beginning of file transfers
     
     //MARK: - LED Glasses
+    
+    func ledGlassesProjCheck() {
+        listDirectoryCommand(path: "") { result in
+            
+            
+            switch result {
+                
+            case .success(let contents):
+                
+                if contents!.contains(where: { name in name.name == "adafruit_is31fl3741"}) {
+                    print("1 exists in the array")
+                    self.ledGlassesCode()
+                    
+                } else {
+                    print("1 does not exists in the array")
+                    self.sendLEDGlassesFiles()
+                }
+                
+            case .failure:
+                print("nothing")
+                
+            }
+            
+        }
+    }
+    
+    func sendLEDGlassesFiles(){
+        self.makeDirectoryCommand(path: "adafruit_is31fl3741") { result in
+            switch result {
+            case .success:
+                DispatchQueue.main.async {
+                    self.sendingBundle = true
+                }
+                self.makeRegisterDirectory()
+                
+                
+                
+            case .failure:
+                print("Failure")
+            }
+        }
+    }
+    
+
+    func ledGlassesCP7xCode() {
+        print("LED Glasses code attempt")
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x")
+        
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py")) else {
+            print("LED code not found")
+            return
+        }
+
+        self.writeFileCommand(path: "/code.py", data: data) { result in
+            
+            switch result {
+            case .success:
+                print("Success")
+                DispatchQueue.main.async {
+                    self.sendingBundle = true
+                }
+                
+                self.ledGinit_File()
+            case .failure(let error):
+                print("Failure - code.py")
+            }
+        }
+        
+        
+        
+    }
     
     func ledGlassesCode() {
         print("LED Glasses code attempt")
@@ -292,6 +3452,9 @@ class ProjectViewModel: ObservableObject  {
         }
         print("Code File Contents: \(documentsURL)")
         
+        DispatchQueue.main.async {
+            self.sendingBundle = true
+        }
         
         self.writeFileCommand(path: "/code.py", data: data) { result in
             
@@ -321,7 +3484,7 @@ class ProjectViewModel: ObservableObject  {
         self.writeFileCommand(path: "/adafruit_is31fl3741/__init__.mpy", data: data) { result in
             switch result {
             case .success:
-                    self.ledGMain_File()
+                self.ledGMain_File()
                 print("Success")
             case .failure:
                 print("Failure - ledGinit_File")
@@ -342,7 +3505,7 @@ class ProjectViewModel: ObservableObject  {
         self.writeFileCommand(path: "/adafruit_is31fl3741/adafruit_ledglasses.mpy", data: data) { result in
             switch result {
             case .success:
-                    self.ledGrgbmatrixFile()
+                self.ledGrgbmatrixFile()
                 print("Success")
             case .failure:
                 print("Failure - ledGMain_File")
@@ -364,7 +3527,7 @@ class ProjectViewModel: ObservableObject  {
         self.writeFileCommand(path: "/adafruit_is31fl3741/adafruit_rgbmatrixqt.mpy", data: data) { result in
             switch result {
             case .success:
-                    self.ledGIssi_evb_File()
+                self.ledGIssi_evb_File()
                 print("Success")
             case .failure:
                 print("Failure - ledGrgbmatrixFile")
@@ -386,7 +3549,7 @@ class ProjectViewModel: ObservableObject  {
         self.writeFileCommand(path: "/adafruit_is31fl3741/issi_evb.mpy", data: data) { result in
             switch result {
             case .success:
-                    self.ledGinit_Reg()
+                self.ledGinit_Reg()
                 print("Success")
             case .failure:
                 print("Failure - ledGIssi_evb_File")
@@ -406,11 +3569,11 @@ class ProjectViewModel: ObservableObject  {
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "__init__", relativeTo: documentsURL).appendingPathExtension("py")) else {
             return
         }
-      //  self.writeFile(filename: "/adafruit_register/__init__.py", data: data)
+        //  self.writeFile(filename: "/adafruit_register/__init__.py", data: data)
         self.writeFileCommand(path: "/adafruit_register/__init__.py", data: data) { result in
             switch result {
             case .success:
-                    self.ledGbcd_Reg()
+                self.ledGbcd_Reg()
                 print("Success")
             case .failure:
                 print("Failure - ledGinit_Reg")
@@ -431,7 +3594,7 @@ class ProjectViewModel: ObservableObject  {
         self.writeFileCommand(path: "/adafruit_register/i2c_bcd_alarm.mpy", data: data) { result in
             switch result {
             case .success:
-                    self.ledGbcd_DaytimeReg()
+                self.ledGbcd_DaytimeReg()
                 print("Success")
             case .failure:
                 print("Failure - ledGbcd_Reg")
@@ -449,11 +3612,11 @@ class ProjectViewModel: ObservableObject  {
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "i2c_bcd_datetime", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
             return
         }
-       
+        
         self.writeFileCommand(path: "/adafruit_register/i2c_bcd_datetime.mpy", data: data) { result in
             switch result {
             case .success:
-                    self.ledGi2c_bit_Reg()
+                self.ledGi2c_bit_Reg()
                 print("Success")
             case .failure:
                 print("Failure - ledGbcd_DaytimeReg")
@@ -475,7 +3638,7 @@ class ProjectViewModel: ObservableObject  {
         self.writeFileCommand(path: "/adafruit_register/i2c_bit.mpy", data: data) { result in
             switch result {
             case .success:
-                    self.ledGi2c_bits_Reg()
+                self.ledGi2c_bits_Reg()
                 print("Success")
             case .failure:
                 print("Failure - ledGi2c_bit_Reg")
@@ -492,12 +3655,12 @@ class ProjectViewModel: ObservableObject  {
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "i2c_bits", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
             return
         }
-
+        
         
         self.writeFileCommand(path: "/adafruit_register/i2c_bits.mpy", data: data) { result in
             switch result {
             case .success:
-                    self.ledGi2c_struct_array_Reg()
+                self.ledGi2c_struct_array_Reg()
                 print("Success")
             case .failure:
                 print("Failure - ledGi2c_bits_Reg")
@@ -516,11 +3679,11 @@ class ProjectViewModel: ObservableObject  {
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "i2c_struct_array", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
             return
         }
-       
+        
         self.writeFileCommand(path: "/adafruit_register/i2c_struct_array.mpy", data: data) { result in
             switch result {
             case .success:
-                    self.ledGi2c_struct_Reg()
+                self.ledGi2c_struct_Reg()
                 print("Success")
             case .failure:
                 print("Failure - ledGi2c_struct_array_Reg")
@@ -537,13 +3700,18 @@ class ProjectViewModel: ObservableObject  {
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "i2c_struct", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
             return
         }
-    
+        
         
         self.writeFileCommand(path: "/adafruit_register/i2c_struct.mpy", data: data) { result in
             switch result {
             case .success:
-                    
+                
                 print("ALL DONE")
+                self.completedTransfer()
+                DispatchQueue.main.async {
+                    self.sendingBundle = false
+                    self.counter = 0
+                }
             case .failure:
                 print("Failure - ledGi2c_struct_array_Reg")
                 
@@ -553,15 +3721,6 @@ class ProjectViewModel: ObservableObject  {
         
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
     func createLEDGlassesLib(){
         makeDirectory(path: "adafruit_is31fl3741")
         makeDirectory(path: "adafruit_register")
@@ -570,7 +3729,6 @@ class ProjectViewModel: ObservableObject  {
     
     func testFunction(completion: @escaping ()-> Void){
         
-        // SEnding first batch
         DispatchQueue.main.asyncAfter(deadline: .now()){
             let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
             
@@ -596,10 +3754,10 @@ class ProjectViewModel: ObservableObject  {
         }
     }
     
-
+    //MARK: - End
     
-
     
+    // MARK: System
     
     struct TransmissionProgress {
         var description: String
@@ -689,20 +3847,20 @@ class ProjectViewModel: ObservableObject  {
         //registerNotifications(enabled: false)
     }
     
-
-
-
-
- func setup(fileTransferClient: FileTransferClient?) {
-     guard let fileTransferClient = fileTransferClient else {
-         DLog("Error: undefined fileTransferClient")
-         return
-     }
-
-     self.fileTransferClient = fileTransferClient
-
- }
- 
+    
+    
+    
+    
+    func setup(fileTransferClient: FileTransferClient?) {
+        guard let fileTransferClient = fileTransferClient else {
+            DLog("Error: undefined fileTransferClient")
+            return
+        }
+        
+        self.fileTransferClient = fileTransferClient
+        
+    }
+    
     // MARK: - Actions
     
     func readFile(filename: String) {
@@ -714,6 +3872,9 @@ class ProjectViewModel: ObservableObject  {
                 switch result {
                 case .success(let data):
                     self.lastTransmit = TransmissionLog(type: .read(data: data))
+                    let str = String(decoding: data, as: UTF8.self)
+                    print("Read: \(str)")
+                    self.bootUpInfo = str
                     
                 case .failure(let error):
                     self.lastTransmit = TransmissionLog(type: .error(message: error.localizedDescription))
@@ -723,6 +3884,7 @@ class ProjectViewModel: ObservableObject  {
             }
         }
     }
+    
     
     
     
@@ -846,7 +4008,7 @@ class ProjectViewModel: ObservableObject  {
     
     private func writeFileCommand(path: String, data: Data, completion: ((Result<Date?, Error>) -> Void)?) {
         guard let fileTransferClient = fileTransferClient else { completion?(.failure(ProjectViewError.fileTransferUndefined)); return }
-        
+        counter += 1
         DLog("start writeFile \(path)")
         fileTransferClient.writeFile(path: path, data: data, progress: { [weak self] written, total in
             DLog("writing progress: \( String(format: "%.1f%%", Float(written) * 100 / Float(total)) )")
@@ -949,39 +4111,39 @@ class ProjectViewModel: ObservableObject  {
      fileTransferClient = nil
      }*/
     
-
-    
-    func gatherGlassesBundle() {
-        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_is31fl3741")
-
-        let documentsUrlSecond = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
-        
-        do {
-            // Get the directory contents urls (including subfolders urls)
-            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl, includingPropertiesForKeys: nil)
-            let secondDireCont = try FileManager.default.contentsOfDirectory(at: documentsUrlSecond, includingPropertiesForKeys: nil)
-            
-            for t in secondDireCont {
-                let addItem = ContentFile(title: t.lastPathComponent)
-                
-                 
-                fileArray.append(addItem)
-                
-            }
-            
-            for i in directoryContents {
-                let addItem = ContentFile(title: i.lastPathComponent)
-                
-                fileArray.append(addItem)
-                
-            }
-
-        } catch {
-            print(error)
-        }
-    }
     
     
+    //    func gatherGlassesBundle() {
+    //        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_is31fl3741")
+    //
+    //        let documentsUrlSecond = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
+    //        
+    //        do {
+    //            // Get the directory contents urls (including subfolders urls)
+    //            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl, includingPropertiesForKeys: nil)
+    //            let secondDireCont = try FileManager.default.contentsOfDirectory(at: documentsUrlSecond, includingPropertiesForKeys: nil)
+    //            
+    //            for t in secondDireCont {
+    //                let addItem = ContentFile(title: t.lastPathComponent)
+    //                
+    //                 
+    //                fileArray.append(addItem)
+    //                
+    //            }
+    //            
+    //            for i in directoryContents {
+    //                let addItem = ContentFile(title: i.lastPathComponent)
+    //                
+    //                fileArray.append(addItem)
+    //                
+    //            }
+    //
+    //        } catch {
+    //            print(error)
+    //        }
+    //    }
     
-
+    
+    
+    
 }

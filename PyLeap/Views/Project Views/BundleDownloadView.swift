@@ -16,7 +16,7 @@ struct BundleDownloadView: View {
             Section(header: Text("Downloaded Files")) {
                 ForEach(model.fileArray) { file in
                     
-                    ContentFileRow(title: file.title)
+                  //  FileRow(title: file.title)
                     
                 }
             }

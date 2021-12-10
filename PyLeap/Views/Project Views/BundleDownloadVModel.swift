@@ -26,8 +26,10 @@ class BundleDownloadVModel: NSObject, ObservableObject {
             for file in contents {
                 print("File Content: \(file.lastPathComponent)")
 
+                let resources = try file.resourceValues(forKeys:[.fileSizeKey])
+                let fileSize = resources.fileSize!
                 
-               let addedFile = ContentFile(title: file.lastPathComponent)
+                let addedFile = ContentFile(title: file.lastPathComponent, fileSize: fileSize)
                 self.fileArray.append(addedFile)
             }
             
