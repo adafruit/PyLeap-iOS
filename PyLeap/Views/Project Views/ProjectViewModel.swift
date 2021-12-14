@@ -14,6 +14,7 @@ class ProjectViewModel: ObservableObject  {
     
     var networkMonitor = NetworkMonitor()
     
+    
     @Published var sendingBundle = false
     
     @AppStorage("index") var index = 0
@@ -42,6 +43,8 @@ class ProjectViewModel: ObservableObject  {
     
     @Published var newBundleDownloaded = false
     @Published var didCompleteTranfer = false
+    @Published var writeError = false
+    
     
     func completedTransfer() {
         
@@ -51,6 +54,19 @@ class ProjectViewModel: ObservableObject  {
             self.didCompleteTranfer = false
             
         }
+    }
+    
+    func displayErrorMessage() {
+        DispatchQueue.main.async {
+            self.writeError = true
+            self.sendingBundle = false
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+            self.writeError = false
+            
+        }
+        
     }
     
     func downloadCheck(at filePath: URL){
@@ -411,7 +427,7 @@ class ProjectViewModel: ObservableObject  {
     
     // MARK: - Bluefruit Playback MP3
     
-    func MP3ProjCheck() {
+    func MP3ProjHead() {
         listDirectoryCommand(path: "") { result in
             
             switch result {
@@ -420,7 +436,7 @@ class ProjectViewModel: ObservableObject  {
                 
                 if contents!.contains(where: { name in name.name == "lib"}) {
                     print("lib directory exist")
-                    self.sendPlayMP3Code()
+                    self.checkMP3CPDirectory()
                     
                     DispatchQueue.main.async {
                         self.sendingBundle = true
@@ -428,25 +444,86 @@ class ProjectViewModel: ObservableObject  {
                     
                 } else {
                     print("lib directory does not exist")
-                    self.sendPlayMP3Proj()
+                    self.makeMP3ProjLib()
                 }
                 
             case .failure:
                 print("failure")
-                
+                self.displayErrorMessage()
             }
             
         }
     }
     
+    func checkMP3CPDirectory(){
+        listDirectoryCommand(path: "lib/") { result in
+            
+            switch result {
+            
+            case .success(let contents):
+
+                if contents!.contains(where: { name in name.name == "adafruit_circuitplayground" }) {
+                    print("adafruit_circuitplayground directory DOES exist")
+                    
+                    self.checkMP3BusDeviceDirectory()
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                } else {
+                    print("adafruit_circuitplayground NOT directory exist")
+                    // Make Directory - on success, call the base function to check
+                    self.makeMP3CPDirectory()
+                }
+                
+            case .failure:
+                print("failure")
+                self.displayErrorMessage()
+            }
+        }
+    }
     
-    func sendPlayMP3Proj() {
+    func checkMP3BusDeviceDirectory(){
+        listDirectoryCommand(path: "lib/") { result in
+            
+            switch result {
+            
+            case .success(let contents):
+
+                if contents!.contains(where: { name in name.name == "adafruit_bus_device" }) {
+                    print("adafruit_bus_device directory DOES exist")
+                    
+                    // Send code files here
+                    
+                     self.sendPlayMP3Code()
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                } else {
+                    print("adafruit_bus_device NOT directory exist")
+                    print("Creating adafruit_bus_device directory...")
+                    
+                    self.createAdafruitBusDevicePlayMP3()
+                }
+                
+            case .failure:
+                print("failure")
+                self.displayErrorMessage()
+            }
+        }
+    }
+    
+    
+    func makeMP3ProjLib() {
         
         self.makeDirectoryCommand(path: "lib") { result in
             switch result {
             case .success:
                 print("Success")
-                self.createAdafruitCPPlayMP3()
+                self.MP3ProjHead()
             case .failure:
                 print("")
             }
@@ -455,13 +532,13 @@ class ProjectViewModel: ObservableObject  {
     }
     
     
-    func createAdafruitCPPlayMP3(){
+    func makeMP3CPDirectory(){
         //adafruit_bus_device
         self.makeDirectoryCommand(path: "lib/adafruit_circuitplayground") { result in
             switch result {
             case .success:
                 print("Success")
-                self.createAdafruitBusDevicePlayMP3()
+                self.MP3ProjHead()
             case .failure:
                 print("")
             }
@@ -476,7 +553,7 @@ class ProjectViewModel: ObservableObject  {
             switch result {
             case .success:
                 print("Success")
-                self.sendPlayMP3Code()
+                self.MP3ProjHead()
             case .failure:
                 print("")
             }
@@ -508,6 +585,7 @@ class ProjectViewModel: ObservableObject  {
                 self.sendBeatsPlayMP3()
             case .failure:
                 print("Faliure")
+                self.displayErrorMessage()
             }
         }
         
@@ -831,6 +909,87 @@ class ProjectViewModel: ObservableObject  {
     
     
     
+    // If command 5 error happens, show: Command error 5: Cannot write to device, disconnect from computer.
+    
+    
+    /*
+     Before we send over file content, we need to make sure these
+     directories exist: lib, adafruit_bus_device, adafruit_CircuitPlayground
+     
+     First, we use listDirectoryCommand to check the listing of file content on the board.
+     Use case #1:
+     
+     * Does Circuit Playground Bluefruit contain "lib" directory?
+     
+     - If yes, great. Continue to check for the next folder directory.
+      • Does "adafruit_bus_device" exist?
+      - If no, make a new directory "lib ✅ "
+     • On Success, contib=nue to the next directory check.
+     • On failure, show error prompt ❌.
+     
+     ** After final check, start sending files.
+     
+     
+     if not`, move forward creating all three directories.
+     
+     If ALL directories exist, continue to send files to their respected directory folders.
+     
+     */
+    
+    
+    /*
+     
+     Break-down:
+     
+     Change of plans.
+     When user  opens PyLeap and reaches the selection 
+     
+     */
+    
+    
+    func makeLibDirectory() {
+        self.makeDirectoryCommand(path: "lib") { result in
+            switch result {
+            case .success(let contents):
+                print("Success: \(contents?.description)\n")
+                self.makeAdafruitCPDirectory()
+            case .failure:
+                print("")
+            }
+        }
+    }
+
+
+    func makeAdafruitCPDirectory(){
+        
+        self.makeDirectoryCommand(path: "lib/adafruit_circuitplayground") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.makeAdafruitBDDirectory()
+            case .failure:
+                print("")
+            }
+        }
+        
+    }
+    
+    
+    func makeAdafruitBDDirectory(){
+        //adafruit_bus_device
+        self.makeDirectoryCommand(path: "lib/adafruit_bus_device") { result in
+            switch result {
+            case .success:
+                print("Success")
+                
+            case .failure:
+                print("Failed to create lib/adafruit_bus_device directory")
+            }
+        }
+        
+    }
+    
+    
     
     
     
@@ -839,41 +998,108 @@ class ProjectViewModel: ObservableObject  {
     
     // MARK: - Bluefruit Sound Meter
     
-    
-    func soundMeterProjCheck() {
+    // Check if lib exists #1
+    func soundMeterHead(){
         listDirectoryCommand(path: "") { result in
             
             switch result {
-                
+            
             case .success(let contents):
-                
-                if contents!.contains(where: { name in name.name == "lib"}) {
+
+                if contents!.contains(where: { name in name.name == "lib" }) {
                     print("lib directory exist")
-                    self.sendSoundMeterCode()
+                    
+                    self.checkAdafruitCircuitPlaygroundDirectoryExist()
                     
                     DispatchQueue.main.async {
                         self.sendingBundle = true
                     }
                     
-                    
                 } else {
                     print("lib directory does not exist")
+                    // Make Directory - on success, call the base function to check
                     self.sendSoundMeterProj()
                 }
                 
             case .failure:
                 print("failure")
-                
             }
-            
         }
     }
     
-    func sendSoundMeterProj() {
+    
+    // adafruit_circuitplayground directory check #2
+    func checkAdafruitCircuitPlaygroundDirectoryExist(){
+        listDirectoryCommand(path: "lib/") { result in
+            
+            switch result {
+            
+            case .success(let contents):
+
+                if contents!.contains(where: { name in name.name == "adafruit_circuitplayground" }) {
+                    print("adafruit_circuitplayground directory DOES exist")
+                    
+                    self.checkAdafruitBusDeviceDirectoryExist()
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                } else {
+                    print("adafruit_circuitplayground NOT directory exist")
+                    // Make Directory - on success, call the base function to check
+                    self.createAdafruitCPSoundMeter()
+                }
+                
+            case .failure:
+                print("failure")
+            }
+        }
+    }
+    
+    
+    // adafruit_bus_device directory check #3
+    func checkAdafruitBusDeviceDirectoryExist(){
+        listDirectoryCommand(path: "lib/") { result in
+            
+            switch result {
+            
+            case .success(let contents):
+
+                if contents!.contains(where: { name in name.name == "adafruit_bus_device" }) {
+                    print("adafruit_bus_device directory DOES exist")
+                    
+                    // Send code files here
+                    
+                     self.sendSoundMeterCode()
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                } else {
+                    print("adafruit_bus_device NOT directory exist")
+                    print("Creating adafruit_bus_device directory...")
+                    
+                    self.createAdafruitBusDeviceSoundMeter()
+                }
+                
+            case .failure:
+                print("failure")
+            }
+        }
+    }
+    
+
+    
+
+    
+    
+    func createLibDirectory() {
         self.makeDirectoryCommand(path: "lib") { result in
             switch result {
-            case .success:
-                print("Success")
+            case .success(let contents):
+                print("Success: \(contents?.description)\n")
                 self.createAdafruitCPSoundMeter()
             case .failure:
                 print("")
@@ -882,13 +1108,58 @@ class ProjectViewModel: ObservableObject  {
     }
     
     
+    
+    func soundMeterProjCheck() {
+        listDirectoryCommand(path: "") { result in
+            
+            switch result {
+            
+            case .success(let contents):
+
+                if contents!.contains(where: { name in name.name == "lib" }) {
+                    print("lib directory exist")
+                    self.sendSoundMeterCode()
+                    
+                   
+                    
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                } else {
+                    print("lib directory does not exist")
+                    self.sendSoundMeterProj()
+                }
+                
+            case .failure:
+                print("failure")
+            }
+        }
+    }
+    
+    func sendSoundMeterProj() {
+        self.makeDirectoryCommand(path: "lib") { result in
+            switch result {
+            case .success(let contents):
+                print("Success: \(contents?.description)\n")
+                self.createAdafruitCPSoundMeter()
+            case .failure:
+                print("")
+            }
+        }
+    }
+
+
     func createAdafruitCPSoundMeter(){
-        //adafruit_bus_device
+        
         self.makeDirectoryCommand(path: "lib/adafruit_circuitplayground") { result in
             switch result {
             case .success:
                 print("Success")
-                self.createAdafruitBusDeviceSoundMeter()
+                // Return to main check
+                self.soundMeterHead()
+            //    self.createAdafruitBusDeviceSoundMeter()
             case .failure:
                 print("")
             }
@@ -903,9 +1174,10 @@ class ProjectViewModel: ObservableObject  {
             switch result {
             case .success:
                 print("Success")
-                self.sendSoundMeterCode()
+                self.soundMeterHead()
+               // self.sendSoundMeterCode()
             case .failure:
-                print("")
+                print("Failed to create a new directory")
             }
         }
         
@@ -1238,7 +1510,7 @@ class ProjectViewModel: ObservableObject  {
     
     // MARK: - Bluefruit Touch Tone Piano
     
-    func pianoNeoPixelProjCheck() {
+    func touchToneProjHead() {
         listDirectoryCommand(path: "") { result in
             
             switch result {
@@ -1247,7 +1519,7 @@ class ProjectViewModel: ObservableObject  {
                 
                 if contents!.contains(where: { name in name.name == "lib"}) {
                     print("lib directory exist")
-                    self.sendPianoNeoPixelCode()
+                    self.touchToneProjCPDirectory()
                     
                     DispatchQueue.main.async {
                         self.sendingBundle = true
@@ -1266,12 +1538,70 @@ class ProjectViewModel: ObservableObject  {
         }
     }
     
+    func touchToneProjCPDirectory(){
+        listDirectoryCommand(path: "lib/") { result in
+            
+            switch result {
+            
+            case .success(let contents):
+
+                if contents!.contains(where: { name in name.name == "adafruit_circuitplayground" }) {
+                    print("adafruit_circuitplayground directory DOES exist")
+                    
+                    self.touchToneProjBusDeviceDirectory()
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                } else {
+                    print("adafruit_circuitplayground NOT directory exist")
+                    // Make Directory - on success, call the base function to check
+                    self.makeCPTouchToneDir()
+                }
+                
+            case .failure:
+                print("failure")
+            }
+        }
+    }
+    
+    func touchToneProjBusDeviceDirectory(){
+        listDirectoryCommand(path: "lib/") { result in
+            
+            switch result {
+            
+            case .success(let contents):
+
+                if contents!.contains(where: { name in name.name == "adafruit_bus_device" }) {
+                    print("adafruit_bus_device directory DOES exist")
+                    
+                    // Send code files here
+                    
+                     self.sendPianoNeoPixelCode()
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                } else {
+                    print("adafruit_bus_device NOT directory exist")
+                    
+                    self.makeBusDeviceTouchTone()
+                }
+                
+            case .failure:
+                print("failure")
+            }
+        }
+    }
+    
     func sendPianoNeoPixelProj() {
         self.makeDirectoryCommand(path: "lib") { result in
             switch result {
             case .success:
                 print("Success")
-                self.createAdafruitCPPianoNeoPixel()
+                self.touchToneProjHead()
             case .failure:
                 print("")
             }
@@ -1279,13 +1609,13 @@ class ProjectViewModel: ObservableObject  {
     }
     
     
-    func createAdafruitCPPianoNeoPixel(){
+    func makeCPTouchToneDir(){
         //adafruit_bus_device
         self.makeDirectoryCommand(path: "lib/adafruit_circuitplayground") { result in
             switch result {
             case .success:
                 print("Success")
-                self.createAdafruitBusDevicePianoNeoPixel()
+                self.touchToneProjHead()
             case .failure:
                 print("")
             }
@@ -1294,13 +1624,13 @@ class ProjectViewModel: ObservableObject  {
     }
     
     
-    func createAdafruitBusDevicePianoNeoPixel(){
+    func makeBusDeviceTouchTone(){
         //adafruit_bus_device
         self.makeDirectoryCommand(path: "lib/adafruit_bus_device") { result in
             switch result {
             case .success:
                 print("Success")
-                self.sendPianoNeoPixelCode()
+                self.touchToneProjHead()
             case .failure:
                 print("")
             }
@@ -1631,7 +1961,7 @@ class ProjectViewModel: ObservableObject  {
                 
                 if contents!.contains(where: { name in name.name == "lib"}) {
                     print("lib directory exist")
-                    self.sendControlledNeoPixelCode()
+                    self.controlledNeoProjCPDirectory()
                     
                     DispatchQueue.main.async {
                         self.sendingBundle = true
@@ -1650,12 +1980,74 @@ class ProjectViewModel: ObservableObject  {
         }
     }
     
+    
+    
+    func controlledNeoProjCPDirectory(){
+        listDirectoryCommand(path: "lib/") { result in
+            
+            switch result {
+            
+            case .success(let contents):
+
+                if contents!.contains(where: { name in name.name == "adafruit_circuitplayground" }) {
+                    print("adafruit_circuitplayground directory DOES exist")
+                    
+                    self.controlledNeoProjBusDeviceDirectory()
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                } else {
+                    print("adafruit_circuitplayground NOT directory exist")
+                    // Make Directory - on success, call the base function to check
+                    self.createAdafruitCPControlledNeoPixel()
+                }
+                
+            case .failure:
+                print("failure")
+            }
+        }
+    }
+    
+    func controlledNeoProjBusDeviceDirectory(){
+        listDirectoryCommand(path: "lib/") { result in
+            
+            switch result {
+            
+            case .success(let contents):
+
+                if contents!.contains(where: { name in name.name == "adafruit_bus_device" }) {
+                    print("adafruit_bus_device directory DOES exist")
+                    
+                    // Send code files here
+                    
+                     self.sendControlledNeoPixelCode()
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                } else {
+                    print("adafruit_bus_device NOT directory exist")
+                    
+                    self.createAdafruitBusDeviceControlledNeoPixel()
+                }
+                
+            case .failure:
+                print("failure")
+            }
+        }
+    }
+    
+    
+    
     func sendControlledNeoPixelProj() {
         self.makeDirectoryCommand(path: "lib") { result in
             switch result {
             case .success:
                 print("Success")
-                self.createAdafruitCPControlledNeoPixel()
+                self.controlledNeoPixelProjCheck()
             case .failure:
                 print("")
             }
@@ -1669,7 +2061,7 @@ class ProjectViewModel: ObservableObject  {
             switch result {
             case .success:
                 print("Success")
-                self.createAdafruitBusDeviceControlledNeoPixel()
+                self.controlledNeoPixelProjCheck()
             case .failure:
                 print("")
             }
@@ -1684,7 +2076,7 @@ class ProjectViewModel: ObservableObject  {
             switch result {
             case .success:
                 print("Success")
-                self.sendControlledNeoPixelCode()
+                self.controlledNeoPixelProjCheck()
             case .failure:
                 print("")
             }
@@ -2010,7 +2402,7 @@ class ProjectViewModel: ObservableObject  {
                 
                 if contents!.contains(where: { name in name.name == "lib"}) {
                     print("lib directory exist")
-                    self.sendTouchNeoPixelCode()
+                    self.touchNeoProjCPDirectory()
                     
                     DispatchQueue.main.async {
                         self.sendingBundle = true
@@ -2029,12 +2421,71 @@ class ProjectViewModel: ObservableObject  {
         }
     }
     
+    func touchNeoProjCPDirectory(){
+        listDirectoryCommand(path: "lib/") { result in
+            
+            switch result {
+            
+            case .success(let contents):
+
+                if contents!.contains(where: { name in name.name == "adafruit_circuitplayground" }) {
+                    print("adafruit_circuitplayground directory DOES exist")
+                    
+                    self.touchNeoProjBusDeviceDirectory()
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                } else {
+                    print("adafruit_circuitplayground NOT directory exist")
+                    // Make Directory - on success, call the base function to check
+                    self.createAdafruitCPTouchNeoPixel()
+                }
+                
+            case .failure:
+                print("failure")
+            }
+        }
+    }
+    
+    func touchNeoProjBusDeviceDirectory(){
+        listDirectoryCommand(path: "lib/") { result in
+            
+            switch result {
+            
+            case .success(let contents):
+
+                if contents!.contains(where: { name in name.name == "adafruit_bus_device" }) {
+                    print("adafruit_bus_device directory DOES exist")
+                    
+                    // Send code files here
+                    
+                     self.sendTouchNeoPixelCode()
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                } else {
+                    print("adafruit_bus_device NOT directory exist")
+                    
+                    self.createAdafruitBusDeviceTouchNeoPixel()
+                }
+                
+            case .failure:
+                print("failure")
+            }
+        }
+    }
+    
+    
     func sendTouchNeoPixelProj() {
         self.makeDirectoryCommand(path: "lib") { result in
             switch result {
             case .success:
                 print("Success")
-                self.createAdafruitCPTouchNeoPixel()
+                self.touchNeoPixelProjCheck()
             case .failure:
                 print("")
             }
@@ -2048,7 +2499,7 @@ class ProjectViewModel: ObservableObject  {
             switch result {
             case .success:
                 print("Success")
-                self.createAdafruitBusDeviceTouchNeoPixel()
+                self.touchNeoPixelProjCheck()
             case .failure:
                 print("")
             }
@@ -2063,7 +2514,7 @@ class ProjectViewModel: ObservableObject  {
             switch result {
             case .success:
                 print("Success")
-                self.sendTouchNeoPixelCode()
+                self.touchNeoPixelProjCheck()
             case .failure:
                 print("")
             }
@@ -2256,7 +2707,7 @@ class ProjectViewModel: ObservableObject  {
         self.writeFileCommand(path: "/lib/adafruit_circuitplayground/express.mpy", data: data) { result in
             switch result {
             case .success:
-                self.adafruit_lis3dh_FileTouchNeoPixel()
+                self.adafruit_pixelBuf_FileTouchNeoPixel()
                 print("Success")
             case .failure:
                 print("Failure - ledGinit_File")
@@ -2267,27 +2718,28 @@ class ProjectViewModel: ObservableObject  {
     }
     
     
-    func adafruit_lis3dh_FileTouchNeoPixel() {
-        
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Touch_NeoPixel_Rainbow").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
-        
-        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_lis3dh", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
-            print("Fail adafruit_lis3dh")
-            return
-        }
-        
-        self.writeFileCommand(path: "/lib/adafruit_lis3dh.mpy", data: data) { result in
-            switch result {
-            case .success:
-                self.adafruit_pixelBuf_FileLM()
-                print("Success")
-            case .failure:
-                print("Failure - ledGinit_File")
-                
-            }
-            
-        }
-    }
+//    func adafruit_lis3dh_FileTouchNeoPixel() {
+//
+//        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Touch_NeoPixel_Rainbow").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+//
+//        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_lis3dh", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+//            print("Fail adafruit_lis3dh")
+//            return
+//        }
+//
+//        self.writeFileCommand(path: "/lib/adafruit_lis3dh.mpy", data: data) { result in
+//            switch result {
+//            case .success:
+//                self.adafruit_pixelBuf_FileLM()
+//                print("Success")
+//            case .failure:
+//                self.adafruit_pixelBuf_FileLM()
+//                print("Failure - ledGinit_File")
+//
+//            }
+//
+//        }
+//    }
     
     
     func adafruit_pixelBuf_FileTouchNeoPixel() {
@@ -2416,7 +2868,7 @@ class ProjectViewModel: ObservableObject  {
                 
                 if contents!.contains(where: { name in name.name == "lib"}) {
                     print("lib directory exist")
-                    self.sendLightMeterCode()
+                    self.lightMeterProjCPDirectory()
                     
                     DispatchQueue.main.async {
                         self.sendingBundle = true
@@ -2436,12 +2888,72 @@ class ProjectViewModel: ObservableObject  {
         }
     }
     
+    
+    func lightMeterProjCPDirectory(){
+        listDirectoryCommand(path: "lib/") { result in
+            
+            switch result {
+            
+            case .success(let contents):
+
+                if contents!.contains(where: { name in name.name == "adafruit_circuitplayground" }) {
+                    print("adafruit_circuitplayground directory DOES exist")
+                    
+                    self.lightMeterProjBusDeviceDirectory()
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                } else {
+                    print("adafruit_circuitplayground NOT directory exist")
+                    // Make Directory - on success, call the base function to check
+                    self.createAdafruitCPLightMeter()
+                }
+                
+            case .failure:
+                print("failure")
+            }
+        }
+    }
+    
+    func lightMeterProjBusDeviceDirectory(){
+        listDirectoryCommand(path: "lib/") { result in
+            
+            switch result {
+            
+            case .success(let contents):
+
+                if contents!.contains(where: { name in name.name == "adafruit_bus_device" }) {
+                    print("adafruit_bus_device directory DOES exist")
+                    
+                    // Send code files here
+                    
+                     self.sendLightMeterCode()
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                } else {
+                    print("adafruit_bus_device NOT directory exist")
+                    
+                    self.createAdafruitBusDeviceLightMeter()
+                }
+                
+            case .failure:
+                print("failure")
+            }
+        }
+    }
+    
+    
     func sendLightMeterProj() {
         self.makeDirectoryCommand(path: "lib") { result in
             switch result {
             case .success:
                 print("Success")
-                self.createAdafruitCPLightMeter()
+                self.lightMeterProjCheck()
             case .failure:
                 print("")
             }
@@ -2455,7 +2967,7 @@ class ProjectViewModel: ObservableObject  {
             switch result {
             case .success:
                 print("Success")
-                self.createAdafruitBusDeviceLightMeter()
+                self.lightMeterProjCheck()
             case .failure:
                 print("")
             }
@@ -2470,7 +2982,7 @@ class ProjectViewModel: ObservableObject  {
             switch result {
             case .success:
                 print("Success")
-                self.sendLightMeterCode()
+                self.lightMeterProjCheck()
             case .failure:
                 print("")
             }
@@ -2789,9 +3301,9 @@ class ProjectViewModel: ObservableObject  {
                 
                 if contents!.contains(where: { name in name.name == "lib"}) {
                     print("lib directory exist")
-                    self.sendwavCode()
+                    self.wavProjCPDirectory()
                     
-                    DispatchQueue.main.async {
+                     DispatchQueue.main.async {
                         self.sendingBundle = true
                     }
                     
@@ -2809,13 +3321,72 @@ class ProjectViewModel: ObservableObject  {
     }
     
     
+    func wavProjCPDirectory(){
+        listDirectoryCommand(path: "lib/") { result in
+            
+            switch result {
+            
+            case .success(let contents):
+
+                if contents!.contains(where: { name in name.name == "adafruit_circuitplayground" }) {
+                    print("adafruit_circuitplayground directory DOES exist")
+                    
+                    self.wavProjBusDeviceDirectory()
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                } else {
+                    print("adafruit_circuitplayground NOT directory exist")
+                    // Make Directory - on success, call the base function to check
+                    self.createAdafruitCP()
+                }
+                
+            case .failure:
+                print("failure")
+            }
+        }
+    }
+    
+    func wavProjBusDeviceDirectory(){
+        listDirectoryCommand(path: "lib/") { result in
+            
+            switch result {
+            
+            case .success(let contents):
+
+                if contents!.contains(where: { name in name.name == "adafruit_bus_device" }) {
+                    print("adafruit_bus_device directory DOES exist")
+                    
+                    // Send code files here
+                    
+                     self.sendwavCode()
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                } else {
+                    print("adafruit_bus_device NOT directory exist")
+                    
+                    self.createAdafruitBusDevice()
+                }
+                
+            case .failure:
+                print("failure")
+            }
+        }
+    }
+    
+    
     func sendPlayWAVProj() {
         
         self.makeDirectoryCommand(path: "lib") { result in
             switch result {
             case .success:
                 print("Success")
-                self.createAdafruitCP()
+                self.playWAVProjCheck()
             case .failure:
                 print("")
             }
@@ -2830,7 +3401,7 @@ class ProjectViewModel: ObservableObject  {
             switch result {
             case .success:
                 print("Success")
-                self.createAdafruitBusDevice()
+                self.playWAVProjCheck()
             case .failure:
                 print("")
             }
@@ -2845,7 +3416,7 @@ class ProjectViewModel: ObservableObject  {
             switch result {
             case .success:
                 print("Success")
-                self.sendwavCode()
+                self.playWAVProjCheck()
             case .failure:
                 print("")
             }
@@ -4085,65 +4656,5 @@ class ProjectViewModel: ObservableObject  {
         }
     }
     
-    /*
-     // MARK: - BLE Notifications
-     private weak var didDisconnectFromPeripheralObserver: NSObjectProtocol?
-     
-     private func registerNotifications(enabled: Bool) {
-     let notificationCenter = NotificationCenter.default
-     if enabled {
-     didDisconnectFromPeripheralObserver = notificationCenter.addObserver(forName: .didDisconnectFromPeripheral, object: nil, queue: .main, using: {[weak self] notification in self?.didDisconnectFromPeripheral(notification: notification)})
-     
-     } else {
-     if let didDisconnectFromPeripheralObserver = didDisconnectFromPeripheralObserver {notificationCenter.removeObserver(didDisconnectFromPeripheralObserver)}
-     }
-     }
-     
-     private func didDisconnectFromPeripheral(notification: Notification) {
-     let peripheral = bleManager.peripheral(from: notification)
-     
-     let currentlyConnectedPeripheralsCount = bleManager.connectedPeripherals().count
-     guard let selectedPeripheral = fileTransferClient?.blePeripheral, selectedPeripheral.identifier == peripheral?.identifier || currentlyConnectedPeripheralsCount == 0 else {        // If selected peripheral is disconnected or if there are no peripherals connected (after a failed dfu update)
-     return
-     }
-     
-     // Disconnect
-     fileTransferClient = nil
-     }*/
-    
-    
-    
-    //    func gatherGlassesBundle() {
-    //        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_is31fl3741")
-    //
-    //        let documentsUrlSecond = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
-    //        
-    //        do {
-    //            // Get the directory contents urls (including subfolders urls)
-    //            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl, includingPropertiesForKeys: nil)
-    //            let secondDireCont = try FileManager.default.contentsOfDirectory(at: documentsUrlSecond, includingPropertiesForKeys: nil)
-    //            
-    //            for t in secondDireCont {
-    //                let addItem = ContentFile(title: t.lastPathComponent)
-    //                
-    //                 
-    //                fileArray.append(addItem)
-    //                
-    //            }
-    //            
-    //            for i in directoryContents {
-    //                let addItem = ContentFile(title: i.lastPathComponent)
-    //                
-    //                fileArray.append(addItem)
-    //                
-    //            }
-    //
-    //        } catch {
-    //            print(error)
-    //        }
-    //    }
-    
-    
-    
-    
+
 }

@@ -377,6 +377,14 @@ struct ProjectCardView: View {
                                     }
                                 }
             
+                                Button {
+                                    
+                                    model.checkAdafruitCircuitPlaygroundDirectoryExist()
+                                } label: {
+                                    Text("Button Test")
+                                }
+
+                                
                                 if model.didDownload {
             
                                     // Section 2
@@ -415,17 +423,17 @@ struct ProjectCardView: View {
                                             }
             
                                             if project.index == 7 {
-                                                model.pianoNeoPixelProjCheck()
+                                                model.touchToneProjHead()
                                                 print("Start Bluefuit Piano Neopixel File Transfer")
                                             }
             
                                             if project.index == 8 {
-                                                model.soundMeterProjCheck()
+                                                model.soundMeterHead()
                                                 print("Start Bluefuit Sound Meter File Transfer")
                                             }
             
                                             if project.index == 9 {
-                                                model.MP3ProjCheck()
+                                                model.MP3ProjHead()
                                                 print("Start Bluefuit Sound Meter File Transfer")
                                             }
             
@@ -453,6 +461,18 @@ struct ProjectCardView: View {
                                         } else {
                                             
                                         }
+                                        
+                                        if model.writeError {
+                                            VStack(alignment: .leading, spacing: 5) {
+                                                Text("Unable to complete transfer")
+                                                    .bold()
+                                                Text("Reset Circuit Playground Bluefruit")
+                                                    .bold()
+                                            }
+                                            .foregroundColor(.red)
+                                            
+                                        }
+                                        
                                         
                                            // .isHidden(showProgressBar)
 //                                            .onChange(of: model.numOfFiles) { newValue in
@@ -545,11 +565,11 @@ struct ProjectCardView: View {
                                 }
             
             // MARK: - Keep for debugging - or will add as a feature
-//                                Button {
-//                                    model.removeAllFiles()
-//                                } label: {
-//                                    Text("Delete All")
-//                                }
+                                Button {
+                                    model.removeAllFiles()
+                                } label: {
+                                    Text("Delete All")
+                                }
             
 
                                 Section(header: Text("Files Downloaded")) {
