@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A95E4587272A1CD4002895B0 /* FileTransferClient in Frameworks */ = {isa = PBXBuildFile; productRef = A95E4586272A1CD4002895B0 /* FileTransferClient */; };
 		D505B99C2755323C00386E9F /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D505B99B2755323C00386E9F /* NetworkMonitor.swift */; };
 		D505B99E2756894300386E9F /* ViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D505B99D2756894300386E9F /* ViewModifier.swift */; };
 		D50D06B0274681F80029A483 /* InfoModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50D06AF274681F80029A483 /* InfoModalView.swift */; };
@@ -46,6 +45,7 @@
 		D56F640E270242CA000E5975 /* String+DeletingPrefix.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F6408270242CA000E5975 /* String+DeletingPrefix.swift */; };
 		D56F64102702A6E9000E5975 /* DownloadButtonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F640F2702A6E9000E5975 /* DownloadButtonViewModel.swift */; };
 		D56F64122702A7E3000E5975 /* DownloadButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F64112702A7E3000E5975 /* DownloadButtonView.swift */; };
+		D585CABE276CFC040010185A /* FileTransferClient in Frameworks */ = {isa = PBXBuildFile; productRef = D585CABD276CFC040010185A /* FileTransferClient */; };
 		D58D887926CAB6FC0085604A /* SamplePythonCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58D887826CAB6FC0085604A /* SamplePythonCode.swift */; };
 		D58D887B26CC02B60085604A /* OnboardingViewPure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58D887A26CC02B60085604A /* OnboardingViewPure.swift */; };
 		D59DFD8F268A4A4D001737F6 /* BTConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFD8E268A4A4D001737F6 /* BTConnectionView.swift */; };
@@ -64,7 +64,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A9AD8723272A18D400322CF8 /* FileTransferClient */ = {isa = PBXFileReference; lastKnownFileType = folder; path = FileTransferClient; sourceTree = "<group>"; };
 		D505B99B2755323C00386E9F /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		D505B99D2756894300386E9F /* ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifier.swift; sourceTree = "<group>"; };
 		D50D06AF274681F80029A483 /* InfoModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoModalView.swift; sourceTree = "<group>"; };
@@ -104,6 +103,7 @@
 		D56F640A270242CA000E5975 /* FileTransferPathUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTransferPathUtils.swift; sourceTree = "<group>"; };
 		D56F640F2702A6E9000E5975 /* DownloadButtonViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadButtonViewModel.swift; sourceTree = "<group>"; };
 		D56F64112702A7E3000E5975 /* DownloadButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadButtonView.swift; sourceTree = "<group>"; };
+		D585CABC276CF97B0010185A /* FileTransferClient */ = {isa = PBXFileReference; lastKnownFileType = folder; path = FileTransferClient; sourceTree = "<group>"; };
 		D58D887826CAB6FC0085604A /* SamplePythonCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplePythonCode.swift; sourceTree = "<group>"; };
 		D58D887A26CC02B60085604A /* OnboardingViewPure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewPure.swift; sourceTree = "<group>"; };
 		D59DFD8E268A4A4D001737F6 /* BTConnectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTConnectionView.swift; sourceTree = "<group>"; };
@@ -127,7 +127,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A95E4587272A1CD4002895B0 /* FileTransferClient in Frameworks */,
+				D585CABE276CFC040010185A /* FileTransferClient in Frameworks */,
 				D52BE7F3269DF62100630900 /* Zip in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -145,7 +145,7 @@
 		A9AD8722272A18D400322CF8 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				A9AD8723272A18D400322CF8 /* FileTransferClient */,
+				D585CABC276CF97B0010185A /* FileTransferClient */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -376,7 +376,7 @@
 			name = PyLeap;
 			packageProductDependencies = (
 				D52BE7F2269DF62100630900 /* Zip */,
-				A95E4586272A1CD4002895B0 /* FileTransferClient */,
+				D585CABD276CFC040010185A /* FileTransferClient */,
 			);
 			productName = PyLeap;
 			productReference = D52F7E702672F4C400911D43 /* PyLeap.app */;
@@ -613,7 +613,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
@@ -623,7 +623,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2;
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.adafruit.PyLeap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -638,7 +638,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
@@ -648,7 +648,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2;
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.adafruit.PyLeap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -691,14 +691,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A95E4586272A1CD4002895B0 /* FileTransferClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = FileTransferClient;
-		};
 		D52BE7F2269DF62100630900 /* Zip */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D52BE7F1269DF62100630900 /* XCRemoteSwiftPackageReference "Zip" */;
 			productName = Zip;
+		};
+		D585CABD276CFC040010185A /* FileTransferClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FileTransferClient;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

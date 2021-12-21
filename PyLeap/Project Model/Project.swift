@@ -49,7 +49,7 @@ struct ProjectData {
         device: "Circuit Playground Bluefruit",
         pythonCode: SamplePythonCode.inRainbows,
         description: """
-For this proof-of-concept we're going to toss a rainbow on over to a Circuit Playground Bluefruit Express.
+For this project we're going to toss a rainbow on over to a Circuit Playground Bluefruit.
 """,
         downloadLink: "https://learn.adafruit.com/pages/22555/elements/3105809/download?type=zip",
         downloadedContents: false,
@@ -64,24 +64,26 @@ For this proof-of-concept we're going to toss a rainbow on over to a Circuit Pla
         device: "Circuit Playground Bluefruit",
         pythonCode: SamplePythonCode.blinky,
         description: """
-A simple example code that flashes the 10 Neopixel LEDs Purple and Pink!
+A simple project code flashes 10 Neopixel LEDs purple and pink.
 """,
         downloadLink: "https://learn.adafruit.com/pages/22920/elements/3105810/download?type=zip",
         downloadedContents: false,
-        filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_Blinky_demo").appendingPathComponent("CircuitPython 7.x"))
+        filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_CPB_NeoPixel_Blinky_demo").appendingPathComponent("CircuitPython 7.x"))
     
     static var cpbLedGlassesProj = Project(
         index:2,
-        title: "LED Glasses",
+        title: "EyeLights LED Glasses",
         image: "led-glasses",
         device: "Circuit Playground Bluefruit",
         pythonCode: SamplePythonCode.ledGlasses,
         description: """
-Let's send over some rainbows to our Adafruit LED Glasses! This example requires 10 library files to be sent.
+Let's send over some rainbows to our EyeLights LED Glasses!
+
+There's also six mounting holes for attaching to a glasses frame of your choosing - we recommend getting some 'fashion frames' from the mall or a street vendor, they're all the style and will provide a great mechanical support.
 """,
         downloadLink: "https://learn.adafruit.com/pages/22957/elements/3105811/download?type=zip",
         downloadedContents: false,
-        filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x"))
+        filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_CPB_EyeLights_LED_Glasses_RainbowSwirl").appendingPathComponent("CircuitPython 7.x"))
     
     static var cpbWavPlaybackProj = Project(
         index:3,
@@ -89,7 +91,7 @@ Let's send over some rainbows to our Adafruit LED Glasses! This example requires
         image: "rainbow-cpb",
         device: "Circuit Playground Bluefruit",
         pythonCode: SamplePythonCode.helloWorld, description: """
-This example plays a different WAV for each button pressed. Be aware, the speaker is small, so you will not get high quality WAV playback using the built-in speaker.
+This project plays a different WAV for each button pressed. Be aware, the speaker is small, so you will not get high quality WAV playback using the built-in speaker.
 """,
         downloadLink: "https://learn.adafruit.com/pages/23250/elements/3106074/download?type=zip", downloadedContents: false, filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_WAV").appendingPathComponent("CircuitPython 7.x"))
     
@@ -100,7 +102,7 @@ This example plays a different WAV for each button pressed. Be aware, the speake
         image: "rainbow-cpb",
         device: "Circuit Playground Bluefruit",
         pythonCode: SamplePythonCode.helloWorld, description: """
-This example uses the ten LEDs to indicate light level from the light sensor.
+This project uses the ten LEDs to indicate light level from the light sensor.
 """,
         downloadLink: "https://learn.adafruit.com/pages/23270/elements/3106247/download?type=zip", downloadedContents: false, filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Light_Meter").appendingPathComponent("CircuitPython 7.x"))
     
@@ -110,7 +112,7 @@ This example uses the ten LEDs to indicate light level from the light sensor.
         image: "rainbow-cpb",
         device: "Circuit Playground Bluefruit",
         pythonCode: SamplePythonCode.helloWorld, description: """
-This example uses the touch pads to light up the LEDs in rainbow colors.
+This project uses the touch pads to light up the LEDs in rainbow colors.
 """,
         downloadLink: "https://learn.adafruit.com/pages/23272/elements/3106255/download?type=zip", downloadedContents: false, filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Touch_NeoPixel_Rainbow").appendingPathComponent("CircuitPython 7.x"))
     
@@ -121,7 +123,7 @@ This example uses the touch pads to light up the LEDs in rainbow colors.
         image: "rainbow-cpb",
         device: "Circuit Playground Bluefruit",
         pythonCode: SamplePythonCode.helloWorld, description: """
-This example lights up half of the NeoPixel LEDs for each button when pressed.
+This project lights up half of the NeoPixel LEDs for each button when pressed.
 
 """,
         downloadLink: "https://learn.adafruit.com/pages/23269/elements/3106245/download?type=zip", downloadedContents: false, filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Button_Half_NeoPixel_Control").appendingPathComponent("CircuitPython 7.x"))
@@ -134,7 +136,7 @@ This example lights up half of the NeoPixel LEDs for each button when pressed.
         image: "rainbow-cpb",
         device: "Circuit Playground Bluefruit",
         pythonCode: SamplePythonCode.helloWorld, description: """
-This example plays a different tone and lights up the NeoPixels a different color for each touch pad touched.
+This project plays a different tone and lights up the NeoPixels a different color for each touch pad touched.
 """,
         downloadLink: "https://learn.adafruit.com/pages/23248/elements/3106070/download?type=zip", downloadedContents: false, filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Tone_Piano").appendingPathComponent("CircuitPython 7.x"))
     
@@ -149,7 +151,7 @@ This example plays a different tone and lights up the NeoPixels a different colo
         image: "rainbow-cpb",
         device: "Circuit Playground Bluefruit",
         pythonCode: SamplePythonCode.helloWorld, description: """
-This example uses the ten LEDs to indicate sound level from the sensor.
+This project uses the ten LEDs to indicate sound level from the sensor.
 """,
         downloadLink: "https://learn.adafruit.com/pages/23271/elements/3106249/download?type=zip", downloadedContents: false, filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Sound_Meter").appendingPathComponent("CircuitPython 7.x"))
     
@@ -162,7 +164,7 @@ This example uses the ten LEDs to indicate sound level from the sensor.
         image: "rainbow-cpb",
         device: "Circuit Playground Bluefruit",
         pythonCode: SamplePythonCode.helloWorld, description: """
-This example plays a different MP3 for each button pressed.
+This project plays a different MP3 for each button pressed.
 """,
         downloadLink: "https://learn.adafruit.com/pages/23249/elements/3106072/download?type=zip", downloadedContents: false, filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_MP3").appendingPathComponent("CircuitPython 7.x"))
     

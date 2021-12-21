@@ -82,6 +82,13 @@ struct BTConnectionView: View {
                             .font(.system(size: 15))
                             .fontWeight(.bold)
                             .multilineTextAlignment(.center)
+                        Text("Unplug Circuit Playground Bluefruit from USB")
+                            .bold()
+                            .font(.system(size: 15))
+                            .foregroundColor(.red)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .padding(.top,5)
+                            .multilineTextAlignment(.center)
                           //  .border(Color(red: 1.0, green: 0.0, blue: 1.0, opacity: 0.6), width: 3)
                        
                         Spacer()

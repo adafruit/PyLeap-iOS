@@ -292,7 +292,7 @@ public class FileTransferConnectionManager: ObservableObject {
 
                     self.updateSelectedPeripheral()
                     self.addKnownPeripheralsUUIDs(peripheral.identifier)
-                    
+
                     NotificationCenter.default.post(name: .didReconnectToKnownPeripheral, object: nil, userInfo: [BleManager.NotificationUserInfoKey.uuid.rawValue: peripheral.identifier])
                 }
                 else {

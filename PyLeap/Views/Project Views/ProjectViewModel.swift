@@ -526,6 +526,7 @@ class ProjectViewModel: ObservableObject  {
                 self.MP3ProjHead()
             case .failure:
                 print("")
+                self.displayErrorMessage()
             }
         }
         
@@ -541,6 +542,7 @@ class ProjectViewModel: ObservableObject  {
                 self.MP3ProjHead()
             case .failure:
                 print("")
+                self.displayErrorMessage()
             }
         }
         
@@ -556,6 +558,7 @@ class ProjectViewModel: ObservableObject  {
                 self.MP3ProjHead()
             case .failure:
                 print("")
+                self.displayErrorMessage()
             }
         }
         
@@ -1103,6 +1106,7 @@ class ProjectViewModel: ObservableObject  {
                 self.createAdafruitCPSoundMeter()
             case .failure:
                 print("")
+                self.displayErrorMessage()
             }
         }
     }
@@ -1146,6 +1150,7 @@ class ProjectViewModel: ObservableObject  {
                 self.createAdafruitCPSoundMeter()
             case .failure:
                 print("")
+                self.displayErrorMessage()
             }
         }
     }
@@ -1162,6 +1167,7 @@ class ProjectViewModel: ObservableObject  {
             //    self.createAdafruitBusDeviceSoundMeter()
             case .failure:
                 print("")
+                self.displayErrorMessage()
             }
         }
         
@@ -1178,6 +1184,7 @@ class ProjectViewModel: ObservableObject  {
                // self.sendSoundMeterCode()
             case .failure:
                 print("Failed to create a new directory")
+                self.displayErrorMessage()
             }
         }
         
@@ -1205,6 +1212,7 @@ class ProjectViewModel: ObservableObject  {
                 self.wavinit_FileSoundMeter()
             case .failure:
                 print("Faliure")
+                self.displayErrorMessage()
             }
         }
         
@@ -1604,6 +1612,7 @@ class ProjectViewModel: ObservableObject  {
                 self.touchToneProjHead()
             case .failure:
                 print("")
+                self.displayErrorMessage()
             }
         }
     }
@@ -1618,6 +1627,7 @@ class ProjectViewModel: ObservableObject  {
                 self.touchToneProjHead()
             case .failure:
                 print("")
+                self.displayErrorMessage()
             }
         }
         
@@ -1633,6 +1643,7 @@ class ProjectViewModel: ObservableObject  {
                 self.touchToneProjHead()
             case .failure:
                 print("")
+                self.displayErrorMessage()
             }
         }
         
@@ -1660,6 +1671,7 @@ class ProjectViewModel: ObservableObject  {
                 self.wavinit_FilePianoNeoPixel()
             case .failure:
                 print("Faliure")
+                self.displayErrorMessage()
             }
         }
         
@@ -2050,6 +2062,7 @@ class ProjectViewModel: ObservableObject  {
                 self.controlledNeoPixelProjCheck()
             case .failure:
                 print("")
+                self.displayErrorMessage()
             }
         }
     }
@@ -2064,6 +2077,7 @@ class ProjectViewModel: ObservableObject  {
                 self.controlledNeoPixelProjCheck()
             case .failure:
                 print("")
+                self.displayErrorMessage()
             }
         }
         
@@ -2079,6 +2093,7 @@ class ProjectViewModel: ObservableObject  {
                 self.controlledNeoPixelProjCheck()
             case .failure:
                 print("")
+                self.displayErrorMessage()
             }
         }
         
@@ -2105,6 +2120,7 @@ class ProjectViewModel: ObservableObject  {
                 self.wavinit_FileControlledNeoPixel()
             case .failure:
                 print("Faliure")
+                self.displayErrorMessage()
             }
         }
         
@@ -2488,6 +2504,7 @@ class ProjectViewModel: ObservableObject  {
                 self.touchNeoPixelProjCheck()
             case .failure:
                 print("")
+                self.displayErrorMessage()
             }
         }
     }
@@ -2502,6 +2519,7 @@ class ProjectViewModel: ObservableObject  {
                 self.touchNeoPixelProjCheck()
             case .failure:
                 print("")
+                self.displayErrorMessage()
             }
         }
         
@@ -2517,6 +2535,7 @@ class ProjectViewModel: ObservableObject  {
                 self.touchNeoPixelProjCheck()
             case .failure:
                 print("")
+                self.displayErrorMessage()
             }
         }
         
@@ -2543,6 +2562,7 @@ class ProjectViewModel: ObservableObject  {
                 self.wavinit_FileTouchNeoPixel()
             case .failure:
                 print("Faliure")
+                self.displayErrorMessage()
             }
         }
         
@@ -2707,7 +2727,7 @@ class ProjectViewModel: ObservableObject  {
         self.writeFileCommand(path: "/lib/adafruit_circuitplayground/express.mpy", data: data) { result in
             switch result {
             case .success:
-                self.adafruit_pixelBuf_FileTouchNeoPixel()
+                self.adafruit_lis3dh_FileTouchNeoPixel()
                 print("Success")
             case .failure:
                 print("Failure - ledGinit_File")
@@ -2718,28 +2738,28 @@ class ProjectViewModel: ObservableObject  {
     }
     
     
-//    func adafruit_lis3dh_FileTouchNeoPixel() {
-//
-//        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Touch_NeoPixel_Rainbow").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
-//
-//        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_lis3dh", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
-//            print("Fail adafruit_lis3dh")
-//            return
-//        }
-//
-//        self.writeFileCommand(path: "/lib/adafruit_lis3dh.mpy", data: data) { result in
-//            switch result {
-//            case .success:
-//                self.adafruit_pixelBuf_FileLM()
-//                print("Success")
-//            case .failure:
-//                self.adafruit_pixelBuf_FileLM()
-//                print("Failure - ledGinit_File")
-//
-//            }
-//
-//        }
-//    }
+    func adafruit_lis3dh_FileTouchNeoPixel() {
+
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Touch_NeoPixel_Rainbow").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_lis3dh", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
+            print("Cannot find adafruit_lis3dh")
+            return
+        }
+
+        self.writeFileCommand(path: "/lib/adafruit_lis3dh.mpy", data: data) { result in
+            switch result {
+            case .success:
+                self.adafruit_pixelBuf_FileTouchNeoPixel()
+                print("Success")
+            case .failure:
+               
+                print("Failure - ledGinit_File")
+
+            }
+
+        }
+    }
     
     
     func adafruit_pixelBuf_FileTouchNeoPixel() {
@@ -2882,7 +2902,7 @@ class ProjectViewModel: ObservableObject  {
                 
             case .failure:
                 print("failure")
-                
+                self.displayErrorMessage()
             }
             
         }
@@ -2913,6 +2933,7 @@ class ProjectViewModel: ObservableObject  {
                 
             case .failure:
                 print("failure")
+                self.displayErrorMessage()
             }
         }
     }
@@ -2943,6 +2964,7 @@ class ProjectViewModel: ObservableObject  {
                 
             case .failure:
                 print("failure")
+                self.displayErrorMessage()
             }
         }
     }
@@ -2956,6 +2978,7 @@ class ProjectViewModel: ObservableObject  {
                 self.lightMeterProjCheck()
             case .failure:
                 print("")
+                self.displayErrorMessage()
             }
         }
     }
@@ -2970,6 +2993,7 @@ class ProjectViewModel: ObservableObject  {
                 self.lightMeterProjCheck()
             case .failure:
                 print("")
+                self.displayErrorMessage()
             }
         }
         
@@ -2985,6 +3009,7 @@ class ProjectViewModel: ObservableObject  {
                 self.lightMeterProjCheck()
             case .failure:
                 print("")
+                self.displayErrorMessage()
             }
         }
         
@@ -3011,6 +3036,7 @@ class ProjectViewModel: ObservableObject  {
                 self.wavinit_FileLM()
             case .failure:
                 print("Faliure")
+                self.displayErrorMessage()
             }
         }
         
@@ -3314,6 +3340,7 @@ class ProjectViewModel: ObservableObject  {
                 
             case .failure:
                 print("failure")
+                self.displayErrorMessage()
                 
             }
             
@@ -3345,6 +3372,7 @@ class ProjectViewModel: ObservableObject  {
                 
             case .failure:
                 print("failure")
+                self.displayErrorMessage()
             }
         }
     }
@@ -3389,6 +3417,7 @@ class ProjectViewModel: ObservableObject  {
                 self.playWAVProjCheck()
             case .failure:
                 print("")
+                self.displayErrorMessage()
             }
         }
         
@@ -3404,6 +3433,7 @@ class ProjectViewModel: ObservableObject  {
                 self.playWAVProjCheck()
             case .failure:
                 print("")
+                self.displayErrorMessage()
             }
         }
         
@@ -3419,6 +3449,7 @@ class ProjectViewModel: ObservableObject  {
                 self.playWAVProjCheck()
             case .failure:
                 print("")
+                self.displayErrorMessage()
             }
         }
         
@@ -3445,6 +3476,7 @@ class ProjectViewModel: ObservableObject  {
                 self.sendDipWav()
             case .failure:
                 print("Faliure")
+                self.displayErrorMessage()
             }
         }
         
@@ -3784,6 +3816,7 @@ class ProjectViewModel: ObservableObject  {
                 self.sendRainbowCode()
             case .failure:
                 print("Faliure")
+                self.displayErrorMessage()
             }
         }
     }
@@ -3808,6 +3841,7 @@ class ProjectViewModel: ObservableObject  {
                 self.sendRainbowPixelbuf()
             case .failure:
                 print("Faliure")
+                self.displayErrorMessage()
             }
         }
         
@@ -3835,6 +3869,7 @@ class ProjectViewModel: ObservableObject  {
                 }
             case .failure:
                 print("Faliure")
+                self.displayErrorMessage()
             }
         }
         
@@ -3845,7 +3880,7 @@ class ProjectViewModel: ObservableObject  {
     // MARK: - Blink
     
     func sendBlinkCode() {
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_Blinky_demo").appendingPathComponent("CircuitPython 7.x")
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_CPB_NeoPixel_Blinky_demo").appendingPathComponent("CircuitPython 7.x")
         
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py")) else {
             return
@@ -3863,6 +3898,7 @@ class ProjectViewModel: ObservableObject  {
                 self.sendBlinkPixelbuf()
             case .failure:
                 print("Faliure")
+                self.displayErrorMessage()
             }
         }
         
@@ -3871,7 +3907,7 @@ class ProjectViewModel: ObservableObject  {
     
     func sendCPBBlinkFiles() {
         print("blinkCP7xLib")
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_Blinky_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_CPB_NeoPixel_Blinky_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
         
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "neopixel", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
             print("error retrieving blink neopixel")
@@ -3890,12 +3926,13 @@ class ProjectViewModel: ObservableObject  {
                 self.sendBlinkCode()
             case .failure:
                 print("Faliure")
+                self.displayErrorMessage()
             }
         }
     }
     
     func sendBlinkPixelbuf() {
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_Blinky_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_CPB_NeoPixel_Blinky_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
         
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_pixelbuf", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
             return
@@ -3913,6 +3950,7 @@ class ProjectViewModel: ObservableObject  {
                 }
             case .failure:
                 print("Faliure")
+                self.displayErrorMessage()
             }
         }
         
@@ -3941,53 +3979,247 @@ class ProjectViewModel: ObservableObject  {
     // End of directory creation -- Beginning of file transfers
     
     //MARK: - LED Glasses
+//
+//
+//    func playWAVProjCheck() {
+//        listDirectoryCommand(path: "") { result in
+//
+//            switch result {
+//
+//            case .success(let contents):
+//
+//                if contents!.contains(where: { name in name.name == "lib"}) {
+//                    print("lib directory exist")
+//                    self.wavProjCPDirectory()
+//
+//                     DispatchQueue.main.async {
+//                        self.sendingBundle = true
+//                    }
+//
+//                } else {
+//                    print("lib directory does not exist")
+//                    self.sendPlayWAVProj()
+//                }
+//
+//            case .failure:
+//                print("failure")
+//                self.displayErrorMessage()
+//
+//            }
+//
+//        }
+//    }
+//
+//
+//    func wavProjCPDirectory(){
+//        listDirectoryCommand(path: "lib/") { result in
+//
+//            switch result {
+//
+//            case .success(let contents):
+//
+//                if contents!.contains(where: { name in name.name == "adafruit_circuitplayground" }) {
+//                    print("adafruit_circuitplayground directory DOES exist")
+//
+//                    self.wavProjBusDeviceDirectory()
+//
+//                    DispatchQueue.main.async {
+//                        self.sendingBundle = true
+//                    }
+//
+//                } else {
+//                    print("adafruit_circuitplayground NOT directory exist")
+//                    // Make Directory - on success, call the base function to check
+//                    self.createAdafruitCP()
+//                }
+//
+//            case .failure:
+//                print("failure")
+//                self.displayErrorMessage()
+//            }
+//        }
+//    }
+//
+   
     
+    
+//    func sendPlayWAVProj() {
+//
+//        self.makeDirectoryCommand(path: "lib") { result in
+//            switch result {
+//            case .success:
+//                print("Success")
+//                self.playWAVProjCheck()
+//            case .failure:
+//                print("")
+//                self.displayErrorMessage()
+//            }
+//        }
+//
+//    }
+//
+//
+//    func createAdafruitCP(){
+//        //adafruit_bus_device
+//        self.makeDirectoryCommand(path: "lib/adafruit_circuitplayground") { result in
+//            switch result {
+//            case .success:
+//                print("Success")
+//                self.playWAVProjCheck()
+//            case .failure:
+//                print("")
+//                self.displayErrorMessage()
+//            }
+//        }
+//
+//    }
+//
+    
+
+    
+    
+    
+    
+    //MARK: - LED TOP
     func ledGlassesProjCheck() {
         listDirectoryCommand(path: "") { result in
-            
             
             switch result {
                 
             case .success(let contents):
                 
-                if contents!.contains(where: { name in name.name == "adafruit_is31fl3741"}) {
-                    print("1 exists in the array")
-                    self.ledGlassesCode()
+                if contents!.contains(where: { name in name.name == "lib"}) {
+                    print("lib directory exist")
+                    self.checkGlassesProjISDirectory()
+                    
+                     DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
                     
                 } else {
-                    print("1 does not exists in the array")
-                    self.sendLEDGlassesFiles()
+                    print("lib directory does not exist")
+                    self.makeGlassesLibDirectory()
                 }
                 
             case .failure:
-                print("nothing")
+                print("failure")
+                self.displayErrorMessage()
                 
             }
             
         }
     }
     
-    func sendLEDGlassesFiles(){
-        self.makeDirectoryCommand(path: "adafruit_is31fl3741") { result in
+    func checkGlassesProjISDirectory(){
+        listDirectoryCommand(path: "lib/") { result in
+            
             switch result {
-            case .success:
-                DispatchQueue.main.async {
-                    self.sendingBundle = true
+            
+            case .success(let contents):
+
+                if contents!.contains(where: { name in name.name == "adafruit_is31fl3741" }) {
+                    print("adafruit_is31fl3741 directory DOES exist")
+                    
+                    self.glassesProjRegDirectory()
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                } else {
+                    print("adafruit_is31fl3741 NOT directory exist")
+                    // Make Directory - on success, call the base function to check
+                    self.makeGlassesISDirectory()
                 }
-                self.makeRegisterDirectory()
-                
-                
                 
             case .failure:
-                print("Failure")
+                print("failure")
+                self.displayErrorMessage()
             }
         }
     }
+
+    
+    func glassesProjRegDirectory(){
+        listDirectoryCommand(path: "lib/") { result in
+            
+            switch result {
+            
+            case .success(let contents):
+
+                if contents!.contains(where: { name in name.name == "adafruit_register" }) {
+                    print("adafruit_register directory DOES exist")
+                    
+                    self.ledGlassesCP7xCode()
+                    
+                    DispatchQueue.main.async {
+                        self.sendingBundle = true
+                    }
+                    
+                } else {
+                    print("adafruit_register NOT directory exist")
+                    // Make Directory - on success, call the base function to check
+                    self.makeGlassesRegDirectory()
+                }
+                
+            case .failure:
+                print("failure")
+                self.displayErrorMessage()
+            }
+        }
+    }
+
+    func makeGlassesLibDirectory(){
+        
+        self.makeDirectoryCommand(path: "lib") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.ledGlassesProjCheck()
+            case .failure:
+                print("")
+                self.displayErrorMessage()
+            }
+        }
+        
+    }
+    
+    func makeGlassesISDirectory(){
+        
+        self.makeDirectoryCommand(path: "lib/adafruit_is31fl3741") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.ledGlassesProjCheck()
+            case .failure:
+                print("")
+                self.displayErrorMessage()
+            }
+        }
+        
+    }
+    
+    func makeGlassesRegDirectory(){
+        //adafruit_bus_device
+        self.makeDirectoryCommand(path: "lib/adafruit_register") { result in
+            switch result {
+            case .success:
+                print("Success")
+                self.ledGlassesProjCheck()
+            case .failure:
+                print("")
+                self.displayErrorMessage()
+            }
+        }
+        
+    }
+    
+
     
 
     func ledGlassesCP7xCode() {
         print("LED Glasses code attempt")
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x")
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_CPB_EyeLights_LED_Glasses_RainbowSwirl").appendingPathComponent("CircuitPython 7.x")
         
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py")) else {
             print("LED code not found")
@@ -4006,6 +4238,7 @@ class ProjectViewModel: ObservableObject  {
                 self.ledGinit_File()
             case .failure(let error):
                 print("Failure - code.py")
+                self.displayErrorMessage()
             }
         }
         
@@ -4015,7 +4248,7 @@ class ProjectViewModel: ObservableObject  {
     
     func ledGlassesCode() {
         print("LED Glasses code attempt")
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x")
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_CPB_EyeLights_LED_Glasses_RainbowSwirl").appendingPathComponent("CircuitPython 7.x")
         
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "code", relativeTo: documentsURL).appendingPathExtension("py")) else {
             print("LED code not found")
@@ -4035,6 +4268,7 @@ class ProjectViewModel: ObservableObject  {
                 self.ledGinit_File()
             case .failure(_):
                 print("Failure - code.py")
+                self.displayErrorMessage()
             }
         }
         
@@ -4046,13 +4280,13 @@ class ProjectViewModel: ObservableObject  {
     
     func ledGinit_File() {
         
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_is31fl3741")
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_CPB_EyeLights_LED_Glasses_RainbowSwirl").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_is31fl3741")
         
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "__init__", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
             return
         }
-        
-        self.writeFileCommand(path: "/adafruit_is31fl3741/__init__.mpy", data: data) { result in
+       
+        self.writeFileCommand(path: "/lib/adafruit_is31fl3741/__init__.mpy", data: data) { result in
             switch result {
             case .success:
                 self.ledGMain_File()
@@ -4067,13 +4301,13 @@ class ProjectViewModel: ObservableObject  {
     
     func ledGMain_File() {
         
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_is31fl3741")
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_CPB_EyeLights_LED_Glasses_RainbowSwirl").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_is31fl3741")
         
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_ledglasses", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
             return
         }
         
-        self.writeFileCommand(path: "/adafruit_is31fl3741/adafruit_ledglasses.mpy", data: data) { result in
+        self.writeFileCommand(path: "/lib/adafruit_is31fl3741/adafruit_ledglasses.mpy", data: data) { result in
             switch result {
             case .success:
                 self.ledGrgbmatrixFile()
@@ -4089,13 +4323,13 @@ class ProjectViewModel: ObservableObject  {
     
     func ledGrgbmatrixFile() {
         
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_is31fl3741")
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_CPB_EyeLights_LED_Glasses_RainbowSwirl").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_is31fl3741")
         
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_rgbmatrixqt", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
             return
         }
         
-        self.writeFileCommand(path: "/adafruit_is31fl3741/adafruit_rgbmatrixqt.mpy", data: data) { result in
+        self.writeFileCommand(path: "/lib/adafruit_is31fl3741/adafruit_rgbmatrixqt.mpy", data: data) { result in
             switch result {
             case .success:
                 self.ledGIssi_evb_File()
@@ -4111,13 +4345,13 @@ class ProjectViewModel: ObservableObject  {
     
     func ledGIssi_evb_File() {
         
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_is31fl3741")
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_CPB_EyeLights_LED_Glasses_RainbowSwirl").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_is31fl3741")
         
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "issi_evb", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
             return
         }
         
-        self.writeFileCommand(path: "/adafruit_is31fl3741/issi_evb.mpy", data: data) { result in
+        self.writeFileCommand(path: "/lib/adafruit_is31fl3741/issi_evb.mpy", data: data) { result in
             switch result {
             case .success:
                 self.ledGinit_Reg()
@@ -4135,13 +4369,13 @@ class ProjectViewModel: ObservableObject  {
     
     func ledGinit_Reg() {
         
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_CPB_EyeLights_LED_Glasses_RainbowSwirl").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
         
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "__init__", relativeTo: documentsURL).appendingPathExtension("py")) else {
             return
         }
         //  self.writeFile(filename: "/adafruit_register/__init__.py", data: data)
-        self.writeFileCommand(path: "/adafruit_register/__init__.py", data: data) { result in
+        self.writeFileCommand(path: "/lib/adafruit_register/__init__.py", data: data) { result in
             switch result {
             case .success:
                 self.ledGbcd_Reg()
@@ -4156,13 +4390,13 @@ class ProjectViewModel: ObservableObject  {
     
     func ledGbcd_Reg() {
         
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_CPB_EyeLights_LED_Glasses_RainbowSwirl").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
         
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "i2c_bcd_alarm", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
             return
         }
         
-        self.writeFileCommand(path: "/adafruit_register/i2c_bcd_alarm.mpy", data: data) { result in
+        self.writeFileCommand(path: "/lib/adafruit_register/i2c_bcd_alarm.mpy", data: data) { result in
             switch result {
             case .success:
                 self.ledGbcd_DaytimeReg()
@@ -4178,13 +4412,13 @@ class ProjectViewModel: ObservableObject  {
     
     func ledGbcd_DaytimeReg() {
         
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_CPB_EyeLights_LED_Glasses_RainbowSwirl").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
         
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "i2c_bcd_datetime", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
             return
         }
         
-        self.writeFileCommand(path: "/adafruit_register/i2c_bcd_datetime.mpy", data: data) { result in
+        self.writeFileCommand(path: "/lib/adafruit_register/i2c_bcd_datetime.mpy", data: data) { result in
             switch result {
             case .success:
                 self.ledGi2c_bit_Reg()
@@ -4200,13 +4434,13 @@ class ProjectViewModel: ObservableObject  {
     
     func ledGi2c_bit_Reg() {
         
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_CPB_EyeLights_LED_Glasses_RainbowSwirl").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
         
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "i2c_bit", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
             return
         }
         
-        self.writeFileCommand(path: "/adafruit_register/i2c_bit.mpy", data: data) { result in
+        self.writeFileCommand(path: "/lib/adafruit_register/i2c_bit.mpy", data: data) { result in
             switch result {
             case .success:
                 self.ledGi2c_bits_Reg()
@@ -4221,14 +4455,14 @@ class ProjectViewModel: ObservableObject  {
     
     func ledGi2c_bits_Reg() {
         
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_CPB_EyeLights_LED_Glasses_RainbowSwirl").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
         
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "i2c_bits", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
             return
         }
         
         
-        self.writeFileCommand(path: "/adafruit_register/i2c_bits.mpy", data: data) { result in
+        self.writeFileCommand(path: "/lib/adafruit_register/i2c_bits.mpy", data: data) { result in
             switch result {
             case .success:
                 self.ledGi2c_struct_array_Reg()
@@ -4245,13 +4479,13 @@ class ProjectViewModel: ObservableObject  {
     //i2c_struct_array.mpy
     func ledGi2c_struct_array_Reg() {
         
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_CPB_EyeLights_LED_Glasses_RainbowSwirl").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
         
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "i2c_struct_array", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
             return
         }
         
-        self.writeFileCommand(path: "/adafruit_register/i2c_struct_array.mpy", data: data) { result in
+        self.writeFileCommand(path: "/lib/adafruit_register/i2c_struct_array.mpy", data: data) { result in
             switch result {
             case .success:
                 self.ledGi2c_struct_Reg()
@@ -4266,14 +4500,14 @@ class ProjectViewModel: ObservableObject  {
     
     func ledGi2c_struct_Reg() {
         
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("examples").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_CPB_EyeLights_LED_Glasses_RainbowSwirl").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib").appendingPathComponent("adafruit_register")
         
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "i2c_struct", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
             return
         }
         
         
-        self.writeFileCommand(path: "/adafruit_register/i2c_struct.mpy", data: data) { result in
+        self.writeFileCommand(path: "/lib/adafruit_register/i2c_struct.mpy", data: data) { result in
             switch result {
             case .success:
                 

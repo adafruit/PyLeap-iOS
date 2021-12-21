@@ -376,13 +376,7 @@ struct ProjectCardView: View {
             
                                     }
                                 }
-            
-                                Button {
-                                    
-                                    model.checkAdafruitCircuitPlaygroundDirectoryExist()
-                                } label: {
-                                    Text("Button Test")
-                                }
+    
 
                                 
                                 if model.didDownload {
@@ -449,8 +443,6 @@ struct ProjectCardView: View {
                                                 .accentColor(.purple)
                                                 .foregroundColor(.purple)
                                             
-                                        } else {
-                                            
                                         }
                                         
                                         
@@ -458,16 +450,16 @@ struct ProjectCardView: View {
                                             Text("Transfer Complete")
                                                 .foregroundColor(.green)
                                                 .bold()
-                                        } else {
-                                            
                                         }
                                         
                                         if model.writeError {
                                             VStack(alignment: .leading, spacing: 5) {
-                                                Text("Unable to complete transfer")
-                                                    .bold()
-                                                Text("Reset Circuit Playground Bluefruit")
-                                                    .bold()
+                                                Text("""
+                                        Cannot write to device
+                                        Unplug from USB & reset Circuit Playground Bluefruit
+                                        """)
+                                         
+                                                    
                                             }
                                             .foregroundColor(.red)
                                             
@@ -564,12 +556,12 @@ struct ProjectCardView: View {
             
                                 }
             
-            // MARK: - Keep for debugging - or will add as a feature
-                                Button {
-                                    model.removeAllFiles()
-                                } label: {
-                                    Text("Delete All")
-                                }
+//            // MARK: - Keep for debugging - or will add as a feature
+//                                Button {
+//                                    model.removeAllFiles()
+//                                } label: {
+//                                    Text("Delete All")
+//                                }
             
 
                                 Section(header: Text("Files Downloaded")) {

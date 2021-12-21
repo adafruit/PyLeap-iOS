@@ -229,6 +229,8 @@ extension BlePeripheral {
     // MARK: - Actions
     func adafruitFileTransferEnable(completion: ((Result<Void, Error>) -> Void)?) {
         
+        adafruitFileTransferDisable()       // Clear any previous data
+        
         self.adafruitServiceEnable(serviceUuid: Self.kFileTransferServiceUUID, versionCharacteristicUUID: Self.kFileTransferVersionCharacteristicUUID, mainCharacteristicUuid: Self.kFileTransferDataCharacteristicUUID) { [weak self] result in
             guard let self = self else { return }
             
@@ -253,8 +255,17 @@ extension BlePeripheral {
     }
     
     func adafruitFileTransferDisable() {
-        // Clear all specific data
+        // Clear all internal data
+        adafruitFileTransferVersion = CustomPropertiesKeys.adafruitFileTransferVersion
         adafruitFileTransferDataCharacteristic = nil
+        adafruitFileTransferDataProcessingQueue = nil
+        
+        adafruitFileTransferReadStatus = nil
+        adafruitFileTransferWriteStatus = nil
+        adafruitFileTransferDeleteStatus = nil
+        adafruitFileTransferListDirectoryStatus = nil
+        adafruitFileTransferMakeDirectoryStatus = nil
+        adafruitFileTransferMoveStatus = nil
     }
     
     // MARK: - Commands
