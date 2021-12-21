@@ -11,29 +11,26 @@ import FileTransferClient
 struct ProjectCardView: View {
     
     var project: Project
-    //@AppStorage("onboarding") var onboardingSeen = false
     
-    @AppStorage("index") var selectedProjectIndex = 0
-    
-    @AppStorage("LED") var selectedLEDIndex = 0
-    
-    @AppStorage("selection") var showSelection = true
     // Data
     @Environment(\.presentationMode) var presentationMode
+    
+    @EnvironmentObject private var connectionManager: FileTransferConnectionManager
+    
     
     @StateObject var model = ProjectViewModel()
     @StateObject var downloadModel = DownloadViewModel()
     
     
-    @State private var showingDownloadAlert = false
+    @State private var showDownloadButton = false
     @State private var sendLabel = "Send Bundle"
-    
     @State private var progress : CGFloat = 0
-    
-    @AppStorage("value") var value = 0
-    @AppStorage("fileSent") var neopixelFileSent = false
-    
     @State private var downloadedBundle = false
+    // Download Button
+    @State private var disableDownload = false
+    @State private var downloadLabel = "Download Bundle"
+    
+    @State var showProgressBar = false
     // Params
     //let fileTransferClient: FileTransferClient? = FileTransferConnectionManager.shared.selectedClient
     
@@ -41,215 +38,30 @@ struct ProjectCardView: View {
         self.project = project
     }
     
-    func fileCheck() {
-        print("Inital value: \(value)")
-        if value == 0 {
-            print("Ready to transmit...")
-        }
-        
-        if value == 1{
-            
-            print("In file checker - step 1")
-            
-            if selectedProjectIndex == 0 {
-                value = 0
-                model.retrieveCP7xNeopixel()
-                print("Sending Rainbow Lib")
-                print("Proj. Index \(selectedProjectIndex)")
-            }
-            
-            if selectedProjectIndex == 1 {
-                value = 0
-                model.blinkCP7xLib()
-                print("Sending Blink Lib")
-                print("Proj. Index \(selectedProjectIndex)")
-            }
-            
-            if selectedProjectIndex == 2 {
-                
-                
-                if selectedLEDIndex == 0 {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                        selectedLEDIndex += 1
-                        print("File 1")
-                        value += 1
-                        model.ledGinit_File()
-                    }
-                    
-                }
-                
-            }
-            
-        }
-        if value == 2 {
-            if selectedProjectIndex == 2 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                    if selectedLEDIndex == 1 {
-                        selectedLEDIndex += 1
-                        print("File 2")
-                        value += 1
-                        model.ledGMain_File()
-                    }
-                }
-            }
-            //print("Restarting")
-            //value = 0
-            
-        }
-        
-        if value == 3 {
-            if selectedProjectIndex == 2 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                    if selectedLEDIndex == 2 {
-                        selectedLEDIndex += 1
-                        print("File 3")
-                        value += 1
-                        model.ledGrgbmatrixFile()
-                    }
-                }
-            }
-        }
-        //Here
-        if value == 4 {
-            if selectedProjectIndex == 2 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                    if selectedLEDIndex == 3 {
-                        selectedLEDIndex += 1
-                        print("File 4")
-                        value += 1
-                        model.ledGIssi_evb_File()
-                    }
-                }
-            }
-        }
-        
-        if value == 5 {
-            if selectedProjectIndex == 2 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                    if selectedLEDIndex == 4 {
-                        selectedLEDIndex += 1
-                        print("File 5")
-                        value += 1
-                        model.ledGinit_Reg()
-                    }
-                }
-            }
-        }
-        
-        if value == 6 {
-            if selectedProjectIndex == 2 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                    if selectedLEDIndex == 5 {
-                        selectedLEDIndex += 1
-                        print("File 6")
-                        value += 1
-                        model.ledGbcd_Reg()
-                    }
-                }
-            }
-        }
-        
-        if value == 7 {
-            if selectedProjectIndex == 2 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                    if selectedLEDIndex == 6 {
-                        selectedLEDIndex += 1
-                        print("File 7")
-                        value += 1
-                        model.ledGbcd_DaytimeReg()
-                    }
-                }
-            }
-        }
-        
-        if value == 8 {
-            if selectedProjectIndex == 2 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                    if selectedLEDIndex == 7 {
-                        selectedLEDIndex += 1
-                        print("File 8")
-                        value += 1
-                        model.ledGi2c_bit_Reg()
-                    }
-                }
-            }
-        }
-        
-        if value == 9 {
-            if selectedProjectIndex == 2 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                    if selectedLEDIndex == 8 {
-                        selectedLEDIndex += 1
-                        print("File 9")
-                        value += 1
-                        model.ledGi2c_bits_Reg()
-                    }
-                }
-            }
-        }
-        
-        
-        if value == 10 {
-            if selectedProjectIndex == 2 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                    if selectedLEDIndex == 9 {
-                        selectedLEDIndex += 1
-                        print("File 10!")
-                        value += 1
-                        model.ledGi2c_struct_Reg()
-                    }
-                }
-            }
-        }
-        
-        if value == 11 {
-            if selectedProjectIndex == 2 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                    if selectedLEDIndex == 10 {
-                        selectedLEDIndex += 1
-                        print("File 11!")
-                        value += 1
-                        model.ledGi2c_struct_array_Reg()
-                    }
-                }
-            }
-        }
-        
-        
-        if value == 12{
-            print("Restart")
-            selectedLEDIndex = 0
-            value = 0
-        }
-        
-    }
-    
     func downloadCheck(at filePath: URL){
-        
+
         do {
-            let documentDirectory = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-            
-            
-            
+
             if FileManager.default.fileExists(atPath: filePath.path) {
-                print("FILE AVAILABLE")
-                downloadedBundle = true
+                DispatchQueue.main.async {
+                    print("FILE AVAILABLE")
+                    downloadedBundle = true
+                    model.filesDownloaded(url: project.filePath)
+                }
             } else {
-                print("FILE NOT AVAILABLE")
-                downloadedBundle = false
+                DispatchQueue.main.async {
+                    print("FILE NOT AVAILABLE")
+                    downloadedBundle = false
+                    progress = 0
+                }
             }
         } catch {
             print(error)
         }
-        
-        
+
+
+
     }
-    
-    
-    var projectNames = ["Glide on over some rainbows!","Blink!", "LED Glasses", "Hello World"]
-    
-    let projectArray = ProjectData.projects
-    var projects: [Project] = ProjectData.projects
     
     let layout = [
         GridItem(.adaptive(minimum: 180))
@@ -259,195 +71,601 @@ struct ProjectCardView: View {
     
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                
-                if showSelection == true {
-                    
-                    ScrollView {
-                        LazyVGrid(columns: layout, spacing: 20) {
-                            
-                            ForEach(projects.indices,id: \.self) { item in
-                                
-                                ZStack {
-                                    Button {
-                                        selectedProjectIndex = projects[item].index
-                                        downloadCheck(at: projects[item].filePath)
-                                        showSelection.toggle()
-                                        
-                                    } label: {
-                                        
-                                        ProjectCell(title: projects[item].title, deviceName: projects[item].device, image: projects[item].image)
-                                    }
-                                    
-                                }
-                            }
-                            
-                        }
-                        
-                        .navigationBarBackButtonHidden(true)
-                        .ignoresSafeArea(.all)
-                    }
-                    
-                    .padding(.top,20)
-                    .navigationBarTitle("PyLeap")
-                    
-                } else {
-                    
-                    
-                    VStack {
-                        
-                        Form {
-                            
-                            // Section 2
-                            Section {
-                                
-                                VStack(alignment: .leading){
-                                    
-                                    HStack{
-                                        
-                                        ZStack {
-                                            
-                                            Rectangle()
-                                                .frame(width: 22, height: 22, alignment: .center)
-                                                .cornerRadius(5.0)
-                                                .foregroundColor(Color(#colorLiteral(red: 0.2156862745, green: 0.6745098039, blue: 1, alpha: 1)))
-                                            
-                                            Image("logo")
-                                                .resizable(resizingMode: .stretch)
-                                                .aspectRatio(contentMode: .fit)
-                                                .foregroundColor(.white)
-                                                .frame(width: 20, height: 20, alignment: .center)
-                                        }
-                                        
-                                        
-                                        Text(projectArray[selectedProjectIndex].device)
-                                            .font(.caption)
-                                            .fontWeight(.light)
-                                            .foregroundColor(.gray)
-                                            .font(.title)
-                                        
-                                        
-                                        Spacer()
-                                        
-                                    }
-                                    
-                                    Text(projectArray[selectedProjectIndex].title)
-                                        .fontWeight(.semibold)
-                                    Divider()
-                                    
-                                    Text("""
-                                    \(projectArray[selectedProjectIndex].description)
-                                    """)
-                                        .fontWeight(.medium)
-                                        .font(.footnote)
-                                        .multilineTextAlignment(.leading)
-                                    
-                                }
-                            }
-                            
-                            if downloadedBundle == false{
-                                
-                                Section{
-                                    Button(action: {
-                                        downloadModel.startDownload(urlString: projectArray[selectedProjectIndex].downloadLink)
-                                        
-                                        print(projectArray[selectedProjectIndex].downloadLink)
-                                    }, label: {
+        
+        VStack {
+            
+//            ScrollView {
+//
+//                VStack{
+//
+//
+//                    Group {
+//
+//                        Image("rainbow")
+//                        .resizable(resizingMode: .stretch)
+//                        .aspectRatio(contentMode: .fit)
+//                        .frame(width: 200, height: 200, alignment: .center)
+//                        .shadow(radius: 10)
+//
+//                        .padding(.top, 5)
+//
+//                    Text(project.title)
+//                        .bold()
+//                        .font(.system(size: 22))
+//                        .padding(.top, 0)
+//
+//
+//                    Text(project.device)
+//                        .font(.subheadline)
+//                        .padding(.top, 0)
+//                        .foregroundColor(Color.secondary)
+//
+//
+//                    Text(project.description)
+//                        .font(.subheadline)
+//                        .multilineTextAlignment(.leading)
+//                        .padding()
+//
+//
+//                        Spacer()
+//                    }
+//
+//
+//                    if downloadedBundle == false {
+//
+//                        Section {
+//                            Button(action: {
+//                                downloadModel.startDownload(urlString: project.downloadLink)
+//
+//                                disableDownload = true
+//                                downloadLabel = "Downloading..."
+//
+//                                print(project.downloadLink)
+//                                print("Download type: \(project.title)")
+//                            }, label: {
+//
+//                                HStack {
+//
+//                                    Text(downloadLabel)
+//                                        .fontWeight(.semibold)
+//                                        .font(.system(size: 18))
+//                                        .frame(width: 230, height: 50, alignment: .center)
+//                                        .background(Color(red: 1, green: 1, blue: 1))
+//                                        .cornerRadius(10)
+//                                        .padding()
+//
+//                                        .onAppear {
+//                                            print("on awake: \(downloadedBundle)")
+//                                        }
+//
+//                                        .onChange(of: downloadModel.downloadProgress) { newValue in
+//                                            print("Current Download Progress: \(newValue)")
+//
+//
+//                                            if newValue == 1.0 {
+//
+//
+//                                                downloadLabel = "Download Bundle"
+//                                                // downloadedBundle = false
+//                                                downloadedBundle = true
+//                                                disableDownload = false
+//
+//                                                DispatchQueue.main.async {
+//                                                    model.downloadCheck(at: project.filePath)
+//                                                }
+//
+//
+//                                                print("Status: \(downloadedBundle)")
+//                                                print("PASS")
+//                                                print("Current Download Status: \(downloadedBundle)")
+//                                            }
+//
+//                                        }
+//                                        .onChange(of: downloadModel.isDownloading, perform: { value in
+//
+//                                            DispatchQueue.main.async {
+//                                                print("Download Status: \(value)")
+//
+//
+//                                                progress = downloadModel.downloadProgress
+//                                            }
+//
+//
+//                                        })
+//
+//                                }
+//
+//                            })
+//
+//                        }
+//                        .disabled(disableDownload)
+//
+//
+//
+//                    } else {
+//                        // Section 2
+//                        Section{
+//                            Button(action: {
+//                                if project.index == 0 {
+//                                    model.sendCPBRainbowFiles()
+//                                    print("Start Rainbow File Transfer")
+//                                }
+//                                if project.index == 1 {
+//                                    model.sendCPBBlinkFiles()
+//                                    print("Start Blink File Transfer")
+//                                }
+//                                if project.index == 2 {
+//                                    model.checkForDirectory()
+//                                    print("Start LED Glasses File Transfer")
+//                                }
+//
+//                                if project.index == 3 {
+//                                    model.sendPlayWAVProj()
+//                                    print("Start Bluefuit WAV File Transfer")
+//                                }
+//
+//                                if project.index == 4 {
+//                                    model.sendLightMeterProj()
+//                                    print("Start Bluefuit Light Meter File Transfer")
+//                                }
+//                                if project.index == 5 {
+//                                    model.sendTouchNeoPixelProj()
+//                                    print("Start Bluefuit Touch Neopixel File Transfer")
+//                                }
+//                                if project.index == 6 {
+//                                    model.sendControlledNeoPixelProj()
+//                                    print("Start Bluefuit Controlled Neopixel File Transfer")
+//                                }
+//
+//                                if project.index == 7 {
+//                                    model.sendPianoNeoPixelProj()
+//                                    print("Start Bluefuit Controlled Neopixel File Transfer")
+//                                }
+//
+//                                if project.index == 8 {
+//                                    model.sendSoundMeterProj()
+//                                    print("Start Bluefuit Sound Meter File Transfer")
+//                                }
+//
+//                                if project.index == 9 {
+//                                    model.sendPlayMP3Proj()
+//                                    print("Start Bluefuit Sound Meter File Transfer")
+//                                }
+//
+//                            }, label: {
+//                                Text(sendLabel)
+//                                    .fontWeight(.semibold)
+//                                    .font(.system(size: 18))
+//                                    .frame(width: 230, height: 50, alignment: .center)
+//                                    .foregroundColor(Color.purple)
+//                                    .background(Color(red: 0.95, green: 0.95, blue: 0.95))
+//                                    .cornerRadius(10)
+//                                    .padding()
+//                            })
+//
+//                        }
+//
+//
+//
+//
+//                    }
+//
+//
+//                    //          Divider()
+//                    Spacer()
+//                }
+//
+//                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height / 2.1)
+//                 .border(Color(red: 1.0, green: 0.0, blue: 0.0, opacity: 0.497), width: 3)
+//                 //  .background(Color.purple)
+//
+//
+//                HStack{
+//                    Text("Files Downloaded")
+//                        .font(.system(size: 22))
+//                        .fontWeight(.bold)
+//                        .multilineTextAlignment(.leading)
+//                        .padding(5)
+//
+//                    Spacer()
+//                }
+//                ForEach(model.directoryArray) { file in
+//
+//                    VStack(alignment: .leading) {
+//                        DirectoryRow(title: file.title)
+//                            .padding(5)
+//                        Divider()
+//                    }
+//
+//                }
+//
+//                ForEach(model.fileArray) { file in
+//                    VStack(alignment: .leading) {
+//                        FileRow(title: file.title, fileSize: file.fileSize)
+//                            .padding(5)
+//                        Divider()
+//                    }
+//                }
+//
+//
+//
+//                Section{
+//                    VStack(alignment: .leading){
+//
+//                        HStack{
+//                            Text("Serial Terminal")
+//                                .font(.system(size: 22))
+//                                .fontWeight(.bold)
+//                                .multilineTextAlignment(.leading)
+//                                .padding(5)
+//
+//                            Spacer()
+//                        }
+//
+//                        Text("""
+//                                                \(model.bootUpInfo)
+//                                                """)
+//
+//                            .font(.custom("Menlo", size: 13))
+//                            .disabled(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/)
+//                    }
+//
+//                }
+//
+//                .background(Color.secondary)
+//                //    .border(Color(hue: 0.926, saturation: 1.0, brightness: 1.0, opacity: 0.8), width: 4)
+//
+//            }
+            // .border(Color(red: 1.0, green: 0.0, blue: 0.0, opacity: 1.0), width: 4)
+            
+            
+            
+            
+            
+            
+                            Form {
+            
+
+                                // Section 2
+                                Section {
+            
+                                    VStack(alignment: .leading){
+            
                                         HStack{
-                                            DownloadButtonViewModel(percentage: $progress)
-                                            Text("Download Project Bundle")
+            
+                                            ZStack {
+            
+                                                Rectangle()
+                                                    .frame(width: 22, height: 22, alignment: .center)
+                                                    .cornerRadius(5.0)
+                                                    .foregroundColor(Color(#colorLiteral(red: 0.2156862745, green: 0.6745098039, blue: 1, alpha: 1)))
+            
+                                                Image("logo")
+                                                    .resizable(resizingMode: .stretch)
+                                                    .aspectRatio(contentMode: .fit)
+                                                    .foregroundColor(.white)
+                                                    .frame(width: 20, height: 20, alignment: .center)
+                                            }
+            
+            
+                                            Text(project.device)
+                                                .font(.caption)
+                                                .fontWeight(.light)
+                                                .foregroundColor(.gray)
+                                                .font(.title)
+            
+            
+                                            Spacer()
+            
+                                        }
+            
+            
+            
+            
+                                        Text(project.title)
+                                            .fontWeight(.semibold)
+                                        Divider()
+            
+                                        Text("""
+                                                \(project.description)
+                                                """)
+                                            .fontWeight(.medium)
+                                            .font(.footnote)
+                                            .multilineTextAlignment(.leading)
+                                            .fixedSize(horizontal: false, vertical: true)
+            
+                                    }
+                                }
+    
+
+                                
+                                if model.didDownload {
+            
+                                    // Section 2
+                                    Section {
+                                      
+                                        Button(action: {
+                                            if project.index == 0 {
+                                                model.sendCPBRainbowFiles()
+                                                print("Start Rainbow File Transfer")
+                                            }
+                                            if project.index == 1 {
+                                                model.sendCPBBlinkFiles()
+                                                print("Start Blink File Transfer")
+                                            }
+                                            if project.index == 2 {
+                                                model.ledGlassesProjCheck()
+                                                print("Start LED Glasses File Transfer")
+                                            }
+            
+                                            if project.index == 3 {
+                                                model.playWAVProjCheck()
+                                                print("Start Bluefuit WAV File Transfer")
+                                            }
+            
+                                            if project.index == 4 {
+                                                model.lightMeterProjCheck()
+                                                print("Start Bluefuit Light Meter File Transfer")
+                                            } 
+                                            if project.index == 5 {
+                                                model.touchNeoPixelProjCheck()
+                                                print("Start Bluefuit Touch Neopixel File Transfer")
+                                            }
+                                            if project.index == 6 {
+                                                model.controlledNeoPixelProjCheck()
+                                                print("Start Bluefuit Controlled Neopixel File Transfer")
+                                            }
+            
+                                            if project.index == 7 {
+                                                model.touchToneProjHead()
+                                                print("Start Bluefuit Piano Neopixel File Transfer")
+                                            }
+            
+                                            if project.index == 8 {
+                                                model.soundMeterHead()
+                                                print("Start Bluefuit Sound Meter File Transfer")
+                                            }
+            
+                                            if project.index == 9 {
+                                                model.MP3ProjHead()
+                                                print("Start Bluefuit Sound Meter File Transfer")
+                                            }
+            
+                                        }, label: {
+                                            Text("\(sendLabel)")
                                                 .bold()
-                                                .onChange(of: downloadModel.downloadProgress, perform: { value in
-                                                    progress = downloadModel.downloadProgress
-                                                })
+                                                .foregroundColor(.purple)
+                                        })
+                                            
+                                        if model.sendingBundle {
+                                            
+                                            ProgressView("Please wait...", value: CGFloat(model.counter), total: CGFloat(model.numOfFiles) )
+                                                .accentColor(.purple)
+                                                .foregroundColor(.purple)
                                             
                                         }
                                         
-                                    })
-                                }
-                                //Download Button
-                            } else {
-                                
-                            }
-                            
-                            // Section 2
-                            Section{
-                                Button(action: {
-                                    if selectedProjectIndex == 0 {
-                                        model.retrieveCP7xCode()
-                                        print("Rainbow")
+                                        
+                                        if model.didCompleteTranfer {
+                                            Text("Transfer Complete")
+                                                .foregroundColor(.green)
+                                                .bold()
+                                        }
+                                        
+                                        if model.writeError {
+                                            VStack(alignment: .leading, spacing: 5) {
+                                                Text("""
+                                        Cannot write to device
+                                        Unplug from USB & reset Circuit Playground Bluefruit
+                                        """)
+                                         
+                                                    
+                                            }
+                                            .foregroundColor(.red)
+                                            
+                                        }
+                                        
+                                        
+                                           // .isHidden(showProgressBar)
+//                                            .onChange(of: model.numOfFiles) { newValue in
+//                                                print("Current Download Progress: \(newValue)")
+//                                                if model.counter == model.numOfFiles || model.counter == 0 {
+//                                                    showProgressBar = true
+//                                                    print("HIDE")
+//                                                } else {
+//                                                    showProgressBar = false
+//                                                    print("SHOW")
+//                                                }
+//                                            }
                                     }
-                                    if selectedProjectIndex == 1 {
-                                        model.retrieveBlinkCP7xCode()
-                                        print("Blink")
-                                    }
-                                    if selectedProjectIndex == 2 {
-                                        model.createLEDGlassesLib()
-                                        model.ledGlassesCP7xCode()
-                                        print("Glasses")
-                                    }
+                                    .disabled(model.sendingBundle)
+            
+                                } else {
                                     
-                                    value = 1
-                                    print("value: \(value)")
-                                }, label: {
-                                    Text("\(sendLabel)")
-                                        .bold()
-                                        .foregroundColor(.purple)
-                                })
-                            }
-                            if selectedProjectIndex == 2 {
-                                Text("\(selectedLEDIndex)/10 Files Transferred")
-                            }
-                        }
-                        
-                        
-                    }
-                    .navigationBarTitle("Project Card")
-                    .navigationBarBackButtonHidden(true)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarLeading) {
-                            
-                            Button("Back") {
-                                showSelection.toggle()
-                            }
-                        }
-                    }
-                    
-                    
-                }
+                                    Section {
+                                        
+                                        Button(action: {
+                                            
+                                            if model.isConnectedToInternet {
+                                                downloadModel.startDownload(urlString: project.downloadLink)
                 
+                                                disableDownload = true
+                                                downloadLabel = "Downloading..."
                 
-            }
+                                            
+                                            } else {
+                                                print("Not connected.")
+                                            }
+                                            
+                                            
+                                        }, label: {
             
-            .disabled(model.transmissionProgress != nil)
+                                            
             
-        }
-        .navigationViewStyle(StackNavigationViewStyle())
-        .onAppear {
+                                                Text(downloadLabel)
+                                                    .bold()
+                                                    .onChange(of: downloadModel.downloadProgress) { newValue in
+                                                        print("Current Download Progress: \(newValue)")
+                                                        
+                                                        if newValue == 1.0 {
             
-            print("View Did Load.")
-            model.onAppear(/*fileTransferClient: fileTransferClient*/)
-            model.startup()
-            downloadCheck(at: projects[selectedProjectIndex].filePath)
-            fileCheck()
-            print("value: \(value)")
             
-            /*
-            if fileTransferClient == nil {
-                print("FileTransfer is nil")
-            }*/
+                                                            downloadLabel = "Download Bundle"
+                                                            downloadedBundle = true
+                                                            disableDownload = false
+            
+                                                           
+                                                                model.downloadCheck(at: project.filePath)
+                                                            
+
+                                                            
+                                                        }
+            
+                                                    }
+                                                    .onChange(of: downloadModel.isDownloading, perform: { value in
+            
+                                                        DispatchQueue.main.async {
+                                                            print("Download Status: \(value)")
+                                                            progress = downloadModel.downloadProgress
+                                                        }
+                                                    })
+            
+                                        })
+            
+                                    }
+                                    .disabled(disableDownload)
+
+                                    
+                                }
+            
+                                
+                                
+                               
+                                
+                                
+            
+                                Section(header: Text("Serial Terminal")){
+                                    VStack(alignment: .leading){
+                                        Text("""
+                                        \(model.bootUpInfo)
+                                        """)
+            
+                                            .font(.custom("Menlo", size: 12))
+                                            .disabled(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/)
+                                    }
+            
+                                }
+            
+//            // MARK: - Keep for debugging - or will add as a feature
+//                                Button {
+//                                    model.removeAllFiles()
+//                                } label: {
+//                                    Text("Delete All")
+//                                }
+            
+
+                                Section(header: Text("Files Downloaded")) {
+                                    List {
+            
+                                        ForEach(model.directoryArray) { file in
+            
+                                            DirectoryRow(title: file.title)
+            
+                                        }
+            
+                                        ForEach(model.fileArray) { file in
+            
+                                            FileRow(title: file.title, fileSize: file.fileSize)
+            
+                                        }
+                                    }
+            
+                                }
+        
+                            }
+            
+            .navigationBarTitle("Project Card")
+            //    .navigationBarBackButtonHidden(true)
         }
         
-        .onDisappear {
-            print("ProjectCard - on disappear")
-            model.onDissapear()
-            
+        
+        
+        
+        
+        .alert(isPresented:$model.showAlert) {
+                    Alert(
+                        title: Text("Internet Connection"),
+                        message: Text("There's a problem with your internet connection. Try again later."),
+                        primaryButton: .destructive(Text("Try Again")) {
+                            print("Deleting...")
+                        },
+                        secondaryButton: .cancel()
+                    )
+                }
+        
+        .disabled(model.transmissionProgress != nil)
+        
+        .onChange(of: model.didDownload, perform: { value in
+
+            DispatchQueue.main.async {
+                print("Download Status: \(value)")
+                downloadedBundle = value
+            }
+        })
+        
+        .onChange(of: connectionManager.selectedClient) { selectedClient in
+            model.setup(fileTransferClient: selectedClient)
         }
+        
+        .navigationViewStyle(StackNavigationViewStyle())
+        .preferredColorScheme(.dark)
+        .onAppear {
+             
+            model.setup(fileTransferClient: connectionManager.selectedClient)
+            model.internetMonitoring()
+            model.downloadCheck(at: project.filePath)
+            model.readFile(filename: "boot_out.txt")
+        }
+    }
+}
+
+
+struct FileRow: View {
+    let title : String
+    let fileSize: Int
+    var body: some View {
+        
+        HStack{
+            Image(systemName: "doc.text")
+                .padding(5)
+            VStack(alignment: .leading){
+                Text(title)
+                    .font(.system(size: 18))
+                
+                Text("\(fileSize) kb")
+                    .font(.subheadline)
+                
+            }
+        }
+        
         
         
     }
 }
+
+struct DirectoryRow: View {
+    let title : String
+    
+    var body: some View {
+        Label(
+            title: { Text(title)
+                    .font(.system(size: 18))
+            },
+            icon: { Image(systemName: "folder.fill") })
+    }
+}
+
+
 
 
 struct ProjectCardView_Previews: PreviewProvider {

@@ -30,13 +30,13 @@ struct RootView: View {
                 })
             
             case .startup:
-                StartupView()
+                FillerView()
                 
             case .main:
                 BTConnectionView()
 
             case .fileTransfer:
-                ProjectCardView(project: ProjectData.projects.first!)
+                SelectionView()
                 
             default:
                 FillerView()

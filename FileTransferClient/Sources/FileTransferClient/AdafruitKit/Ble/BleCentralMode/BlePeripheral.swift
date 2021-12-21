@@ -11,7 +11,7 @@ import CoreBluetooth
 
 // TODO: Modernize completion blocks to use Swift.Result 
 
-public class BlePeripheral: NSObject {
+open class BlePeripheral: NSObject {
     // Config
     private static var kProfileCharacteristicUpdates = true
 
@@ -52,11 +52,11 @@ public class BlePeripheral: NSObject {
     }
     public var lastSeenTime: CFAbsoluteTime
 
-    public var identifier: UUID {
+    open var identifier: UUID {
         return peripheral.identifier
     }
 
-    public var name: String? {
+    open var name: String? {
         return peripheral.name
     }
     
@@ -64,7 +64,7 @@ public class BlePeripheral: NSObject {
         return peripheral.name ?? peripheral.identifier.uuidString
     }
 
-    public var state: CBPeripheralState {
+    open var state: CBPeripheralState {
         return peripheral.state
     }
     
@@ -176,7 +176,7 @@ public class BlePeripheral: NSObject {
     //private var profileStartTime: CFTimeInterval = 0
 
     // MARK: - Init
-    init(peripheral: CBPeripheral, advertisementData: [String: Any]?, rssi: Int?) {
+    public init(peripheral: CBPeripheral, advertisementData: [String: Any]?, rssi: Int?) {
         self.peripheral = peripheral
         self.advertisement = Advertisement(advertisementData: advertisementData)
         self.lastSeenTime = CFAbsoluteTimeGetCurrent()

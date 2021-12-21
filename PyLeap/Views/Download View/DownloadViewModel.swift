@@ -10,8 +10,6 @@ import Zip
 
 class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate {
     
-    //private let fileTransferClient: FileTransferClient?
-    
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     let cachesPath = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
     
@@ -26,20 +24,23 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
     // Show Progress View
     @Published var downloadProgress: CGFloat = 0
     @Published var showDownloadProgress = false
+    @Published var didDownloadBundle = false
+    
+    @Published var isDownloading = false
     
     // Saving Download task refernce for cancelling...
     @Published var downloadtaskSession : URLSessionDownloadTask!
     
     // MARK:- Download
     func startDownload(urlString: String) {
-        
+         isDownloading = true
         // Check for valid URL
         guard let validURL = URL(string: urlString) else {
             self.reportError(error: "Invalid URL!")
             return
         }
         downloadProgress = 0
-        withAnimation{showDownloadProgress = true}
+       // withAnimation{showDownloadProgress = true}
         
         // Download Task...
         // Since were going to get the progress as well as location of the File, I'm going to use a delegate...
@@ -102,7 +103,6 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
         }
     }
     
-    
     func createNewTextFile() {
         
         // Creating a File Manager Object
@@ -125,7 +125,6 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
                            attributes: [FileAttributeKey.creationDate:Date()])
         
     }
-    
     
     func deleteTextFile() {
         
@@ -153,18 +152,30 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
         }
     }
     
+
     
+    /// Periodically informs the delegate about the download’s progress - Used for progress UI
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+        // Getting Progress
+        let numeralProgress = CGFloat(totalBytesWritten) / CGFloat(totalBytesExpectedToWrite)
+        print("Progress: \(numeralProgress)")
+        
+        
+        
+        // Since URL Session will be running in the background thread
+        // UI will be done on the main thread
+        DispatchQueue.main.async {
+            self.downloadProgress = numeralProgress
+        }
+    }
     
     /// Tells the delegate that a download task has finished downloading.
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-        print("Download Location: \(location)")
-        
+       
         guard let url = downloadTask.originalRequest?.url else {
             self.reportError(error: "An error has occurred...")
             return
         }
-        
-        
         
         // Creating a destination for storing files with a destination URL
         let destinationURL = directoryPath.appendingPathComponent(url.lastPathComponent)
@@ -180,9 +191,13 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
             
             // If Success
             print("Successful Download")
+            isDownloading = false
+            print("Download Location: \(location)")
+            self.downloadProgress = 1.0
             
             // Closing Progress View
             DispatchQueue.main.async {
+                //self.downloadProgress = 0
                 withAnimation{self.showDownloadProgress = false}
             }
             
@@ -190,72 +205,12 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
         } catch {
             print(error)
             self.reportError(error: "Try again later")
+            isDownloading = false
         }
         
     }
-   
-    
-    @Published var fileArray: [ContentFile] = []
-
-    func startup(){
-        
-        print("Directory Path: \(directoryPath.path)")
-        print("Caches Directory Path: \(cachesPath.path)")
-
-        
-        do {
-            
-            let contents = try FileManager.default.contentsOfDirectory(at: directoryPath, includingPropertiesForKeys: nil,options: [.skipsHiddenFiles])
-            
-            for file in contents {
-                print("File Content: \(file.lastPathComponent)")
-              //  print("File Size: \(fileSize)")
-                
-               let addedFile = ContentFile(title: file.lastPathComponent)
-                self.fileArray.append(addedFile)
-            }
-        } catch {
-            print("Error: \(error)")
-        }
-        
-//        
-//        
-//        if let enumerator =
-//            FileManager.default.enumerator(atPath: directoryPath.path)
-//        {
-//            for case let path as String in enumerator {
-//                // Skip entries with '_' prefix, for example
-//                if path.hasPrefix("_") {
-//                    
-//                    print("Path : \(path)")
-//                    enumerator.skipDescendants()
-//                    
-//                }
-//            }
-//        }
-//        
-//        
-//        print("Directory Path: \(directoryPath.path)")
-    }
-    
-   
-    
-
-
     
     
-    /// Periodically informs the delegate about the download’s progress - Used for progress UI
-    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
-        // Getting Progress
-        let numeralProgress = CGFloat(totalBytesWritten) / CGFloat(totalBytesExpectedToWrite)
-        print("Progress: \(numeralProgress)")
-        
-        // Since URL Session will be running in the background thread
-        // UI will be done on the main thread
-        DispatchQueue.main.async {
-            self.downloadProgress = numeralProgress
-        }
-    }
     
     // Report Error Function...
     func reportError(error: String){
@@ -263,7 +218,6 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
         showAlert.toggle()
     }
    
-    
     // cancel Task...
     func cancelTask(){
         if let task = downloadtaskSession,task.state == .running{

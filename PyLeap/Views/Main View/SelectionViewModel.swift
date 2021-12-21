@@ -32,7 +32,10 @@ class SelectionViewModel: ObservableObject {
                 print("File Content: \(file.lastPathComponent)")
               //  print("File Size: \(fileSize)")
                 
-               let addedFile = ContentFile(title: file.lastPathComponent)
+                let resources = try file.resourceValues(forKeys:[.fileSizeKey])
+                let fileSize = resources.fileSize!
+                
+                let addedFile = ContentFile(title: file.lastPathComponent, fileSize: fileSize)
                 self.fileArray.append(addedFile)
             }
         } catch {

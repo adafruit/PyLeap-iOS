@@ -26,9 +26,10 @@ struct ScanningView: View {
                 .foregroundColor(Color(#colorLiteral(red: 0.8300942183, green: 0.4873027205, blue: 0.7138621807, alpha: 1)))
                 .scaleEffect(wave ? 2 : 1)
                 .opacity(wave ? 0 : 1)
-                .animation(Animation.easeInOut(duration: 1).repeatForever(autoreverses: false).speed(0.5))
                 .onAppear(){
+                    withAnimation(.easeInOut(duration: 1).repeatForever(autoreverses: false).speed(0.5)) {
                     self.wave.toggle()
+                    }
                 }
             
             Circle()
@@ -37,9 +38,10 @@ struct ScanningView: View {
                 .foregroundColor(Color(#colorLiteral(red: 0.8300942183, green: 0.4873027205, blue: 0.7138621807, alpha: 1)))
                 .scaleEffect(wave1 ? 2 : 1)
                 .opacity(wave1 ? 0 : 1)
-                .animation(Animation.easeInOut(duration: 1).repeatForever(autoreverses: false).speed(0.5))
                 .onAppear(){
+                    withAnimation(.easeInOut(duration: 1).repeatForever(autoreverses: false).speed(0.5)) {
                     self.wave1.toggle()
+                    }
                 }
             
             
@@ -49,9 +51,10 @@ struct ScanningView: View {
                 .foregroundColor(Color(#colorLiteral(red: 0.8300942183, green: 0.4873027205, blue: 0.7138621807, alpha: 1)))
                 .scaleEffect(wave2 ? 2 : 1)
                 .opacity(wave2 ? 0 : 1)
-                .animation(Animation.easeInOut(duration: 1).repeatForever(autoreverses: false).speed(0.5))
                 .onAppear(){
+                    withAnimation(.easeInOut(duration: 1).repeatForever(autoreverses: false).speed(0.5)) {
                     self.wave2.toggle()
+                    }
                 }
             
             Circle()
@@ -60,9 +63,10 @@ struct ScanningView: View {
                 .foregroundColor(Color(#colorLiteral(red: 0.8300942183, green: 0.4873027205, blue: 0.7138621807, alpha: 1)))
                 .scaleEffect(wave3 ? 2 : 1)
                 .opacity(wave3 ? 0 : 1)
-                .animation(Animation.easeInOut(duration: 1).repeatForever(autoreverses: false).speed(0.5))
                 .onAppear(){
+                    withAnimation(.easeInOut(duration: 1).repeatForever(autoreverses: false).speed(0.5)) {
                     self.wave3.toggle()
+                    }
                 }
             
             Circle()
@@ -71,9 +75,10 @@ struct ScanningView: View {
                 .foregroundColor(Color(#colorLiteral(red: 0.8300942183, green: 0.4873027205, blue: 0.7138621807, alpha: 1)))
                 .scaleEffect(wave4 ? 2 : 1)
                 .opacity(wave4 ? 0 : 1)
-                .animation(Animation.easeInOut(duration: 1).repeatForever(autoreverses: false).speed(0.5))
                 .onAppear(){
+                    withAnimation(.easeInOut(duration: 1).repeatForever(autoreverses: false).speed(0.5)) {
                     self.wave4.toggle()
+                    }
                 }
             
             Circle()
@@ -82,9 +87,10 @@ struct ScanningView: View {
                 .foregroundColor(Color(#colorLiteral(red: 0.8300942183, green: 0.4873027205, blue: 0.7138621807, alpha: 1)))
                 .scaleEffect(wave5 ? 2 : 1)
                 .opacity(wave5 ? 0 : 1)
-                .animation(Animation.easeInOut(duration: 1).repeatForever(autoreverses: false).speed(0.5))
                 .onAppear(){
+                    withAnimation(.easeInOut(duration: 1).repeatForever(autoreverses: false).speed(0.5)) {
                     self.wave5.toggle()
+                    }
                 }
         }
     }
