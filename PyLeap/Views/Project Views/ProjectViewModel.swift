@@ -70,7 +70,7 @@ class ProjectViewModel: ObservableObject  {
     }
     
     func downloadCheck(at filePath: URL){
-       
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             print("Download Check!")
             do {
@@ -89,7 +89,7 @@ class ProjectViewModel: ObservableObject  {
                 } else {
                     DispatchQueue.main.async {
                         print("FILES NOT DOWNLOADED")
-                       
+                        
                         
                     }
                 }
@@ -97,16 +97,16 @@ class ProjectViewModel: ObservableObject  {
                 print(error)
             }
         }
-       
+        
         
         
     }
     
     func internetMonitoring() {
-
+        
         networkMonitor.startMonitoring()
         
-            networkMonitor.monitor.pathUpdateHandler = { path in
+        networkMonitor.monitor.pathUpdateHandler = { path in
             if path.status == .satisfied {
                 print("We're connected!")
                 
@@ -125,7 +125,7 @@ class ProjectViewModel: ObservableObject  {
                 }
                 
             }
-
+            
             print("isExpensive :\(path.isExpensive)")
         }
         
@@ -135,11 +135,36 @@ class ProjectViewModel: ObservableObject  {
         case fileTransferUndefined
     }
     
+    typealias CompletionHandler = (_ success:Bool) -> Void
+    
+    func downloadFileFromURL(url: URL,completionHandler: CompletionHandler) {
+        
+        // download code.
+        
+        let flag = true // true if download succeed,false otherwise
+        
+        completionHandler(flag)
+    }
+    
     
     
     var num = Int()
     // MARK: - View Startup
     func startup(url: URL) {
+        
+        
+        // How to use it.
+        
+        downloadFileFromURL(url: URL(string: "url_str")!, completionHandler: { (success) -> Void in
+            
+            // When download completes,control flow goes here.
+            if success {
+                // download success
+            } else {
+                // download fail
+            }
+        })
+        
         print("Running Startup")
         
         print("Directory Path: \(directoryPath.path)")
@@ -195,10 +220,20 @@ class ProjectViewModel: ObservableObject  {
     // MARK: - Test Functions
     /*
      Function takes in a URL path of files downloaded
+     
+     Look at all top level files
+     - Should see : code.py, lib(directory), MP3 files etc.
+     
+     
      Enumerate through the files and sending each one
+     
      - using a result completion handler
      
      */
+    
+    //Async
+    
+    
     let group = DispatchGroup()
     
     
@@ -207,22 +242,24 @@ class ProjectViewModel: ObservableObject  {
         print("Start fileTransferTest")
         
         
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_Blinky_demo").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
+        
+        
+        let newURL = url.appendingPathComponent("lib")
         
         var files = [URL]()
         
-        if let enumerator = FileManager.default.enumerator(at: documentsURL, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
+        if let enumerator = FileManager.default.enumerator(at: newURL, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
             for case let fileURL as URL in enumerator {
                 do {
                     let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey])
                     if fileAttributes.isRegularFile! {
                         
-                        print(files.count)
+                        
                         files.append(fileURL)
-                        print("TEST")
+                        
                         print("File name: \(fileURL.deletingPathExtension().lastPathComponent)")
                         print("Path Extention:.\(fileURL.pathExtension)\n")
-                        
+                        print("file count:\(files.count)")
                         //                        guard let data = try? Data(contentsOf: URL(fileURLWithPath: fileURL.deletingPathExtension().lastPathComponent, relativeTo: url).appendingPathExtension(fileURL.pathExtension)) else {
                         //                             print("error retrieving file")
                         //                             return
@@ -249,24 +286,25 @@ class ProjectViewModel: ObservableObject  {
                 for index in files {
                     
                     
-                    guard let data = try? Data(contentsOf: URL(fileURLWithPath: fileURL.deletingPathExtension().lastPathComponent, relativeTo: documentsURL ).appendingPathExtension(fileURL.pathExtension)) else {
+                    guard let data = try? Data(contentsOf: URL(fileURLWithPath: fileURL.deletingPathExtension().lastPathComponent, relativeTo: newURL ).appendingPathExtension(fileURL.pathExtension)) else {
                         print("error retrieving file")
                         return
                     }
-                    group.enter()
+                    
+                    
                     //async function
                     writeFileCommand(path: "/\(index.deletingPathExtension().lastPathComponent).\(fileURL.pathExtension)", data: data) { result in
                         switch result {
                             
                         case .success(_):
-                            do { self.group.leave() }
+                            
+                            print("hi")
+                            
                         case .failure(_):
                             print("Failed to write \(index.deletingPathExtension().lastPathComponent)")
                         }
                     }
                 }
-                
-                print("xxFiles: \(files)")
             }
             
         }
@@ -279,8 +317,11 @@ class ProjectViewModel: ObservableObject  {
         var files = [URL]()
         
         if let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
+            
             for case let fileURL as URL in enumerator {
+                
                 do {
+                    
                     let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey, .addedToDirectoryDateKey,.isDirectoryKey])
                     if fileAttributes.isRegularFile!  {
                         
@@ -300,12 +341,10 @@ class ProjectViewModel: ObservableObject  {
                     
                     if fileAttributes.isDirectory! {
                         
-                        
-                        //                        let resources = try fileURL.resourceValues(forKeys:[.fileSizeKey])
-                        //                        let fileSize = resources.fileSize!
-                        
                         let addedFile = ContentFile(title: fileURL.lastPathComponent, fileSize: 0)
+                        
                         directoryArray.append(addedFile)
+                        
                         print("directory name: \(fileURL.deletingPathExtension().lastPathComponent)")
                     }
                     
@@ -317,113 +356,344 @@ class ProjectViewModel: ObservableObject  {
         }
     }
     
-    func filesTest(url: URL){
-        print("Files downloaded at this URL...")
+    
+    
+    var projectDirectories: [URL] = []
+    
+    
+    func herc(url: URL) {
+        print(#function)
+        let localFileManager = FileManager()
+        let resourceKeys = Set<URLResourceKey>([.nameKey, .isDirectoryKey])
+        var topLvlFiles: [URL] = []
+        var fileURLs: [URL] = []
+    
         
-        if let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
-            for case let fileURL as URL in enumerator {
-                do {
-                    let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey, .addedToDirectoryDateKey,.isDirectoryKey])
-                    if fileAttributes.isRegularFile!  {
-                        
-                        num += 1
-                        print("File name: \(fileURL.deletingPathExtension().lastPathComponent)")
-                        print("Path Extention:.\(fileURL.pathExtension)\n")
-                        print("Number: \(num)")
-                        
-                        
-                        
-                        guard let data = try? Data(contentsOf: URL(fileURLWithPath: fileURL.deletingPathExtension().lastPathComponent, relativeTo: url).appendingPathExtension(fileURL.pathExtension)) else {
-                            print("Failed to get file from path.")
-                            return
-                        }
-                        
-                        
-                        writeFileCommand(path: "/\(fileURL.deletingPathExtension().lastPathComponent).\(fileURL.pathExtension)", data: data) { result in
-                            switch result {
-                            case .success:
-                                
-                                
-                                print("Successful File Transfer: \(fileURL.lastPathComponent)")
-                                
-                                
-                                
-                            case .failure:
-                                print("Failure - File Transfer")
-                                
-                            }
+        let dirEnumerator = localFileManager.enumerator(at: url, includingPropertiesForKeys: Array(resourceKeys), options: .skipsHiddenFiles)!
+        
+        do {
+            
+            let directoryContents = try localFileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: nil)
+                   
+                print("base contents: \(directoryContents)")
+
+            
+            for content in directoryContents {
+               
+                if content.hasDirectoryPath {
+                    
+                    let temp = try localFileManager.contentsOfDirectory(at: content, includingPropertiesForKeys: nil)
+                    
+                    print("2nd base contents: \(temp)")
+                    
+                } else {
+                    topLvlFiles.append(content)
+                }
+                    
+                    
+            }
+            
+
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+        
+       
+        
+        for case let fileURL as URL in dirEnumerator {
+            guard let resourceValues = try? fileURL.resourceValues(forKeys: resourceKeys),
+                  let isDirectory = resourceValues.isDirectory,
+                  let name = resourceValues.name
+            else {
+                continue
+            }
+
+            if isDirectory {
+                if name == "_extras" {
+                    dirEnumerator.skipDescendants()
+                }
+                print("Directory: \(fileURL.lastPathComponent)")
+               
+                projectDirectories.append(fileURL)
+            } else {
+                print("Files: \(fileURL.deletingLastPathComponent().lastPathComponent)")
+                print(fileURL.lastPathComponent)
+                fileURLs.append(fileURL)
+            }
+        }
+        
+        print(fileURLs)
+        
+        for i in projectDirectories {
+            print(" directories in an array: \(i.lastPathComponent)")
+        }
+        
+        valkarie(dirList: projectDirectories, filesUrls: fileURLs)
+        
+   
+    }
+    
+    func valkarie(dirList: [URL], filesUrls: [URL]) {
+        
+        var copiedDirectory = dirList
+        
+        // if directory is not lib, add to lib
+        if dirList.isEmpty {
+            print("No directories left in queue")
+            
+            
+                self.sendTopfiles(topFiles: filesUrls)
+            
+            
+        } else {
+            
+            guard let directory = dirList.first else {
+                print("No directory exist here")
+                return
+            }
+            
+            print("Valkarie: \(directory.lastPathComponent)")
+            
+            if directory.lastPathComponent == "lib" {
+                
+                mkLibDir(libDirectory: directory, copiedDirectory: copiedDirectory, filesUrl: filesUrls)
+                
+            } else {
+                
+                mkSubLibDir(subdirectory: directory, copiedDirectory: copiedDirectory, filesURL: filesUrls)
+
+                
+            }
+            
+            
+       
+            
+            
+            
+        }
+        
+    }
+
+    func mkLibDir(libDirectory: URL, copiedDirectory: [URL], filesUrl: [URL]){
+        
+    var temp = copiedDirectory
+        
+        listDirectoryCommand(path: "") { result in
+            
+            switch result {
+                
+            case .success(let contents):
+                
+                print("ListDirCommand: \(contents)")
+                
+                if contents!.contains(where: { name in name.name == libDirectory.lastPathComponent}) {
+                    print("lib directory exist")
+
+                    temp.removeFirst()
+                    self.valkarie(dirList: temp, filesUrls: filesUrl)
+                    
+                } else {
+                    print("lib directory does not exist")
+                    
+                    self.makeDirectoryCommand(path: libDirectory.lastPathComponent) { result in
+                        switch result {
+                        case .success:
+                            print("Success")
+                           
+                            temp.removeFirst()
+                            self.valkarie(dirList: temp, filesUrls: filesUrl)
                             
+                        case .failure:
+                            
+                            self.displayErrorMessage()
                         }
-                        
                     }
                     
-                    if fileAttributes.isDirectory! {
-                        
-                        print("Directory name: \(fileURL.deletingPathExtension().lastPathComponent)")
+                    
+                }
+                
+            case .failure:
+                print("failure")
+                self.displayErrorMessage()
+            }
+            
+        }
+        
+        
+    }
+    
+    func mkSubLibDir(subdirectory: URL, copiedDirectory: [URL], filesURL: [URL]) {
+        
+        var temp = copiedDirectory
+        
+        listDirectoryCommand(path: "lib/") { result in
+            
+            switch result {
+                
+            case .success(let contents):
+                
+                print("ListDirCommand: \(contents)")
+                
+                if contents!.contains(where: { name in name.name == subdirectory.lastPathComponent}) {
+                    print("\(subdirectory.lastPathComponent) directory exist")
+
+                    temp.removeFirst()
+                    self.valkarie(dirList: temp, filesUrls: filesURL)
+                    
+                } else {
+                    print("\(subdirectory.lastPathComponent) directory does not exist")
+              //      Make a directory
+                    
+        self.makeDirectoryCommand(path: "lib/\(subdirectory.lastPathComponent)") { result in
+                        switch result {
+                        case .success:
+                            print("Success")
+                           
+                            temp.removeFirst()
+                            self.valkarie(dirList: temp, filesUrls: filesURL)
+                            
+                        case .failure:
+                            print("")
+                            self.displayErrorMessage()
+                        }
                     }
                     
-                } catch { print(error, fileURL) }
+                    
+                }
+                
+            case .failure:
+                print("failure")
+                self.displayErrorMessage()
             }
             
         }
     }
     
-    func fileTransferTest(){
-        print("Start fileTransferTest")
+    func sendTopfiles(topFiles: [URL]) {
         
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_WAV").appendingPathComponent("CircuitPython 7.x")
+        var copiedFiles = topFiles
         
         
-        var files = [URL]()
-        
-        if let enumerator = FileManager.default.enumerator(at: documentsURL, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
-            for case let fileURL as URL in enumerator {
-                do {
-                    let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey])
-                    if fileAttributes.isRegularFile! {
-                        
-                        print(files.count)
-                        files.append(fileURL)
-                        print("TEST")
-                        print("File name: \(fileURL.deletingPathExtension().lastPathComponent)")
-                        print("Path Extention:.\(fileURL.pathExtension)\n")
-                        
-                        guard let data = try? Data(contentsOf: URL(fileURLWithPath: fileURL.deletingPathExtension().lastPathComponent, relativeTo: documentsURL).appendingPathExtension(fileURL.pathExtension)) else {
-                            print("error retrieving file")
-                            return
-                        }
-                        
-                        
-                        self.writeFileCommand(path: "/\(fileURL.deletingPathExtension().lastPathComponent).\(fileURL.pathExtension)", data: data) { result in
-                            
-                            switch result {
-                            case .success:
-                                
-                                print("Success")
-                                
-                                
-                                // self.sendBlinkCode()
-                            case .failure:
-                                print("Faliure")
-                            }
-                        }
-                        
-                        
-                        
-                        
-                    }
-                } catch { print(error, fileURL) }
-                print("xxFiles: \(files)")
+        if topFiles.isEmpty {
+            print("Array of contents empty - Check other directories")
+            self.completedTransfer()
+            
+            DispatchQueue.main.async {
+                self.sendingBundle = false
+                self.counter = 0
             }
             
+        } else {
+            
+            guard let topFile = topFiles.first else {
+                print("No such file exist here")
+                return
+            }
+             
+            
+            print(topFile.lastPathComponent)
+            print(topFile.path)
+            
+            guard let data = try? Data(contentsOf: URL(fileURLWithPath: topFile.deletingPathExtension().lastPathComponent, relativeTo: topFile).appendingPathExtension(topFile.pathExtension)) else {
+                print("File not found")
+                return
+            }
+            
+            var directoryComponent = String()
+            
+            print("\(topFile.path)")
+            
+            print("Potential path: /\(topFile.deletingLastPathComponent().lastPathComponent)/\(topFile.deletingPathExtension().lastPathComponent).\(topFile.pathExtension)")
+            
+            print("/lib/\(topFile.deletingLastPathComponent().lastPathComponent)/\(topFile.deletingPathExtension().lastPathComponent).\(topFile.pathExtension)")
+            
+            print("Dir:/\(topFile.deletingLastPathComponent().lastPathComponent)")
+            
+            if topFile.deletingLastPathComponent().lastPathComponent == "CircuitPython 7.x" {
+                       print("In loop")
+                
+                print("/\(topFile.deletingPathExtension().lastPathComponent).\(topFile.pathExtension)")
+                
+               
+                    
+                    self.writeFileCommand(path: "/\(topFile.deletingPathExtension().lastPathComponent).\(topFile.pathExtension)", data: data) { result in
+                                    switch result {
+                    
+                                    case .success(_):
+                                        copiedFiles.removeFirst()
+                                        self.sendTopfiles(topFiles: copiedFiles)
+                    
+                                    case .failure(_):
+                                        self.displayErrorMessage()
+                                    }
+                                }
+                    
+                
+
+            }
+            
+            else if topFile.deletingLastPathComponent().lastPathComponent == "lib" {
+                
+            print("For lib:/lib/\(topFile.deletingPathExtension().lastPathComponent).\(topFile.pathExtension)")
+                
+                 writeFileCommand(path: "/lib/\(topFile.deletingPathExtension().lastPathComponent).\(topFile.pathExtension)", data: data) { result in
+                                switch result {
+                
+                                case .success(_):
+                                    copiedFiles.removeFirst()
+                                    self.sendTopfiles(topFiles: copiedFiles)
+                
+                                case .failure(_):
+                                    self.displayErrorMessage()
+                                }
+                            }
+            } else {
+                print("Other")
+                print("TEST: \(topFile.deletingLastPathComponent().lastPathComponent)/\(topFile.deletingPathExtension().lastPathComponent).\(topFile.pathExtension)")
+
+                writeFileCommand(path: "/lib/\(topFile.deletingLastPathComponent().lastPathComponent)/\(topFile.deletingPathExtension().lastPathComponent).\(topFile.pathExtension)", data: data) { result in
+                               switch result {
+               
+                               case .success(_):
+                                   copiedFiles.removeFirst()
+                                   self.sendTopfiles(topFiles: copiedFiles)
+               
+                               case .failure(_):
+                                   self.displayErrorMessage()
+
+                               }
+                           }
+                
+                
+                
+            }
+            
+            
+            
+//        writeFileCommand(path: "/\(topFile.deletingPathExtension().lastPathComponent).\(topFile.pathExtension)", data: data) { result in
+//                switch result {
+//
+//                case .success(_):
+//                    copiedFiles.removeFirst()
+//                    self.sendTopfiles(topFiles: copiedFiles)
+//
+//                case .failure(_):
+//                    print("Failed to send:\(topFile.deletingPathExtension().lastPathComponent)")
+//                }
+//            }
+            
         }
+     
+        DispatchQueue.main.async {
+            self.sendingBundle = true
+        }
+        
+        
+        
     }
     
-    
-    
-    
-    
-    
+
     
     // MARK: - Bluefruit Playback MP3
     
@@ -459,9 +729,9 @@ class ProjectViewModel: ObservableObject  {
         listDirectoryCommand(path: "lib/") { result in
             
             switch result {
-            
+                
             case .success(let contents):
-
+                
                 if contents!.contains(where: { name in name.name == "adafruit_circuitplayground" }) {
                     print("adafruit_circuitplayground directory DOES exist")
                     
@@ -488,15 +758,15 @@ class ProjectViewModel: ObservableObject  {
         listDirectoryCommand(path: "lib/") { result in
             
             switch result {
-            
+                
             case .success(let contents):
-
+                
                 if contents!.contains(where: { name in name.name == "adafruit_bus_device" }) {
                     print("adafruit_bus_device directory DOES exist")
                     
                     // Send code files here
                     
-                     self.sendPlayMP3Code()
+                    self.sendPlayMP3Code()
                     
                     DispatchQueue.main.async {
                         self.sendingBundle = true
@@ -925,8 +1195,8 @@ class ProjectViewModel: ObservableObject  {
      * Does Circuit Playground Bluefruit contain "lib" directory?
      
      - If yes, great. Continue to check for the next folder directory.
-      • Does "adafruit_bus_device" exist?
-      - If no, make a new directory "lib ✅ "
+     • Does "adafruit_bus_device" exist?
+     - If no, make a new directory "lib ✅ "
      • On Success, contib=nue to the next directory check.
      • On failure, show error prompt ❌.
      
@@ -945,7 +1215,7 @@ class ProjectViewModel: ObservableObject  {
      Break-down:
      
      Change of plans.
-     When user  opens PyLeap and reaches the selection 
+     When user  opens PyLeap and reaches the selection
      
      */
     
@@ -961,8 +1231,8 @@ class ProjectViewModel: ObservableObject  {
             }
         }
     }
-
-
+    
+    
     func makeAdafruitCPDirectory(){
         
         self.makeDirectoryCommand(path: "lib/adafruit_circuitplayground") { result in
@@ -1006,9 +1276,9 @@ class ProjectViewModel: ObservableObject  {
         listDirectoryCommand(path: "") { result in
             
             switch result {
-            
+                
             case .success(let contents):
-
+                
                 if contents!.contains(where: { name in name.name == "lib" }) {
                     print("lib directory exist")
                     
@@ -1036,9 +1306,9 @@ class ProjectViewModel: ObservableObject  {
         listDirectoryCommand(path: "lib/") { result in
             
             switch result {
-            
+                
             case .success(let contents):
-
+                
                 if contents!.contains(where: { name in name.name == "adafruit_circuitplayground" }) {
                     print("adafruit_circuitplayground directory DOES exist")
                     
@@ -1066,15 +1336,15 @@ class ProjectViewModel: ObservableObject  {
         listDirectoryCommand(path: "lib/") { result in
             
             switch result {
-            
+                
             case .success(let contents):
-
+                
                 if contents!.contains(where: { name in name.name == "adafruit_bus_device" }) {
                     print("adafruit_bus_device directory DOES exist")
                     
                     // Send code files here
                     
-                     self.sendSoundMeterCode()
+                    self.sendSoundMeterCode()
                     
                     DispatchQueue.main.async {
                         self.sendingBundle = true
@@ -1093,9 +1363,9 @@ class ProjectViewModel: ObservableObject  {
         }
     }
     
-
     
-
+    
+    
     
     
     func createLibDirectory() {
@@ -1117,14 +1387,14 @@ class ProjectViewModel: ObservableObject  {
         listDirectoryCommand(path: "") { result in
             
             switch result {
-            
+                
             case .success(let contents):
-
+                
                 if contents!.contains(where: { name in name.name == "lib" }) {
                     print("lib directory exist")
                     self.sendSoundMeterCode()
                     
-                   
+                    
                     
                     
                     DispatchQueue.main.async {
@@ -1154,8 +1424,8 @@ class ProjectViewModel: ObservableObject  {
             }
         }
     }
-
-
+    
+    
     func createAdafruitCPSoundMeter(){
         
         self.makeDirectoryCommand(path: "lib/adafruit_circuitplayground") { result in
@@ -1164,7 +1434,7 @@ class ProjectViewModel: ObservableObject  {
                 print("Success")
                 // Return to main check
                 self.soundMeterHead()
-            //    self.createAdafruitBusDeviceSoundMeter()
+                //    self.createAdafruitBusDeviceSoundMeter()
             case .failure:
                 print("")
                 self.displayErrorMessage()
@@ -1181,7 +1451,7 @@ class ProjectViewModel: ObservableObject  {
             case .success:
                 print("Success")
                 self.soundMeterHead()
-               // self.sendSoundMeterCode()
+                // self.sendSoundMeterCode()
             case .failure:
                 print("Failed to create a new directory")
                 self.displayErrorMessage()
@@ -1550,9 +1820,9 @@ class ProjectViewModel: ObservableObject  {
         listDirectoryCommand(path: "lib/") { result in
             
             switch result {
-            
+                
             case .success(let contents):
-
+                
                 if contents!.contains(where: { name in name.name == "adafruit_circuitplayground" }) {
                     print("adafruit_circuitplayground directory DOES exist")
                     
@@ -1578,15 +1848,15 @@ class ProjectViewModel: ObservableObject  {
         listDirectoryCommand(path: "lib/") { result in
             
             switch result {
-            
+                
             case .success(let contents):
-
+                
                 if contents!.contains(where: { name in name.name == "adafruit_bus_device" }) {
                     print("adafruit_bus_device directory DOES exist")
                     
                     // Send code files here
                     
-                     self.sendPianoNeoPixelCode()
+                    self.sendPianoNeoPixelCode()
                     
                     DispatchQueue.main.async {
                         self.sendingBundle = true
@@ -1925,7 +2195,7 @@ class ProjectViewModel: ObservableObject  {
             return
         }
         
-       
+        
         
         self.writeFileCommand(path: "/lib/neopixel.mpy", data: data) { result in
             switch result {
@@ -1998,9 +2268,9 @@ class ProjectViewModel: ObservableObject  {
         listDirectoryCommand(path: "lib/") { result in
             
             switch result {
-            
+                
             case .success(let contents):
-
+                
                 if contents!.contains(where: { name in name.name == "adafruit_circuitplayground" }) {
                     print("adafruit_circuitplayground directory DOES exist")
                     
@@ -2026,15 +2296,15 @@ class ProjectViewModel: ObservableObject  {
         listDirectoryCommand(path: "lib/") { result in
             
             switch result {
-            
+                
             case .success(let contents):
-
+                
                 if contents!.contains(where: { name in name.name == "adafruit_bus_device" }) {
                     print("adafruit_bus_device directory DOES exist")
                     
                     // Send code files here
                     
-                     self.sendControlledNeoPixelCode()
+                    self.sendControlledNeoPixelCode()
                     
                     DispatchQueue.main.async {
                         self.sendingBundle = true
@@ -2441,9 +2711,9 @@ class ProjectViewModel: ObservableObject  {
         listDirectoryCommand(path: "lib/") { result in
             
             switch result {
-            
+                
             case .success(let contents):
-
+                
                 if contents!.contains(where: { name in name.name == "adafruit_circuitplayground" }) {
                     print("adafruit_circuitplayground directory DOES exist")
                     
@@ -2469,15 +2739,15 @@ class ProjectViewModel: ObservableObject  {
         listDirectoryCommand(path: "lib/") { result in
             
             switch result {
-            
+                
             case .success(let contents):
-
+                
                 if contents!.contains(where: { name in name.name == "adafruit_bus_device" }) {
                     print("adafruit_bus_device directory DOES exist")
                     
                     // Send code files here
                     
-                     self.sendTouchNeoPixelCode()
+                    self.sendTouchNeoPixelCode()
                     
                     DispatchQueue.main.async {
                         self.sendingBundle = true
@@ -2739,25 +3009,25 @@ class ProjectViewModel: ObservableObject  {
     
     
     func adafruit_lis3dh_FileTouchNeoPixel() {
-
+        
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_Bluefruit_Touch_NeoPixel_Rainbow").appendingPathComponent("CircuitPython 7.x").appendingPathComponent("lib")
-
+        
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "adafruit_lis3dh", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
             print("Cannot find adafruit_lis3dh")
             return
         }
-
+        
         self.writeFileCommand(path: "/lib/adafruit_lis3dh.mpy", data: data) { result in
             switch result {
             case .success:
                 self.adafruit_pixelBuf_FileTouchNeoPixel()
                 print("Success")
             case .failure:
-               
+                
                 print("Failure - ledGinit_File")
-
+                
             }
-
+            
         }
     }
     
@@ -2913,9 +3183,9 @@ class ProjectViewModel: ObservableObject  {
         listDirectoryCommand(path: "lib/") { result in
             
             switch result {
-            
+                
             case .success(let contents):
-
+                
                 if contents!.contains(where: { name in name.name == "adafruit_circuitplayground" }) {
                     print("adafruit_circuitplayground directory DOES exist")
                     
@@ -2942,15 +3212,15 @@ class ProjectViewModel: ObservableObject  {
         listDirectoryCommand(path: "lib/") { result in
             
             switch result {
-            
+                
             case .success(let contents):
-
+                
                 if contents!.contains(where: { name in name.name == "adafruit_bus_device" }) {
                     print("adafruit_bus_device directory DOES exist")
                     
                     // Send code files here
                     
-                     self.sendLightMeterCode()
+                    self.sendLightMeterCode()
                     
                     DispatchQueue.main.async {
                         self.sendingBundle = true
@@ -3329,7 +3599,7 @@ class ProjectViewModel: ObservableObject  {
                     print("lib directory exist")
                     self.wavProjCPDirectory()
                     
-                     DispatchQueue.main.async {
+                    DispatchQueue.main.async {
                         self.sendingBundle = true
                     }
                     
@@ -3352,9 +3622,9 @@ class ProjectViewModel: ObservableObject  {
         listDirectoryCommand(path: "lib/") { result in
             
             switch result {
-            
+                
             case .success(let contents):
-
+                
                 if contents!.contains(where: { name in name.name == "adafruit_circuitplayground" }) {
                     print("adafruit_circuitplayground directory DOES exist")
                     
@@ -3381,15 +3651,15 @@ class ProjectViewModel: ObservableObject  {
         listDirectoryCommand(path: "lib/") { result in
             
             switch result {
-            
+                
             case .success(let contents):
-
+                
                 if contents!.contains(where: { name in name.name == "adafruit_bus_device" }) {
                     print("adafruit_bus_device directory DOES exist")
                     
                     // Send code files here
                     
-                     self.sendwavCode()
+                    self.sendwavCode()
                     
                     DispatchQueue.main.async {
                         self.sendingBundle = true
@@ -3979,103 +4249,103 @@ class ProjectViewModel: ObservableObject  {
     // End of directory creation -- Beginning of file transfers
     
     //MARK: - LED Glasses
-//
-//
-//    func playWAVProjCheck() {
-//        listDirectoryCommand(path: "") { result in
-//
-//            switch result {
-//
-//            case .success(let contents):
-//
-//                if contents!.contains(where: { name in name.name == "lib"}) {
-//                    print("lib directory exist")
-//                    self.wavProjCPDirectory()
-//
-//                     DispatchQueue.main.async {
-//                        self.sendingBundle = true
-//                    }
-//
-//                } else {
-//                    print("lib directory does not exist")
-//                    self.sendPlayWAVProj()
-//                }
-//
-//            case .failure:
-//                print("failure")
-//                self.displayErrorMessage()
-//
-//            }
-//
-//        }
-//    }
-//
-//
-//    func wavProjCPDirectory(){
-//        listDirectoryCommand(path: "lib/") { result in
-//
-//            switch result {
-//
-//            case .success(let contents):
-//
-//                if contents!.contains(where: { name in name.name == "adafruit_circuitplayground" }) {
-//                    print("adafruit_circuitplayground directory DOES exist")
-//
-//                    self.wavProjBusDeviceDirectory()
-//
-//                    DispatchQueue.main.async {
-//                        self.sendingBundle = true
-//                    }
-//
-//                } else {
-//                    print("adafruit_circuitplayground NOT directory exist")
-//                    // Make Directory - on success, call the base function to check
-//                    self.createAdafruitCP()
-//                }
-//
-//            case .failure:
-//                print("failure")
-//                self.displayErrorMessage()
-//            }
-//        }
-//    }
-//
-   
+    //
+    //
+    //    func playWAVProjCheck() {
+    //        listDirectoryCommand(path: "") { result in
+    //
+    //            switch result {
+    //
+    //            case .success(let contents):
+    //
+    //                if contents!.contains(where: { name in name.name == "lib"}) {
+    //                    print("lib directory exist")
+    //                    self.wavProjCPDirectory()
+    //
+    //                     DispatchQueue.main.async {
+    //                        self.sendingBundle = true
+    //                    }
+    //
+    //                } else {
+    //                    print("lib directory does not exist")
+    //                    self.sendPlayWAVProj()
+    //                }
+    //
+    //            case .failure:
+    //                print("failure")
+    //                self.displayErrorMessage()
+    //
+    //            }
+    //
+    //        }
+    //    }
+    //
+    //
+    //    func wavProjCPDirectory(){
+    //        listDirectoryCommand(path: "lib/") { result in
+    //
+    //            switch result {
+    //
+    //            case .success(let contents):
+    //
+    //                if contents!.contains(where: { name in name.name == "adafruit_circuitplayground" }) {
+    //                    print("adafruit_circuitplayground directory DOES exist")
+    //
+    //                    self.wavProjBusDeviceDirectory()
+    //
+    //                    DispatchQueue.main.async {
+    //                        self.sendingBundle = true
+    //                    }
+    //
+    //                } else {
+    //                    print("adafruit_circuitplayground NOT directory exist")
+    //                    // Make Directory - on success, call the base function to check
+    //                    self.createAdafruitCP()
+    //                }
+    //
+    //            case .failure:
+    //                print("failure")
+    //                self.displayErrorMessage()
+    //            }
+    //        }
+    //    }
+    //
     
     
-//    func sendPlayWAVProj() {
-//
-//        self.makeDirectoryCommand(path: "lib") { result in
-//            switch result {
-//            case .success:
-//                print("Success")
-//                self.playWAVProjCheck()
-//            case .failure:
-//                print("")
-//                self.displayErrorMessage()
-//            }
-//        }
-//
-//    }
-//
-//
-//    func createAdafruitCP(){
-//        //adafruit_bus_device
-//        self.makeDirectoryCommand(path: "lib/adafruit_circuitplayground") { result in
-//            switch result {
-//            case .success:
-//                print("Success")
-//                self.playWAVProjCheck()
-//            case .failure:
-//                print("")
-//                self.displayErrorMessage()
-//            }
-//        }
-//
-//    }
-//
     
-
+    //    func sendPlayWAVProj() {
+    //
+    //        self.makeDirectoryCommand(path: "lib") { result in
+    //            switch result {
+    //            case .success:
+    //                print("Success")
+    //                self.playWAVProjCheck()
+    //            case .failure:
+    //                print("")
+    //                self.displayErrorMessage()
+    //            }
+    //        }
+    //
+    //    }
+    //
+    //
+    //    func createAdafruitCP(){
+    //        //adafruit_bus_device
+    //        self.makeDirectoryCommand(path: "lib/adafruit_circuitplayground") { result in
+    //            switch result {
+    //            case .success:
+    //                print("Success")
+    //                self.playWAVProjCheck()
+    //            case .failure:
+    //                print("")
+    //                self.displayErrorMessage()
+    //            }
+    //        }
+    //
+    //    }
+    //
+    
+    
     
     
     
@@ -4092,7 +4362,7 @@ class ProjectViewModel: ObservableObject  {
                     print("lib directory exist")
                     self.checkGlassesProjISDirectory()
                     
-                     DispatchQueue.main.async {
+                    DispatchQueue.main.async {
                         self.sendingBundle = true
                     }
                     
@@ -4114,9 +4384,9 @@ class ProjectViewModel: ObservableObject  {
         listDirectoryCommand(path: "lib/") { result in
             
             switch result {
-            
+                
             case .success(let contents):
-
+                
                 if contents!.contains(where: { name in name.name == "adafruit_is31fl3741" }) {
                     print("adafruit_is31fl3741 directory DOES exist")
                     
@@ -4138,15 +4408,15 @@ class ProjectViewModel: ObservableObject  {
             }
         }
     }
-
+    
     
     func glassesProjRegDirectory(){
         listDirectoryCommand(path: "lib/") { result in
             
             switch result {
-            
+                
             case .success(let contents):
-
+                
                 if contents!.contains(where: { name in name.name == "adafruit_register" }) {
                     print("adafruit_register directory DOES exist")
                     
@@ -4168,7 +4438,7 @@ class ProjectViewModel: ObservableObject  {
             }
         }
     }
-
+    
     func makeGlassesLibDirectory(){
         
         self.makeDirectoryCommand(path: "lib") { result in
@@ -4214,9 +4484,9 @@ class ProjectViewModel: ObservableObject  {
         
     }
     
-
     
-
+    
+    
     func ledGlassesCP7xCode() {
         print("LED Glasses code attempt")
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_CPB_EyeLights_LED_Glasses_RainbowSwirl").appendingPathComponent("CircuitPython 7.x")
@@ -4225,7 +4495,7 @@ class ProjectViewModel: ObservableObject  {
             print("LED code not found")
             return
         }
-
+        
         self.writeFileCommand(path: "/code.py", data: data) { result in
             
             switch result {
@@ -4285,7 +4555,7 @@ class ProjectViewModel: ObservableObject  {
         guard let data = try? Data(contentsOf: URL(fileURLWithPath: "__init__", relativeTo: documentsURL).appendingPathExtension("mpy")) else {
             return
         }
-       
+        
         self.writeFileCommand(path: "/lib/adafruit_is31fl3741/__init__.mpy", data: data) { result in
             switch result {
             case .success:
@@ -4890,5 +5160,5 @@ class ProjectViewModel: ObservableObject  {
         }
     }
     
-
+    
 }

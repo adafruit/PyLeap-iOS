@@ -436,7 +436,11 @@ struct ProjectCardView: View {
                                                 .bold()
                                                 .foregroundColor(.purple)
                                         })
-                                            
+                                           
+                                        
+                                        
+                                        
+                                        
                                         if model.sendingBundle {
                                             
                                             ProgressView("Please wait...", value: CGFloat(model.counter), total: CGFloat(model.numOfFiles) )
@@ -563,6 +567,15 @@ struct ProjectCardView: View {
 //                                    Text("Delete All")
 //                                }
             
+                                
+                                Button {
+                                    model.herc(url: project.filePath)
+                                } label: {
+                                    Text("\(sendLabel)")
+                                        .bold()
+                                        .foregroundColor(.purple)
+                                }
+                                
 
                                 Section(header: Text("Files Downloaded")) {
                                     List {
