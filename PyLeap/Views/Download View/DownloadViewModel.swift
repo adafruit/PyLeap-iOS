@@ -72,8 +72,7 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
 
         let CPZipName = directoryPath.appendingPathComponent("RainbowBundle.zip")
         
-        let pyleapProjectFile = directoryPath.appendingPathComponent("PyLeap Folder")
-        
+        _ = directoryPath.appendingPathComponent("PyLeap Folder")
         
         if let zipFileUrl = URL(string: urlString) {
             // Download from this site
@@ -131,11 +130,9 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
         // Creating a File Manager Object
         let manager = FileManager.default
         
-        guard let url = manager.urls(
-                for: .documentDirectory,
-                in: .userDomainMask).first else {return}
-        
-        
+        guard manager.urls(
+            for: .documentDirectory,
+               in: .userDomainMask).first != nil else {return}
         
         let deleteFile = directoryPath.appendingPathComponent("PyLeap Project Folder")
        

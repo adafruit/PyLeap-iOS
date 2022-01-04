@@ -55,12 +55,7 @@ struct ProjectCardView: View {
                     progress = 0
                 }
             }
-        } catch {
-            print(error)
-        }
-
-
-
+        } 
     }
     
     let layout = [
@@ -384,61 +379,14 @@ struct ProjectCardView: View {
                                     // Section 2
                                     Section {
                                       
-                                        Button(action: {
-                                            if project.index == 0 {
-                                                model.sendCPBRainbowFiles()
-                                                print("Start Rainbow File Transfer")
-                                            }
-                                            if project.index == 1 {
-                                                model.sendCPBBlinkFiles()
-                                                print("Start Blink File Transfer")
-                                            }
-                                            if project.index == 2 {
-                                                model.ledGlassesProjCheck()
-                                                print("Start LED Glasses File Transfer")
-                                            }
-            
-                                            if project.index == 3 {
-                                                model.playWAVProjCheck()
-                                                print("Start Bluefuit WAV File Transfer")
-                                            }
-            
-                                            if project.index == 4 {
-                                                model.lightMeterProjCheck()
-                                                print("Start Bluefuit Light Meter File Transfer")
-                                            } 
-                                            if project.index == 5 {
-                                                model.touchNeoPixelProjCheck()
-                                                print("Start Bluefuit Touch Neopixel File Transfer")
-                                            }
-                                            if project.index == 6 {
-                                                model.controlledNeoPixelProjCheck()
-                                                print("Start Bluefuit Controlled Neopixel File Transfer")
-                                            }
-            
-                                            if project.index == 7 {
-                                                model.touchToneProjHead()
-                                                print("Start Bluefuit Piano Neopixel File Transfer")
-                                            }
-            
-                                            if project.index == 8 {
-                                                model.soundMeterHead()
-                                                print("Start Bluefuit Sound Meter File Transfer")
-                                            }
-            
-                                            if project.index == 9 {
-                                                model.MP3ProjHead()
-                                                print("Start Bluefuit Sound Meter File Transfer")
-                                            }
-            
-                                        }, label: {
+                                        Button {
+                                            model.filesTransfer(url: project.filePath)
+                                        } label: {
                                             Text("\(sendLabel)")
                                                 .bold()
                                                 .foregroundColor(.purple)
-                                        })
+                                        }
                                            
-                                        
-                                        
                                         
                                         
                                         if model.sendingBundle {
@@ -470,7 +418,7 @@ struct ProjectCardView: View {
                                         }
                                         
                                         
-                                           // .isHidden(showProgressBar)
+//                                            .isHidden(showProgressBar)
 //                                            .onChange(of: model.numOfFiles) { newValue in
 //                                                print("Current Download Progress: \(newValue)")
 //                                                if model.counter == model.numOfFiles || model.counter == 0 {
@@ -568,13 +516,7 @@ struct ProjectCardView: View {
 //                                }
             
                                 
-                                Button {
-                                    model.herc(url: project.filePath)
-                                } label: {
-                                    Text("\(sendLabel)")
-                                        .bold()
-                                        .foregroundColor(.purple)
-                                }
+
                                 
 
                                 Section(header: Text("Files Downloaded")) {
