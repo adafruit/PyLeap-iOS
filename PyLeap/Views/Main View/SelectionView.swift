@@ -73,13 +73,6 @@ struct SelectionView: View {
     
 }
 
-struct ContentFile: Identifiable {
-    var id = UUID()
-    var title: String
-    var fileSize: Int
-}
-
-
 struct FileView_Previews: PreviewProvider {
     static var previews: some View {
         SelectionView()

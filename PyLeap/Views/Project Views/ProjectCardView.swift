@@ -522,17 +522,14 @@ struct ProjectCardView: View {
                                 Section(header: Text("Files Downloaded")) {
                                     List {
             
-                                        ForEach(model.directoryArray) { file in
+                                        
+                                        ForEach(model.contentList) { file in
             
-                                            DirectoryRow(title: file.title)
-            
-                                        }
-            
-                                        ForEach(model.fileArray) { file in
-            
-                                            FileRow(title: file.title, fileSize: file.fileSize)
+                                            DirectoryRow(incomingURL: file, fileSize: 0)
             
                                         }
+                                        
+                                    
                                     }
             
                                 }
@@ -597,29 +594,71 @@ struct FileRow: View {
                 Text(title)
                     .font(.system(size: 18))
                 
+                
+                
                 Text("\(fileSize) kb")
                     .font(.subheadline)
                 
             }
         }
-        
-        
-        
     }
+}
+
+struct URLData: Identifiable {
+    let id = UUID()
+    let urlTitle: URL
 }
 
 struct DirectoryRow: View {
-    let title : String
+    var incomingURL: URLData
+   // let urlTitle: URL
+    let fileSize: Int
+    
+   
     
     var body: some View {
-        Label(
-            title: { Text(title)
-                    .font(.system(size: 18))
-            },
-            icon: { Image(systemName: "folder.fill") })
+        
+        
+        if incomingURL.urlTitle.hasDirectoryPath {
+            Label(
+                title: {
+                    HStack {
+                    Text(incomingURL.urlTitle.lastPathComponent)
+                        .font(.system(size: 18))
+                        
+                        Image(systemName: "chevron.down")
+                            
+                    }
+                },
+                icon: { Image(systemName: "folder.fill") })
+        } else {
+            HStack{
+                Image(systemName: "doc.text")
+                    .padding(5)
+                VStack(alignment: .leading){
+                 
+                    Text(incomingURL.urlTitle.lastPathComponent)
+                        .font(.system(size: 18))
+
+                }
+            }
+        }
+        
+
     }
 }
 
+struct ContentDir: Identifiable {
+    var id = UUID()
+    var urlTitle: URL
+    
+}
+
+struct ContentFile: Identifiable {
+    var id = UUID()
+    var title: String
+    var fileSize: Int
+}
 
 
 

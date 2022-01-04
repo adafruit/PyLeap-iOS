@@ -12,20 +12,19 @@ class ProjectViewModel: ObservableObject  {
     
     var networkMonitor = NetworkMonitor()
     
-    
     @Published var sendingBundle = false
     
     @AppStorage("index") var index = 0
     private weak var fileTransferClient: FileTransferClient?
-    
-    @Published var fileArray: [ContentFile] = []
     @Published var directoryArray: [ContentFile] = []
-    
+    @Published var fileArray: [ContentFile] = []
+
+    @Published var contentList: [URLData] = []
     @Published var bootUpInfo = ""
     
     @Published var entries = [BlePeripheral.DirectoryEntry]()
     @Published var isTransmiting = false
-    @Published var isRootDirectory = false
+
     @Published var directory = ""
     
     @Published var numOfFiles = 0
@@ -36,7 +35,6 @@ class ProjectViewModel: ObservableObject  {
     
     @Published var isConnectedToInternet = false
     
-    @Published var newBundleDownloaded = false
     @Published var didCompleteTranfer = false
     @Published var writeError = false
     
@@ -111,12 +109,10 @@ class ProjectViewModel: ObservableObject  {
     // Deletes all files and dic. on Bluefruit device *Except boot_out.txt*
     func removeAllFiles(){
         self.listDirectoryCommand(path: "") { result in
-            
+
             switch result {
                 
             case .success(let contents):
-                
-                print("Listed Content")
                 
                 for i in contents! where i.name != "boot_out.txt" {
                     self.deleteFileCommand(path: i.name) { deletionResult in
@@ -137,25 +133,20 @@ class ProjectViewModel: ObservableObject  {
     func filesDownloaded(url: URL){
         
         fileArray.removeAll()
-        
         var files = [URL]()
-        
         if let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
             for case let fileURL as URL in enumerator {
                 
                 do {
                     let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey, .addedToDirectoryDateKey,.isDirectoryKey])
+
+                    contentList.append(.init(urlTitle: fileURL))
                     if fileAttributes.isRegularFile!  {
                         
                         files.append(fileURL)
                         
-                        print("File name: \(fileURL.deletingPathExtension().lastPathComponent)")
-                        print("Path Extention:.\(fileURL.pathExtension)\n")
-                        
                         let resources = try fileURL.resourceValues(forKeys:[.fileSizeKey])
                         let fileSize = resources.fileSize!
-                        
-                        print("Path Size:\(fileSize) kb\n")
                         
                         let addedFile = ContentFile(title: fileURL.lastPathComponent, fileSize: fileSize)
                         fileArray.append(addedFile)
@@ -166,15 +157,18 @@ class ProjectViewModel: ObservableObject  {
                         let addedFile = ContentFile(title: fileURL.lastPathComponent, fileSize: 0)
                         
                         directoryArray.append(addedFile)
-                        
-                        print("directory name: \(fileURL.deletingPathExtension().lastPathComponent)")
                     }
                     
                 } catch { print(error, fileURL) }
             }
             numOfFiles = fileArray.count
             print("File Count: \(self.fileArray.count)")
-            print("\(files)")
+
+            
+            for i in contentList {
+                print("CL: \(i.urlTitle.lastPathComponent)")
+            }
+            
         }
     }
     
@@ -183,27 +177,10 @@ class ProjectViewModel: ObservableObject  {
         
         let localFileManager = FileManager()
         let resourceKeys = Set<URLResourceKey>([.nameKey, .isDirectoryKey])
-        var topLvlFiles: [URL] = []
         var fileURLs: [URL] = []
         
-        
         let dirEnumerator = localFileManager.enumerator(at: url, includingPropertiesForKeys: Array(resourceKeys), options: .skipsHiddenFiles)!
-        
-        do {
-            
-            let directoryContents = try localFileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: nil)
-            print("base contents: \(directoryContents)")
-            
-            for content in directoryContents {
-                
-                if !content.hasDirectoryPath {
-                    topLvlFiles.append(content)
-                }
-            }
-        } catch {
-            print(error.localizedDescription)
-        }
-        
+
         for case let fileURL as URL in dirEnumerator {
             guard let resourceValues = try? fileURL.resourceValues(forKeys: resourceKeys),
                   let isDirectory = resourceValues.isDirectory,
@@ -222,36 +199,34 @@ class ProjectViewModel: ObservableObject  {
             }
         }
         
-        print(fileURLs)
+        print("Listed Files")
+        for file in fileURLs {
+            print(file.lastPathComponent)
+        }
 
         DispatchQueue.main.async {
             self.sendingBundle = true
         }
-        directoryList(dirList: projectDirectories, filesUrls: fileURLs)
+        directoryCheck(dirList: projectDirectories, filesUrls: fileURLs)
     }
     
-    func directoryList(dirList: [URL], filesUrls: [URL]) {
-        var copiedDirectory = dirList
-        
-        // if directory is not lib, add to lib
+    func directoryCheck(dirList: [URL], filesUrls: [URL]) {
+        let tempDirectory = dirList
+
         if dirList.isEmpty {
             print("No directories left in queue")
-            self.sendTopfiles(topFiles: filesUrls)
+            self.transferFiles(files: filesUrls)
         } else {
             guard let directory = dirList.first else {
                 print("No directory exist here")
                 return
             }
-            
-            print("Directory: \(directory.lastPathComponent)")
-            
+
             if directory.lastPathComponent == "lib" {
-                
-                mkLibDir(libDirectory: directory, copiedDirectory: copiedDirectory, filesUrl: filesUrls)
+                mkLibDir(libDirectory: directory, copiedDirectory: tempDirectory, filesUrl: filesUrls)
                 
             } else {
-                
-                mkSubLibDir(subdirectory: directory, copiedDirectory: copiedDirectory, filesURL: filesUrls)
+                mkSubLibDir(subdirectory: directory, copiedDirectory: tempDirectory, filesURL: filesUrls)
             }
         }
     }
@@ -270,7 +245,7 @@ class ProjectViewModel: ObservableObject  {
                     print("lib directory exist")
                     
                     temp.removeFirst()
-                    self.directoryList(dirList: temp, filesUrls: filesUrl)
+                    self.directoryCheck(dirList: temp, filesUrls: filesUrl)
                     
                 } else {
                     print("lib directory does not exist")
@@ -281,7 +256,7 @@ class ProjectViewModel: ObservableObject  {
                             print("Success")
                             
                             temp.removeFirst()
-                            self.directoryList(dirList: temp, filesUrls: filesUrl)
+                            self.directoryCheck(dirList: temp, filesUrls: filesUrl)
                             
                         case .failure:
                             self.displayErrorMessage()
@@ -309,7 +284,7 @@ class ProjectViewModel: ObservableObject  {
                     print("\(subdirectory.lastPathComponent) directory exist")
                     
                     temp.removeFirst()
-                    self.directoryList(dirList: temp, filesUrls: filesURL)
+                    self.directoryCheck(dirList: temp, filesUrls: filesURL)
                     
                 } else {
                     print("\(subdirectory.lastPathComponent) directory does not exist")
@@ -320,7 +295,7 @@ class ProjectViewModel: ObservableObject  {
                             print("Success")
                             
                             temp.removeFirst()
-                            self.directoryList(dirList: temp, filesUrls: filesURL)
+                            self.directoryCheck(dirList: temp, filesUrls: filesURL)
                             
                         case .failure:
                             self.displayErrorMessage()
@@ -334,11 +309,11 @@ class ProjectViewModel: ObservableObject  {
         }
     }
     
-    func sendTopfiles(topFiles: [URL]) {
+    func transferFiles(files: [URL]) {
         
-        var copiedFiles = topFiles
+        var copiedFiles = files
         
-        if topFiles.isEmpty {
+        if files.isEmpty {
             print("Array of contents empty - Check other directories")
             self.completedTransfer()
             
@@ -349,26 +324,23 @@ class ProjectViewModel: ObservableObject  {
             
         } else {
             
-            guard let topFile = topFiles.first else {
+            guard let selectedUrl = files.first else {
                 print("No such file exist here")
                 return
             }
             
-            print(topFile.lastPathComponent)
-            print(topFile.path)
-            
-            guard let data = try? Data(contentsOf: URL(fileURLWithPath: topFile.deletingPathExtension().lastPathComponent, relativeTo: topFile).appendingPathExtension(topFile.pathExtension)) else {
+            guard let data = try? Data(contentsOf: URL(fileURLWithPath: selectedUrl.deletingPathExtension().lastPathComponent, relativeTo: selectedUrl).appendingPathExtension(selectedUrl.pathExtension)) else {
                 print("File not found")
                 return
             }
             
-            if topFile.deletingLastPathComponent().lastPathComponent == "CircuitPython 7.x"{
-                self.writeFileCommand(path: "/\(topFile.deletingPathExtension().lastPathComponent).\(topFile.pathExtension)", data: data) { result in
+            if selectedUrl.deletingLastPathComponent().lastPathComponent == "CircuitPython 7.x"{
+                self.writeFileCommand(path: "/\(selectedUrl.deletingPathExtension().lastPathComponent).\(selectedUrl.pathExtension)", data: data) { result in
                     switch result {
                         
                     case .success(_):
                         copiedFiles.removeFirst()
-                        self.sendTopfiles(topFiles: copiedFiles)
+                        self.transferFiles(files: copiedFiles)
                         
                     case .failure(_):
                         self.displayErrorMessage()
@@ -376,13 +348,13 @@ class ProjectViewModel: ObservableObject  {
                 }
             }
             
-            else if topFile.deletingLastPathComponent().lastPathComponent == "lib" {
+            else if selectedUrl.deletingLastPathComponent().lastPathComponent == "lib" {
                 
-                writeFileCommand(path: "/lib/\(topFile.deletingPathExtension().lastPathComponent).\(topFile.pathExtension)", data: data) { result in
+                writeFileCommand(path: "/lib/\(selectedUrl.deletingPathExtension().lastPathComponent).\(selectedUrl.pathExtension)", data: data) { result in
                     switch result {
                     case .success(_):
                         copiedFiles.removeFirst()
-                        self.sendTopfiles(topFiles: copiedFiles)
+                        self.transferFiles(files: copiedFiles)
                         
                     case .failure(_):
                         self.displayErrorMessage()
@@ -390,11 +362,11 @@ class ProjectViewModel: ObservableObject  {
                 }
             } else {
                 
-                writeFileCommand(path: "/lib/\(topFile.deletingLastPathComponent().lastPathComponent)/\(topFile.deletingPathExtension().lastPathComponent).\(topFile.pathExtension)", data: data) { result in
+                writeFileCommand(path: "/lib/\(selectedUrl.deletingLastPathComponent().lastPathComponent)/\(selectedUrl.deletingPathExtension().lastPathComponent).\(selectedUrl.pathExtension)", data: data) { result in
                     switch result {
                     case .success(_):
                         copiedFiles.removeFirst()
-                        self.sendTopfiles(topFiles: copiedFiles)
+                        self.transferFiles(files: copiedFiles)
                     case .failure(_):
                         self.displayErrorMessage()
                         
