@@ -186,11 +186,14 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
             // Copy temp file to directory.
             try FileManager.default.copyItem(at: location, to: destinationURL)
             
-            // If Success
-            print("Successful Download")
-            isDownloading = false
-            print("Download Location: \(location)")
-            self.downloadProgress = 1.0
+            DispatchQueue.main.async {
+                // If Successful
+                print("Successful Download")
+                self.isDownloading = false
+                print("Download Location: \(location)")
+                self.downloadProgress = 1.0
+                
+            }
             
             // Closing Progress View
             DispatchQueue.main.async {

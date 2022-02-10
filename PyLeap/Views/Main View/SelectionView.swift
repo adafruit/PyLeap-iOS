@@ -12,9 +12,9 @@ struct SelectionView: View {
     
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject private var connectionManager: FileTransferConnectionManager
+    @StateObject var viewModel = SelectionViewModel()
     
-    
-    var projects: [Project] = ProjectData.projects
+    @State var projects: [Project] = []
     
     let layout = [
         GridItem(.adaptive(minimum: 180))
@@ -22,13 +22,12 @@ struct SelectionView: View {
     
     var columns = Array(repeating: GridItem(.flexible(), spacing:20), count: 2)
     
-    @StateObject var viewModel = SelectionViewModel()
+
     
     
     var body: some View {
        
         NavigationView {
-            
             
             VStack {
                 
@@ -41,7 +40,7 @@ struct SelectionView: View {
                             ZStack {
                                 
                                 NavigationLink(destination: ProjectCardView(project: self.projects[item])) {
-                                    
+
                                     ProjectCell(title: projects[item].title, deviceName: projects[item].device, image: projects[item].image)
                                 }
                                 
@@ -59,9 +58,21 @@ struct SelectionView: View {
             }
             
         }
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(.none)
+        
+        .onChange(of: viewModel.projects, perform: { value in
+
+            DispatchQueue.main.async {
+               
+                projects = viewModel.projects
+            }
+        })
         
         .onAppear {
+
+            viewModel.setup(fileTransferClient: connectionManager.selectedClient)
+             
+            viewModel.readFile(filename: "boot_out.txt")
             
         }
         .onDisappear {

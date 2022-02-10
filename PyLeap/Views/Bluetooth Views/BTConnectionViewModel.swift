@@ -210,6 +210,8 @@ class BTConnectionViewModel: ObservableObject {
             return
         }
         connectionStatus = .connected
+        
+        
     }
 
     private func willDiscoverServices(notification: Notification) {

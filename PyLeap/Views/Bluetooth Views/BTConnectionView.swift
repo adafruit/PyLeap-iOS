@@ -23,16 +23,11 @@ struct BTConnectionView: View {
         
         ZStack {
             
-            
-            
             NavigationView {
                 
                 ZStack{
                     
-                    
                     Color(#colorLiteral(red: 0.5275210142, green: 0.4204645753, blue: 0.6963143945, alpha: 1)).edgesIgnoringSafeArea(.all)
-                    
-                    
                     
                     VStack{
                         HStack {

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Project: Identifiable {
+struct Project: Identifiable, Equatable {
 
     let id = UUID()
     let index: Int
@@ -33,7 +33,7 @@ struct Project: Identifiable {
     }
 }
 
-struct ProjectData {
+struct CPBProjects {
     
     static var projects = [cpbInRainbowsProj,cpbBlinkProj,cpbLedGlassesProj,cpbWavPlaybackProj,cpbLightMeterProj, cpbTouchNeoPixelProj, cpbControlledNeoPixelProj,cpbPianoNeoPixelProj,cpbSoundMeterProj,cpbPlayMP3Proj]
     static let cpbProjects = [cpbInRainbowsProj, cpbBlinkProj,cpbLedGlassesProj]
@@ -45,7 +45,7 @@ struct ProjectData {
     static var cpbInRainbowsProj = Project(
         index:0,
         title: "NeoPixel Rainbows",
-        image: "rainbow-cpb",
+        image: "cpb",
         device: "Circuit Playground Bluefruit",
         pythonCode: SamplePythonCode.inRainbows,
         description: """
@@ -60,7 +60,7 @@ For this project we're going to toss a rainbow on over to a Circuit Playground B
     static var cpbBlinkProj = Project(
         index:1,
         title: "Blink!",
-        image: "rainbow-cpb",
+        image: "cpb",
         device: "Circuit Playground Bluefruit",
         pythonCode: SamplePythonCode.blinky,
         description: """
@@ -73,7 +73,7 @@ A simple project code flashes 10 Neopixel LEDs purple and pink.
     static var cpbLedGlassesProj = Project(
         index:2,
         title: "EyeLights LED Glasses",
-        image: "led-glasses",
+        image: "cpb",
         device: "Circuit Playground Bluefruit",
         pythonCode: SamplePythonCode.ledGlasses,
         description: """
@@ -88,7 +88,7 @@ There's also six mounting holes for attaching to a glasses frame of your choosin
     static var cpbWavPlaybackProj = Project(
         index:3,
         title: "WAV Playback",
-        image: "rainbow-cpb",
+        image: "cpb",
         device: "Circuit Playground Bluefruit",
         pythonCode: SamplePythonCode.helloWorld, description: """
 This project plays a different WAV for each button pressed. Be aware, the speaker is small, so you will not get high quality WAV playback using the built-in speaker.
@@ -99,7 +99,7 @@ This project plays a different WAV for each button pressed. Be aware, the speake
     static var cpbLightMeterProj = Project(
         index:4,
         title: "Light Meter",
-        image: "rainbow-cpb",
+        image: "cpb",
         device: "Circuit Playground Bluefruit",
         pythonCode: SamplePythonCode.helloWorld, description: """
 This project uses the ten LEDs to indicate light level from the light sensor.
@@ -109,7 +109,7 @@ This project uses the ten LEDs to indicate light level from the light sensor.
     static var cpbTouchNeoPixelProj = Project(
         index:5,
         title: "Touch NeoPixel Rainbow",
-        image: "rainbow-cpb",
+        image: "cpb",
         device: "Circuit Playground Bluefruit",
         pythonCode: SamplePythonCode.helloWorld, description: """
 This project uses the touch pads to light up the LEDs in rainbow colors.
@@ -120,7 +120,7 @@ This project uses the touch pads to light up the LEDs in rainbow colors.
     static var cpbControlledNeoPixelProj = Project(
         index:6,
         title: "Button Controlled NeoPixels",
-        image: "rainbow-cpb",
+        image: "cpb",
         device: "Circuit Playground Bluefruit",
         pythonCode: SamplePythonCode.helloWorld, description: """
 This project lights up half of the NeoPixel LEDs for each button when pressed.
@@ -133,7 +133,7 @@ This project lights up half of the NeoPixel LEDs for each button when pressed.
     static var cpbPianoNeoPixelProj = Project(
         index:7,
         title: "Touch Tone Piano",
-        image: "rainbow-cpb",
+        image: "cpb",
         device: "Circuit Playground Bluefruit",
         pythonCode: SamplePythonCode.helloWorld, description: """
 This project plays a different tone and lights up the NeoPixels a different color for each touch pad touched.
@@ -148,7 +148,7 @@ This project plays a different tone and lights up the NeoPixels a different colo
     static var cpbSoundMeterProj = Project(
         index:8,
         title: "Sound Meter",
-        image: "rainbow-cpb",
+        image: "cpb",
         device: "Circuit Playground Bluefruit",
         pythonCode: SamplePythonCode.helloWorld, description: """
 This project uses the ten LEDs to indicate sound level from the sensor.
@@ -161,7 +161,7 @@ This project uses the ten LEDs to indicate sound level from the sensor.
     static var cpbPlayMP3Proj = Project(
         index:9,
         title: "MP3 Playback",
-        image: "rainbow-cpb",
+        image: "cpb",
         device: "Circuit Playground Bluefruit",
         pythonCode: SamplePythonCode.helloWorld, description: """
 This project plays a different MP3 for each button pressed.
@@ -173,9 +173,9 @@ This project plays a different MP3 for each button pressed.
     
     
     static var rainbowClue = Project(
-        index:4,
-        title: "Glide on over to some Rainbows",
-        image: "rainbow-cpb",
+        index:0,
+        title: "NeoPixel Rainbows",
+        image: "clue",
         device: "Adafruit CLUE",
         pythonCode: SamplePythonCode.inRainbows,
         description: """
@@ -183,21 +183,21 @@ PyLeap will list the device enabled guides, including this one. Our first stop i
 
 For this proof-of-concept we're going to toss a rainbow on over to the Adafruit CLUE.
 """,
-        downloadLink: "https://learn.adafruit.com/pages/22555/elements/3098569/download?type=zip", downloadedContents: false, filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo"))
+        downloadLink: "https://learn.adafruit.com/pages/22555/elements/3105809/download?type=zip", downloadedContents: false, filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo"))
     
     static var blinkClue = Project(
-        index:5,
+        index:1,
         title: "Blink!",
-        image: "rainbow-cpb",
+        image: "clue",
         device: "Adafruit CLUE",
         pythonCode: SamplePythonCode.blinky,
         description: "A simple example code that flashes a single Neopixel LED Purple and Pink!",
-        downloadLink: "https://learn.adafruit.com/pages/22920/elements/3103057/download?type=zip", downloadedContents: false, filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_NeoPixel_demo"))
+        downloadLink: "https://learn.adafruit.com/pages/22920/elements/3105810/download?type=zip", downloadedContents: false, filePath: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("RainbowBundle").appendingPathComponent("PyLeap_CPB_NeoPixel_Blinky_demo").appendingPathComponent("CircuitPython 7.x"))
     
     static var helloWorldClue = Project(
-        index:6,
+        index:2,
         title: "Hello World(Wipe)",
-        image: "rainbow-cpb",
+        image: "clue",
         device: "Adafruit CLUE",
         pythonCode: SamplePythonCode.helloWorld,
         description: "Prints 'Hello World' on the CLUE's TFT display",

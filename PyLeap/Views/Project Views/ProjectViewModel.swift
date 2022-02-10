@@ -3,7 +3,43 @@
 //  PyLeap
 //
 //  Created by Trevor Beaton on 6/30/21.
+
+/// Please add a comment at the top of the file here that explains how files are transfered. For example, include how the different functions are related to each other.
+
+/// To transfer project files to a connected Circuit Playground Bluefruit, first, we call the        filesTransfer function that accept a File Mananger URL that locates the downloaded project folder.
+
+/// Within the File Transfer Function we call the sort Directory function to first split the directories,and with the directories found, check if the directories exist. If the directory exists, we then
+
+/// if selectedUrl.deletingLastPathComponent().lastPathComponent == "CircuitPython 7.x"{
+
+
+//DELETE LATER VVVVVV
+//func sortDirectory(dirList: [URL], filesUrls: [URL]) {
+//    let tempDirectory = dirList
 //
+//    if dirList.isEmpty {
+//        print("No directories left in queue")
+//        self.transferFiles(files: filesUrls)
+//    } else {
+//        guard let directory = dirList.first else {
+//            print("No directory exist here")
+//            return
+//        }
+//
+//        if directory.lastPathComponent == "lib" {
+//            mkLibDir(libDirectory: directory, copiedDirectory: tempDirectory, filesUrl: filesUrls)
+//
+//        } else {
+//            mkSubLibDir(subdirectory: directory, copiedDirectory: tempDirectory, filesURL: filesUrls)
+//        }
+//    }
+//}
+
+///
+///
+///
+///
+
 
 import SwiftUI
 import FileTransferClient
@@ -18,13 +54,13 @@ class ProjectViewModel: ObservableObject  {
     private weak var fileTransferClient: FileTransferClient?
     @Published var directoryArray: [ContentFile] = []
     @Published var fileArray: [ContentFile] = []
-
+    
     @Published var contentList: [URLData] = []
     @Published var bootUpInfo = ""
     
     @Published var entries = [BlePeripheral.DirectoryEntry]()
     @Published var isTransmiting = false
-
+    
     @Published var directory = ""
     
     @Published var numOfFiles = 0
@@ -37,6 +73,8 @@ class ProjectViewModel: ObservableObject  {
     
     @Published var didCompleteTranfer = false
     @Published var writeError = false
+    
+    @Published var editableContent1 = ""
     
     var projectDirectories: [URL] = []
     
@@ -106,10 +144,10 @@ class ProjectViewModel: ObservableObject  {
         }
     }
     
-    // Deletes all files and dic. on Bluefruit device *Except boot_out.txt*
+    /// Deletes all files and dic. on Bluefruit device *Except boot_out.txt*
     func removeAllFiles(){
         self.listDirectoryCommand(path: "") { result in
-
+            
             switch result {
                 
             case .success(let contents):
@@ -139,7 +177,7 @@ class ProjectViewModel: ObservableObject  {
                 
                 do {
                     let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey, .addedToDirectoryDateKey,.isDirectoryKey])
-
+                    
                     contentList.append(.init(urlTitle: fileURL))
                     if fileAttributes.isRegularFile!  {
                         
@@ -150,6 +188,18 @@ class ProjectViewModel: ObservableObject  {
                         
                         let addedFile = ContentFile(title: fileURL.lastPathComponent, fileSize: fileSize)
                         fileArray.append(addedFile)
+                    }
+                    
+                    if fileURL.lastPathComponent == "code.py" {
+                        print("PRINTING")
+                        do {
+                            
+                            let text2 = try String(contentsOf: fileURL, encoding: .utf8)
+                            
+                            print(text2)
+                            editableContent1 = text2
+                        }
+                        
                     }
                     
                     if fileAttributes.isDirectory! {
@@ -163,7 +213,7 @@ class ProjectViewModel: ObservableObject  {
             }
             numOfFiles = fileArray.count
             print("File Count: \(self.fileArray.count)")
-
+            
             
             for i in contentList {
                 print("CL: \(i.urlTitle.lastPathComponent)")
@@ -180,7 +230,7 @@ class ProjectViewModel: ObservableObject  {
         var fileURLs: [URL] = []
         
         let dirEnumerator = localFileManager.enumerator(at: url, includingPropertiesForKeys: Array(resourceKeys), options: .skipsHiddenFiles)!
-
+        
         for case let fileURL as URL in dirEnumerator {
             guard let resourceValues = try? fileURL.resourceValues(forKeys: resourceKeys),
                   let isDirectory = resourceValues.isDirectory,
@@ -203,16 +253,16 @@ class ProjectViewModel: ObservableObject  {
         for file in fileURLs {
             print(file.lastPathComponent)
         }
-
+        
         DispatchQueue.main.async {
             self.sendingBundle = true
         }
-        directoryCheck(dirList: projectDirectories, filesUrls: fileURLs)
+        sortDirectory(dirList: projectDirectories, filesUrls: fileURLs)
     }
     
-    func directoryCheck(dirList: [URL], filesUrls: [URL]) {
+    func sortDirectory(dirList: [URL], filesUrls: [URL]) {
         let tempDirectory = dirList
-
+        
         if dirList.isEmpty {
             print("No directories left in queue")
             self.transferFiles(files: filesUrls)
@@ -221,7 +271,7 @@ class ProjectViewModel: ObservableObject  {
                 print("No directory exist here")
                 return
             }
-
+            
             if directory.lastPathComponent == "lib" {
                 mkLibDir(libDirectory: directory, copiedDirectory: tempDirectory, filesUrl: filesUrls)
                 
@@ -245,7 +295,7 @@ class ProjectViewModel: ObservableObject  {
                     print("lib directory exist")
                     
                     temp.removeFirst()
-                    self.directoryCheck(dirList: temp, filesUrls: filesUrl)
+                    self.sortDirectory(dirList: temp, filesUrls: filesUrl)
                     
                 } else {
                     print("lib directory does not exist")
@@ -256,7 +306,7 @@ class ProjectViewModel: ObservableObject  {
                             print("Success")
                             
                             temp.removeFirst()
-                            self.directoryCheck(dirList: temp, filesUrls: filesUrl)
+                            self.sortDirectory(dirList: temp, filesUrls: filesUrl)
                             
                         case .failure:
                             self.displayErrorMessage()
@@ -271,7 +321,7 @@ class ProjectViewModel: ObservableObject  {
         }
     }
     
-    func mkSubLibDir(subdirectory: URL, copiedDirectory: [URL], filesURL: [URL]) {
+    func mkSubLibDir(subdirectory: URL, copiedDirectory: [URL], filesURL: [URL]){
         var temp = copiedDirectory
         
         listDirectoryCommand(path: "lib/") { result in
@@ -284,7 +334,7 @@ class ProjectViewModel: ObservableObject  {
                     print("\(subdirectory.lastPathComponent) directory exist")
                     
                     temp.removeFirst()
-                    self.directoryCheck(dirList: temp, filesUrls: filesURL)
+                    self.sortDirectory(dirList: temp, filesUrls: filesURL)
                     
                 } else {
                     print("\(subdirectory.lastPathComponent) directory does not exist")
@@ -295,7 +345,7 @@ class ProjectViewModel: ObservableObject  {
                             print("Success")
                             
                             temp.removeFirst()
-                            self.directoryCheck(dirList: temp, filesUrls: filesURL)
+                            self.sortDirectory(dirList: temp, filesUrls: filesURL)
                             
                         case .failure:
                             self.displayErrorMessage()

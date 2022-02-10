@@ -3,7 +3,6 @@
 //  PyLeap
 //
 //  Created by Trevor Beaton on 6/10/21.
-//
 
 import SwiftUI
 

@@ -12,6 +12,7 @@
 		D50D06B0274681F80029A483 /* InfoModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50D06AF274681F80029A483 /* InfoModalView.swift */; };
 		D517807E273449E700108212 /* CustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D517807D273449E700108212 /* CustomView.swift */; };
 		D517F68126C5771D002996E8 /* FillerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D517F68026C5771D002996E8 /* FillerView.swift */; };
+		D527215827B195590096DD65 /* FileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D527215727B195590096DD65 /* FileEditView.swift */; };
 		D52BE7EE269DF36E00630900 /* DownloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE7EA269DF36E00630900 /* DownloadViewModel.swift */; };
 		D52BE7F0269DF36E00630900 /* DownloadProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE7E9269DF36E00630900 /* DownloadProgressView.swift */; };
 		D52BE7F3269DF62100630900 /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = D52BE7F2269DF62100630900 /* Zip */; };
@@ -69,6 +70,7 @@
 		D50D06AF274681F80029A483 /* InfoModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoModalView.swift; sourceTree = "<group>"; };
 		D517807D273449E700108212 /* CustomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomView.swift; sourceTree = "<group>"; };
 		D517F68026C5771D002996E8 /* FillerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FillerView.swift; sourceTree = "<group>"; };
+		D527215727B195590096DD65 /* FileEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileEditView.swift; sourceTree = "<group>"; };
 		D52BE7E9269DF36E00630900 /* DownloadProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProgressView.swift; sourceTree = "<group>"; };
 		D52BE7EA269DF36E00630900 /* DownloadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadViewModel.swift; sourceTree = "<group>"; };
 		D52BE85326A0E39100630900 /* BTConnectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTConnectionViewModel.swift; sourceTree = "<group>"; };
@@ -319,6 +321,7 @@
 				D59DFDB3268CCEB9001737F6 /* Onboarding Views */,
 				D5640215271B54BF00AE1519 /* MainSelectionView.swift */,
 				D5640217271B577F00AE1519 /* MainSelectionDetailView.swift */,
+				D527215727B195590096DD65 /* FileEditView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -446,6 +449,7 @@
 				D59DFDC0268CE565001737F6 /* ProjectViewModel.swift in Sources */,
 				D5F53CED2694B7A9007634C2 /* OnboardingBackgroundView.swift in Sources */,
 				D55D5BFD26C4BE45002B0925 /* Project.swift in Sources */,
+				D527215827B195590096DD65 /* FileEditView.swift in Sources */,
 				D58D887926CAB6FC0085604A /* SamplePythonCode.swift in Sources */,
 				D5F53CEF2694BD51007634C2 /* ScanAnimation.swift in Sources */,
 				D52F7E742672F4C400911D43 /* PyLeapApp.swift in Sources */,

@@ -94,6 +94,6 @@ struct MainSelectionDetailView: View {
 
 struct MainSelectionDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        MainSelectionDetailView(project: ProjectData.cpbInRainbowsProj)
+        MainSelectionDetailView(project: CPBProjects.cpbInRainbowsProj)
     }
 }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainSelectionView: View {
     
-    var projects: [Project] = ProjectData.projects
+    var projects: [Project] = CPBProjects.projects
     
     let layout = [
         GridItem(.adaptive(minimum: 180))

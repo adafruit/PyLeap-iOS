@@ -20,10 +20,33 @@ struct ProjectCell: View {
         
         ZStack {
             
-            Image(image)
-                .resizable(resizingMode: .stretch)
-                .aspectRatio(contentMode: .fit)
-                .offset(x: 0, y: -25)
+            ZStack {
+                
+///                Image(image)
+//                    .resizable(resizingMode: .stretch)
+//                    .aspectRatio(contentMode: .fit)
+//                    .offset(x: 0, y: -25)
+//                    //.opacity(0.5)
+                
+//                Image(image)
+//                    .resizable(resizingMode: .stretch)
+//                    .aspectRatio(contentMode: .fit)
+//                    .frame(width: 100, height: 100, alignment: .center)
+//                    .offset(x: 0, y: -25)
+//
+                
+                Image(image)
+                    .resizable(resizingMode: .stretch)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 100, height: 100, alignment: .center)
+                    .offset(x: 0, y: -25)
+                
+            }
+            
+           
+            
+            
+            
             HStack {
                 
                 VStack(alignment: .leading){
@@ -31,7 +54,7 @@ struct ProjectCell: View {
                         .resizable(resizingMode: .stretch)
                         .aspectRatio(contentMode: .fit)
                         .foregroundColor(.white)
-                        .frame(width: 25, height: 25)
+                        .frame(width: 20, height: 20)
                         .padding(9)
                     
                     Spacer()
