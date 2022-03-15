@@ -19,6 +19,10 @@ struct FillerView: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .offset(y: -20)
+            
+            ProgressView()
+               // .frame(width: 200, height: 200, alignment: .center)
+                
         }
         .padding(.horizontal, 20)
         .edgesIgnoringSafeArea(.all)
@@ -31,14 +35,7 @@ struct FillerView: View {
             if isStartupFinished {
                 
                 rootViewModel.goToMain()
-                
-//                if onboardingSeen == true {
-//
-//                    rootViewModel.goToMain()
-//                    print("Onboarding: \(onboardingSeen)")
-//                } else {
-//                    rootViewModel.goToOnboarding()
-//                }
+            
             }
         }
     }

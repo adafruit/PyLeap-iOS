@@ -44,7 +44,8 @@ struct RootView: View {
         }
         .onChange(of: connectionManager.isConnectedOrReconnecting) { isConnectedOrReconnecting in
             //DLog("isConnectedOrReconnecting: \(isConnectedOrReconnecting)")
-            
+
+            /// If connection is lost, go to .main = BTConnectionView
             if !isConnectedOrReconnecting, model.destination == .fileTransfer {
                 model.destination = .main
             }
@@ -55,8 +56,14 @@ struct RootView: View {
         }
         .environmentObject(model)
         .environmentObject(connectionManager)
+      //  .edgesIgnoringSafeArea(.all)
+//
+        .navigationBarBackButtonHidden(true)
+        .navigationBarHidden(true)
+       // .ignoresSafeArea(.all)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .edgesIgnoringSafeArea(.all)
-
+        .ignoresSafeArea(.all)
     }
 }
 

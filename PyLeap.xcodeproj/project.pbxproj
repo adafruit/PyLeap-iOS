@@ -13,6 +13,9 @@
 		D517807E273449E700108212 /* CustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D517807D273449E700108212 /* CustomView.swift */; };
 		D517F68126C5771D002996E8 /* FillerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D517F68026C5771D002996E8 /* FillerView.swift */; };
 		D527215827B195590096DD65 /* FileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D527215727B195590096DD65 /* FileEditView.swift */; };
+		D52721AE27BB3E6E0096DD65 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52721AD27BB3E6E0096DD65 /* TestView.swift */; };
+		D5279A2F27C528EF00BEAC99 /* PyLeapCatagoryHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5279A2E27C528EF00BEAC99 /* PyLeapCatagoryHeader.swift */; };
+		D5279A3227C52D5E00BEAC99 /* Catagories.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5279A3127C52D5E00BEAC99 /* Catagories.swift */; };
 		D52BE7EE269DF36E00630900 /* DownloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE7EA269DF36E00630900 /* DownloadViewModel.swift */; };
 		D52BE7F0269DF36E00630900 /* DownloadProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE7E9269DF36E00630900 /* DownloadProgressView.swift */; };
 		D52BE7F3269DF62100630900 /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = D52BE7F2269DF62100630900 /* Zip */; };
@@ -41,11 +44,13 @@
 		D55D5C0026C4D619002B0925 /* ProjectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D55D5BFF26C4D619002B0925 /* ProjectCell.swift */; };
 		D5640216271B54BF00AE1519 /* MainSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5640215271B54BF00AE1519 /* MainSelectionView.swift */; };
 		D5640218271B577F00AE1519 /* MainSelectionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5640217271B577F00AE1519 /* MainSelectionDetailView.swift */; };
+		D569F9E827C4A54900847A8B /* GridLayoutStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D569F9E727C4A54900847A8B /* GridLayoutStyle.swift */; };
 		D56F640C270242CA000E5975 /* UIColor+LightAndDark.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F6407270242CA000E5975 /* UIColor+LightAndDark.swift */; };
 		D56F640D270242CA000E5975 /* FileTransferPathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F640A270242CA000E5975 /* FileTransferPathUtils.swift */; };
 		D56F640E270242CA000E5975 /* String+DeletingPrefix.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F6408270242CA000E5975 /* String+DeletingPrefix.swift */; };
 		D56F64102702A6E9000E5975 /* DownloadButtonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F640F2702A6E9000E5975 /* DownloadButtonViewModel.swift */; };
 		D56F64122702A7E3000E5975 /* DownloadButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F64112702A7E3000E5975 /* DownloadButtonView.swift */; };
+		D58358EE27DA5C0F0069F7F5 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58358ED27DA5C0F0069F7F5 /* NetworkError.swift */; };
 		D585CABE276CFC040010185A /* FileTransferClient in Frameworks */ = {isa = PBXBuildFile; productRef = D585CABD276CFC040010185A /* FileTransferClient */; };
 		D58D887926CAB6FC0085604A /* SamplePythonCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58D887826CAB6FC0085604A /* SamplePythonCode.swift */; };
 		D58D887B26CC02B60085604A /* OnboardingViewPure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58D887A26CC02B60085604A /* OnboardingViewPure.swift */; };
@@ -58,6 +63,12 @@
 		D59DFDC2268CFA36001737F6 /* OnboardingStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFDC1268CFA36001737F6 /* OnboardingStepView.swift */; };
 		D59DFDC4268CFAB4001737F6 /* OnboardingDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFDC3268CFAB4001737F6 /* OnboardingDataModel.swift */; };
 		D5A4E5FB2715F47F00A6937F /* SingletonModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A4E5FA2715F47F00A6937F /* SingletonModule.swift */; };
+		D5C4749E27DFDB48002DD160 /* NavBarModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C4749D27DFDB48002DD160 /* NavBarModifier.swift */; };
+		D5C474A127DFDBA6002DD160 /* View + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C474A027DFDBA6002DD160 /* View + Extensions.swift */; };
+		D5C474A327DFDC02002DD160 /* ListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C474A227DFDC02002DD160 /* ListCell.swift */; };
+		D5C474A527DFDC5A002DD160 /* GifImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C474A427DFDC5A002DD160 /* GifImage.swift */; };
+		D5C474A727DFDCBE002DD160 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C474A627DFDCBE002DD160 /* Model.swift */; };
+		D5C474A927DFDDAA002DD160 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C474A827DFDDAA002DD160 /* NetworkService.swift */; };
 		D5E52DC626A71E010083956B /* SplashViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E52DC526A71E010083956B /* SplashViewModel.swift */; };
 		D5F53CEB2694B524007634C2 /* ScanningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F53CEA2694B524007634C2 /* ScanningView.swift */; };
 		D5F53CED2694B7A9007634C2 /* OnboardingBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F53CEC2694B7A9007634C2 /* OnboardingBackgroundView.swift */; };
@@ -71,6 +82,9 @@
 		D517807D273449E700108212 /* CustomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomView.swift; sourceTree = "<group>"; };
 		D517F68026C5771D002996E8 /* FillerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FillerView.swift; sourceTree = "<group>"; };
 		D527215727B195590096DD65 /* FileEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileEditView.swift; sourceTree = "<group>"; };
+		D52721AD27BB3E6E0096DD65 /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
+		D5279A2E27C528EF00BEAC99 /* PyLeapCatagoryHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PyLeapCatagoryHeader.swift; sourceTree = "<group>"; };
+		D5279A3127C52D5E00BEAC99 /* Catagories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Catagories.swift; sourceTree = "<group>"; };
 		D52BE7E9269DF36E00630900 /* DownloadProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProgressView.swift; sourceTree = "<group>"; };
 		D52BE7EA269DF36E00630900 /* DownloadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadViewModel.swift; sourceTree = "<group>"; };
 		D52BE85326A0E39100630900 /* BTConnectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTConnectionViewModel.swift; sourceTree = "<group>"; };
@@ -100,11 +114,13 @@
 		D55D5BFF26C4D619002B0925 /* ProjectCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCell.swift; sourceTree = "<group>"; };
 		D5640215271B54BF00AE1519 /* MainSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSelectionView.swift; sourceTree = "<group>"; };
 		D5640217271B577F00AE1519 /* MainSelectionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSelectionDetailView.swift; sourceTree = "<group>"; };
+		D569F9E727C4A54900847A8B /* GridLayoutStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridLayoutStyle.swift; sourceTree = "<group>"; };
 		D56F6407270242CA000E5975 /* UIColor+LightAndDark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+LightAndDark.swift"; sourceTree = "<group>"; };
 		D56F6408270242CA000E5975 /* String+DeletingPrefix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+DeletingPrefix.swift"; sourceTree = "<group>"; };
 		D56F640A270242CA000E5975 /* FileTransferPathUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTransferPathUtils.swift; sourceTree = "<group>"; };
 		D56F640F2702A6E9000E5975 /* DownloadButtonViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadButtonViewModel.swift; sourceTree = "<group>"; };
 		D56F64112702A7E3000E5975 /* DownloadButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadButtonView.swift; sourceTree = "<group>"; };
+		D58358ED27DA5C0F0069F7F5 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		D585CABC276CF97B0010185A /* FileTransferClient */ = {isa = PBXFileReference; lastKnownFileType = folder; path = FileTransferClient; sourceTree = "<group>"; };
 		D58D887826CAB6FC0085604A /* SamplePythonCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplePythonCode.swift; sourceTree = "<group>"; };
 		D58D887A26CC02B60085604A /* OnboardingViewPure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewPure.swift; sourceTree = "<group>"; };
@@ -118,6 +134,12 @@
 		D59DFDC3268CFAB4001737F6 /* OnboardingDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingDataModel.swift; sourceTree = "<group>"; };
 		D5A4E5FA2715F47F00A6937F /* SingletonModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingletonModule.swift; sourceTree = "<group>"; };
 		D5C41D6526C59A48004C38E3 /* PyLeap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PyLeap.entitlements; sourceTree = "<group>"; };
+		D5C4749D27DFDB48002DD160 /* NavBarModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBarModifier.swift; sourceTree = "<group>"; };
+		D5C474A027DFDBA6002DD160 /* View + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View + Extensions.swift"; sourceTree = "<group>"; };
+		D5C474A227DFDC02002DD160 /* ListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCell.swift; sourceTree = "<group>"; };
+		D5C474A427DFDC5A002DD160 /* GifImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifImage.swift; sourceTree = "<group>"; };
+		D5C474A627DFDCBE002DD160 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		D5C474A827DFDDAA002DD160 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		D5E52DC526A71E010083956B /* SplashViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewModel.swift; sourceTree = "<group>"; };
 		D5F53CEA2694B524007634C2 /* ScanningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanningView.swift; sourceTree = "<group>"; };
 		D5F53CEC2694B7A9007634C2 /* OnboardingBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingBackgroundView.swift; sourceTree = "<group>"; };
@@ -165,10 +187,26 @@
 			path = "Origanal Setup";
 			sourceTree = "<group>";
 		};
+		D5279A3027C52D2C00BEAC99 /* New PyLeap Layout */ = {
+			isa = PBXGroup;
+			children = (
+				D5279A2E27C528EF00BEAC99 /* PyLeapCatagoryHeader.swift */,
+				D5C4749F27DFDB6F002DD160 /* CustomView */,
+				D5279A3127C52D5E00BEAC99 /* Catagories.swift */,
+				D5C474A227DFDC02002DD160 /* ListCell.swift */,
+				D5C474A827DFDDAA002DD160 /* NetworkService.swift */,
+				D569F9E727C4A54900847A8B /* GridLayoutStyle.swift */,
+				D5C474A627DFDCBE002DD160 /* Model.swift */,
+				D5C474A427DFDC5A002DD160 /* GifImage.swift */,
+			);
+			path = "New PyLeap Layout";
+			sourceTree = "<group>";
+		};
 		D52BE85226A0E22C00630900 /* Root View */ = {
 			isa = PBXGroup;
 			children = (
 				D59DFDBB268CE0EB001737F6 /* RootView.swift */,
+				D52721AD27BB3E6E0096DD65 /* TestView.swift */,
 				D59DFDB9268CDEEC001737F6 /* RootViewModel.swift */,
 			);
 			path = "Root View";
@@ -199,6 +237,7 @@
 				D52F7E732672F4C400911D43 /* PyLeapApp.swift */,
 				D59DFDB5268CD052001737F6 /* AppEnvironment.swift */,
 				D5597BF726A9E14B00DF17C0 /* AppDelegate.swift */,
+				D5279A3027C52D2C00BEAC99 /* New PyLeap Layout */,
 				D517F67F26C56939002996E8 /* Origanal Setup */,
 				D55D5BFB26C4BE0C002B0925 /* Project Model */,
 				D59DFDB2268CCEAC001737F6 /* Views */,
@@ -320,6 +359,7 @@
 				D5597C0626AF018800DF17C0 /* Utils */,
 				D59DFDB3268CCEB9001737F6 /* Onboarding Views */,
 				D5640215271B54BF00AE1519 /* MainSelectionView.swift */,
+				D58358ED27DA5C0F0069F7F5 /* NetworkError.swift */,
 				D5640217271B577F00AE1519 /* MainSelectionDetailView.swift */,
 				D527215727B195590096DD65 /* FileEditView.swift */,
 			);
@@ -347,6 +387,15 @@
 				D56F640F2702A6E9000E5975 /* DownloadButtonViewModel.swift */,
 			);
 			path = "Download View";
+			sourceTree = "<group>";
+		};
+		D5C4749F27DFDB6F002DD160 /* CustomView */ = {
+			isa = PBXGroup;
+			children = (
+				D5C4749D27DFDB48002DD160 /* NavBarModifier.swift */,
+				D5C474A027DFDBA6002DD160 /* View + Extensions.swift */,
+			);
+			path = CustomView;
 			sourceTree = "<group>";
 		};
 		D5F53CF02694C914007634C2 /* Bluetooth Views */ = {
@@ -442,17 +491,23 @@
 				D50D06B0274681F80029A483 /* InfoModalView.swift in Sources */,
 				D56F640D270242CA000E5975 /* FileTransferPathUtils.swift in Sources */,
 				D5507AD326C668BC00512BAA /* SelectionView.swift in Sources */,
+				D5C474A127DFDBA6002DD160 /* View + Extensions.swift in Sources */,
 				D59DFDC4268CFAB4001737F6 /* OnboardingDataModel.swift in Sources */,
 				D5597C1426AF751B00DF17C0 /* MainView.swift in Sources */,
 				D5597C0426ADDD5E00DF17C0 /* StartupViewModel.swift in Sources */,
 				D56F640C270242CA000E5975 /* UIColor+LightAndDark.swift in Sources */,
+				D5279A2F27C528EF00BEAC99 /* PyLeapCatagoryHeader.swift in Sources */,
+				D5C4749E27DFDB48002DD160 /* NavBarModifier.swift in Sources */,
 				D59DFDC0268CE565001737F6 /* ProjectViewModel.swift in Sources */,
+				D5C474A927DFDDAA002DD160 /* NetworkService.swift in Sources */,
 				D5F53CED2694B7A9007634C2 /* OnboardingBackgroundView.swift in Sources */,
 				D55D5BFD26C4BE45002B0925 /* Project.swift in Sources */,
 				D527215827B195590096DD65 /* FileEditView.swift in Sources */,
 				D58D887926CAB6FC0085604A /* SamplePythonCode.swift in Sources */,
 				D5F53CEF2694BD51007634C2 /* ScanAnimation.swift in Sources */,
 				D52F7E742672F4C400911D43 /* PyLeapApp.swift in Sources */,
+				D569F9E827C4A54900847A8B /* GridLayoutStyle.swift in Sources */,
+				D58358EE27DA5C0F0069F7F5 /* NetworkError.swift in Sources */,
 				D52BE7F0269DF36E00630900 /* DownloadProgressView.swift in Sources */,
 				D5E52DC626A71E010083956B /* SplashViewModel.swift in Sources */,
 				D517807E273449E700108212 /* CustomView.swift in Sources */,
@@ -461,8 +516,11 @@
 				D52BE85626A0E5A700630900 /* PeripheralAutoConnect.swift in Sources */,
 				D5640218271B577F00AE1519 /* MainSelectionDetailView.swift in Sources */,
 				D545DE1727323CE1001E915A /* BundleDownloadVModel.swift in Sources */,
+				D5279A3227C52D5E00BEAC99 /* Catagories.swift in Sources */,
+				D52721AE27BB3E6E0096DD65 /* TestView.swift in Sources */,
 				D505B99E2756894300386E9F /* ViewModifier.swift in Sources */,
 				D59DFDB8268CD6A7001737F6 /* SplashScreen.swift in Sources */,
+				D5C474A327DFDC02002DD160 /* ListCell.swift in Sources */,
 				D5A4E5FB2715F47F00A6937F /* SingletonModule.swift in Sources */,
 				D517F68126C5771D002996E8 /* FillerView.swift in Sources */,
 				D5F53CEB2694B524007634C2 /* ScanningView.swift in Sources */,
@@ -475,6 +533,8 @@
 				D58D887B26CC02B60085604A /* OnboardingViewPure.swift in Sources */,
 				D52BE85426A0E39100630900 /* BTConnectionViewModel.swift in Sources */,
 				D59DFDC2268CFA36001737F6 /* OnboardingStepView.swift in Sources */,
+				D5C474A527DFDC5A002DD160 /* GifImage.swift in Sources */,
+				D5C474A727DFDCBE002DD160 /* Model.swift in Sources */,
 				D5597C3926B8B26100DF17C0 /* ProjectCardView.swift in Sources */,
 				D5507AD126C668BC00512BAA /* SearchBarView.swift in Sources */,
 				D59DFDBA268CDEEC001737F6 /* RootViewModel.swift in Sources */,

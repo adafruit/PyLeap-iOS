@@ -11,7 +11,19 @@ import WebKit
 
 struct WebView : UIViewRepresentable {
     
-    let request = URLRequest(url: URL(string: "https://learn.adafruit.com/pyleap-device-enabled-blinky")!)
+    private let learnGuideLink: URLRequest
+
+    init(_ name: URLRequest) {
+        self.learnGuideLink = name
+    }
+    
+    var request: URLRequest {
+        get {
+            return URLRequest(url: learnGuideLink.url!)
+        }
+    }
+    
+   // let request = URLRequest(url: URL(string: project.learn_guide_link)!)
     
     func makeUIView(context: Context) -> WKWebView  {
         return WKWebView()
@@ -87,16 +99,16 @@ struct ProjectCardView: View {
         VStack {
             
 //            ScrollView {
-//                
-//                
-//                
+//
+//
+//
 //                VStack{
-//                    
-//                    
+//
+//
 //                    Group {
-//                        
+//
 //                        Text("code.py")
-//                        
+//
 //                        TextEditor(text: $editedContents)
 //                            .background(Color.white)
 //                        //                        Image("rainbow")
@@ -124,26 +136,26 @@ struct ProjectCardView: View {
 //                        //                        .multilineTextAlignment(.leading)
 //                        //                        .padding()
 //                        //
-//                        
+//
 //                        Spacer()
 //                    }
-//                    
-//                    
+//
+//
 //                    if downloadedBundle == false {
-//                        
+//
 //                        Section {
 //                            Button(action: {
 //                                downloadModel.startDownload(urlString: project.downloadLink)
-//                                
+//
 //                                disableDownload = true
 //                                downloadLabel = "Downloading..."
-//                                
+//
 //                                print(project.downloadLink)
 //                                print("Download type: \(project.title)")
 //                            }, label: {
-//                                
+//
 //                                HStack {
-//                                    
+//
 //                                    Text(downloadLabel)
 //                                        .fontWeight(.semibold)
 //                                        .font(.system(size: 18))
@@ -151,55 +163,55 @@ struct ProjectCardView: View {
 //                                        .background(Color(red: 1, green: 1, blue: 1))
 //                                        .cornerRadius(10)
 //                                        .padding()
-//                                    
+//
 //                                        .onAppear {
 //                                            print("on awake: \(downloadedBundle)")
 //                                        }
-//                                    
+//
 //                                        .onChange(of: downloadModel.downloadProgress) { newValue in
 //                                            print("Current Download Progress: \(newValue)")
-//                                            
-//                                            
+//
+//
 //                                            if newValue == 1.0 {
-//                                                
-//                                                
+//
+//
 //                                                downloadLabel = "Download Bundle"
 //                                                // downloadedBundle = false
 //                                                downloadedBundle = true
 //                                                disableDownload = false
-//                                                
+//
 //                                                DispatchQueue.main.async {
 //                                                    model.downloadCheck(at: project.filePath)
 //                                                }
-//                                                
-//                                                
+//
+//
 //                                                print("Status: \(downloadedBundle)")
 //                                                print("PASS")
 //                                                print("Current Download Status: \(downloadedBundle)")
 //                                            }
-//                                            
+//
 //                                        }
 //                                        .onChange(of: downloadModel.isDownloading, perform: { value in
-//                                            
+//
 //                                            DispatchQueue.main.async {
 //                                                print("Download Status: \(value)")
-//                                                
-//                                                
+//
+//
 //                                                progress = downloadModel.downloadProgress
 //                                            }
-//                                            
-//                                            
+//
+//
 //                                        })
-//                                    
+//
 //                                }
-//                                
+//
 //                            })
-//                            
+//
 //                        }
 //                        .disabled(disableDownload)
-//                        
-//                        
-//                        
+//
+//
+//
 //                    } else {
 //                        // Section 2
 //                        Section{
@@ -215,31 +227,31 @@ struct ProjectCardView: View {
 //                                    .cornerRadius(10)
 //                                    .padding()
 //                            })
-//                            
+//
 //                        }
-//                        
-//                        
-//                        
-//                        
+//
+//
+//
+//
 //                    }
-//                    
-//                    
+//
+//
 //                    //          Divider()
 //                    Spacer()
 //                }
-//                
+//
 //                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height / 2.1)
 //                .border(Color(red: 1.0, green: 0.0, blue: 0.0, opacity: 0.497), width: 3)
 //                //  .background(Color.purple)
-//                
-//                
+//
+//
 //                HStack{
 //                    Text("Files Downloaded")
 //                        .font(.system(size: 22))
 //                        .fontWeight(.bold)
 //                        .multilineTextAlignment(.leading)
 //                        .padding(5)
-//                    
+//
 //                    Spacer()
 //                }
 //                //                ForEach(model.directoryArray) { file in
@@ -251,7 +263,7 @@ struct ProjectCardView: View {
 //                //                    }
 //                //
 //                //                }
-//                
+//
 //                ForEach(model.fileArray) { file in
 //                    VStack(alignment: .leading) {
 //                        FileRow(title: file.title, fileSize: file.fileSize)
@@ -259,38 +271,38 @@ struct ProjectCardView: View {
 //                        Divider()
 //                    }
 //                }
-//                
-//                
-//                
+//
+//
+//
 //                Section{
 //                    VStack(alignment: .leading){
-//                        
+//
 //                        HStack{
 //                            Text("Serial Terminal")
 //                                .font(.system(size: 22))
 //                                .fontWeight(.bold)
 //                                .multilineTextAlignment(.leading)
 //                                .padding(5)
-//                            
+//
 //                            Spacer()
 //                        }
-//                        
+//
 //                        Text("""
 //                                                \(model.bootUpInfo)
 //                                                """)
-//                        
+//
 //                            .font(.custom("Menlo", size: 13))
 //                            .disabled(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/)
 //                    }
-//                    
+//
 //                }
-//                
+//
 //                .background(Color.secondary)
 //                //    .border(Color(hue: 0.926, saturation: 1.0, brightness: 1.0, opacity: 0.8), width: 4)
-//                
+//
 //            }
 //            .border(Color(red: 1.0, green: 0.0, blue: 0.0, opacity: 1.0), width: 4)
-//            
+//
             
             
             
@@ -340,7 +352,7 @@ struct ProjectCardView: View {
                             arrowEdge: .bottom
                         ) {
                             VStack{
-                                WebView()
+                              //  WebView(project: )
                             }
                             
                             .padding(0)

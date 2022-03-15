@@ -76,6 +76,9 @@ class ProjectViewModel: ObservableObject  {
     
     @Published var editableContent1 = ""
     
+    @Published var directoryArrayTest : [URL] = []
+    
+    
     var projectDirectories: [URL] = []
     
     enum ProjectViewError: LocalizedError {
@@ -168,7 +171,27 @@ class ProjectViewModel: ObservableObject  {
         }
     }
     
-    func filesDownloaded(url: URL){
+    func directoryChecker(path: URL) {
+        
+        let fileManager = FileManager.default
+        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        do {
+            let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
+            // process files
+            
+            for i in fileURLs {
+                print(i.lastPathComponent)
+            }
+            
+        } catch {
+            print("Error while enumerating files \(documentsURL.path): \(error.localizedDescription)")
+        }
+        
+        
+        
+    }
+    
+    func filesDownloaded(url: URL) {
         
         fileArray.removeAll()
         var files = [URL]()
@@ -179,7 +202,7 @@ class ProjectViewModel: ObservableObject  {
                     let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey, .addedToDirectoryDateKey,.isDirectoryKey])
                     
                     contentList.append(.init(urlTitle: fileURL))
-                    if fileAttributes.isRegularFile!  {
+                    if fileAttributes.isRegularFile! {
                         
                         files.append(fileURL)
                         
@@ -190,12 +213,15 @@ class ProjectViewModel: ObservableObject  {
                         fileArray.append(addedFile)
                     }
                     
+                    if fileAttributes.isDirectory! {
+                        directoryArrayTest.append(fileURL)
+                    }
+                    
                     if fileURL.lastPathComponent == "code.py" {
-                        print("PRINTING")
+                        
                         do {
                             
                             let text2 = try String(contentsOf: fileURL, encoding: .utf8)
-                            
                             print(text2)
                             editableContent1 = text2
                         }
@@ -215,16 +241,34 @@ class ProjectViewModel: ObservableObject  {
             print("File Count: \(self.fileArray.count)")
             
             
+            //            for i in directoryArrayTest {
+            //                print("Index: \(i.pathComponents.count - 12)")
+            //                print(i.lastPathComponent)
+            //                print(i.path)
+            //
+            //            }
+            
+            let newarry = directoryArrayTest.sorted(by: { $1.pathComponents.count > $0.pathComponents.count} )
+            
+            //  print("Direct Path")
+            
+            for i in newarry {
+                //                print("Index: \(i.pathComponents.count - 12)")
+                //                print(i.lastPathComponent)
+                //                print(i.path)
+                //
+            }
+            
             for i in contentList {
-                print("CL: \(i.urlTitle.lastPathComponent)")
+                
+                //print("CL: \(i.urlTitle.pathComponents.count - 12)")
+                print("CL: \(i.urlTitle.pathComponents)")
             }
             
         }
     }
     
     func filesTransfer(url: URL) {
-        print(#function)
-        
         let localFileManager = FileManager()
         let resourceKeys = Set<URLResourceKey>([.nameKey, .isDirectoryKey])
         var fileURLs: [URL] = []
@@ -240,6 +284,8 @@ class ProjectViewModel: ObservableObject  {
             }
             
             if isDirectory {
+                print("Directories Found")
+                print(fileURL.lastPathComponent)
                 if name == "_extras" {
                     dirEnumerator.skipDescendants()
                 }
@@ -261,7 +307,13 @@ class ProjectViewModel: ObservableObject  {
     }
     
     func sortDirectory(dirList: [URL], filesUrls: [URL]) {
-        let tempDirectory = dirList
+        // let newarry = directoryArrayTest.sorted(by: { $1.pathComponents.count > $0.pathComponents.count} )
+        
+        let tempDirectory = dirList.sorted(by: { $1.pathComponents.count > $0.pathComponents.count} )
+        print("Sorted Directory")
+        for i in tempDirectory{
+            print(i.lastPathComponent)
+        }
         
         if dirList.isEmpty {
             print("No directories left in queue")
@@ -281,7 +333,7 @@ class ProjectViewModel: ObservableObject  {
         }
     }
     
-    func mkLibDir(libDirectory: URL, copiedDirectory: [URL], filesUrl: [URL]){
+    func mkLibDir(libDirectory: URL, copiedDirectory: [URL], filesUrl: [URL]) {
         var temp = copiedDirectory
         
         listDirectoryCommand(path: "") { result in
@@ -300,7 +352,13 @@ class ProjectViewModel: ObservableObject  {
                 } else {
                     print("lib directory does not exist")
                     
-                    self.makeDirectoryCommand(path: libDirectory.lastPathComponent) { result in
+                    var tempURL = libDirectory.pathComponents
+                    tempURL.removeFirst(12)
+                    
+                    let joined = tempURL.joined(separator: "/")
+                    print("FIXED PATHxx:\(joined)")
+                    
+                    self.makeDirectoryCommand(path: joined) { result in
                         switch result {
                         case .success:
                             print("Success")
@@ -321,7 +379,7 @@ class ProjectViewModel: ObservableObject  {
         }
     }
     
-    func mkSubLibDir(subdirectory: URL, copiedDirectory: [URL], filesURL: [URL]){
+    func mkSubLibDir(subdirectory: URL, copiedDirectory: [URL], filesURL: [URL]) {
         var temp = copiedDirectory
         
         listDirectoryCommand(path: "lib/") { result in
@@ -331,15 +389,24 @@ class ProjectViewModel: ObservableObject  {
             case .success(let contents):
                 
                 if contents!.contains(where: { name in name.name == subdirectory.lastPathComponent}) {
-                    print("\(subdirectory.lastPathComponent) directory exist")
-                    
+                    print("FULL PATH OF: \(subdirectory.lastPathComponent)")
+                    print("\(subdirectory.path)")
+                    // Skips the existing directory.
                     temp.removeFirst()
                     self.sortDirectory(dirList: temp, filesUrls: filesURL)
                     
                 } else {
+                    
                     print("\(subdirectory.lastPathComponent) directory does not exist")
                     
-                    self.makeDirectoryCommand(path: "lib/\(subdirectory.lastPathComponent)") { result in
+                    var tempURL = subdirectory.pathComponents
+                    
+                    tempURL.removeFirst(12)
+                    let joined = tempURL.joined(separator: "/")
+                    print("FIXED PATHxx:\(joined)")
+                    
+                    
+                    self.makeDirectoryCommand(path: joined) { result in
                         switch result {
                         case .success:
                             print("Success")
@@ -385,7 +452,23 @@ class ProjectViewModel: ObservableObject  {
             }
             
             if selectedUrl.deletingLastPathComponent().lastPathComponent == "CircuitPython 7.x"{
-                self.writeFileCommand(path: "/\(selectedUrl.deletingPathExtension().lastPathComponent).\(selectedUrl.pathExtension)", data: data) { result in
+                
+                print("Selected Path: \(selectedUrl.path)")
+                
+                var tempURL = selectedUrl.pathComponents
+                //tempURL.removeFirst(142)
+                
+                //  var tempURL = subdirectory.pathComponents
+                
+                tempURL.removeFirst(12)
+                let joined = tempURL.joined(separator: "/")
+                print("FIXED PATHxx:\(joined)")
+                
+                
+                
+                print("Updated Path:\(joined)")
+                
+                self.writeFileCommand(path: joined, data: data) { result in
                     switch result {
                         
                     case .success(_):
@@ -400,7 +483,20 @@ class ProjectViewModel: ObservableObject  {
             
             else if selectedUrl.deletingLastPathComponent().lastPathComponent == "lib" {
                 
-                writeFileCommand(path: "/lib/\(selectedUrl.deletingPathExtension().lastPathComponent).\(selectedUrl.pathExtension)", data: data) { result in
+                
+                
+                var tempURL = selectedUrl.pathComponents
+                tempURL.removeFirst(12)
+                let joined = tempURL.joined(separator: "/")
+                print("FIXED PATHxx:\(joined)")
+                
+                
+                
+                print("Updated Path:\(joined)")
+                
+                
+                
+                writeFileCommand(path: joined, data: data) { result in
                     switch result {
                     case .success(_):
                         copiedFiles.removeFirst()
@@ -412,7 +508,17 @@ class ProjectViewModel: ObservableObject  {
                 }
             } else {
                 
-                writeFileCommand(path: "/lib/\(selectedUrl.deletingLastPathComponent().lastPathComponent)/\(selectedUrl.deletingPathExtension().lastPathComponent).\(selectedUrl.pathExtension)", data: data) { result in
+                var tempURL = selectedUrl.pathComponents
+                tempURL.removeFirst(12)
+                let joined = tempURL.joined(separator: "/")
+                print("FIXED PATHxx:\(joined)")
+                
+                
+                
+                print("Updated Path:\(joined)")
+                
+                
+                writeFileCommand(path: joined, data: data) { result in
                     switch result {
                     case .success(_):
                         copiedFiles.removeFirst()

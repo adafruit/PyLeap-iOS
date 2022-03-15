@@ -12,7 +12,9 @@ struct PyLeapApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootView()
+            ViewA()
+          //  RootView()
+            
         }
     }
 }

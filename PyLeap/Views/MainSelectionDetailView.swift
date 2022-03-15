@@ -6,6 +6,9 @@
 //
 
 import SwiftUI
+import WebKit
+
+
 
 struct MainSelectionDetailView: View {
     var project: Project
@@ -16,7 +19,7 @@ struct MainSelectionDetailView: View {
         self.project = project
     }
 
-
+    @State private var showWebViewPopover: Bool = false
     
     var body: some View {
         
@@ -66,27 +69,38 @@ struct MainSelectionDetailView: View {
                             .fontWeight(.medium)
                             .font(.footnote)
                             .multilineTextAlignment(.leading)
-
+                            .fixedSize(horizontal: false, vertical: true)
+                        
                     }
                     
                 }
                 
+                Section {
+                    Button("Show Learn Guide") {
+                        self.showWebViewPopover = true
+                    }
+                    .popover(
+                        isPresented: self.$showWebViewPopover,
+                        arrowEdge: .bottom
+                    ) {
+                        VStack{
+                           // WebView(request: project.learnGuideURL)
+                        }
+                        
+                        .padding(0)
+                        
+                    }
+                }
+                
                 Section{
-                    Button(action: {
-                        ProjectState.shared.projectSingleton = project
-                        rootViewModel.goToMainSelection()
-                        
-                        self.mode.wrappedValue.dismiss()
-                        rootViewModel.goToMain()
-                        
-                    }, label: {
-                        Text("Connect to device")
+                   
+                    NavigationLink(destination: RootView(), label: {
+                        Text("Go To RootView")
                     })
                 }
                 
             }
-            
-
+            .navigationBarTitle("Project Card")
             
         }
     }
