@@ -4,6 +4,17 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>ReadexPro-Medium.ttf</string>
+		<string>ReadexPro-Regular.ttf</string>
+		<string>ReadexPro-Light.ttf</string>
+		<string>ReadexPro-Bold.ttf</string>
+	</array>
+	<key>CFBundleDisplayName</key>
+	<array>
+		<string></string>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

@@ -33,17 +33,15 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
     
     // MARK:- Download
     func startDownload(urlString: String) {
-         isDownloading = true
+        isDownloading = true
         // Check for valid URL
         guard let validURL = URL(string: urlString) else {
             self.reportError(error: "Invalid URL!")
             return
         }
         downloadProgress = 0
-       // withAnimation{showDownloadProgress = true}
         
         // Download Task...
-        // Since were going to get the progress as well as location of the File, I'm going to use a delegate...
         let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
         
         downloadTaskSession = session.downloadTask(with: validURL)
@@ -54,22 +52,22 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
     
     func makeFileDirectory() {
         // Creating a File Manager Object
-       
+        
         // Creating a folder
         let pyleapProjectFolderURL = directoryPath.appendingPathComponent("PyLeap Project Folder")
         
         do {
             
             try FileManager.default.createDirectory(at: pyleapProjectFolderURL,
-                                        withIntermediateDirectories: true,
-                                        attributes: [:])
+                                                    withIntermediateDirectories: true,
+                                                    attributes: [:])
         } catch {
             print(error)
         }
     }
     
     func unzipProjectFile(urlString: String) {
-
+        
         let CPZipName = directoryPath.appendingPathComponent("RainbowBundle.zip")
         
         _ = directoryPath.appendingPathComponent("PyLeap Folder")
@@ -109,8 +107,8 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
         
         // Creating a path to make a document directory path
         guard let url = manager.urls(
-                for: .documentDirectory,
-                in: .userDomainMask).first else {return}
+            for: .documentDirectory,
+               in: .userDomainMask).first else {return}
         
         // Creating a folder
         let newFolderURL = url.appendingPathComponent("PyLeap Folder")
@@ -135,29 +133,25 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
                in: .userDomainMask).first != nil else {return}
         
         let deleteFile = directoryPath.appendingPathComponent("PyLeap Project Folder")
-       
+        
         
         if manager.fileExists(atPath: deleteFile.path) {
             print("File to be deleted :\(deleteFile)")
             
             do {
                 try manager.removeItem(at: deleteFile)
-
+                
             } catch {
                 print(error)
             }
         }
     }
     
-
-    
     /// Periodically informs the delegate about the download’s progress - Used for progress UI
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
         // Getting Progress
         let numeralProgress = CGFloat(totalBytesWritten) / CGFloat(totalBytesExpectedToWrite)
         print("Progress: \(numeralProgress)")
-        
-        
         
         // Since URL Session will be running in the background thread
         // UI will be done on the main thread
@@ -168,7 +162,7 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
     
     /// Tells the delegate that a download task has finished downloading.
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-       
+        
         guard let url = downloadTask.originalRequest?.url else {
             self.reportError(error: "An error has occurred...")
             return
@@ -210,21 +204,19 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
         
     }
     
-    
-    
     // Report Error Function...
     func reportError(error: String){
         alertMsg = error
         showAlert.toggle()
     }
-   
+    
     // cancel Task...
     func cancelTask(){
         if let task = downloadtaskSession,task.state == .running{
             // cancelling...
             downloadtaskSession.cancel()
             // closing view...
-         //   withAnimation{self.showDownlodProgress = false}
+            //   withAnimation{self.showDownlodProgress = false}
         }
     }
     

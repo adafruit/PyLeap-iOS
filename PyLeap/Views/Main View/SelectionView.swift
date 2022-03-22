@@ -19,10 +19,11 @@ struct SelectionView: View {
     let layout = [
         GridItem(.adaptive(minimum: 180))
     ]
-    
+    let grayColor = UIColor(red: 51/255, green: 51/255, blue: 51/255, alpha: 1)
     var columns = Array(repeating: GridItem(.flexible(), spacing:20), count: 2)
     @ObservedObject var model = NetworkService()
-   
+    @State private var isConnected = true
+    
     var body: some View {
         
         NavigationView {
@@ -31,6 +32,7 @@ struct SelectionView: View {
 
                 
                 ScrollView {
+                    
                     HStack {
                         
                         Text("Browse all of the available PyLeap Projects")
@@ -40,7 +42,7 @@ struct SelectionView: View {
                     .padding(.vertical,30)
                     
                     ForEach(model.pdemos) { demo in
-                        DemoCell(result: demo)
+                        DemoCell(result: demo, isConnected: $isConnected)
                     }
                     
                     
@@ -55,15 +57,22 @@ struct SelectionView: View {
                     }
                 }
                 
-                .toolbar {
-                    Button(action: {
-                        print("Hello button tapped!")
-                    }) {
-                        Image(systemName: "list.bullet")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 30, height: 30, alignment: .center)
-                    }                }
+//                .toolbar {
+//                    Button(action: {
+//                        print("Hello button tapped!")
+//                    }) {
+//                        Image(systemName: "list.bullet")
+//                            .resizable()
+//                            .aspectRatio(contentMode: .fit)
+//                            .frame(width: 30, height: 30, alignment: .center)
+//                    }                }
+                
+                
+                
+                
+                
+                
+                
                 
                 
 //                ScrollView {
@@ -87,7 +96,10 @@ struct SelectionView: View {
 //                }
 
             }
-           
+            .background(Color.white)
+            .navigationBarColor(grayColor)
+            .navigationBarTitleDisplayMode(.inline)
+            
          //   .padding(10)
 //            .navigationBarHidden(true)
 //           // .ignoresSafeArea(.all)

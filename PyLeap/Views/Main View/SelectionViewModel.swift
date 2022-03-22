@@ -39,7 +39,8 @@ class SelectionViewModel: ObservableObject {
             print("Clue device")
             
             DispatchQueue.main.async { [self] in
-             //   projects = []
+             
+                
             }
         default:
             print("Unknown Device")

@@ -7,33 +7,7 @@
 
 import SwiftUI
 import FileTransferClient
-import WebKit
 
-struct WebView : UIViewRepresentable {
-    
-    private let learnGuideLink: URLRequest
-
-    init(_ name: URLRequest) {
-        self.learnGuideLink = name
-    }
-    
-    var request: URLRequest {
-        get {
-            return URLRequest(url: learnGuideLink.url!)
-        }
-    }
-    
-   // let request = URLRequest(url: URL(string: project.learn_guide_link)!)
-    
-    func makeUIView(context: Context) -> WKWebView  {
-        return WKWebView()
-    }
-    
-    func updateUIView(_ uiView: WKWebView, context: Context) {
-        uiView.load(request)
-    }
-    
-}
 
 struct ProjectCardView: View {
     
@@ -47,6 +21,7 @@ struct ProjectCardView: View {
     @State private var showWebViewPopover: Bool = false
     
     @StateObject var model = ProjectViewModel()
+    
     @StateObject var downloadModel = DownloadViewModel()
     
     

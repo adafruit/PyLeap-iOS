@@ -14,20 +14,20 @@ struct RootResults: Decodable {
 struct ResultItem: Codable, Identifiable {
     enum CodingKeys: CodingKey {
 
-        case project_name
-        case project_image
+        case projectName
+        case projectImage
         case description
-        case bundle_link
-        case learn_guide_link
+        case bundleLink
+        case learnGuideLink
         case compatibility
     }
     
     var id = UUID()
 
-    let project_name: String
-    let project_image: String
+    let projectName: String
+    let projectImage: String
     let description: String
-    let bundle_link: String
-    let learn_guide_link: String
+    let bundleLink: String
+    let learnGuideLink: String
     let compatibility: [String]
 }

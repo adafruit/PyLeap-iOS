@@ -9,14 +9,21 @@ import SwiftUI
 import FileTransferClient
 
 
+
+enum AdafruitDevices {
+    case clue_nrf52840_express
+    case circuitplayground_bluefruit
+}
+
+
 struct MainSelectionView: View {
     
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject private var connectionManager: FileTransferConnectionManager
     
-    var projects: [Project] = CPBProjects.projects
-    var clueProjects: [Project] = CPBProjects.clueProjects
-    var cpbProjects: [Project] = CPBProjects.cpbDemos
+//    var projects: [Project] = CPBProjects.projects
+//    var clueProjects: [Project] = CPBProjects.clueProjects
+//    var cpbProjects: [Project] = CPBProjects.cpbDemos
     
     
     @State private var showWebViewPopover: Bool = false
@@ -49,6 +56,9 @@ struct MainSelectionView: View {
     
     let grayColor = UIColor(red: 51/255, green: 51/255, blue: 51/255, alpha: 1)
     
+    
+    @State private var isConnected = false
+    
     var body: some View {
         
         VStack{
@@ -65,13 +75,9 @@ struct MainSelectionView: View {
                 .padding(.vertical,30)
                 
                 ForEach(model.pdemos) { demo in
-                    DemoCell(result: demo)
+                    DemoCell(result: demo, isConnected: $isConnected)
                 }
-                .onAppear {
-                    print(model.pdemos.count)
-                }
-                // .animation(.linear)
-                
+
                 
             }
             .toolbar {
@@ -84,81 +90,20 @@ struct MainSelectionView: View {
                 }
             }
             
-            .toolbar {
-                Button(action: {
-                    print("Hello button tapped!")
-                }) {
-                    Image(systemName: "list.bullet")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 30, height: 30, alignment: .center)
-                }                }
+//            .toolbar {
+//                Button(action: {
+//                    print("Hello button tapped!")
+//                }) {
+//                    Image(systemName: "list.bullet")
+//                        .resizable()
+//                        .aspectRatio(contentMode: .fit)
+//                        .frame(width: 30, height: 30, alignment: .center)
+//                }                }
         }
         .background(Color.white)
         .navigationBarColor(grayColor)
         .navigationBarTitleDisplayMode(.inline)
         
-        //            ScrollView {
-        //
-        //                LazyVGrid(columns: layout, spacing: 20, pinnedViews: [.sectionHeaders]) {
-        //
-        //                    Section(header:
-        //                                HStack {
-        //                        Text("Adafruit CLUE")
-        //                            .padding(2)
-        //
-        //
-        //                        Spacer()}) {
-        //
-        //
-        //                            List(model.pdemos) { demo in
-        //                               // ProjectCell(title: model.pdemos[demo].project_name)
-        //                            }
-        //
-        ////                            **MAIN
-        ////                            ForEach(clueProjects.indices,id: \.self) { item in
-        ////
-        ////                            ZStack {
-        ////
-        ////                                NavigationLink(destination: MainSelectionDetailView(project: self.clueProjects[item])) {
-        ////                                    ProjectCell(title: clueProjects[item].title, deviceName: clueProjects[item].device, image: clueProjects[item].image)
-        ////                                }
-        ////
-        ////                            }
-        ////                        }
-        //                    }
-        //
-        //
-        //
-        //
-        //
-        ////                    Section(header:
-        ////                                HStack {
-        ////                        Text("Circuit Playground Bluefruit")
-        ////                            .padding(2)
-        ////
-        ////
-        ////                        Spacer()}
-        ////                                ) {
-        ////                        ForEach(cpbProjects.indices,id: \.self) { item in
-        ////
-        ////                            ZStack {
-        ////
-        ////                                NavigationLink(destination: MainSelectionDetailView(project: self.cpbProjects[item])) {
-        ////                                    ProjectCell(title: cpbProjects[item].title, deviceName: cpbProjects[item].device, image: cpbProjects[item].image)
-        ////                                }
-        ////
-        ////                            }
-        ////                        }
-        ////                    }
-        //
-        //
-        //
-        //
-        //
-        //
-        //                }
-        //            }
     }
 }
 

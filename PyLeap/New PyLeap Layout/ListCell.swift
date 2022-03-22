@@ -12,6 +12,8 @@ struct DemoCell: View {
     
     let result : ResultItem
     
+    @Binding var isConnected: Bool
+    
     var body: some View {
         
         content
@@ -25,7 +27,7 @@ struct DemoCell: View {
             if isExpanded {
                 Group {
                     
-                    DemoSubview(description: result.description, learnGuideLink: URLRequest(url: URL(string: result.learn_guide_link)!), compatibility: result.compatibility)
+                    DemoSubview(description: result.description, learnGuideLink: URLRequest(url: URL(string: result.learnGuideLink)!), compatibility: result.compatibility, isConnected: $isConnected)
                 }
             }
         }
@@ -36,10 +38,9 @@ struct DemoCell: View {
     private var header: some View {
         HStack {
             
-            Text(result.project_name)
+            Text(result.projectName)
             
-                .font(Font.custom("ReadexPro-VariableFont_wght", size: 24))
-                .fontWeight(.bold)
+                .font(Font.custom("ReadexPro-Regular", size: 24))
                 .padding(8)
                 .foregroundColor(.white)
             
@@ -69,23 +70,22 @@ struct DemoSubview: View {
     let description: String
     let learnGuideLink: URLRequest
     let compatibility: [String]
-    var isConnect = false
     
-//    private let test: Bool
-//
-//    init(_ name: URLRequest) {
-//        self.learnGuideLink = name
-//    }
+    @Binding var isConnected : Bool
     
     @State private var showWebViewPopover: Bool = false
     
     var body: some View {
         VStack {
             
+            
             Image("product_image_cpb")
                 .resizable()
                 .scaledToFit()
                 .frame(maxWidth: .infinity)
+                .cornerRadius(14)
+                .padding(.leading, 30)
+                .padding(.trailing, 30)
             
             //           GifImage("test")
             //               .frame(width: 300, height: 300, alignment: .center)
@@ -93,12 +93,11 @@ struct DemoSubview: View {
             //               .cornerRadius(35)
             
             Text(description)
-                .font(Font.custom("ReadexPro-VariableFont_wght", size: 17))
+                .font(Font.custom("ReadexPro-Regular", size: 18))
                 .fontWeight(.regular)
                 .multilineTextAlignment(.leading)
-                .padding(.horizontal, 10)
-                .padding(.top, 8)
-            
+                .padding(.leading, 32)
+                .padding(.trailing, 30)
             HStack {
                 Text("Compatible with:")
                     .bold()
@@ -107,27 +106,26 @@ struct DemoSubview: View {
             }
             .padding(.top, 5)
             
-            VStack(alignment: .trailing, spacing: 8) {
-                ForEach(compatibility, id: \.self) { string in
-                    Text(string)
-                        .bold()
+            HStack {
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(compatibility, id: \.self) { string in
+                        if string == "circuitplayground_bluefruit" {
+                            Text("Circuit Playground Bluefruit")
+                                .font(Font.custom("ReadexPro-Bold", size: 17))
+                        }
+                        if string  == "clue_nrf52840_express" {
+                            Text("Adafruit CLUE")
+                                .font(Font.custom("ReadexPro-Bold", size: 17))
+                        }
+                        
+                    }
                 }
+                
+                Spacer()
+                
             }
-            .padding(0)
-//            HStack {
-//                Image(systemName: "checkmark")
-//                    .resizable()
-//                    .aspectRatio(contentMode: .fit)
-//                    .foregroundColor(.green)
-//                    .frame(width: 16, height: 16, alignment: .center)
-//                    .padding(5)
-//                Text(compatibility.first!)
-//                    .bold()
-//
-//                Spacer()
-//            }
-//            .padding(0)
-            
+            .padding(.top, 5)
             
             
             Button(action: {
@@ -135,12 +133,11 @@ struct DemoSubview: View {
             }) {
                 Text("Learn Guide")
                 
-                    .font(.custom("ReadexPro", size: 25))
-                    .fontWeight(.ultraLight)
+                    .font(.custom("ReadexPro-Regular", size: 25))
                     .foregroundColor(Color("pyleap_purple"))
-                    .padding(.horizontal, 50)
-                    .padding(.vertical, 8)
-                
+                    .padding(.leading, 60)
+                    .padding(.trailing, 60)
+                    .frame(height: 50)
                     .popover(
                         isPresented: self.$showWebViewPopover,
                         arrowEdge: .bottom
@@ -157,23 +154,45 @@ struct DemoSubview: View {
                             .stroke((Color("pyleap_purple")), lineWidth: 3.5)
                     )
             }
-            .padding(5)
             
-            
-            
+            if isConnected {
+                
+                
+                //                Image(systemName: "checkmark")
+                //                    .resizable()
+                //                    .frame(width: 30, height: 22.4, alignment: .center)
+                Text("Run It!")
+                    .font(Font.custom("ReadexPro-Regular", size: 25))
+                    .background(Color("pyleap_pink"))
+                    .foregroundColor(Color.white)
+                    .padding(.leading, 60)
+                    .padding(.trailing, 60)
+                    .frame(height: 50)
+                    .cornerRadius(25)
+
+
+                
+            } else {
+                
+                
                 NavigationLink(destination: RootView(), label: {
                     Text("Connect")
-                        .font(Font.custom("ReadexPro-VariableFont_wght", size: 25))
-                        .padding(.horizontal, 75)
-                        .padding(.vertical, 8)
+                        .font(Font.custom("ReadexPro-Regular", size: 25))
                         .background(Color("adafruit_blue"))
                         .foregroundColor(Color.white)
-                        .cornerRadius(30)
-                })
-                    .padding(10)
-            
-           
+                        .padding(.horizontal, 50)
+                        .padding(.vertical, 50)
+                        .frame(height: 50)
+                        .cornerRadius(25)
+                }
+                
+                )
+                   
+                
+            }
             
         }
+        
+        .padding(.top, 8)
     }
 }
