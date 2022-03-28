@@ -23,8 +23,6 @@ struct WebView : UIViewRepresentable {
         }
     }
     
-   // let request = URLRequest(url: URL(string: project.learn_guide_link)!)
-    
     func makeUIView(context: Context) -> WKWebView  {
         return WKWebView()
     }

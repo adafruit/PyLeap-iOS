@@ -54,15 +54,5 @@ class RootViewModel: ObservableObject {
     func goToFileTransfer() {
         destination = .fileTransfer
     }
-    
-    /*
-    func goToConnection() {
-        destination = .bluetoothConnection
-    }*/
-    /*
-    func goToFilesView() {
-        destination = .filesView
-    }*/
-    
 }
 
