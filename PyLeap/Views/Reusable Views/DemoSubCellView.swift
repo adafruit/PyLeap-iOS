@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct DemoSubview: View {
+    let title: String
     let image: String
     let description: String
     let learnGuideLink: URLRequest
@@ -77,8 +78,10 @@ struct DemoSubview: View {
             
             Button(action: {
                 //showWebViewPopover = true
+                //This does not belong here.
                 
-                fileCheckModel.filesDownloaded()
+                // We need to
+               // fileCheckModel.filesDownloaded(projectName: title)
                 
                 
             }) {
@@ -107,7 +110,7 @@ struct DemoSubview: View {
             if isConnected {
                 Button(action: {
                     print("Download Button Pressed!")
-                    downloadModel.startDownload(urlString: downloadLink)
+                    downloadModel.startDownload(urlString: downloadLink, projectTitle: title)
                     
                 }) {
                     

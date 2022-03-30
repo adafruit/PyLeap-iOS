@@ -21,6 +21,28 @@ struct SelectionView: View {
         
         NavigationView {
             VStack {
+                
+                Group {
+                Button {
+                    viewModel.removeAllFiles()
+                } label: {
+                    Text("Delete")
+                        .foregroundColor(Color.red)
+                }
+
+                Button {
+                    viewModel.listDirectory(filename: "")
+                    viewModel.listDirectory(filename: "lib/")
+                } label: {
+                    Text("List files on disk")
+                        .foregroundColor(Color.blue)
+                }
+                }
+                .font(Font.custom("ReadexPro-Regular", size: 25))
+                .padding(5)
+                
+                
+                
                 ScrollView {
                     HStack {
                         Text("Browse all of the available PyLeap Projects")
@@ -31,6 +53,28 @@ struct SelectionView: View {
                     
                     ForEach(model.pdemos) { demo in
                         DemoViewCell(result: demo, isConnected: $isConnected)
+                       
+                        
+                        
+                        
+                        Button(action: {
+                            //Uses the Project name to locate the path of the downloaded bundle.
+                            
+                            viewModel.filesDownloaded(projectName: demo.projectName)
+                            print(demo.projectName)
+                        }) {
+                            Text("File Transfer")
+                                .font(.custom("ReadexPro-Regular", size: 25))
+                                .foregroundColor(Color("pyleap_purple"))
+                                .padding(.leading, 60)
+                                .padding(.trailing, 60)
+                                .frame(height: 50)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 25)
+                                        .stroke((Color("pyleap_purple")), lineWidth: 3.5))
+                        }
+                        
+                        
                     }
                 }
                 .toolbar {
@@ -46,6 +90,10 @@ struct SelectionView: View {
             .background(Color.white)
             .navigationBarColor(UIColor(named: "pyleap_gray"))
             .navigationBarTitleDisplayMode(.inline)
+            
+        }
+        .onChange(of: connectionManager.selectedClient) { selectedClient in
+            viewModel.setup(fileTransferClient: selectedClient)
         }
         .onAppear {
             viewModel.setup(fileTransferClient: connectionManager.selectedClient)

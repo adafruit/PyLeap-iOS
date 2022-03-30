@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ViewA: View {
+struct MainView: View {
     
     @State private var isActive: Bool = false
     

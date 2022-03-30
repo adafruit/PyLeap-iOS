@@ -32,7 +32,7 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
     @Published var downloadtaskSession : URLSessionDownloadTask!
     
     // MARK:- Download
-    func startDownload(urlString: String) {
+    func startDownload(urlString: String, projectTitle: String) {
         isDownloading = true
         // Check for valid URL
         guard let validURL = URL(string: urlString) else {
@@ -47,7 +47,7 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
         downloadTaskSession = session.downloadTask(with: validURL)
         downloadTaskSession.resume()
         
-        unzipProjectFile(urlString: urlString)
+        unzipProjectFile(urlString: urlString, projectTitle: projectTitle)
     }
     
     func makeFileDirectory() {
@@ -66,11 +66,11 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
         }
     }
     
-    func unzipProjectFile(urlString: String) {
+    func unzipProjectFile(urlString: String, projectTitle: String) {
         
-        let CPZipName = directoryPath.appendingPathComponent("PyLeapBundle.zip")
+        let CPZipName = directoryPath.appendingPathComponent("\(projectTitle).zip")
         
-        _ = directoryPath.appendingPathComponent("PyLeap Folder")
+     //   _ = directoryPath.appendingPathComponent("PyLeap Folder")
         
         if let zipFileUrl = URL(string: urlString) {
             // Download from this site

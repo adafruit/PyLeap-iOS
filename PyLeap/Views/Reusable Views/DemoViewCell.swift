@@ -7,6 +7,7 @@
 import SwiftUI
 import Foundation
 
+
 struct DemoViewCell: View {
     let result : ResultItem
     @State private var isExpanded: Bool = false
@@ -22,7 +23,14 @@ struct DemoViewCell: View {
             header
             if isExpanded {
                 Group {
-                    DemoSubview(image: result.projectImage, description: result.description, learnGuideLink: URLRequest(url: URL(string: result.learnGuideLink)!), downloadLink: result.bundleLink, compatibility: result.compatibility, isConnected: $isConnected)
+                    DemoSubview(title: result.projectName,
+                                image: result.projectImage,
+                                description: result.description,
+                                learnGuideLink: URLRequest(url: URL(string: result.learnGuideLink)!),
+                                downloadLink: result.bundleLink,
+                                compatibility: result.compatibility,
+                                setUUID: "xyz",
+                                isConnected: $isConnected)
                 }
             }
         }
