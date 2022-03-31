@@ -22,6 +22,8 @@ struct MainSelectionView: View {
     @ObservedObject var model = NetworkService()
     
     @State private var isConnected = false
+    @State var test: String = "x"
+    
     
     var body: some View {
         
@@ -38,7 +40,7 @@ struct MainSelectionView: View {
                 .padding(.vertical,30)
                 
                 ForEach(model.pdemos) { demo in
-                    DemoViewCell(result: demo, isConnected: $isConnected)
+                    DemoViewCell(result: demo, isConnected: $isConnected, newerTest: test)
                 }
             }
             .toolbar {

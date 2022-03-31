@@ -274,7 +274,7 @@ class SelectionViewModel: ObservableObject {
                 }
                 
             case .failure:
-                print("failure")
+                print("Failure - mkLibDir")
                 temp.removeAll()
                 self.projectDirectories.removeAll()
                 self.displayErrorMessage()
@@ -470,7 +470,7 @@ class SelectionViewModel: ObservableObject {
                 let joined = tempURL.joined(separator: "/")
                 print("File transfer modified path 33:\(joined)")
                 
-                // Hi there.
+                
                 
                 print("Updated Path:\(joined)")
                 

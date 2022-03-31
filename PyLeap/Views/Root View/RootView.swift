@@ -62,11 +62,7 @@ struct RootView: View {
     }
 }
 
-struct RootView_Previews: PreviewProvider {
-    static var previews: some View {
-        RootView()
-    }
-}
+
 
 extension NSNotification {
     static let fileSent = Notification.Name.init("fileSent")

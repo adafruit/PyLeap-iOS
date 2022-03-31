@@ -9,9 +9,12 @@ import Foundation
 
 
 struct DemoViewCell: View {
+    
     let result : ResultItem
     @State private var isExpanded: Bool = false
     @Binding var isConnected: Bool
+    
+    @State var newerTest: String
     
     var body: some View {
         content

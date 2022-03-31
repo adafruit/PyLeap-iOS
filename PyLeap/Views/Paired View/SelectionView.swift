@@ -1,4 +1,4 @@
-//
+// ;}
 //  FileView.swift
 //  SwiftUI File Manager
 //
@@ -14,7 +14,12 @@ struct SelectionView: View {
     @EnvironmentObject private var connectionManager: FileTransferConnectionManager
     @StateObject var viewModel = SelectionViewModel()
     @ObservedObject var model = NetworkService()
-   
+    @StateObject var globalString = GlobalString()
+    
+    
+     var test: String = ""
+    
+    
     @State private var isConnected = true
     
     var body: some View {
@@ -23,20 +28,20 @@ struct SelectionView: View {
             VStack {
                 
                 Group {
-                Button {
-                    viewModel.removeAllFiles()
-                } label: {
-                    Text("Delete")
-                        .foregroundColor(Color.red)
-                }
-
-                Button {
-                    viewModel.listDirectory(filename: "")
-                    viewModel.listDirectory(filename: "lib/")
-                } label: {
-                    Text("List files on disk")
-                        .foregroundColor(Color.blue)
-                }
+                    Button {
+                        viewModel.removeAllFiles()
+                    } label: {
+                        Text("Delete")
+                            .foregroundColor(Color.red)
+                    }
+                    
+                    Button {
+                        viewModel.listDirectory(filename: "")
+                        viewModel.listDirectory(filename: "lib/")
+                    } label: {
+                        Text("List files on disk")
+                            .foregroundColor(Color.blue)
+                    }
                 }
                 .font(Font.custom("ReadexPro-Regular", size: 25))
                 .padding(5)
@@ -52,29 +57,8 @@ struct SelectionView: View {
                     .padding(.vertical,30)
                     
                     ForEach(model.pdemos) { demo in
-                        DemoViewCell(result: demo, isConnected: $isConnected)
-                       
-                        
-                        
-                        
-                        Button(action: {
-                            //Uses the Project name to locate the path of the downloaded bundle.
-                            
-                            viewModel.filesDownloaded(projectName: demo.projectName)
-                            print(demo.projectName)
-                        }) {
-                            Text("File Transfer")
-                                .font(.custom("ReadexPro-Regular", size: 25))
-                                .foregroundColor(Color("pyleap_purple"))
-                                .padding(.leading, 60)
-                                .padding(.trailing, 60)
-                                .frame(height: 50)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 25)
-                                        .stroke((Color("pyleap_purple")), lineWidth: 3.5))
-                        }
-                        
-                        
+                        DemoViewCell(result: demo, isConnected: $isConnected, newerTest: test)
+
                     }
                 }
                 .toolbar {
@@ -92,6 +76,13 @@ struct SelectionView: View {
             .navigationBarTitleDisplayMode(.inline)
             
         }
+        .environmentObject(globalString)
+        
+        .onChange(of: globalString.projectString, perform: { newValue in
+            viewModel.filesDownloaded(projectName: newValue)
+
+        })
+        
         .onChange(of: connectionManager.selectedClient) { selectedClient in
             viewModel.setup(fileTransferClient: selectedClient)
         }
@@ -102,8 +93,4 @@ struct SelectionView: View {
     }
 }
 
-struct FileView_Previews: PreviewProvider {
-    static var previews: some View {
-        SelectionView()
-    }
-}
+

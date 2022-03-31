@@ -6,8 +6,17 @@
 //
 
 import SwiftUI
+import FileTransferClient
+
+class GlobalString: ObservableObject {
+  @Published var projectString = ""
+}
 
 struct DemoSubview: View {
+    
+    @EnvironmentObject var globalString : GlobalString
+   
+    
     let title: String
     let image: String
     let description: String
@@ -16,8 +25,9 @@ struct DemoSubview: View {
     let compatibility: [String]
     var setUUID: String
     
+    
     @StateObject var downloadModel = DownloadViewModel()
-    @StateObject var fileCheckModel = FileManagerCheck()
+    
     
     @Binding var isConnected : Bool
     @State private var showWebViewPopover: Bool = false
@@ -77,15 +87,10 @@ struct DemoSubview: View {
             .padding(.horizontal, 20)
             
             Button(action: {
-                //showWebViewPopover = true
-                //This does not belong here.
-                
-                // We need to
-               // fileCheckModel.filesDownloaded(projectName: title)
-                
-                
+                showWebViewPopover = true
+
             }) {
-                Text("Debug Button")
+                Text("Learn Guide")
                     .font(.custom("ReadexPro-Regular", size: 25))
                     .foregroundColor(Color("pyleap_purple"))
                     .padding(.leading, 60)
@@ -114,7 +119,7 @@ struct DemoSubview: View {
                     
                 }) {
                     
-                    Text("Run It!")
+                    Text("Download")
                         .font(Font.custom("ReadexPro-Regular", size: 25))
                         .foregroundColor(Color.white)
                         .padding(.horizontal, 60)
@@ -122,6 +127,23 @@ struct DemoSubview: View {
                         .background(Color("pyleap_pink"))
                         .clipShape(Capsule())
                 }
+                
+                Button(action: {
+                   print("Project Selected: \(title) - DemoSubView")
+                 // viewModel.filesDownloaded(projectName: title)
+                    globalString.projectString = title
+                    print("\(globalString.projectString) - DemoSubView")
+                }) {
+                    
+                    Text("Transfer")
+                        .font(Font.custom("ReadexPro-Regular", size: 25))
+                        .foregroundColor(Color.white)
+                        .padding(.horizontal, 60)
+                        .frame(height: 50)
+                        .background(Color("pyleap_pink"))
+                        .clipShape(Capsule())
+                }
+                
                 
             } else {
                 
@@ -138,5 +160,6 @@ struct DemoSubview: View {
             }
         }
         .padding(.top, 8)
-    }
+        
+}
 }
