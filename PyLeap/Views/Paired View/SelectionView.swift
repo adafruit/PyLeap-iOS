@@ -17,38 +17,46 @@ struct SelectionView: View {
     @StateObject var globalString = GlobalString()
     
     
-     var test: String = ""
+  /*
+   need to know what device is paired.
+   
+   */
+    
+    @State private var boardBootInfo = ""
     
     
-    @State private var isConnected = true
+    @State private var inConnectedInSelectionView = true
     
     var body: some View {
         
         NavigationView {
             VStack {
                 
-                Group {
-                    Button {
-                        viewModel.removeAllFiles()
-                    } label: {
-                        Text("Delete")
-                            .foregroundColor(Color.red)
-                    }
-                    
-                    Button {
-                        viewModel.listDirectory(filename: "")
-                        viewModel.listDirectory(filename: "lib/")
-                    } label: {
-                        Text("List files on disk")
-                            .foregroundColor(Color.blue)
-                    }
-                }
-                .font(Font.custom("ReadexPro-Regular", size: 25))
-                .padding(5)
+//                Group {
+//                    Button {
+//                        viewModel.removeAllFiles()
+//                    } label: {
+//                        Text("Delete")
+//                            .foregroundColor(Color.red)
+//                    }
+//
+//                    Button {
+//                        viewModel.listDirectory(filename: "")
+//                        viewModel.listDirectory(filename: "lib/")
+//                    } label: {
+//                        Text("List files on disk")
+//                            .foregroundColor(Color.blue)
+//                    }
+//                }
+//                .font(Font.custom("ReadexPro-Regular", size: 25))
+//                .padding(5)
                 
                 
                 
                 ScrollView {
+                    
+                    
+                    
                     HStack {
                         Text("Browse all of the available PyLeap Projects")
                             .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
@@ -57,7 +65,7 @@ struct SelectionView: View {
                     .padding(.vertical,30)
                     
                     ForEach(model.pdemos) { demo in
-                        DemoViewCell(result: demo, isConnected: $isConnected, newerTest: test)
+                        DemoViewCell(result: demo, isConnected: $inConnectedInSelectionView, bootOne: $boardBootInfo)
 
                     }
                 }
@@ -76,10 +84,35 @@ struct SelectionView: View {
             .navigationBarTitleDisplayMode(.inline)
             
         }
+        
         .environmentObject(globalString)
         
+        
+        
+        
+        .onChange(of: viewModel.sendingBundle, perform: { newValue in
+            globalString.isSendingG = newValue
+            print("Is Sending? = \(newValue)")
+        })
+        
+        .onChange(of: viewModel.numOfFiles, perform: { newValue in
+            globalString.numberOfFilesG = newValue
+            print("NumOfFiles: \(newValue)")
+        })
+        
+        .onChange(of: viewModel.counter, perform: { newValue in
+            globalString.counterG = newValue
+
+        })
+        
+        .onChange(of: viewModel.bootUpInfo, perform: { newValue in
+            viewModel.readMyStatus()
+            print("newValue \(newValue)")
+            boardBootInfo = newValue
+        })
+        
         .onChange(of: globalString.projectString, perform: { newValue in
-            viewModel.filesDownloaded(projectName: newValue)
+            viewModel.getProjectURL(nameOf: newValue)
 
         })
         
@@ -89,6 +122,8 @@ struct SelectionView: View {
         .onAppear {
             viewModel.setup(fileTransferClient: connectionManager.selectedClient)
             viewModel.readFile(filename: "boot_out.txt")
+            
+          
         }
     }
 }

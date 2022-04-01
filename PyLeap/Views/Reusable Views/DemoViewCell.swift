@@ -13,8 +13,8 @@ struct DemoViewCell: View {
     let result : ResultItem
     @State private var isExpanded: Bool = false
     @Binding var isConnected: Bool
-    
-    @State var newerTest: String
+    @Binding var bootOne: String
+
     
     var body: some View {
         content
@@ -26,7 +26,7 @@ struct DemoViewCell: View {
             header
             if isExpanded {
                 Group {
-                    DemoSubview(title: result.projectName,
+                    DemoSubview(bindingString: $bootOne, title: result.projectName,
                                 image: result.projectImage,
                                 description: result.description,
                                 learnGuideLink: URLRequest(url: URL(string: result.learnGuideLink)!),

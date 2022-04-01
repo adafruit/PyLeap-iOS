@@ -4,14 +4,6 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
-	<key>UIAppFonts</key>
-	<array>
-		<string>ReadexPro-Medium.ttf</string>
-		<string>ReadexPro-Regular.ttf</string>
-		<string>ReadexPro-Light.ttf</string>
-		<string>ReadexPro-Bold.ttf</string>
-		<string>ReadexPro-SemiBold.ttf</string>
-	</array>
 	<key>CFBundleDisplayName</key>
 	<array>
 		<string></string>
@@ -38,6 +30,14 @@
 	<string>This app needs access to Bluetooth to connect to Adafruit devices</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>This app needs access to Bluetooth to connect to Adafruit devices</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>ReadexPro-Medium.ttf</string>
+		<string>ReadexPro-Regular.ttf</string>
+		<string>ReadexPro-Light.ttf</string>
+		<string>ReadexPro-Bold.ttf</string>
+		<string>ReadexPro-SemiBold.ttf</string>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

@@ -10,6 +10,9 @@ import Zip
 import FileTransferClient
 
 class SelectionViewModel: ObservableObject {
+   
+    @StateObject var globalString = GlobalString()
+    
     private weak var fileTransferClient: FileTransferClient?
     @Published var entries = [BlePeripheral.DirectoryEntry]()
     @Published var isTransmiting = false
@@ -19,7 +22,11 @@ class SelectionViewModel: ObservableObject {
     @Published var sendingBundle = false
     @Published var didCompleteTranfer = false
     @Published var writeError = false
+    
+    
     @Published var counter = 0
+    @Published var numOfFiles = 0
+    
     
     @Published var fileArray: [ContentFile] = []
     @Published var contentList: [URLData] = []
@@ -65,12 +72,55 @@ class SelectionViewModel: ObservableObject {
        }
     
     
-    func filesDownloaded(projectName: String) {
+    /*
+     - Find URL by name - send it to filesDownloaded
+     - Enumerate thru found URL
+     - Get collection of files and directories - then send URL to startFileTransfer
+     */
+    
+    func getProjectURL(nameOf project: String) {
+        
+        if let enumerator = FileManager.default.enumerator(at: directoryPath, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
+           // for case condition: Only process URLs
+            for case let fileURL as URL in enumerator {
+                
+                do {
+                    
+                    if fileURL.lastPathComponent == project {
+                        
+                        print("Searching for... \(project)")
+                       
+                        do {
+                            
+                            print("Found \(project) project at this location...")
+                            print("URL Path: \(fileURL.path)")
+                            print("URL : \(fileURL)")
+                            let newURL = URL(fileURLWithPath: fileURL.path, relativeTo: directoryPath)
+                            print("URL: \(newURL)")
+                            filesDownloaded(url: fileURL)
+                            
+                            return
+                        } catch { print(error, fileURL) }
+                    } else {
+                        print("Project was not found...")
+                    }
+                    
+                }
+            }
+            
+        }
+        
+    }
+    
+    
+    func filesDownloaded(url: URL) {
+        
         //Cycles through files and directories in File Manager Document Directory
         fileArray.removeAll()
+        
         var files = [URL]()
         // Returns a directory enumerator object that can be used to perform a deep enumeration of the directory at the specified URL.
-        if let enumerator = FileManager.default.enumerator(at: directoryPath, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
+        if let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
            // for case condition: Only process URLs
             for case let fileURL as URL in enumerator {
                 
@@ -89,33 +139,27 @@ class SelectionViewModel: ObservableObject {
                         fileArray.append(addedFile)
                     }
                     
+                    let addedFile = ContentFile(title: fileURL.lastPathComponent, fileSize: 0 )
+                    fileArray.append(addedFile)
                     
-                    if fileURL.lastPathComponent == projectName {
-                        
-                        print("Searching for... \(projectName)")
-                       
-                        do {
-                            
-                            print("Found \(projectName) project at this location...")
-                            print(fileURL.path)
-                            
-                            let newURL = URL(fileURLWithPath: fileURL.path, relativeTo: directoryPath)
-                            
-                            startFileTransfer(url: newURL)
-                            
-                        }
-                    } else {
-                      //  print("Project was not found...")
-                    }
+                    
+                  
                     
                 } catch { print(error, fileURL) }
             }
             
+            startFileTransfer(url: url)
+            
+            numOfFiles = files.count
+            print("Contents in URL \(fileArray.count)")
+            print("Number of Files in URL \(files.count)")
+           
             for i in contentList {
                 
-             //  print("CL: \(i.urlTitle.pathComponents)")
+               print("CL: \(i.urlTitle.pathComponents)")
             }
             
+            contentList.removeAll()
         }
     }
     
@@ -376,6 +420,7 @@ class SelectionViewModel: ObservableObject {
     func completedTransfer() {
         DispatchQueue.main.async {
             self.didCompleteTranfer = true
+            self.numOfFiles = 0
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             self.didCompleteTranfer = false
@@ -390,9 +435,12 @@ class SelectionViewModel: ObservableObject {
             print("Array of contents empty - Check other directories")
             self.completedTransfer()
             
+            
+            
             DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                 self.sendingBundle = false
                 self.counter = 0
+                self.contentList.removeAll()
             }
             
         } else {
@@ -504,20 +552,26 @@ class SelectionViewModel: ObservableObject {
     
     
     func readMyStatus() {
-     //   model.readFile(filename: "boot_out.txt")
+       // model.readFile(filename: "boot_out.txt")
         print(#function)
 
+        print("BOOT INFO: \(bootUpInfo)")
+        
         switch bootUpInfo.description {
             
-        case let str where str.contains("Circuit Playground Bluefruit with nRF52840"):
-            print("Bluefruit device")
-        case let str where str.contains("CLUE nRF52840"):
+        case let str where str.contains("circuitplayground_bluefruit"):
+            print("Circuit Playground Bluefruit device")
+            bootUpInfo = "circuitplayground_bluefruit"
+//            DispatchQueue.main.async { [self] in
+//                    self.globalString.compatibilityString = "circuitplayground_bluefruit"
+//            }
+        case let str where str.contains("clue_nrf52840_express"):
             print("Clue device")
-            
-            DispatchQueue.main.async { [self] in
-             
-                
-            }
+            bootUpInfo = "clue_nrf52840_express"
+//            DispatchQueue.main.async { [self] in
+//                globalString.compatibilityString = "clue_nrf52840_express"
+//
+//            }
         default:
             print("Unknown Device")
         }
@@ -757,6 +811,7 @@ class SelectionViewModel: ObservableObject {
     private func writeFileCommand(path: String, data: Data, completion: ((Result<Date?, Error>) -> Void)?) {
         guard let fileTransferClient = fileTransferClient else { completion?(.failure(ProjectViewError.fileTransferUndefined)); return }
         counter += 1
+        
         DLog("start writeFile \(path)")
         fileTransferClient.writeFile(path: path, data: data, progress: { [weak self] written, total in
             DLog("writing progress: \( String(format: "%.1f%%", Float(written) * 100 / Float(total)) )")

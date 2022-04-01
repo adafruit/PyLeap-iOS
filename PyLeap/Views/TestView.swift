@@ -57,7 +57,7 @@ struct FirstOnboardingStep: View {
                 .opacity(/*@START_MENU_TOKEN@*/0.8/*@END_MENU_TOKEN@*/)
         }
         // Always on Light Mode.
-        .preferredColorScheme(.light)
+        //.preferredColorScheme(.light)
         .padding()
     }
 }

@@ -21,10 +21,6 @@ struct BTConnectionView: View {
             .repeatForever(autoreverses: false)
     }
     
-    init() {
-        let navBarAppearence = UINavigationBarAppearance()
-        UINavigationBar.appearance().tintColor = UIColor.white
-    }
     
     
     
@@ -48,24 +44,21 @@ struct BTConnectionView: View {
                                 self.showModal.toggle()
                             } label: {
                                 Image(systemName: "info.circle.fill")
-                                    .frame(width: 50, height: 50)
-                                    .padding(3)
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                                    .padding(8)
                             }
                         }
-                        //  .border(Color(red: 1.0, green: 0.0, blue: 1.0, opacity: 0.6), width: 3)
-                        //  Spacer()
-                        //   .border(Color(red: 1.0, green: 0.0, blue: 1.0, opacity: 0.6), width: 3)
-                        
-                        
-                        
+
                         Text("Press the RESET button in the center of the board")
-                            .font(.system(size: 15))
+                            .font(Font.custom("ReadexPro-Regular", size: 16))
                             .fontWeight(.bold)
                             .multilineTextAlignment(.center)
                             .padding(3)
-                        // .border(Color(red: 1.0, green: 0.0, blue: 1.0, opacity: 0.6), width: 3)
+                            .lineLimit(0)
+
                         Text("Then press RESET again while LEDs flashes blue")
-                            .font(.system(size: 15))
+                            .font(Font.custom("ReadexPro-Regular", size: 16))
                             .fontWeight(.bold)
                             .multilineTextAlignment(.center)
                             .padding(.top,3)
@@ -96,12 +89,13 @@ struct BTConnectionView: View {
                         .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height / 3)
                         //.border(Color(red: 1.0, green: 0.0, blue: 1.0, opacity: 0.6), width: 3)
                         Text("Hold your Bluefruit device closely to your mobile device")
-                            .font(.system(size: 15))
+                            .font(Font.custom("ReadexPro-Regular", size: 16))
                             .fontWeight(.bold)
+                            
                             .multilineTextAlignment(.center)
                         Text("Unplug Circuit Playground Bluefruit from USB")
-                            .bold()
-                            .font(.system(size: 15))
+                            .font(Font.custom("ReadexPro-Regular", size: 16))
+                            .fontWeight(.bold)
                             .foregroundColor(.red)
                             .fixedSize(horizontal: false, vertical: true)
                             .padding(.top,5)
@@ -120,7 +114,7 @@ struct BTConnectionView: View {
                             Text(detailText)
                                 .bold()
                         }
-                        .font(.system(size: 15))
+                        //font(.system(size: 15))
                         //  .border(Color(red: 1.0, green: 0.0, blue: 1.0, opacity: 0.6), width: 3)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(5)
@@ -128,7 +122,7 @@ struct BTConnectionView: View {
                     // .border(Color(red: 1.0, green: 0.0, blue: 1.0, opacity: 0.6), width: 3)
                     .navigationBarTitle("Searching...")
                     
-                    .foregroundColor(Color.gray)
+                    .foregroundColor(Color.black)
                     
                     
                 }
@@ -163,7 +157,7 @@ struct BTConnectionView: View {
                             }, label: {
                                 Text("Dismiss")
                                     .font(.headline)
-                                    .foregroundColor(.white)
+                                    //.foregroundColor(.white)
                             })
                             Spacer()
                             
@@ -232,7 +226,7 @@ Press the reset button again while LEDs are flashing blue, then hold the board c
                             
                         }
                         .padding(10)
-                        .font(.system(size: 15))
+                        .font(Font.custom("ReadexPro-Regular", size: 16))
                         Spacer()
                     }//
                     
@@ -248,9 +242,9 @@ Press the reset button again while LEDs are flashing blue, then hold the board c
             .background(Color(#colorLiteral(red: 0.5275210142, green: 0.4204645753, blue: 0.6963143945, alpha: 1)))
             .edgesIgnoringSafeArea(.all)
             .offset(x: 0, y: self.showModal ? 0 : UIApplication.shared.keyWindow?.frame.height ?? 0)
-            
+            .foregroundColor(.white)
         }
-        .preferredColorScheme(.dark)
+        //.preferredColorScheme(.dark)
         .onAppear {
             model.onAppear()
         }
