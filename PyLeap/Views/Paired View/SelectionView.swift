@@ -8,6 +8,10 @@
 import SwiftUI
 import FileTransferClient
 
+
+ 
+
+
 struct SelectionView: View {
     
     @Environment(\.presentationMode) var presentationMode
@@ -16,12 +20,26 @@ struct SelectionView: View {
     @ObservedObject var model = NetworkService()
     @StateObject var globalString = GlobalString()
     
+    @StateObject var btConnectionViewModel = BTConnectionViewModel()
     
-  /*
-   need to know what device is paired.
-   
-   */
+    @StateObject private var rootModel = RootViewModel()
     
+    // Data
+    enum ActiveAlert: Identifiable {
+        case confirmUnpair(blePeripheral: BlePeripheral)
+        
+        var id: Int {
+            switch self {
+            case .confirmUnpair: return 1
+            }
+        }
+    }
+    
+    
+    @State private var activeAlert: ActiveAlert?
+    let selectedPeripheral = FileTransferConnectionManager.shared.selectedPeripheral
+    
+
     @State private var boardBootInfo = ""
     
     
@@ -29,28 +47,67 @@ struct SelectionView: View {
     
     var body: some View {
         
+        let connectedPeripherals = connectionManager.peripherals.filter{$0.state == .connected}
+        
         NavigationView {
             VStack {
+                Section(
+                    header:
+                        HStack{
+                            Spacer()
+                            Text("Connected peripherals:")
+                                .foregroundColor(.white)
+                            Spacer()
+                        },
+                    footer:
+                        HStack {
+                           
+                            Button(
+                                action: {
+                                    FileTransferConnectionManager.shared.reconnect()
+                                },
+                                label: {
+                                    Label("Find paired peripherals", systemImage: "arrow.clockwise")
+                                })
+                               
+                                                                    
+                        }) {
                 
-//                Group {
-//                    Button {
-//                        viewModel.removeAllFiles()
-//                    } label: {
-//                        Text("Delete")
-//                            .foregroundColor(Color.red)
-//                    }
-//
-//                    Button {
-//                        viewModel.listDirectory(filename: "")
-//                        viewModel.listDirectory(filename: "lib/")
-//                    } label: {
-//                        Text("List files on disk")
-//                            .foregroundColor(Color.blue)
-//                    }
-//                }
-//                .font(Font.custom("ReadexPro-Regular", size: 25))
-//                .padding(5)
-                
+                if connectedPeripherals.isEmpty {
+                        Text("No peripherals found".uppercased())
+                            .foregroundColor(.gray)
+                            .frame(maxWidth: .infinity)
+                    }
+                    else {
+                    let selectedPeripheral = FileTransferConnectionManager.shared.selectedPeripheral
+                    ForEach(connectedPeripherals, id: \.identifier) { peripheral in
+                        
+                        HStack {
+                            Button(action: {
+                                DLog("Select: \(peripheral.name ?? peripheral.identifier.uuidString)")
+                                FileTransferConnectionManager.shared.setSelectedClient(blePeripheral: peripheral)
+                            }, label: {
+                                Text(verbatim: "\(peripheral.name ?? "<unknown>")")
+                                    .if(selectedPeripheral?.identifier == peripheral.identifier) {
+                                        $0.bold()
+                                    }
+                            })
+                            
+                            Spacer()
+                            
+                            Button(action: {
+                                activeAlert = .confirmUnpair(blePeripheral: peripheral)
+                            }, label: {
+                                Image(systemName: "xmark.circle")
+                            })
+                        }
+                        .foregroundColor(.black)
+                       
+                    }
+                    
+                    .listRowBackground(Color.white.opacity(0.7))
+                    }
+                }
                 
                 
                 ScrollView {
@@ -61,14 +118,31 @@ struct SelectionView: View {
                         Text("Browse all of the available PyLeap Projects")
                             .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                             .font(Font.custom("ReadexPro-Regular", size: 25))
+                            .foregroundColor(.black)
                     }
                     .padding(.vertical,30)
                     
                     ForEach(model.pdemos) { demo in
                         DemoViewCell(result: demo, isConnected: $inConnectedInSelectionView, bootOne: $boardBootInfo)
-
+                        
                     }
                 }
+                .toolbar {
+                    Button(action: {
+                       // print("Go to...")
+                        //rootModel.goToTest()
+                       // btConnectionViewModel.disconnect(peripheral: selectedPeripheral!)
+                        print("Pressing Disconnection Button")
+                        
+                    }) {
+                        Image(systemName: "list.bullet")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 30, height: 30, alignment: .center)
+                    }                }
+                .modifier(Alerts(activeAlert: $activeAlert))
+                
+                
                 .toolbar {
                     ToolbarItem(placement: .principal) {
                         Image("pyleap_logo_white")
@@ -102,7 +176,7 @@ struct SelectionView: View {
         
         .onChange(of: viewModel.counter, perform: { newValue in
             globalString.counterG = newValue
-
+            print("Change for counterG happened: Value should be \(newValue)")
         })
         
         .onChange(of: viewModel.bootUpInfo, perform: { newValue in
@@ -113,7 +187,7 @@ struct SelectionView: View {
         
         .onChange(of: globalString.projectString, perform: { newValue in
             viewModel.getProjectURL(nameOf: newValue)
-
+            
         })
         
         .onChange(of: connectionManager.selectedClient) { selectedClient in
@@ -123,9 +197,34 @@ struct SelectionView: View {
             viewModel.setup(fileTransferClient: connectionManager.selectedClient)
             viewModel.readFile(filename: "boot_out.txt")
             
-          
+            
         }
     }
+    
+    
+    
+    
+    struct Alerts: ViewModifier {
+       @Binding var activeAlert: ActiveAlert?
+       
+       func body(content: Content) -> some View {
+           content
+               .alert(item: $activeAlert, content:  { alert in
+                   switch alert {
+                   case .confirmUnpair(let blePeripheral):
+                       return Alert(
+                           title: Text("Confirm disconnect \(blePeripheral.name ?? "")"),
+                           message: nil,
+                           primaryButton: .destructive(Text("Disconnect")) {
+                               //BleAutoReconnect.clearAutoconnectPeripheral()
+                               BleManager.shared.disconnect(from: blePeripheral)
+                           },
+                           secondaryButton: .cancel(Text("Cancel")) {})
+                   }
+               })
+       }
+   }
+    
 }
 
 

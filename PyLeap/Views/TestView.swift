@@ -7,6 +7,28 @@
 
 import SwiftUI
 
+struct TestingView: View {
+    
+    @StateObject private var model = RootViewModel()
+    
+    var body: some View {
+       
+        NavigationView {
+            
+            VStack {
+                Button {
+                    model.goToTest()
+                } label: {
+                    Text("Great! Testing View is visible. Now go back to Main View.")
+                }
+
+            }
+            .background(Color("pyleap_pink"))
+            .navigationTitle("PyLeap")
+        }
+    }
+}
+
 struct MainView: View {
     
     @State private var isActive: Bool = false

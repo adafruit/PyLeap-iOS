@@ -38,10 +38,20 @@ struct RootView: View {
             case .fileTransfer:
                 SelectionView()
                 
+            case .test:
+                TestingView()
+                
             default:
-                FillerView()
+                MainView()
             }
         }
+//        .onChange(of: model.destination, perform: { newValue in
+//            if model.destination == .test {
+//                model.destination = .test
+//            }
+//        
+//        })
+        
         .onChange(of: connectionManager.isConnectedOrReconnecting) { isConnectedOrReconnecting in
             
             if !isConnectedOrReconnecting, model.destination == .fileTransfer {

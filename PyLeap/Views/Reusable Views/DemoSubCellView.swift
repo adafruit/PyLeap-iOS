@@ -50,7 +50,7 @@ struct DemoSubview: View {
                 .cornerRadius(14)
                 .padding(.leading, 30)
                 .padding(.trailing, 30)
-            
+                
             //           GifImage("test")
             //               .frame(width: 300, height: 300, alignment: .center)
             //               .scaledToFit()
@@ -74,6 +74,7 @@ struct DemoSubview: View {
                                 .foregroundColor(.green)
                             Text("Circuit Playground Bluefruit")
                                 .font(Font.custom("ReadexPro-Regular", size: 18))
+                                .foregroundColor(.black)
                         }
                     }
                     
@@ -86,6 +87,7 @@ struct DemoSubview: View {
                                 .foregroundColor(.green)
                             Text("Adafruit CLUE")
                                 .font(Font.custom("ReadexPro-Regular", size: 18))
+                                .foregroundColor(.black)
                             Spacer()
                         }
                     }
@@ -118,10 +120,8 @@ struct DemoSubview: View {
                             .stroke((Color("pyleap_purple")), lineWidth: 3.5))
             }
             .onAppear {
-               // print("SUBVIEW \(globalString.compatibilityString)")
+
             }
-           
-            
             
             
             
@@ -129,57 +129,55 @@ struct DemoSubview: View {
                
                 if compatibility.contains(bindingString) {
                     
-                    
-                  
-                    
-                    Button(action: {
-                       print("Project Selected: \(title) - DemoSubView")
-                     // viewModel.filesDownloaded(projectName: title)
-                        globalString.projectString = title
+                    if globalString.isSendingG {
+                        ProgressView("", value: CGFloat(globalString.counterG), total: CGFloat(globalString.numberOfFilesG) )
+                            .accentColor(Color("pyleap_pink"))
+                                .foregroundColor(.purple)
+                    }else {
                         
-                        print("\(globalString.projectString) - DemoSubView")
-                    }) {
-                        
-                        
-                        
-                        Text("Transfer")
-                            .font(Font.custom("ReadexPro-Regular", size: 25))
-                            .foregroundColor(Color.white)
-                            .padding(.horizontal, 60)
-                            .frame(height: 50)
-                            .background(Color("pyleap_pink"))
-                            .clipShape(Capsule())
                     }
-                    .disabled(globalString.isSendingG)
                     
-                }
-                
-                if globalString.isSendingG {
-                    ProgressView("", value: CGFloat(globalString.counterG), total: CGFloat(globalString.numberOfFilesG) )
-                            .accentColor(.pink)
-                            .foregroundColor(.purple)
-                }else {
-                    
-                }
-                
-                if isDownloaded == true {
-                   
-                 
-                } else {
-                    Button(action: {
-                        print("Download Button Pressed!")
-                        downloadModel.startDownload(urlString: downloadLink, projectTitle: title)
+                    if isDownloaded == true {
+                       
+                        Button(action: {
+                           print("Project Selected: \(title) - DemoSubView")
+                         // viewModel.filesDownloaded(projectName: title)
+                            globalString.projectString = title
+                            
+                            print("\(globalString.projectString) - DemoSubView")
+                        }) {
+                            
+                            
+                            
+                            Text("Transfer")
+                                .font(Font.custom("ReadexPro-Regular", size: 25))
+                                .foregroundColor(Color.white)
+                                .padding(.horizontal, 60)
+                                .frame(height: 50)
+                                .background(Color("pyleap_pink"))
+                                .clipShape(Capsule())
+                        }
+                        .disabled(globalString.isSendingG)
                         
-                    }) {
-                        
-                        Text("Download")
-                            .font(Font.custom("ReadexPro-Regular", size: 25))
-                            .foregroundColor(Color.white)
-                            .padding(.horizontal, 60)
-                            .frame(height: 50)
-                            .background(Color("pyleap_pink"))
-                            .clipShape(Capsule())
+                     
+                    } else {
+                        Button(action: {
+                            print("Download Button Pressed!")
+                            downloadModel.startDownload(urlString: downloadLink, projectTitle: title)
+                            
+                        }) {
+                            
+                            Text("Download")
+                                .font(Font.custom("ReadexPro-Regular", size: 25))
+                                .foregroundColor(Color.white)
+                                .padding(.horizontal, 60)
+                                .frame(height: 50)
+                                .background(Color("pyleap_pink"))
+                                .clipShape(Capsule())
+                        }
                     }
+
+                    
                 }
                 
                 

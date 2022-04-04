@@ -24,11 +24,13 @@ class RootViewModel: ObservableObject {
     
     @Published var destination: Destination = AppEnvironment.isRunningTests ? .test : .startup
     
-    /*
-    func goToSplash(){
-        destination = .splash
+    
+    func goToTest(){
+        destination = .test
     }
-    */
+    
+    
+    
     func goToMainSelection(){
         destination = .mainSelection
     }

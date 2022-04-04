@@ -79,7 +79,7 @@ class SelectionViewModel: ObservableObject {
      */
     
     func getProjectURL(nameOf project: String) {
-        
+        counter = 0
         if let enumerator = FileManager.default.enumerator(at: directoryPath, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
            // for case condition: Only process URLs
             for case let fileURL as URL in enumerator {
@@ -167,18 +167,6 @@ class SelectionViewModel: ObservableObject {
     
     
     func startFileTransfer(url: URL) {
-        print(#function)
-//        print("Incoming URL Path: \(url.path)")
-//        print("Incoming URL: \(url)")
-//        var tempURL = url.pathComponents
-//
-//
-//        let joined = tempURL.joined(separator: "/")
-//
-//        print("FIXED PATHxx: \(joined)")
-        
-       // URL(fileURLWithPath: fileURL.path, relativeTo: directoryPath)
-        
         print("Project Location: \(url)")
         let localFileManager = FileManager()
         let resourceKeys = Set<URLResourceKey>([.nameKey, .isDirectoryKey])
@@ -200,10 +188,18 @@ class SelectionViewModel: ObservableObject {
                 if name == "_extras" {
                     dirEnumerator.skipDescendants()
                 }
-                if fileURL.pathComponents.count > 12 {
-                    print("File Path component count: \(fileURL.pathComponents.count)")
-                    projectDirectories.append(fileURL)
+                //adafruit-circuitpython-bundle
+                if fileURL.lastPathComponent.contains("adafruit-circuitpython-bundle") {
+                    print("We got one!")
+                    print("Bad file - \(fileURL)")
+                } else {
+                    if fileURL.pathComponents.count > 12 {
+                        print("File Path component count: \(fileURL.pathComponents.count)")
+                        projectDirectories.append(fileURL)
+                    }
                 }
+                
+                
                
             } else {
                 fileURLs.append(fileURL)
@@ -421,6 +417,7 @@ class SelectionViewModel: ObservableObject {
         DispatchQueue.main.async {
             self.didCompleteTranfer = true
             self.numOfFiles = 0
+            self.counter = 0
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             self.didCompleteTranfer = false
@@ -440,6 +437,8 @@ class SelectionViewModel: ObservableObject {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                 self.sendingBundle = false
                 self.counter = 0
+                
+                self.numOfFiles = 0
                 self.contentList.removeAll()
             }
             
@@ -627,15 +626,7 @@ class SelectionViewModel: ObservableObject {
     }
     @Published var lastTransmit: TransmissionLog? =  TransmissionLog(type: .write(size: 334))
     
-    enum ActiveAlert: Identifiable {
-        case error(error: Error)
-        
-        var id: Int {
-            switch self {
-            case .error: return 1
-            }
-        }
-    }
+
     @Published var activeAlert: ActiveAlert?
     
     // Data
@@ -810,7 +801,11 @@ class SelectionViewModel: ObservableObject {
     
     private func writeFileCommand(path: String, data: Data, completion: ((Result<Date?, Error>) -> Void)?) {
         guard let fileTransferClient = fileTransferClient else { completion?(.failure(ProjectViewError.fileTransferUndefined)); return }
-        counter += 1
+        
+        DispatchQueue.main.async {
+            self.counter += 1
+        }
+        
         
         DLog("start writeFile \(path)")
         fileTransferClient.writeFile(path: path, data: data, progress: { [weak self] written, total in
@@ -889,4 +884,14 @@ class SelectionViewModel: ObservableObject {
     }
     
     
+}
+
+enum ActiveAlert: Identifiable {
+    case error(error: Error)
+    
+    var id: Int {
+        switch self {
+        case .error: return 1
+        }
+    }
 }
