@@ -1,18 +1,13 @@
 //
+//  BLEPairingView.swift
 //  PyLeap
 //
-//  Created by Trevor Beaton on 6/28/21.
+//  Created by Trevor Beaton on 4/4/22.
 //
 
 import SwiftUI
 
-struct BTConnectionView: View {
-    
-    @Environment(\.presentationMode) var presentation
-    @StateObject private var model = BTConnectionViewModel()
-    @EnvironmentObject var rootViewModel: RootViewModel
-    @State private var showModal = false
-
+struct BLEPairingView: View {
     let timer = Timer.publish(every: 15, on: .main, in: .common).autoconnect()
     @State private var isAnimating = false
     @State private var showProgress = false
@@ -23,11 +18,8 @@ struct BTConnectionView: View {
     @State private var userWaitThreshold = false
     @State private var nextText = false
     
-    
     var body: some View {
-        
-        
-        
+       
         VStack{
            
             HStack {
@@ -51,23 +43,24 @@ struct BTConnectionView: View {
             Image("pyleapLogo")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-              //  .offset(y: -20)
-               // .padding(.top, 100)
-                .padding(.horizontal, 60)
 
+                .padding(.horizontal, 60)
+                .fixedSize(horizontal: false, vertical: true)
+
+           // Spacer()
             
             if userWaitThreshold == false {
                 
-                Spacer()
+                
                 Text("Searching for your Bluefruit device...")
                     .font(Font.custom("ReadexPro-Regular", size: 36))
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
                     //.padding(.top, 100)
                     .padding(.horizontal, 20)
                 
                 BlinkaAnimationView()
                     .rotationEffect(Angle(degrees: self.isAnimating ? 360 : 0.0))
-                
-                
                 
                     .onAppear(){
                         Animation.linear(duration: 1.0)
@@ -82,17 +75,16 @@ struct BTConnectionView: View {
                 if nextText == false {
                     
                     Text("""
-        No device found.
-        Let's fix this.
-
-        First, disconnect your device from USB and connect to a battery.
+        No device found. Let's fix this. First, disconnect your device from USB and connect to a battery.
 
         """)
-                        .font(Font.custom("ReadexPro-Regular", size: 36))
-                        .multilineTextAlignment(.center)
-                      //  .padding(.top, 100)
+                        .font(Font.custom("ReadexPro-Regular", size: 10))
                         .padding(.horizontal, 30)
                         
+                        
+                        
+                    Spacer()
+                    
                     Button(action: {
 nextText = true
                     }) {
@@ -114,9 +106,9 @@ nextText = true
                   
                   The LEDs on your board should be flashing blue.
                   """)
-                                  .font(Font.custom("ReadexPro-Regular", size: 32))
+                                  .font(Font.custom("ReadexPro-Regular", size: 36))
                                   .multilineTextAlignment(.center)
-                                  //.padding(.top, 108.7)
+                                  .padding(.top, 108.7)
                                  .padding(.horizontal, 30)
                     
                     
@@ -139,64 +131,28 @@ nextText = false
 
             }
             
+            
+//            Text("Searching for your Bluefruit device...")
+//                .font(Font.custom("ReadexPro-Regular", size: 36))
+//                .padding(.top, 108.7)
+//                .padding(.horizontal, 20)
+            
 
+            
             Spacer()
         }
         
         .edgesIgnoringSafeArea(.all)
-        //.preferredColorScheme(.dark)
-        .onAppear {
-            model.onAppear()
-        }
-        .onDisappear {
-            model.onDissapear()
-        }
-        .onChange(of: model.destination) { destination in
-            if destination == .fileTransfer {
-                self.rootViewModel.goToFileTransfer()
-            }
-        }
-    }
-    
-    // MARK: - UI
-    private var detailText: String {
-        let text: String
-        switch model.connectionStatus {
-        case .scanning:
-            text = "Scanning..."
-        case .restoringConnection:
-            text = "Restoring connection..."
-        case .connecting:
-            text = "Connecting..."
-        case .connected:
-            text = "Connected..."
-        case .discovering:
-            text = "Discovering Services..."
-        case .fileTransferError:
-            text = "Error initializing FileTransfer"
-        case .fileTransferReady:
-            text = "FileTransfer service ready"
-        case .disconnected(let error):
-            if let error = error {
-                text = "Disconnected: \(error.localizedDescription)"
-            } else {
-                text = "Disconnected"
-            }
-        }
-        return text
+        .preferredColorScheme(.light)
+        
+        
+        
     }
 }
 
-
-struct BTConnectionView_Previews: PreviewProvider {
+struct BLEPairingView_Previews: PreviewProvider {
     static var previews: some View {
-        Group {
-            BTConnectionView()
-                .previewDevice("iPhone SE (2nd generation)")
-            BTConnectionView()
-                .previewDevice("iPad Pro (11-inch) (3rd generation)")
-        }
+        BLEPairingView()
+            .previewDevice("iPhone SE (2nd generation)")
     }
 }
-
-

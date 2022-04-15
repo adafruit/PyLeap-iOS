@@ -51,63 +51,63 @@ struct SelectionView: View {
         
         NavigationView {
             VStack {
-                Section(
-                    header:
-                        HStack{
-                            Spacer()
-                            Text("Connected peripherals:")
-                                .foregroundColor(.white)
-                            Spacer()
-                        },
-                    footer:
-                        HStack {
-                           
-                            Button(
-                                action: {
-                                    FileTransferConnectionManager.shared.reconnect()
-                                },
-                                label: {
-                                    Label("Find paired peripherals", systemImage: "arrow.clockwise")
-                                })
-                               
-                                                                    
-                        }) {
-                
-                if connectedPeripherals.isEmpty {
-                        Text("No peripherals found".uppercased())
-                            .foregroundColor(.gray)
-                            .frame(maxWidth: .infinity)
-                    }
-                    else {
-                    let selectedPeripheral = FileTransferConnectionManager.shared.selectedPeripheral
-                    ForEach(connectedPeripherals, id: \.identifier) { peripheral in
-                        
-                        HStack {
-                            Button(action: {
-                                DLog("Select: \(peripheral.name ?? peripheral.identifier.uuidString)")
-                                FileTransferConnectionManager.shared.setSelectedClient(blePeripheral: peripheral)
-                            }, label: {
-                                Text(verbatim: "\(peripheral.name ?? "<unknown>")")
-                                    .if(selectedPeripheral?.identifier == peripheral.identifier) {
-                                        $0.bold()
-                                    }
-                            })
-                            
-                            Spacer()
-                            
-                            Button(action: {
-                                activeAlert = .confirmUnpair(blePeripheral: peripheral)
-                            }, label: {
-                                Image(systemName: "xmark.circle")
-                            })
-                        }
-                        .foregroundColor(.black)
-                       
-                    }
-                    
-                    .listRowBackground(Color.white.opacity(0.7))
-                    }
-                }
+//                Section(
+//                    header:
+//                        HStack{
+//                            Spacer()
+//                            Text("Connected peripherals:")
+//                                .foregroundColor(.white)
+//                            Spacer()
+//                        },
+//                    footer:
+//                        HStack {
+//
+//                            Button(
+//                                action: {
+//                                    FileTransferConnectionManager.shared.reconnect()
+//                                },
+//                                label: {
+//                                    Label("Find paired peripherals", systemImage: "arrow.clockwise")
+//                                })
+//
+//
+//                        }) {
+//
+//                if connectedPeripherals.isEmpty {
+//                        Text("No peripherals found".uppercased())
+//                            .foregroundColor(.gray)
+//                            .frame(maxWidth: .infinity)
+//                    }
+//                    else {
+//                    let selectedPeripheral = FileTransferConnectionManager.shared.selectedPeripheral
+//                    ForEach(connectedPeripherals, id: \.identifier) { peripheral in
+//
+//                        HStack {
+//                            Button(action: {
+//                                DLog("Select: \(peripheral.name ?? peripheral.identifier.uuidString)")
+//                                FileTransferConnectionManager.shared.setSelectedClient(blePeripheral: peripheral)
+//                            }, label: {
+//                                Text(verbatim: "\(peripheral.name ?? "<unknown>")")
+//                                    .if(selectedPeripheral?.identifier == peripheral.identifier) {
+//                                        $0.bold()
+//                                    }
+//                            })
+//
+//                            Spacer()
+//
+//                            Button(action: {
+//                                activeAlert = .confirmUnpair(blePeripheral: peripheral)
+//                            }, label: {
+//                                Image(systemName: "xmark.circle")
+//                            })
+//                        }
+//                        .foregroundColor(.black)
+//
+//                    }
+//
+//                    .listRowBackground(Color.white.opacity(0.7))
+//                    }
+//                }
                 
                 
                 ScrollView {
@@ -127,20 +127,20 @@ struct SelectionView: View {
                         
                     }
                 }
-                .toolbar {
-                    Button(action: {
-                       // print("Go to...")
-                        //rootModel.goToTest()
-                       // btConnectionViewModel.disconnect(peripheral: selectedPeripheral!)
-                        print("Pressing Disconnection Button")
-                        
-                    }) {
-                        Image(systemName: "list.bullet")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 30, height: 30, alignment: .center)
-                    }                }
-                .modifier(Alerts(activeAlert: $activeAlert))
+//                .toolbar {
+//                    Button(action: {
+//                       // print("Go to...")
+//                        //rootModel.goToTest()
+//                       // btConnectionViewModel.disconnect(peripheral: selectedPeripheral!)
+//                        print("Pressing Disconnection Button")
+//                        
+//                    }) {
+//                        Image(systemName: "list.bullet")
+//                            .resizable()
+//                            .aspectRatio(contentMode: .fit)
+//                            .frame(width: 30, height: 30, alignment: .center)
+//                    }                }
+//                .modifier(Alerts(activeAlert: $activeAlert))
                 
                 
                 .toolbar {

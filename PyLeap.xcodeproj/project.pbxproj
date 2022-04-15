@@ -34,6 +34,7 @@
 		D56F640D270242CA000E5975 /* FileTransferPathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F640A270242CA000E5975 /* FileTransferPathUtils.swift */; };
 		D56F640E270242CA000E5975 /* String+DeletingPrefix.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F6408270242CA000E5975 /* String+DeletingPrefix.swift */; };
 		D58182FB27F732E40091C43B /* SubCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58182FA27F732E40091C43B /* SubCellViewModel.swift */; };
+		D58182FD27FBF09F0091C43B /* BLEPairingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58182FC27FBF09F0091C43B /* BLEPairingView.swift */; };
 		D58358EE27DA5C0F0069F7F5 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58358ED27DA5C0F0069F7F5 /* NetworkError.swift */; };
 		D585CABE276CFC040010185A /* FileTransferClient in Frameworks */ = {isa = PBXBuildFile; productRef = D585CABD276CFC040010185A /* FileTransferClient */; };
 		D58D887B26CC02B60085604A /* OnboardingViewPure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58D887A26CC02B60085604A /* OnboardingViewPure.swift */; };
@@ -90,6 +91,7 @@
 		D56F6408270242CA000E5975 /* String+DeletingPrefix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+DeletingPrefix.swift"; sourceTree = "<group>"; };
 		D56F640A270242CA000E5975 /* FileTransferPathUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTransferPathUtils.swift; sourceTree = "<group>"; };
 		D58182FA27F732E40091C43B /* SubCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubCellViewModel.swift; sourceTree = "<group>"; };
+		D58182FC27FBF09F0091C43B /* BLEPairingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEPairingView.swift; sourceTree = "<group>"; };
 		D58358ED27DA5C0F0069F7F5 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		D585CABC276CF97B0010185A /* FileTransferClient */ = {isa = PBXFileReference; lastKnownFileType = folder; path = FileTransferClient; sourceTree = "<group>"; };
 		D58D887A26CC02B60085604A /* OnboardingViewPure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewPure.swift; sourceTree = "<group>"; };
@@ -369,6 +371,7 @@
 			isa = PBXGroup;
 			children = (
 				D59DFD8E268A4A4D001737F6 /* BTConnectionView.swift */,
+				D58182FC27FBF09F0091C43B /* BLEPairingView.swift */,
 				D52BE85326A0E39100630900 /* BTConnectionViewModel.swift */,
 			);
 			path = "Bluetooth Pairing View";
@@ -480,6 +483,7 @@
 				D5C474AC27E174A5002DD160 /* WebView Content.swift in Sources */,
 				D56F640D270242CA000E5975 /* FileTransferPathUtils.swift in Sources */,
 				D5507AD326C668BC00512BAA /* SelectionView.swift in Sources */,
+				D58182FD27FBF09F0091C43B /* BLEPairingView.swift in Sources */,
 				D59DFDC4268CFAB4001737F6 /* OnboardingDataModel.swift in Sources */,
 				D5597C0426ADDD5E00DF17C0 /* StartupViewModel.swift in Sources */,
 				D56F640C270242CA000E5975 /* UIColor+LightAndDark.swift in Sources */,
@@ -573,7 +577,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -628,7 +632,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -645,7 +649,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
@@ -670,7 +674,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;

@@ -129,13 +129,7 @@ struct DemoSubview: View {
                
                 if compatibility.contains(bindingString) {
                     
-                    if globalString.isSendingG {
-                        ProgressView("", value: CGFloat(globalString.counterG), total: CGFloat(globalString.numberOfFilesG) )
-                            .accentColor(Color("pyleap_pink"))
-                                .foregroundColor(.purple)
-                    }else {
-                        
-                    }
+                   
                     
                     if isDownloaded == true {
                        
@@ -152,6 +146,7 @@ struct DemoSubview: View {
                             Text("Transfer")
                                 .font(Font.custom("ReadexPro-Regular", size: 25))
                                 .foregroundColor(Color.white)
+                            
                                 .padding(.horizontal, 60)
                                 .frame(height: 50)
                                 .background(Color("pyleap_pink"))
@@ -159,6 +154,21 @@ struct DemoSubview: View {
                         }
                         .disabled(globalString.isSendingG)
                         
+                        
+                        if globalString.isSendingG {
+                            ProgressView("", value: CGFloat(globalString.counterG), total: CGFloat(globalString.numberOfFilesG) )
+                                .padding(.horizontal, 80)
+                                .padding(.top, 3)
+                                .padding(.bottom, 10)
+                                .accentColor(Color("pyleap_pink"))
+                                .foregroundColor(.purple)
+                                .cornerRadius(25)
+                                .frame(height: 25)
+                            
+                            
+                        }else {
+                            
+                        }
                      
                     } else {
                         Button(action: {

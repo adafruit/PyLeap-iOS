@@ -13,7 +13,7 @@ struct FillerView: View {
     @EnvironmentObject var rootViewModel: RootViewModel
     
     var body: some View {
-        VStack{
+        VStack {
             
             Image("pyleapLogo")
                 .resizable()
@@ -23,6 +23,7 @@ struct FillerView: View {
             ProgressView()
 
         }
+        .preferredColorScheme(.light)
         .padding(.horizontal, 20)
         .edgesIgnoringSafeArea(.all)
         .modifier(Alerts(activeAlert: $model.activeAlert, model: model))
