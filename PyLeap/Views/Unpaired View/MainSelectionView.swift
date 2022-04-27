@@ -15,50 +15,54 @@ enum AdafruitDevices {
 
 struct MainSelectionView: View {
     
-    
+    @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject private var connectionManager: FileTransferConnectionManager
     
     @State private var showWebViewPopover: Bool = false
     @ObservedObject var model = NetworkService()
-    @EnvironmentObject var rootViewModel: RootViewModel
-    @State private var isConnected = false
     
+    @State private var isConnected = false
+
     @State private var test = ""
     
     var body: some View {
         
-        
+        VStack{
+            HeaderView()
             
-            VStack {
-                
-                HeaderView()
-               
-                ScrollView {
-                    SubHeaderView()
-
+            ScrollView {
+            
+                ScrollViewReader { scroll in
+                   
+                   SubHeaderView()
+                    
                     ForEach(model.pdemos) { demo in
-                        DemoViewCell(result: demo, isConnected: $isConnected, bootOne: $test)
+                        DemoViewCell(result: demo, isConnected: $isConnected, bootOne: $test, onViewGeometryChanged: {
+                            withAnimation {
+                                scroll.scrollTo(demo.id)
+                            }
+                        })
                     }
                 }
-
             }
-            .onChange(of: rootViewModel.destination) { destination in
-                if destination == .fileTransfer {
-                    self.rootViewModel.goToStartup()
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Image("pyleap_logo_white")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100, height: 100)
+                        .offset(y: -10)
+                    
                 }
             }
-        
-            .onAppear(perform: {
-                print("MainSelectionView")
-            })
-            .preferredColorScheme(.light)
-            .background(Color.white)
-            .navigationBarColor(UIColor(named: "pyleap_gray"))
-            .navigationBarTitleDisplayMode(.inline)
-            
         }
+        .preferredColorScheme(.light)
+        .background(Color.white)
+        .navigationBarColor(UIColor(named: "pyleap_gray"))
+        .navigationBarTitleDisplayMode(.inline)
+        
     }
-
-
+}
 
 
 struct MainSelectionView_Previews: PreviewProvider {
