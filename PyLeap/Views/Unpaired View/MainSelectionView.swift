@@ -30,18 +30,23 @@ struct MainSelectionView: View {
         VStack{
             
             ScrollView {
-                
-                HStack {
-                    
-                    Text("Browse all of the available PyLeap Projects")
-                        .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                        .font(Font.custom("ReadexPro-Regular", size: 25))
+                ScrollViewReader { scroll in
+                    HStack {
                         
-                }
-                .padding(.vertical,30)
-                
-                ForEach(model.pdemos) { demo in
-                    DemoViewCell(result: demo, isConnected: $isConnected, bootOne: $test)
+                        Text("Browse all of the available PyLeap Projects")
+                            .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            .font(Font.custom("ReadexPro-Regular", size: 25))
+                        
+                    }
+                    .padding(.vertical,30)
+                    
+                    ForEach(model.pdemos) { demo in
+                        DemoViewCell(result: demo, isConnected: $isConnected, bootOne: $test, onViewGeometryChanged: {
+                            withAnimation {
+                                scroll.scrollTo(demo.id)
+                            }
+                        })
+                    }
                 }
             }
             .toolbar {

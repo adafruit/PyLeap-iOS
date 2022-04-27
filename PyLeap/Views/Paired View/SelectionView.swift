@@ -123,7 +123,9 @@ struct SelectionView: View {
                     .padding(.vertical,30)
                     
                     ForEach(model.pdemos) { demo in
-                        DemoViewCell(result: demo, isConnected: $inConnectedInSelectionView, bootOne: $boardBootInfo)
+                        DemoViewCell(result: demo, isConnected: $inConnectedInSelectionView, bootOne: $boardBootInfo, onViewGeometryChanged: {
+                            // TODO
+                        })
                         
                     }
                 }
