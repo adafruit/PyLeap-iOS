@@ -11,10 +11,15 @@ import Foundation
 struct DemoViewCell: View {
     
     let result : ResultItem
-    @State private var isExpanded: Bool = false
+    @State private var isExpanded: Bool = false {
+        didSet {
+            onViewGeometryChanged()
+        }
+    }
     @Binding var isConnected: Bool
     @Binding var bootOne: String
 
+    let onViewGeometryChanged: ()->Void
     
     var body: some View {
         content
