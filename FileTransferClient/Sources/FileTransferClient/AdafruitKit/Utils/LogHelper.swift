@@ -12,7 +12,7 @@ import Foundation
 
 public func DLog(_ message: String, function: String = #function) {
     if _isDebugAssertConfiguration() {
-        NSLog("%@, %@", function, message)
+      //  NSLog("%@, %@", function, message)
     }
     
     // Send notification in case we are using LogManager

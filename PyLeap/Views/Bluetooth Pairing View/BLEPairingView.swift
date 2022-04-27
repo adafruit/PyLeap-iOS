@@ -38,7 +38,7 @@ struct BLEPairingView: View {
                     }
             }
             
-            Spacer()
+            
             
             Image("pyleapLogo")
                 .resizable()

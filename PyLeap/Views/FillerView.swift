@@ -28,11 +28,12 @@ struct FillerView: View {
         .edgesIgnoringSafeArea(.all)
         .modifier(Alerts(activeAlert: $model.activeAlert, model: model))
         .onAppear {
+            print("Filler View")
             model.setupBluetooth()
         }
         .onChange(of: model.isStartupFinished) { isStartupFinished in
             if isStartupFinished {
-                
+                // .fileTransfer 
                 rootViewModel.goToMain()
             
             }

@@ -9,12 +9,14 @@ import SwiftUI
 import FileTransferClient
 
 class GlobalString: ObservableObject {
-  @Published var projectString = ""
-  @Published var compatibilityString = ""
+    @Published var projectString = ""
+    @Published var compatibilityString = ""
     
     @Published var counterG = 0
     @Published var numberOfFilesG = 0
     @Published var isSendingG = false
+    @Published var bundleHasBeenDownloaded = false
+    @Published var numberOfTimesDownloaded = 0
 }
 
 struct DemoSubview: View {
@@ -22,8 +24,10 @@ struct DemoSubview: View {
     @State var isDownloaded = false
     
     @EnvironmentObject var globalString : GlobalString
-   
+    
     @Binding var bindingString: String
+    
+    @State private var toggleView: Bool = false
     
     let title: String
     let image: String
@@ -33,28 +37,29 @@ struct DemoSubview: View {
     let compatibility: [String]
     var setUUID: String
     
+    @EnvironmentObject var rootViewModel: RootViewModel
     @StateObject var downloadModel = DownloadViewModel()
     @StateObject var viewModel = SubCellViewModel()
+    @StateObject var selectionModel = SelectionViewModel()
     
     @Binding var isConnected : Bool
-    @State private var showWebViewPopover: Bool = false
     
+    @State private var showWebViewPopover: Bool = false
+    @State var errorOccured = false
     
     
     var body: some View {
+        
         VStack {
-            Image(image)
+            Image(systemName: "photo")
+                .data(url: URL(string: image)!)
                 .resizable()
                 .scaledToFit()
                 .frame(maxWidth: .infinity)
                 .cornerRadius(14)
                 .padding(.leading, 30)
                 .padding(.trailing, 30)
-                
-            //           GifImage("test")
-            //               .frame(width: 300, height: 300, alignment: .center)
-            //               .scaledToFit()
-            //               .cornerRadius(35)
+            
             
             VStack(alignment: .leading, spacing: 10) {
                 Text(description)
@@ -98,7 +103,7 @@ struct DemoSubview: View {
             
             Button(action: {
                 showWebViewPopover = true
-
+                
             }) {
                 Text("Learn Guide")
                     .font(.custom("ReadexPro-Regular", size: 25))
@@ -106,39 +111,35 @@ struct DemoSubview: View {
                     .padding(.leading, 60)
                     .padding(.trailing, 60)
                     .frame(height: 50)
-                    .popover(
-                        isPresented: self.$showWebViewPopover,
-                        arrowEdge: .bottom
-                    ) {
-                        VStack{
-                            WebView(URLRequest(url: learnGuideLink.url!))
-                        }
-                        .padding(0)
-                    }
                     .overlay(
                         RoundedRectangle(cornerRadius: 25)
                             .stroke((Color("pyleap_purple")), lineWidth: 3.5))
             }
-            .onAppear {
-
-            }
+            .sheet(isPresented: $showWebViewPopover, content: {
+                WebView(URLRequest(url: learnGuideLink.url!))
+            })
+            
             
             
             
             if isConnected {
-               
+                
                 if compatibility.contains(bindingString) {
                     
-                   
+                    
                     
                     if isDownloaded == true {
-                       
+                        
                         Button(action: {
-                           print("Project Selected: \(title) - DemoSubView")
-                         // viewModel.filesDownloaded(projectName: title)
+                            print("Project Selected: \(title) - DemoSubView")
+                            
                             globalString.projectString = title
                             
+                            print("\(selectionModel.writeError) - selectionModel.writeError")
                             print("\(globalString.projectString) - DemoSubView")
+                            
+                            globalString.numberOfTimesDownloaded += 1
+                            print("ught \(globalString.numberOfTimesDownloaded)")
                         }) {
                             
                             
@@ -154,6 +155,15 @@ struct DemoSubview: View {
                         }
                         .disabled(globalString.isSendingG)
                         
+//                        .alert(isPresented: $errorOccured) {
+//                            Alert(title: Text("Cannot write to device"), message: Text("Unplug from computer and use external battery source"), dismissButton: .destructive(Text("Got it!"), action: {
+//                                DispatchQueue.main.asyncAfter(deadline: .now()) {
+//                                    selectionModel.writeError = false
+//
+//                                }
+//                            }))
+//                        }
+                    //}
                         
                         if globalString.isSendingG {
                             ProgressView("", value: CGFloat(globalString.counterG), total: CGFloat(globalString.numberOfFilesG) )
@@ -169,7 +179,7 @@ struct DemoSubview: View {
                         }else {
                             
                         }
-                     
+                        
                     } else {
                         Button(action: {
                             print("Download Button Pressed!")
@@ -186,14 +196,16 @@ struct DemoSubview: View {
                                 .clipShape(Capsule())
                         }
                     }
-
+                    
                     
                 }
                 
                 
             } else {
                 
-                NavigationLink(destination: RootView(), label: {
+                Button  {
+                    rootViewModel.goTobluetoothPairing()
+                } label: {
                     Text("Connect")
                         .font(Font.custom("ReadexPro-Regular", size: 25))
                         .foregroundColor(Color.white)
@@ -202,24 +214,40 @@ struct DemoSubview: View {
                         .background(Color("adafruit_blue"))
                         .clipShape(Capsule())
                     
-                })
+                }
+                
             }
         }
-        
-        
-        
+                
         .onChange(of: downloadModel.isDownloading, perform: { newValue in
-            viewModel.getProjectURL(nameOf: title)
+            viewModel.getProjectForSubClass(nameOf: title)
         })
         
-        .onChange(of: viewModel.projectDownloaded, perform: { newValue in
-            print("For project: \(title), project download is \(newValue) ")
-            isDownloaded = newValue
+        .onChange(of: downloadModel.didDownloadBundle, perform: { newValue in
+            print("For project: \(title), project download is \(newValue)")
+            
+            
+            
+            if newValue {
+                DispatchQueue.main.async {
+                    viewModel.getProjectForSubClass(nameOf: title)
+                    isDownloaded = true
+                }
+            }else {
+                isDownloaded = false
+            }
+            
         })
         .onAppear(perform: {
-            viewModel.getProjectURL(nameOf: title)
+            viewModel.getProjectForSubClass(nameOf: title)
+            if viewModel.projectDownloaded {
+                isDownloaded = true
+            } else {
+                isDownloaded = false
+            }
+            print("is downloaded? \(isDownloaded)")
         })
         .padding(.top, 8)
         
-}
+    }
 }

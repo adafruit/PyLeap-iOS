@@ -186,6 +186,8 @@ class BTConnectionViewModel: ObservableObject {
         // Finished setup
         self.connectionStatus = .fileTransferReady
         self.gotoFileTransfer()
+        
+        print("Go to new view")
     }
     
     private func didFailToReconnectToKnownPeripheral(_ notification: Notification) {

@@ -38,11 +38,12 @@ class SelectionViewModel: ObservableObject {
     }
 
     func displayErrorMessage() {
+        
         DispatchQueue.main.async {
             self.writeError = true
             self.sendingBundle = false
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
             self.writeError = false
         }
     }
@@ -427,6 +428,8 @@ class SelectionViewModel: ObservableObject {
     func transferFiles(files: [URL]) {
         print(#function)
         var copiedFiles = files
+        print("Number of files in filesArray \(files.count)")
+        print(files)
         
         if files.isEmpty {
             print("Array of contents empty - Check other directories")
@@ -485,6 +488,8 @@ class SelectionViewModel: ObservableObject {
                 }
             }
             
+            
+            
             else if selectedUrl.deletingLastPathComponent().lastPathComponent == "lib" {
                 
                 
@@ -512,24 +517,34 @@ class SelectionViewModel: ObservableObject {
                 }
             } else {
                 
+                if selectedUrl.lastPathComponent == "README.txt" {
+                    print("Got one")
+                    copiedFiles.removeFirst()
+                    self.transferFiles(files: copiedFiles)
+                   
+
+                }
+                
+                
                 var tempURL = selectedUrl.pathComponents
                 tempURL.removeFirst(12)
                 let joined = tempURL.joined(separator: "/")
-                print("File transfer modified path 33:\(joined)")
-                
-                
-                
+                print("File transfer modified path: \(joined)")
+
+
+
                 print("Updated Path:\(joined)")
-                
-                
+
+
                 writeFileCommand(path: joined, data: data) { result in
                     switch result {
                     case .success(_):
                         copiedFiles.removeFirst()
                         self.transferFiles(files: copiedFiles)
                     case .failure(_):
-                        self.displayErrorMessage()
-                        
+                        print("Failed")
+                       // self.displayErrorMessage()
+
                     }
                 }
             }

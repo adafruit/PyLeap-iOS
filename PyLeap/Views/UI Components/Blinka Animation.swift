@@ -22,7 +22,7 @@ struct BlinkaAnimationView: View {
             Image("BlinkaLoading")
                 .resizable(resizingMode: .stretch)
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 230, height: 230)
+                .frame(width: 300, height: 300)
                 .rotationEffect(Angle(degrees: self.isAnimating ? 360 : 0.0))
                 .animation(self.isAnimating ? foreverAnimation : .default)
             

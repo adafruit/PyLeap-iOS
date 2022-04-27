@@ -15,8 +15,8 @@ class RootViewModel: ObservableObject {
         case main
         case startup
         case onboard
-        //case bluetoothConnection
-        //case filesView
+        case bluetoothPairing
+        case bluetoothStatus
         case fileTransfer
         case test
         case mainSelection
@@ -29,14 +29,16 @@ class RootViewModel: ObservableObject {
         destination = .test
     }
     
-    
+    func goTobluetoothPairing() {
+        destination = .bluetoothPairing
+    }
     
     func goToMainSelection(){
         destination = .mainSelection
     }
     
     func goToMain(){
-        // Check if we are reconnecting to a known Peripheral. If AppState.shared.fileTransferClient is not nil, no need to scan, just go to the connected screen
+
         if FileTransferConnectionManager.shared.selectedClient != nil {
             destination = .fileTransfer
         }
@@ -56,5 +58,19 @@ class RootViewModel: ObservableObject {
     func goToFileTransfer() {
         destination = .fileTransfer
     }
+    
+    
+    func showWarningIfBluetoothStateIsNotReady() {
+        let bluetoothState = BleManager.shared.state
+        let shouldShowBluetoothDialog = bluetoothState == .poweredOff || bluetoothState == .unsupported || bluetoothState == .unauthorized
+        
+        if shouldShowBluetoothDialog {
+            destination = .bluetoothStatus
+        }
+        else if destination == .bluetoothStatus {
+            goToStartup()
+        }
+    }
+    
 }
 

@@ -13,7 +13,7 @@ class SubCellViewModel: ObservableObject {
     
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     
-    func getProjectURL(nameOf project: String) {
+    func getProjectForSubClass(nameOf project: String) {
         
         if let enumerator = FileManager.default.enumerator(at: directoryPath, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
            // for case condition: Only process URLs

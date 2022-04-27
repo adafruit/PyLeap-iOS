@@ -13,7 +13,7 @@ struct BTConnectionView: View {
     @EnvironmentObject var rootViewModel: RootViewModel
     @State private var showModal = false
 
-    let timer = Timer.publish(every: 15, on: .main, in: .common).autoconnect()
+    let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
     @State private var isAnimating = false
     @State private var showProgress = false
     var foreverAnimation: Animation {
@@ -46,8 +46,7 @@ struct BTConnectionView: View {
                     }
             }
             
-            Spacer()
-            
+
             Image("pyleapLogo")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
@@ -58,16 +57,18 @@ struct BTConnectionView: View {
             
             if userWaitThreshold == false {
                 
-                Spacer()
-                Text("Searching for your Bluefruit device...")
+                
+                Text("Searching for device...")
                     .font(Font.custom("ReadexPro-Regular", size: 36))
                     //.padding(.top, 100)
                     .padding(.horizontal, 20)
                 
+                    Spacer()
                 BlinkaAnimationView()
+                    .minimumScaleFactor(0.1)
                     .rotationEffect(Angle(degrees: self.isAnimating ? 360 : 0.0))
                 
-                
+                    Spacer()
                 
                     .onAppear(){
                         Animation.linear(duration: 1.0)
@@ -83,16 +84,19 @@ struct BTConnectionView: View {
                     
                     Text("""
         No device found.
-        Let's fix this.
 
-        First, disconnect your device from USB and connect to a battery.
+        First, disconnect your device from your computer, and connect it to a  Lipoly battery, AAA battery or USB wall power.
 
         """)
                         .font(Font.custom("ReadexPro-Regular", size: 36))
+                        .minimumScaleFactor(0.01)
                         .multilineTextAlignment(.center)
                       //  .padding(.top, 100)
-                        .padding(.horizontal, 30)
-                        
+                        .padding(.horizontal, 20)
+                    
+                    
+                    Spacer()
+                    
                     Button(action: {
 nextText = true
                     }) {
@@ -100,25 +104,32 @@ nextText = true
                         Text("Next Step")
                             .font(Font.custom("ReadexPro-Regular", size: 25))
                             .foregroundColor(Color.white)
+                            
+                            .padding()
                             .padding(.horizontal, 60)
+                            
                             .frame(height: 50)
                             .background(Color("pyleap_pink"))
                             .clipShape(Capsule())
+
                     }
-                    
+                    Spacer()
+                        .frame(height: 14)
                     
                 } else {
                     
                     Text("""
-                  Press the RESET button on your board, the press it one more time.
+                  Press the RESET button on your board. When the LED(s) quickly flash blue, press RESET one more time.
                   
-                  The LEDs on your board should be flashing blue.
+                  The LED(s) on your board should be flashing blue.
                   """)
                                   .font(Font.custom("ReadexPro-Regular", size: 32))
+                                  .minimumScaleFactor(0.01)
                                   .multilineTextAlignment(.center)
-                                  //.padding(.top, 108.7)
-                                 .padding(.horizontal, 30)
+                                 .padding(.horizontal, 20)
                     
+                    
+                    Spacer()
                     
                     Button(action: {
 nextText = false
@@ -132,7 +143,8 @@ nextText = false
                             .background(Color("pyleap_pink"))
                             .clipShape(Capsule())
                     }
-                    
+                    Spacer()
+                        .frame(height: 14)
                     
                 }
                 
@@ -140,12 +152,13 @@ nextText = false
             }
             
 
-            Spacer()
+           // Spacer()
         }
         
         .edgesIgnoringSafeArea(.all)
-        //.preferredColorScheme(.dark)
+
         .onAppear {
+            print("BTConnectionView")
             model.onAppear()
         }
         .onDisappear {
@@ -191,6 +204,8 @@ nextText = false
 struct BTConnectionView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
+            BTConnectionView()
+                .previewDevice("iPhone SE (2nd generation)")
             BTConnectionView()
                 .previewDevice("iPhone SE (2nd generation)")
             BTConnectionView()

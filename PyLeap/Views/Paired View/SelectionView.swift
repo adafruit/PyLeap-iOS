@@ -9,9 +9,6 @@ import SwiftUI
 import FileTransferClient
 
 
- 
-
-
 struct SelectionView: View {
     
     @Environment(\.presentationMode) var presentationMode
@@ -19,10 +16,18 @@ struct SelectionView: View {
     @StateObject var viewModel = SelectionViewModel()
     @ObservedObject var model = NetworkService()
     @StateObject var globalString = GlobalString()
-    
     @StateObject var btConnectionViewModel = BTConnectionViewModel()
-    
     @StateObject private var rootModel = RootViewModel()
+    
+    
+    
+    //clearKnownPeripheralUUIDs
+    
+    @State private var isConnected = false
+    @State private var switchedView = false
+    @State private var errorOccured = false
+    
+    @State private var scrollViewID = UUID()
     
     // Data
     enum ActiveAlert: Identifiable {
@@ -39,7 +44,7 @@ struct SelectionView: View {
     @State private var activeAlert: ActiveAlert?
     let selectedPeripheral = FileTransferConnectionManager.shared.selectedPeripheral
     
-
+    
     @State private var boardBootInfo = ""
     
     
@@ -47,127 +52,181 @@ struct SelectionView: View {
     
     var body: some View {
         
-        let connectedPeripherals = connectionManager.peripherals.filter{$0.state == .connected}
+          let connectedPeripherals = connectionManager.peripherals.filter{$0.state == .connected}
+        let selectedPeripheral = FileTransferConnectionManager.shared.selectedPeripheral
         
-        NavigationView {
-            VStack {
-//                Section(
-//                    header:
-//                        HStack{
-//                            Spacer()
-//                            Text("Connected peripherals:")
-//                                .foregroundColor(.white)
-//                            Spacer()
-//                        },
-//                    footer:
-//                        HStack {
-//
-//                            Button(
-//                                action: {
-//                                    FileTransferConnectionManager.shared.reconnect()
-//                                },
-//                                label: {
-//                                    Label("Find paired peripherals", systemImage: "arrow.clockwise")
-//                                })
-//
-//
-//                        }) {
-//
-//                if connectedPeripherals.isEmpty {
-//                        Text("No peripherals found".uppercased())
-//                            .foregroundColor(.gray)
-//                            .frame(maxWidth: .infinity)
-//                    }
-//                    else {
-//                    let selectedPeripheral = FileTransferConnectionManager.shared.selectedPeripheral
-//                    ForEach(connectedPeripherals, id: \.identifier) { peripheral in
-//
-//                        HStack {
-//                            Button(action: {
-//                                DLog("Select: \(peripheral.name ?? peripheral.identifier.uuidString)")
-//                                FileTransferConnectionManager.shared.setSelectedClient(blePeripheral: peripheral)
-//                            }, label: {
-//                                Text(verbatim: "\(peripheral.name ?? "<unknown>")")
-//                                    .if(selectedPeripheral?.identifier == peripheral.identifier) {
-//                                        $0.bold()
-//                                    }
-//                            })
-//
-//                            Spacer()
-//
-//                            Button(action: {
-//                                activeAlert = .confirmUnpair(blePeripheral: peripheral)
-//                            }, label: {
-//                                Image(systemName: "xmark.circle")
-//                            })
-//                        }
-//                        .foregroundColor(.black)
-//
-//                    }
-//
-//                    .listRowBackground(Color.white.opacity(0.7))
-//                    }
-//                }
+        VStack {
+            //Start
+            
+            if switchedView == false {
+                HStack {
+                    
+                    Spacer()
+                    Image("bluetooth")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 30, height: 30, alignment: .center)
+                        .padding(35)
+                    
+                }
                 
+                Image("pyleapLogo")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .minimumScaleFactor(0.01)
+                    .padding(.horizontal, 60)
+                    .fixedSize(horizontal: false, vertical: true)
                 
-                ScrollView {
+                Spacer()
+                
+                Group {
+                    Text("Connected!")
+                        .font(Font.custom("ReadexPro-Regular", size: 36))
+                        .multilineTextAlignment(.center)
+                        .lineLimit(2)
+                    //.padding(.top, 100)
+                        .padding(.horizontal, 20)
                     
                     
-                    
-                    HStack {
-                        Text("Browse all of the available PyLeap Projects")
-                            .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                            .font(Font.custom("ReadexPro-Regular", size: 25))
-                            .foregroundColor(.black)
+                    if boardBootInfo == "circuitplayground_bluefruit" {
+                        Image("cpb")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 300.0, height: 300.0)
+                            .minimumScaleFactor(0.01)
+                        
+                            .padding(.horizontal, 60)
+                            .fixedSize(horizontal: false, vertical: true)
+                        
+                        Text("Circuit Playground Bluefruit")
+                            .font(Font.custom("ReadexPro-Regular", size: 30))
+                            .minimumScaleFactor(0.01)
+                            .multilineTextAlignment(.center)
+                            .lineLimit(2)
+                        //.padding(.top, 100)
+                            .padding(.horizontal, 20)
+                        
+                    } else {
+                        
                     }
-                    .padding(.vertical,30)
                     
-                    ForEach(model.pdemos) { demo in
-                        DemoViewCell(result: demo, isConnected: $inConnectedInSelectionView, bootOne: $boardBootInfo)
+                    
+                    if boardBootInfo == "clue_nrf52840_express" {
+                        Image("clue")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 300.0, height: 300.0)
+                            .padding(.horizontal, 60)
+                            .fixedSize(horizontal: false, vertical: true)
+                        
+                        Text("Adafruit CLUE")
+                            .font(Font.custom("ReadexPro-Regular", size: 30))
+                            .minimumScaleFactor(0.01)
+                            .multilineTextAlignment(.center)
+                            .lineLimit(2)
+                            .padding(.horizontal, 20)
+                        
+                    } else {
                         
                     }
                 }
-//                .toolbar {
-//                    Button(action: {
-//                       // print("Go to...")
-//                        //rootModel.goToTest()
-//                       // btConnectionViewModel.disconnect(peripheral: selectedPeripheral!)
-//                        print("Pressing Disconnection Button")
-//                        
-//                    }) {
-//                        Image(systemName: "list.bullet")
-//                            .resizable()
-//                            .aspectRatio(contentMode: .fit)
-//                            .frame(width: 30, height: 30, alignment: .center)
-//                    }                }
-//                .modifier(Alerts(activeAlert: $activeAlert))
                 
+                Spacer()
                 
-                .toolbar {
-                    ToolbarItem(placement: .principal) {
-                        Image("pyleap_logo_white")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 100, height: 100)
-                            .offset(y: -10)
-                    }
+                Button(action: {
+                    switchedView = true
+                }) {
+                    
+                    Text("Let's Go!")
+                        .font(Font.custom("ReadexPro-Regular", size: 25))
+                        .foregroundColor(Color.white)
+                        .padding(.horizontal, 60)
+                        .frame(height: 50)
+                        .background(Color("pyleap_purple"))
+                        .clipShape(Capsule())
                 }
+                
+                Spacer()
+                    .frame(height: 20)
+                
+            } else {
+                //End
+                
+                // Start
+                
+                VStack {
+                    
+                    HeaderView()
+                     
+
+                        
+                        ScrollView(.vertical, showsIndicators: true) {
+                            
+                            SubHeaderView()
+                            
+                            ForEach(model.pdemos) { demo in
+                                DemoViewCell(result: demo, isConnected: $inConnectedInSelectionView, bootOne: $boardBootInfo)
+                                
+                            }
+                        }
+                        .id(self.scrollViewID)
+                    }
+                
+                //END
             }
-            .background(Color.white)
-            .navigationBarColor(UIColor(named: "pyleap_gray"))
-            .navigationBarTitleDisplayMode(.inline)
             
         }
         
+        .background(Color.white)
+        
         .environmentObject(globalString)
         
+        //        .onChange(of: viewModel.writeError, perform: { newValue in
+        //            print("changed value")
+        //            errorOccured = newValue
+        //            if newValue {
+        //                errorOccured = true
+        //            } else {
+        //                errorOccured = false
+        //            }
+        //
+        //
+        //        })
         
+        //        .onChange(of: globalString.numberOfTimesDownloaded, perform: { newValue in
+        //            viewModel.getProjectURL(nameOf: globalString.projectString)
+        //            print("Current project...\(globalString.projectString)")
+        //            print("Number of downloads: \(newValue)")
+        //        })
         
+        .alert(isPresented: $errorOccured) {
+            Alert(title: Text("Cannot write to device"), message: Text("""
+Please unplug from computer and use external power source
+
+Then press RESET on device to continue
+"""), dismissButton: .destructive(Text("Got it!"), action: {
+                DispatchQueue.main.asyncAfter(deadline: .now()) {
+                 //   selectionModel.writeError = false
+                    
+                }
+            }))
+        }
+        
+        .modifier(Alerts(activeAlert: $activeAlert))
+        
+        .onChange(of: viewModel.writeError, perform: { newValue in
+            print("Change happened! \(newValue)")
+            
+            globalString.bundleHasBeenDownloaded = newValue
+            
+            errorOccured = newValue
+        })
         
         .onChange(of: viewModel.sendingBundle, perform: { newValue in
             globalString.isSendingG = newValue
-            print("Is Sending? = \(newValue)")
         })
+        
+        
         
         .onChange(of: viewModel.numOfFiles, perform: { newValue in
             globalString.numberOfFilesG = newValue
@@ -190,40 +249,43 @@ struct SelectionView: View {
             
         })
         
+        
+        
         .onChange(of: connectionManager.selectedClient) { selectedClient in
             viewModel.setup(fileTransferClient: selectedClient)
         }
         .onAppear {
+            print("SelectionView")
             viewModel.setup(fileTransferClient: connectionManager.selectedClient)
             viewModel.readFile(filename: "boot_out.txt")
-            
-            
+
         }
+        
     }
     
     
     
     
     struct Alerts: ViewModifier {
-       @Binding var activeAlert: ActiveAlert?
-       
-       func body(content: Content) -> some View {
-           content
-               .alert(item: $activeAlert, content:  { alert in
-                   switch alert {
-                   case .confirmUnpair(let blePeripheral):
-                       return Alert(
-                           title: Text("Confirm disconnect \(blePeripheral.name ?? "")"),
-                           message: nil,
-                           primaryButton: .destructive(Text("Disconnect")) {
-                               //BleAutoReconnect.clearAutoconnectPeripheral()
-                               BleManager.shared.disconnect(from: blePeripheral)
-                           },
-                           secondaryButton: .cancel(Text("Cancel")) {})
-                   }
-               })
-       }
-   }
+        @Binding var activeAlert: ActiveAlert?
+        
+        func body(content: Content) -> some View {
+            content
+                .alert(item: $activeAlert, content:  { alert in
+                    switch alert {
+                    case .confirmUnpair(let blePeripheral):
+                        return Alert(
+                            title: Text("Confirm disconnect \(blePeripheral.name ?? "")"),
+                            message: nil,
+                            primaryButton: .destructive(Text("Disconnect")) {
+                                //BleAutoReconnect.clearAutoconnectPeripheral()
+                                BleManager.shared.disconnect(from: blePeripheral)
+                            },
+                            secondaryButton: .cancel(Text("Cancel")) {})
+                    }
+                })
+        }
+    }
     
 }
 

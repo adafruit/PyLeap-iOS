@@ -9,24 +9,22 @@ import SwiftUI
 
 struct TestingView: View {
     
-    @StateObject private var model = RootViewModel()
+   // @StateObject private var model = RootViewModel()
     
     var body: some View {
-       
-        NavigationView {
-            
+ 
             VStack {
                 Button {
-                    model.goToTest()
+                   // model.goToTest()
+                    print("Let's Go!")
                 } label: {
                     Text("Great! Testing View is visible. Now go back to Main View.")
                 }
 
             }
-            .background(Color("pyleap_pink"))
-            .navigationTitle("PyLeap")
+          
         }
-    }
+    
 }
 
 struct MainView: View {

@@ -32,17 +32,24 @@ struct RootView: View {
             case .startup:
                 FillerView()
                 
-            case .main:
+            case .bluetoothPairing:
                 BTConnectionView()
+                
+            case .bluetoothStatus:
+                BluetoothStatusView()
+                
+            case .main:
+                MainSelectionView()
 
             case .fileTransfer:
                 SelectionView()
                 
             case .test:
+               
                 TestingView()
                 
             default:
-                MainView()
+                FillerView()
             }
         }
 //        .onChange(of: model.destination, perform: { newValue in
@@ -52,10 +59,17 @@ struct RootView: View {
 //        
 //        })
         
+        .onReceive(NotificationCenter.default.publisher(for: .didUpdateBleState)) { notification in
+            if !Config.isSimulatingBluetooth {
+                model.showWarningIfBluetoothStateIsNotReady()
+            }
+        }
+        
         .onChange(of: connectionManager.isConnectedOrReconnecting) { isConnectedOrReconnecting in
             
             if !isConnectedOrReconnecting, model.destination == .fileTransfer {
-                model.destination = .main
+                //model.destination = .main
+                print("Should go to pairing view...")
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
@@ -64,16 +78,12 @@ struct RootView: View {
         }
         .environmentObject(model)
         .environmentObject(connectionManager)
-        .navigationBarBackButtonHidden(true)
-        .navigationBarHidden(true)
+        .background(Color.white)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .edgesIgnoringSafeArea(.all)
         .ignoresSafeArea(.all)
+        .preferredColorScheme(.light)
     }
 }
 
 
-
-extension NSNotification {
-    static let fileSent = Notification.Name.init("fileSent")
-}

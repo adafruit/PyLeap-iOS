@@ -37,7 +37,7 @@ class StartupViewModel: ObservableObject {
     }
     
     func setupBluetooth() {
-        DispatchQueue.global().async {      // Important: Launch in background queue
+        DispatchQueue.global().async {   // Important: Launch in background queue
             // check Bluetooth status
             let bleState = BleManager.shared.state
             //DLog("Initial bluetooth state: \(bleState.rawValue)")
@@ -54,6 +54,7 @@ class StartupViewModel: ObservableObject {
             }
             
             DispatchQueue.main.async {
+                print("Checking Bluetooth Support")
                 self.checkBleSupport()
             }
             

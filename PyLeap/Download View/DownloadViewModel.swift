@@ -23,7 +23,7 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
     
     // Show Progress View
     @Published var downloadProgress: CGFloat = 0
-    @Published var showDownloadProgress = false
+
     @Published var didDownloadBundle = false
     
     @Published var isDownloading = false
@@ -156,7 +156,10 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
         // Since URL Session will be running in the background thread
         // UI will be done on the main thread
         DispatchQueue.main.async {
+
             self.downloadProgress = numeralProgress
+            print("Recorded downloadProgress Progress: \(self.downloadProgress)")
+            print("Recorded numeralProgress Progress: \(numeralProgress)")
         }
     }
     
@@ -181,25 +184,21 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
             try FileManager.default.copyItem(at: location, to: destinationURL)
             
             DispatchQueue.main.async {
-                // If Successful
+                // If Successful...
                 print("Successful Download")
                 self.isDownloading = false
                 print("Download Location: \(location)")
                 self.downloadProgress = 1.0
-                
+                print("\(self.didDownloadBundle) CURRENT STATE")
+                self.didDownloadBundle = true
+                print("\(self.didDownloadBundle) CURRENT STATE")
             }
-            
-            // Closing Progress View
-            DispatchQueue.main.async {
-                //self.downloadProgress = 0
-                withAnimation{self.showDownloadProgress = false}
-            }
-            
             
         } catch {
             print(error)
             self.reportError(error: "Try again later")
             isDownloading = false
+            self.didDownloadBundle = false
         }
         
     }

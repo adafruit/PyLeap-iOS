@@ -20,6 +20,7 @@
 		D52F7E742672F4C400911D43 /* PyLeapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52F7E732672F4C400911D43 /* PyLeapApp.swift */; };
 		D52F7E782672F4C500911D43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D52F7E772672F4C500911D43 /* Assets.xcassets */; };
 		D52F7E7B2672F4C500911D43 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D52F7E7A2672F4C500911D43 /* Preview Assets.xcassets */; };
+		D534F3FC280B59090053699C /* ExampleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D534F3FB280B59090053699C /* ExampleView.swift */; };
 		D5507AD026C668BC00512BAA /* SelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACC26C668BC00512BAA /* SelectionViewModel.swift */; };
 		D5507AD126C668BC00512BAA /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACF26C668BC00512BAA /* SearchBarView.swift */; };
 		D5507AD326C668BC00512BAA /* SelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACB26C668BC00512BAA /* SelectionView.swift */; };
@@ -38,6 +39,7 @@
 		D58358EE27DA5C0F0069F7F5 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58358ED27DA5C0F0069F7F5 /* NetworkError.swift */; };
 		D585CABE276CFC040010185A /* FileTransferClient in Frameworks */ = {isa = PBXBuildFile; productRef = D585CABD276CFC040010185A /* FileTransferClient */; };
 		D58D887B26CC02B60085604A /* OnboardingViewPure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58D887A26CC02B60085604A /* OnboardingViewPure.swift */; };
+		D595FC2E2812C23D00569D8C /* Image Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D595FC2D2812C23D00569D8C /* Image Extension.swift */; };
 		D59DFD8F268A4A4D001737F6 /* BTConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFD8E268A4A4D001737F6 /* BTConnectionView.swift */; };
 		D59DFDB6268CD052001737F6 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFDB5268CD052001737F6 /* AppEnvironment.swift */; };
 		D59DFDBA268CDEEC001737F6 /* RootViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFDB9268CDEEC001737F6 /* RootViewModel.swift */; };
@@ -52,6 +54,10 @@
 		D5C74DF327EB92FA00730505 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C74DF227EB92FA00730505 /* View+Extensions.swift */; };
 		D5C74DF527EB93E300730505 /* DemoViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C74DF427EB93E300730505 /* DemoViewCell.swift */; };
 		D5C74DF727EBA47E00730505 /* ReadexPro-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D5C74DF627EBA47C00730505 /* ReadexPro-SemiBold.ttf */; };
+		D5CC6BAE2816FD27008629FB /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CC6BAD2816FD27008629FB /* Config.swift */; };
+		D5CC6BB02816FDA1008629FB /* BluetoothStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CC6BAF2816FDA1008629FB /* BluetoothStatusView.swift */; };
+		D5CC6BB428173AE0008629FB /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CC6BB328173AE0008629FB /* HeaderView.swift */; };
+		D5CC6BB628173B91008629FB /* SubHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CC6BB528173B91008629FB /* SubHeaderView.swift */; };
 		D5D1F4A427EBA7E30040E2BF /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D1F4A327EBA7E30040E2BF /* NetworkManager.swift */; };
 		D5D1F4A627EBA9C80040E2BF /* DemoSubCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D1F4A527EBA9C80040E2BF /* DemoSubCellView.swift */; };
 		D5D1F4AE27ECFDA10040E2BF /* GifImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D1F4AD27ECFDA10040E2BF /* GifImage.swift */; };
@@ -63,6 +69,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D50237E3280994F900F1EE8A /* PyLeap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = PyLeap.entitlements; path = "../../../../Desktop/Copy Of PyLeap Entitlement/PyLeap.entitlements"; sourceTree = "<group>"; };
 		D505B99B2755323C00386E9F /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		D505B99D2756894300386E9F /* ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifier.swift; sourceTree = "<group>"; };
 		D517F68026C5771D002996E8 /* FillerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FillerView.swift; sourceTree = "<group>"; };
@@ -74,6 +81,7 @@
 		D52F7E772672F4C500911D43 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D52F7E7A2672F4C500911D43 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D52F7E7C2672F4C500911D43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D534F3FB280B59090053699C /* ExampleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleView.swift; sourceTree = "<group>"; };
 		D54D38B82691E0D000FBFE47 /* KeyboardUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardUtils.swift; sourceTree = "<group>"; };
 		D54D38C52692044800FBFE47 /* PeripheralList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralList.swift; sourceTree = "<group>"; };
 		D54D38C62692044800FBFE47 /* PeripheralAutoConnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralAutoConnect.swift; sourceTree = "<group>"; };
@@ -95,13 +103,13 @@
 		D58358ED27DA5C0F0069F7F5 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		D585CABC276CF97B0010185A /* FileTransferClient */ = {isa = PBXFileReference; lastKnownFileType = folder; path = FileTransferClient; sourceTree = "<group>"; };
 		D58D887A26CC02B60085604A /* OnboardingViewPure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewPure.swift; sourceTree = "<group>"; };
+		D595FC2D2812C23D00569D8C /* Image Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image Extension.swift"; sourceTree = "<group>"; };
 		D59DFD8E268A4A4D001737F6 /* BTConnectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTConnectionView.swift; sourceTree = "<group>"; };
 		D59DFDB5268CD052001737F6 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 		D59DFDB9268CDEEC001737F6 /* RootViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewModel.swift; sourceTree = "<group>"; };
 		D59DFDBB268CE0EB001737F6 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		D59DFDC1268CFA36001737F6 /* OnboardingStepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStepView.swift; sourceTree = "<group>"; };
 		D59DFDC3268CFAB4001737F6 /* OnboardingDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingDataModel.swift; sourceTree = "<group>"; };
-		D5C41D6526C59A48004C38E3 /* PyLeap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PyLeap.entitlements; sourceTree = "<group>"; };
 		D5C474AB27E174A5002DD160 /* WebView Content.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WebView Content.swift"; sourceTree = "<group>"; };
 		D5C474C227E39FAD002DD160 /* ReadexPro-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ReadexPro-Bold.ttf"; sourceTree = "<group>"; };
 		D5C474C527E39FC8002DD160 /* ReadexPro-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ReadexPro-Light.ttf"; sourceTree = "<group>"; };
@@ -110,6 +118,10 @@
 		D5C74DF227EB92FA00730505 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		D5C74DF427EB93E300730505 /* DemoViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoViewCell.swift; sourceTree = "<group>"; };
 		D5C74DF627EBA47C00730505 /* ReadexPro-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "ReadexPro-SemiBold.ttf"; path = "../../../../../../../Downloads/Nunito,Readex_Pro-2/Readex_Pro/static/ReadexPro-SemiBold.ttf"; sourceTree = "<group>"; };
+		D5CC6BAD2816FD27008629FB /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		D5CC6BAF2816FDA1008629FB /* BluetoothStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothStatusView.swift; sourceTree = "<group>"; };
+		D5CC6BB328173AE0008629FB /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		D5CC6BB528173B91008629FB /* SubHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubHeaderView.swift; sourceTree = "<group>"; };
 		D5D1F4A327EBA7E30040E2BF /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		D5D1F4A527EBA9C80040E2BF /* DemoSubCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoSubCellView.swift; sourceTree = "<group>"; };
 		D5D1F4AD27ECFDA10040E2BF /* GifImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifImage.swift; sourceTree = "<group>"; };
@@ -169,10 +181,11 @@
 		D52F7E722672F4C400911D43 /* PyLeap */ = {
 			isa = PBXGroup;
 			children = (
-				D5C41D6526C59A48004C38E3 /* PyLeap.entitlements */,
+				D50237E3280994F900F1EE8A /* PyLeap.entitlements */,
 				D52F7E732672F4C400911D43 /* PyLeapApp.swift */,
 				D5597BF726A9E14B00DF17C0 /* AppDelegate.swift */,
 				D59DFDB5268CD052001737F6 /* AppEnvironment.swift */,
+				D534F3FB280B59090053699C /* ExampleView.swift */,
 				D5C74DF027EB92E900730505 /* Model */,
 				D59DFDB2268CCEAC001737F6 /* Views */,
 				D5C74DEE27EB91D600730505 /* Networking */,
@@ -233,6 +246,8 @@
 		D5507ACE26C668BC00512BAA /* UI Components */ = {
 			isa = PBXGroup;
 			children = (
+				D5CC6BB328173AE0008629FB /* HeaderView.swift */,
+				D5CC6BB528173B91008629FB /* SubHeaderView.swift */,
 				D5507ACF26C668BC00512BAA /* SearchBarView.swift */,
 				D5F53CEA2694B524007634C2 /* Blinka Animation.swift */,
 			);
@@ -328,6 +343,7 @@
 				D505B99B2755323C00386E9F /* NetworkMonitor.swift */,
 				D5D1F4A327EBA7E30040E2BF /* NetworkManager.swift */,
 				D58358ED27DA5C0F0069F7F5 /* NetworkError.swift */,
+				D595FC2D2812C23D00569D8C /* Image Extension.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -371,6 +387,7 @@
 			isa = PBXGroup;
 			children = (
 				D59DFD8E268A4A4D001737F6 /* BTConnectionView.swift */,
+				D5CC6BAF2816FDA1008629FB /* BluetoothStatusView.swift */,
 				D58182FC27FBF09F0091C43B /* BLEPairingView.swift */,
 				D52BE85326A0E39100630900 /* BTConnectionViewModel.swift */,
 			);
@@ -382,6 +399,7 @@
 			children = (
 				D59DFDBB268CE0EB001737F6 /* RootView.swift */,
 				D59DFDB9268CDEEC001737F6 /* RootViewModel.swift */,
+				D5CC6BAD2816FD27008629FB /* Config.swift */,
 			);
 			path = "Root View";
 			sourceTree = "<group>";
@@ -485,18 +503,22 @@
 				D5507AD326C668BC00512BAA /* SelectionView.swift in Sources */,
 				D58182FD27FBF09F0091C43B /* BLEPairingView.swift in Sources */,
 				D59DFDC4268CFAB4001737F6 /* OnboardingDataModel.swift in Sources */,
+				D5CC6BB02816FDA1008629FB /* BluetoothStatusView.swift in Sources */,
 				D5597C0426ADDD5E00DF17C0 /* StartupViewModel.swift in Sources */,
 				D56F640C270242CA000E5975 /* UIColor+LightAndDark.swift in Sources */,
 				D5F53CED2694B7A9007634C2 /* OnboardingBackgroundView.swift in Sources */,
 				D5D1F4B227ECFF760040E2BF /* ProjectsModel.swift in Sources */,
 				D52F7E742672F4C400911D43 /* PyLeapApp.swift in Sources */,
+				D534F3FC280B59090053699C /* ExampleView.swift in Sources */,
 				D58358EE27DA5C0F0069F7F5 /* NetworkError.swift in Sources */,
 				D5597C0B26AF018800DF17C0 /* HideKeyboard.swift in Sources */,
 				D5D1F4A627EBA9C80040E2BF /* DemoSubCellView.swift in Sources */,
 				D59DFDB6268CD052001737F6 /* AppEnvironment.swift in Sources */,
+				D5CC6BB428173AE0008629FB /* HeaderView.swift in Sources */,
 				D52BE85626A0E5A700630900 /* PeripheralAutoConnect.swift in Sources */,
 				D52721AE27BB3E6E0096DD65 /* TestView.swift in Sources */,
 				D505B99E2756894300386E9F /* ViewModifier.swift in Sources */,
+				D5CC6BB628173B91008629FB /* SubHeaderView.swift in Sources */,
 				D517F68126C5771D002996E8 /* FillerView.swift in Sources */,
 				D5F53CEB2694B524007634C2 /* Blinka Animation.swift in Sources */,
 				D5597BF826A9E14B00DF17C0 /* AppDelegate.swift in Sources */,
@@ -505,10 +527,12 @@
 				D5597C3B26B98E1E00DF17C0 /* NumbersOnly.swift in Sources */,
 				D5D1F4A427EBA7E30040E2BF /* NetworkManager.swift in Sources */,
 				D59DFDBC268CE0EB001737F6 /* RootView.swift in Sources */,
+				D595FC2E2812C23D00569D8C /* Image Extension.swift in Sources */,
 				D59DFD8F268A4A4D001737F6 /* BTConnectionView.swift in Sources */,
 				D58D887B26CC02B60085604A /* OnboardingViewPure.swift in Sources */,
 				D52BE85426A0E39100630900 /* BTConnectionViewModel.swift in Sources */,
 				D59DFDC2268CFA36001737F6 /* OnboardingStepView.swift in Sources */,
+				D5CC6BAE2816FD27008629FB /* Config.swift in Sources */,
 				D5507AD126C668BC00512BAA /* SearchBarView.swift in Sources */,
 				D59DFDBA268CDEEC001737F6 /* RootViewModel.swift in Sources */,
 				D5C74DF527EB93E300730505 /* DemoViewCell.swift in Sources */,
@@ -577,7 +601,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -632,7 +656,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -649,12 +673,12 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = PyLeap/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -662,8 +686,10 @@
 				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.adafruit.PyLeap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -674,12 +700,12 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = PyLeap/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -687,8 +713,10 @@
 				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.adafruit.PyLeap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

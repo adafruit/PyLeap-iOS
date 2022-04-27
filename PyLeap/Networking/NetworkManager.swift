@@ -33,12 +33,17 @@ class NetworkService: ObservableObject {
     func fetch() {
         session.dataTask(with: URL(string: baseURL)!) { (data, _, _) in
             
+            guard let data = data else {
+                print("No cached data found")
+                return }
+            
             do {
-                let projectData = try? JSONDecoder().decode(RootResults.self, from: data!)
+                let projectData = try? JSONDecoder().decode(RootResults.self, from: data)
+                
+                
                 
                 DispatchQueue.main.async {
                     self.pdemos = projectData!.projects
-                   // print(projectData)
                 }
             } catch {
                 print(error.localizedDescription)
@@ -47,5 +52,4 @@ class NetworkService: ObservableObject {
         }.resume()
     }
 
-  
 }
