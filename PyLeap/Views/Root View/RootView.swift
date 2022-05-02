@@ -32,40 +32,61 @@ struct RootView: View {
             case .startup:
                 FillerView()
                 
-            case .main:
+            case .bluetoothPairing:
                 BTConnectionView()
+                
+            case .bluetoothStatus:
+                BluetoothStatusView()
+                
+            case .main:
+                MainSelectionView()
 
             case .fileTransfer:
                 SelectionView()
+                
+            case .test:
+               
+                TestingView()
                 
             default:
                 FillerView()
             }
         }
-        .onChange(of: connectionManager.isConnectedOrReconnecting) { isConnectedOrReconnecting in
-            //DLog("isConnectedOrReconnecting: \(isConnectedOrReconnecting)")
-            
-            if !isConnectedOrReconnecting, model.destination == .fileTransfer {
-                model.destination = .main
+//        .onChange(of: model.destination, perform: { newValue in
+//            if model.destination == .test {
+//                model.destination = .test
+//            }
+//        
+//        })
+        
+        .onReceive(NotificationCenter.default.publisher(for: .didUpdateBleState)) { notification in
+            if !Config.isSimulatingBluetooth {
+                model.showWarningIfBluetoothStateIsNotReady()
             }
         }
+        
+        .onChange(of: connectionManager.isConnectedOrReconnecting) { isConnectedOrReconnecting in
+            
+            if !isConnectedOrReconnecting, model.destination == .fileTransfer {
+                model.destination = .bluetoothPairing
+                print("Should go to pairing view...")
+            }
+        }
+        
+        
+        
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             DLog("App moving to the foreground. Force reconnect")
             FileTransferConnectionManager.shared.reconnect()
         }
         .environmentObject(model)
         .environmentObject(connectionManager)
+        .background(Color.white)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .edgesIgnoringSafeArea(.all)
-
+        .ignoresSafeArea(.all)
+        .preferredColorScheme(.light)
     }
 }
 
-struct RootView_Previews: PreviewProvider {
-    static var previews: some View {
-        RootView()
-    }
-}
 
-extension NSNotification {
-    static let fileSent = Notification.Name.init("fileSent")
-}
