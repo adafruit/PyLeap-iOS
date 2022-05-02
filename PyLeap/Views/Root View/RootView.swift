@@ -68,10 +68,13 @@ struct RootView: View {
         .onChange(of: connectionManager.isConnectedOrReconnecting) { isConnectedOrReconnecting in
             
             if !isConnectedOrReconnecting, model.destination == .fileTransfer {
-                //model.destination = .main
+                model.destination = .bluetoothPairing
                 print("Should go to pairing view...")
             }
         }
+        
+        
+        
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             DLog("App moving to the foreground. Force reconnect")
             FileTransferConnectionManager.shared.reconnect()

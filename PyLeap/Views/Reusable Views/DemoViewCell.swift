@@ -20,6 +20,8 @@ struct DemoViewCell: View {
 
     let onViewGeometryChanged: ()->Void
     
+    @Binding var stateBinder: DownloadState
+    
     var body: some View {
         content
             .frame(maxWidth: .infinity)
@@ -30,13 +32,12 @@ struct DemoViewCell: View {
             header
             if isExpanded {
                 Group {
-                    DemoSubview(bindingString: $bootOne, title: result.projectName,
+                    DemoSubview(bindingString: $bootOne, downloadStateBinder: $stateBinder, title: result.projectName,
                                 image: result.projectImage,
                                 description: result.description,
                                 learnGuideLink: URLRequest(url: URL(string: result.learnGuideLink)!),
                                 downloadLink: result.bundleLink,
                                 compatibility: result.compatibility,
-                                setUUID: "xyz",
                                 isConnected: $isConnected)
                 }
             }

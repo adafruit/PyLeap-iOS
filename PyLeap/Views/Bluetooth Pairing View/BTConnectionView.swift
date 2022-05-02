@@ -13,7 +13,7 @@ struct BTConnectionView: View {
     @EnvironmentObject var rootViewModel: RootViewModel
     @State private var showModal = false
 
-    let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
+    let timer = Timer.publish(every: 9, on: .main, in: .common).autoconnect()
     @State private var isAnimating = false
     @State private var showProgress = false
     var foreverAnimation: Animation {
@@ -75,7 +75,10 @@ struct BTConnectionView: View {
                             .repeatForever(autoreverses: false)
                         isAnimating = true
                     }
-                
+                Text(detailText)
+                    .font(Font.custom("ReadexPro-Regular", size: 24))
+                Spacer()
+                    .frame(height: 60)
                 
             } else {
                 
@@ -114,7 +117,7 @@ nextText = true
 
                     }
                     Spacer()
-                        .frame(height: 14)
+                        .frame(height: 60)
                     
                 } else {
                     
@@ -144,7 +147,7 @@ nextText = false
                             .clipShape(Capsule())
                     }
                     Spacer()
-                        .frame(height: 14)
+                        .frame(height: 60)
                     
                 }
                 

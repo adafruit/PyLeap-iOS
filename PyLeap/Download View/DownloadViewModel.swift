@@ -14,6 +14,10 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
     let cachesPath = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
     
     
+    static let shared = DownloadViewModel()
+    
+    
+    
     // Alert
     @Published var alertMsg = ""
     @Published var showAlert = false
@@ -192,6 +196,7 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
                 print("\(self.didDownloadBundle) CURRENT STATE")
                 self.didDownloadBundle = true
                 print("\(self.didDownloadBundle) CURRENT STATE")
+
             }
             
         } catch {

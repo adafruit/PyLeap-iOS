@@ -27,11 +27,28 @@ class SelectionViewModel: ObservableObject {
     @Published var counter = 0
     @Published var numOfFiles = 0
     
+
     
     @Published var fileArray: [ContentFile] = []
     @Published var contentList: [URLData] = []
     
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    
+    var networkMonitor = NetworkMonitor()
+    static let shared = SelectionViewModel()
+    
+    @Published var isConnectedToInternet = false
+    @Published var showAlert = false
+    
+    var downloadPhases: String = "" 
+    
+
+    @Published var state: DownloadState = .idle
+    
+    
+    
+    
+    
     
     enum ProjectViewError: LocalizedError {
         case fileTransferUndefined
@@ -46,6 +63,32 @@ class SelectionViewModel: ObservableObject {
         DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
             self.writeError = false
         }
+    }
+    
+    func internetMonitoring() {
+        
+        networkMonitor.startMonitoring()
+        networkMonitor.monitor.pathUpdateHandler = { path in
+            if path.status == .satisfied {
+                print("Connected to internet.")
+                
+                DispatchQueue.main.async {
+                    self.showAlert = false
+                    self.isConnectedToInternet = true
+                }
+            } else {
+                print("No connection.")
+                DispatchQueue.main.async {
+                    self.showAlert = true
+                    self.isConnectedToInternet = false
+                }
+            }
+            print("isExpensive: \(path.isExpensive)")
+        }
+    }
+    
+    init() {
+        internetMonitoring()
     }
     
     /// Deletes all files and dic. on Bluefruit device *Except boot_out.txt*
@@ -81,6 +124,7 @@ class SelectionViewModel: ObservableObject {
     
     func getProjectURL(nameOf project: String) {
         counter = 0
+        state = .transferring
         if let enumerator = FileManager.default.enumerator(at: directoryPath, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
            // for case condition: Only process URLs
             for case let fileURL as URL in enumerator {
@@ -103,6 +147,7 @@ class SelectionViewModel: ObservableObject {
                             return
                         } catch { print(error, fileURL) }
                     } else {
+                        
                         print("Project was not found...")
                     }
                     
@@ -415,13 +460,19 @@ class SelectionViewModel: ObservableObject {
     }
     
     func completedTransfer() {
+       
+       
         DispatchQueue.main.async {
             self.didCompleteTranfer = true
             self.numOfFiles = 0
             self.counter = 0
+            self.state = .complete
+
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             self.didCompleteTranfer = false
+            self.state = .idle
+            
         }
     }
     
@@ -483,6 +534,7 @@ class SelectionViewModel: ObservableObject {
                         self.transferFiles(files: copiedFiles)
                         
                     case .failure(_):
+                        self.state = .failed
                         self.displayErrorMessage()
                     }
                 }
@@ -512,6 +564,7 @@ class SelectionViewModel: ObservableObject {
                         self.transferFiles(files: copiedFiles)
                         
                     case .failure(_):
+                        self.state = .failed
                         self.displayErrorMessage()
                     }
                 }
@@ -647,10 +700,7 @@ class SelectionViewModel: ObservableObject {
     // Data
     private let bleManager = BleManager.shared
     
-    
-     init() {
-        
-    }
+
     
     // MARK: - Setup
     func onAppear() {

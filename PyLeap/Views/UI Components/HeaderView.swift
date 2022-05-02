@@ -25,8 +25,9 @@ struct HeaderView: View {
             }
             
         }
+        
         .frame(maxWidth: .infinity)
-        .frame(maxHeight: 130)
+        .frame(maxHeight: 120)
         .background(Color("pyleap_gray"))
     }
 }

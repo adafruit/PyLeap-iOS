@@ -27,6 +27,8 @@ struct DemoSubview: View {
     
     @Binding var bindingString: String
     
+    @Binding var downloadStateBinder: DownloadState
+    
     @State private var toggleView: Bool = false
     
     let title: String
@@ -35,7 +37,6 @@ struct DemoSubview: View {
     let learnGuideLink: URLRequest
     let downloadLink: String
     let compatibility: [String]
-    var setUUID: String
     
     @EnvironmentObject var rootViewModel: RootViewModel
     @StateObject var downloadModel = DownloadViewModel()
@@ -51,9 +52,7 @@ struct DemoSubview: View {
     var body: some View {
         
         VStack {
-            Image(systemName: "photo")
-                .data(url: URL(string: image)!)
-                .resizable()
+            ImageWithURL(image)
                 .scaledToFit()
                 .frame(maxWidth: .infinity)
                 .cornerRadius(14)
@@ -61,11 +60,26 @@ struct DemoSubview: View {
                 .padding(.trailing, 30)
             
             
+            
+//            AsyncImage(url: URL(string: image)) { image in
+//                image.resizable()
+//                    .scaledToFit()
+//                    .frame(maxWidth: .infinity)
+//                    .cornerRadius(14)
+//                    .padding(.leading, 30)
+//                    .padding(.trailing, 30)
+//            } placeholder: {
+//                ProgressView()
+//                    .frame(width: 100, height: 100)
+//            }
+
+            
             VStack(alignment: .leading, spacing: 10) {
                 Text(description)
                     .font(Font.custom("ReadexPro-Regular", size: 18))
                     .fontWeight(.regular)
                     .multilineTextAlignment(.leading)
+                    .minimumScaleFactor(0.1)
                 Text("Compatible with:")
                     .font(Font.custom("ReadexPro-SemiBold", size: 18))
                 
@@ -126,78 +140,69 @@ struct DemoSubview: View {
                 
                 if compatibility.contains(bindingString) {
                     
+                    if downloadStateBinder == .idle {
+                        Button(action: {
+                            downloadModel.startDownload(urlString: downloadLink, projectTitle: title)
+
+                        }) {
+                            
+                            RunItButton()
+                        }
+                    }
                     
                     
-                    if isDownloaded == true {
+                    
+                    if downloadStateBinder == .transferring {
                         
                         Button(action: {
                             print("Project Selected: \(title) - DemoSubView")
                             
                             globalString.projectString = title
-                            
-                            print("\(selectionModel.writeError) - selectionModel.writeError")
-                            print("\(globalString.projectString) - DemoSubView")
-                            
                             globalString.numberOfTimesDownloaded += 1
-                            print("ught \(globalString.numberOfTimesDownloaded)")
+                            
                         }) {
                             
-                            
-                            
-                            Text("Transfer")
-                                .font(Font.custom("ReadexPro-Regular", size: 25))
-                                .foregroundColor(Color.white)
-                            
-                                .padding(.horizontal, 60)
-                                .frame(height: 50)
-                                .background(Color("pyleap_pink"))
-                                .clipShape(Capsule())
+                            DownloadingButton()
                         }
-                        .disabled(globalString.isSendingG)
+                        .disabled(true)
                         
-//                        .alert(isPresented: $errorOccured) {
-//                            Alert(title: Text("Cannot write to device"), message: Text("Unplug from computer and use external battery source"), dismissButton: .destructive(Text("Got it!"), action: {
-//                                DispatchQueue.main.asyncAfter(deadline: .now()) {
-//                                    selectionModel.writeError = false
-//
-//                                }
-//                            }))
-//                        }
-                    //}
+
                         
                         if globalString.isSendingG {
                             ProgressView("", value: CGFloat(globalString.counterG), total: CGFloat(globalString.numberOfFilesG) )
-                                .padding(.horizontal, 80)
-                                .padding(.top, 3)
+                                .padding(.horizontal, 90)
+                                .padding(.top, -8)
                                 .padding(.bottom, 10)
-                                .accentColor(Color("pyleap_pink"))
-                                .foregroundColor(.purple)
-                                .cornerRadius(25)
-                                .frame(height: 25)
+                                .accentColor(Color.gray)
+                                .scaleEffect(x: 1, y: 2, anchor: .center)             .cornerRadius(10)
+                                .frame(height: 10)
                             
                             
                         }else {
                             
                         }
                         
-                    } else {
-                        Button(action: {
-                            print("Download Button Pressed!")
-                            downloadModel.startDownload(urlString: downloadLink, projectTitle: title)
-                            
-                        }) {
-                            
-                            Text("Download")
-                                .font(Font.custom("ReadexPro-Regular", size: 25))
-                                .foregroundColor(Color.white)
-                                .padding(.horizontal, 60)
-                                .frame(height: 50)
-                                .background(Color("pyleap_pink"))
-                                .clipShape(Capsule())
-                        }
                     }
                     
+                    if downloadStateBinder == .downloading {
+                        
+                        Button(action: {
+                            print("Download Button Pressed!")
+                        //    downloadModel.startDownload(urlString: downloadLink, projectTitle: title)
+                          //  DownloadViewModel.shared.startDownload(urlString: downloadLink, projectTitle: title)
+                        }) {
+                            
+                           DownloadingButton()
+                        }
+                        .disabled(true)
+                    }
                     
+                    if downloadStateBinder == .complete {
+                    
+                    CompleteButton()
+                    }
+                    Spacer()
+                        .frame(height: 40)
                 }
                 
                 
@@ -226,7 +231,7 @@ struct DemoSubview: View {
         .onChange(of: downloadModel.didDownloadBundle, perform: { newValue in
             print("For project: \(title), project download is \(newValue)")
             
-            
+            globalString.projectString = title
             
             if newValue {
                 DispatchQueue.main.async {

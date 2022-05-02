@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class NetworkService: ObservableObject {
 
@@ -30,11 +31,24 @@ class NetworkService: ObservableObject {
            return URLSession(configuration: configuration)
        }()
     
+    @Published var projectInfo = Data()
+    
     func fetch() {
+        let cache = URLCache.shared
+        let request = URLRequest(url: URL(string: baseURL)!, cachePolicy: URLRequest.CachePolicy.returnCacheDataElseLoad, timeoutInterval: 60.0)
+        
+        if let data = cache.cachedResponse(for: request)?.data {
+            print("got image from cache")
+            //self.projectInfo = data
+            let projectData = try? JSONDecoder().decode(RootResults.self, from: data)
+            self.pdemos = projectData!.projects
+        }
+        
+        print("fetching...")
         session.dataTask(with: URL(string: baseURL)!) { (data, _, _) in
             
             guard let data = data else {
-                print("No cached data found")
+                print("No data found")
                 return }
             
             do {
@@ -53,3 +67,5 @@ class NetworkService: ObservableObject {
     }
 
 }
+
+

@@ -25,6 +25,7 @@ struct BLEPairingView: View {
             HStack {
                 
                 Spacer()
+               
                 Image("bluetooth")
                     .resizable()
                     

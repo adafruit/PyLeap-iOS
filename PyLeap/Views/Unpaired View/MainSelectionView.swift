@@ -25,10 +25,33 @@ struct MainSelectionView: View {
 
     @State private var test = ""
     
+    @State private var nilBinder = DownloadState.idle
+    
+    @EnvironmentObject var rootViewModel: RootViewModel
+    
     var body: some View {
-        
-        VStack{
+        // rootViewModel.goTobluetoothPairing()
+        VStack(spacing: 0) {
             HeaderView()
+            
+            HStack(alignment: .center, spacing: 8, content: {
+                Text("Not Connected to a Device.")
+                    .font(Font.custom("ReadexPro-Regular", size: 16))
+                Button {
+                    rootViewModel.goTobluetoothPairing()
+                } label: {
+                    Text("Connect Now")
+                        .font(Font.custom("ReadexPro-Regular", size: 16))
+                        .underline()
+                        
+                }
+
+            })
+            .padding(.all, 0.0)
+            .frame(maxWidth: .infinity)
+            .frame(maxHeight: 40)
+            .background(Color("pyleap_burg"))
+            .foregroundColor(.white)
             
             ScrollView {
             
@@ -41,21 +64,13 @@ struct MainSelectionView: View {
                             withAnimation {
                                 scroll.scrollTo(demo.id)
                             }
-                        })
+                        }, stateBinder: $nilBinder)
                     }
                 }
             }
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Image("pyleap_logo_white")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 100, height: 100)
-                        .offset(y: -10)
-                    
-                }
-            }
+
         }
+        
         .preferredColorScheme(.light)
         .background(Color.white)
         .navigationBarColor(UIColor(named: "pyleap_gray"))
