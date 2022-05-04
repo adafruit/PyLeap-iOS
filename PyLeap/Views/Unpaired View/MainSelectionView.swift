@@ -43,6 +43,7 @@ struct MainSelectionView: View {
                     Text("Connect Now")
                         .font(Font.custom("ReadexPro-Regular", size: 16))
                         .underline()
+                        .spotlight(enabled: true, title: "TEST")
                         
                 }
 
@@ -66,6 +67,7 @@ struct MainSelectionView: View {
                             }
                         }, stateBinder: $nilBinder)
                     }
+                    
                 }
             }
 

@@ -47,7 +47,7 @@ struct DemoSubview: View {
     
     @State private var showWebViewPopover: Bool = false
     @State var errorOccured = false
-    
+    @State private var presentAlert = false
     
     var body: some View {
         
@@ -61,18 +61,18 @@ struct DemoSubview: View {
             
             
             
-//            AsyncImage(url: URL(string: image)) { image in
-//                image.resizable()
-//                    .scaledToFit()
-//                    .frame(maxWidth: .infinity)
-//                    .cornerRadius(14)
-//                    .padding(.leading, 30)
-//                    .padding(.trailing, 30)
-//            } placeholder: {
-//                ProgressView()
-//                    .frame(width: 100, height: 100)
-//            }
-
+            //            AsyncImage(url: URL(string: image)) { image in
+            //                image.resizable()
+            //                    .scaledToFit()
+            //                    .frame(maxWidth: .infinity)
+            //                    .cornerRadius(14)
+            //                    .padding(.leading, 30)
+            //                    .padding(.trailing, 30)
+            //            } placeholder: {
+            //                ProgressView()
+            //                    .frame(width: 100, height: 100)
+            //            }
+            
             
             VStack(alignment: .leading, spacing: 10) {
                 Text(description)
@@ -140,15 +140,56 @@ struct DemoSubview: View {
                 
                 if compatibility.contains(bindingString) {
                     
-                    if downloadStateBinder == .idle {
+                    if downloadStateBinder == .idle && viewModel.failedProjectLaunch == false {
+                                            Button(action: {
+                                                downloadModel.startDownload(urlString: downloadLink, projectTitle: title)
+                    
+                                                if selectionModel.isConnectedToInternet == false {
+                                                    print("Going offline...")
+                                                    globalString.projectString = title
+                                                }
+                    
+                    
+                                            }) {
+                    
+                                                RunItButton()
+                                            }
+                                        }
+                    
+                    if downloadStateBinder == .idle && viewModel.failedProjectLaunch == true && selectionModel.isConnectedToInternet == true {
                         Button(action: {
                             downloadModel.startDownload(urlString: downloadLink, projectTitle: title)
 
+                            if selectionModel.isConnectedToInternet == false {
+                                print("Going offline...")
+                                globalString.projectString = title
+                            }
+
+
                         }) {
-                            
+
                             RunItButton()
                         }
+                        
+                    } else if downloadStateBinder == .idle && viewModel.failedProjectLaunch == true {
+                        
+                        //downloadStateBinder == .idle && viewModel.failedProjectLaunch == true
+                        
+                        Button(action: {
+                            print("No project found")
+                            presentAlert = true
+                        }) {
+                            FailedButton()
+                        }
+                        .alert("No Internet Connecton", isPresented: $presentAlert, actions: {
+                            // actions
+                        }, message: {
+                            Text("There's a problem with your internet connection. Try again later.")
+                        })
+                        
+                       
                     }
+                    
                     
                     
                     
@@ -166,7 +207,7 @@ struct DemoSubview: View {
                         }
                         .disabled(true)
                         
-
+                        
                         
                         if globalString.isSendingG {
                             ProgressView("", value: CGFloat(globalString.counterG), total: CGFloat(globalString.numberOfFilesG) )
@@ -188,19 +229,24 @@ struct DemoSubview: View {
                         
                         Button(action: {
                             print("Download Button Pressed!")
-                        //    downloadModel.startDownload(urlString: downloadLink, projectTitle: title)
-                          //  DownloadViewModel.shared.startDownload(urlString: downloadLink, projectTitle: title)
+                            //    downloadModel.startDownload(urlString: downloadLink, projectTitle: title)
+                            //  DownloadViewModel.shared.startDownload(urlString: downloadLink, projectTitle: title)
                         }) {
                             
-                           DownloadingButton()
+                            DownloadingButton()
                         }
                         .disabled(true)
                     }
                     
                     if downloadStateBinder == .complete {
-                    
-                    CompleteButton()
+                        
+                        CompleteButton()
                     }
+                    
+                    //                   if viewModel.failedProjectLaunch == true {
+                    //                        FailedButton()
+                    //                    }
+                    
                     Spacer()
                         .frame(height: 40)
                 }
@@ -223,7 +269,8 @@ struct DemoSubview: View {
                 
             }
         }
-                
+        
+        
         .onChange(of: downloadModel.isDownloading, perform: { newValue in
             viewModel.getProjectForSubClass(nameOf: title)
         })

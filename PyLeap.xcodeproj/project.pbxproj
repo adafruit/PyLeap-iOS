@@ -25,6 +25,7 @@
 		D544A24B281F92840038D483 /* ImageCaching.swift in Sources */ = {isa = PBXBuildFile; fileRef = D544A24A281F92840038D483 /* ImageCaching.swift */; };
 		D544A24D282036B80038D483 /* CPBView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D544A24C282036B80038D483 /* CPBView.swift */; };
 		D544A24F282046840038D483 /* OnAnimationComplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = D544A24E282046840038D483 /* OnAnimationComplete.swift */; };
+		D544A2512822D4730038D483 /* Spotlight Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D544A2502822D4730038D483 /* Spotlight Extension.swift */; };
 		D5507AD026C668BC00512BAA /* SelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACC26C668BC00512BAA /* SelectionViewModel.swift */; };
 		D5507AD126C668BC00512BAA /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACF26C668BC00512BAA /* SearchBarView.swift */; };
 		D5507AD326C668BC00512BAA /* SelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACB26C668BC00512BAA /* SelectionView.swift */; };
@@ -91,6 +92,7 @@
 		D544A24A281F92840038D483 /* ImageCaching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCaching.swift; sourceTree = "<group>"; };
 		D544A24C282036B80038D483 /* CPBView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPBView.swift; sourceTree = "<group>"; };
 		D544A24E282046840038D483 /* OnAnimationComplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnAnimationComplete.swift; sourceTree = "<group>"; };
+		D544A2502822D4730038D483 /* Spotlight Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Spotlight Extension.swift"; sourceTree = "<group>"; };
 		D54D38B82691E0D000FBFE47 /* KeyboardUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardUtils.swift; sourceTree = "<group>"; };
 		D54D38C52692044800FBFE47 /* PeripheralList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralList.swift; sourceTree = "<group>"; };
 		D54D38C62692044800FBFE47 /* PeripheralAutoConnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralAutoConnect.swift; sourceTree = "<group>"; };
@@ -263,6 +265,7 @@
 				D5F53CEA2694B524007634C2 /* Blinka Animation.swift */,
 				D544A24C282036B80038D483 /* CPBView.swift */,
 				D544A24E282046840038D483 /* OnAnimationComplete.swift */,
+				D544A2502822D4730038D483 /* Spotlight Extension.swift */,
 			);
 			path = "UI Components";
 			sourceTree = "<group>";
@@ -516,6 +519,7 @@
 				D544A1D2281B9BB70038D483 /* Buttons.swift in Sources */,
 				D5D1F4AE27ECFDA10040E2BF /* GifImage.swift in Sources */,
 				D5C474AC27E174A5002DD160 /* WebView Content.swift in Sources */,
+				D544A2512822D4730038D483 /* Spotlight Extension.swift in Sources */,
 				D56F640D270242CA000E5975 /* FileTransferPathUtils.swift in Sources */,
 				D5507AD326C668BC00512BAA /* SelectionView.swift in Sources */,
 				D58182FD27FBF09F0091C43B /* BLEPairingView.swift in Sources */,
@@ -693,7 +697,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6.1;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
@@ -720,7 +724,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6.1;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;

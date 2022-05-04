@@ -44,6 +44,19 @@ struct CompleteButton: View {
     }
 }
 
+struct FailedButton: View {
+    var body: some View {
+        Image("x-mark")
+            .resizable()
+            .scaledToFit()
+            .frame(width: 30, height: 30)
+            .padding(.horizontal, 120)
+            .frame(height: 50)
+            .background(Color("pyleap_burg"))
+            .clipShape(Capsule())
+    }
+}
+
 struct Buttons_Previews: PreviewProvider {
     static var previews: some View {
         RunItButton()
