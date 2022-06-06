@@ -10,6 +10,7 @@ import Foundation
 class SubCellViewModel: ObservableObject {
     
     @Published var projectDownloaded = false
+    @Published var failedProjectLaunch = false
     
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     
@@ -20,8 +21,9 @@ class SubCellViewModel: ObservableObject {
             for case let fileURL as URL in enumerator {
             
                     if fileURL.lastPathComponent == project {
-                        
+                        failedProjectLaunch = false
                         projectDownloaded = true
+                        print(#function)
                         print("Searching for... \(project)")
                         print("URL Path: \(fileURL.path)")
                         print("URL : \(fileURL)")
@@ -29,8 +31,10 @@ class SubCellViewModel: ObservableObject {
                     return
                         
                     } else {
+                        failedProjectLaunch = true
                         projectDownloaded = false
                         print("Project was not found...")
+                        
                     }
                     
                 

@@ -7,23 +7,58 @@
 
 import SwiftUI
 
-struct TestingView: View {
+struct ReconnectionView: View {
+
+    @Environment(\.presentationMode) var presentation
+    @StateObject private var model = BTConnectionViewModel()
+    @EnvironmentObject var rootViewModel: RootViewModel
     
-   // @StateObject private var model = RootViewModel()
+    @State private var isAnimating = false
     
     var body: some View {
  
-            VStack {
-                Button {
-                   // model.goToTest()
-                    print("Let's Go!")
-                } label: {
-                    Text("Great! Testing View is visible. Now go back to Main View.")
+        VStack {
+            
+            Image("pyleapLogo")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .offset(y: -20)
+            
+            BlinkaAnimationView()
+                .minimumScaleFactor(0.1)
+                .rotationEffect(Angle(degrees: self.isAnimating ? 360 : 0.0))
+            
+                .onAppear(){
+                    Animation.linear(duration: 1.0)
+                        .repeatForever(autoreverses: false)
+                    isAnimating = true
                 }
+            
+            HStack(alignment: .center, spacing: 8, content: {
+                Text("Reconnecting...")
+                .font(Font.custom("ReadexPro-Regular", size: 36))
+                .padding(.horizontal, 20)
+            })
+            
+           
 
-            }
-          
         }
+        .padding(.horizontal, 20)
+        .edgesIgnoringSafeArea(.all)
+            .onAppear {
+                print("ReconnectionView")
+                model.onAppear()
+            }
+            .onDisappear {
+                model.onDissapear()
+            }
+            .onChange(of: model.destination) { destination in
+                if destination == .fileTransfer {
+                    self.rootViewModel.goToFileTransfer()
+                }
+            }
+        }
+        
     
 }
 

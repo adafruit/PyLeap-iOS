@@ -60,9 +60,7 @@ class SelectionViewModel: ObservableObject {
             self.writeError = true
             self.sendingBundle = false
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
-            self.writeError = false
-        }
+
     }
     
     func internetMonitoring() {
@@ -123,6 +121,7 @@ class SelectionViewModel: ObservableObject {
      */
     
     func getProjectURL(nameOf project: String) {
+        print("getProjectURL called")
         counter = 0
         state = .transferring
         if let enumerator = FileManager.default.enumerator(at: directoryPath, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
@@ -130,13 +129,14 @@ class SelectionViewModel: ObservableObject {
             for case let fileURL as URL in enumerator {
                 
                 do {
+                    print("Starting a loop...")
                     
                     if fileURL.lastPathComponent == project {
                         
                         print("Searching for... \(project)")
                        
                         do {
-                            
+                            print(#function)
                             print("Found \(project) project at this location...")
                             print("URL Path: \(fileURL.path)")
                             print("URL : \(fileURL)")
@@ -148,7 +148,10 @@ class SelectionViewModel: ObservableObject {
                         } catch { print(error, fileURL) }
                     } else {
                         
-                        print("Project was not found...")
+                        print("Project was not found for...\(project)")
+                        print("\(state)")
+                        state = .idle
+                        
                     }
                     
                 }
@@ -160,7 +163,7 @@ class SelectionViewModel: ObservableObject {
     
     
     func filesDownloaded(url: URL) {
-        
+        print("filesDownloaded was called")
         //Cycles through files and directories in File Manager Document Directory
         fileArray.removeAll()
         
@@ -173,20 +176,31 @@ class SelectionViewModel: ObservableObject {
                 do {
                     let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey, .addedToDirectoryDateKey,.isDirectoryKey])
                     
-                    contentList.append(.init(urlTitle: fileURL))
-                    if fileAttributes.isRegularFile! {
+                    print("INCOMING FILE: \(fileURL.path)")
+                    
+                    if fileURL.path.contains("adafruit-circuitpython-bundle-7.x-mpy") {
+                        print("Removing adafruit-circuitpython-bundle-7.x-mpy: \(fileURL.path)")
                         
-                        files.append(fileURL)
+                    } else {
                         
-                        let resources = try fileURL.resourceValues(forKeys:[.fileSizeKey])
-                        let fileSize = resources.fileSize!
+                        print("FILTERED INCOMING FILE: \(fileURL.path)")
+                        contentList.append(.init(urlTitle: fileURL))
+                        if fileAttributes.isRegularFile! {
+                            
+                            files.append(fileURL)
+                            
+                            let resources = try fileURL.resourceValues(forKeys:[.fileSizeKey])
+                            let fileSize = resources.fileSize!
+                            
+                            let addedFile = ContentFile(title: fileURL.lastPathComponent, fileSize: fileSize)
+                            fileArray.append(addedFile)
+                        }
                         
-                        let addedFile = ContentFile(title: fileURL.lastPathComponent, fileSize: fileSize)
+                        let addedFile = ContentFile(title: fileURL.lastPathComponent, fileSize: 0 )
                         fileArray.append(addedFile)
                     }
                     
-                    let addedFile = ContentFile(title: fileURL.lastPathComponent, fileSize: 0 )
-                    fileArray.append(addedFile)
+                    
                     
                     
                   
@@ -228,28 +242,36 @@ class SelectionViewModel: ObservableObject {
                 continue
             }
             
-            if isDirectory {
-                print("Directories Found")
-                print(fileURL.lastPathComponent)
-                if name == "_extras" {
-                    dirEnumerator.skipDescendants()
-                }
-                //adafruit-circuitpython-bundle
-                if fileURL.lastPathComponent.contains("adafruit-circuitpython-bundle") {
-                    print("We got one!")
-                    print("Bad file - \(fileURL)")
-                } else {
-                    if fileURL.pathComponents.count > 12 {
-                        print("File Path component count: \(fileURL.pathComponents.count)")
-                        projectDirectories.append(fileURL)
-                    }
-                }
+            if fileURL.path.contains("adafruit-circuitpython-bundle-7.x-mpy") {
+                print("Removing adafruit-circuitpython-bundle-7.x-mpy: \(fileURL.path)")
                 
-                
-               
             } else {
-                fileURLs.append(fileURL)
+                if isDirectory {
+                    print("Directories Found")
+                    print(fileURL.lastPathComponent)
+                    if name == "_extras" {
+                        dirEnumerator.skipDescendants()
+                    }
+                    //adafruit-circuitpython-bundle
+                    if fileURL.lastPathComponent.contains("adafruit-circuitpython-bundle") {
+                        print("We got one!")
+                        print("Bad file - \(fileURL)")
+                    } else {
+                        if fileURL.pathComponents.count > 12 {
+                            print("File Path component count: \(fileURL.pathComponents.count)")
+                            projectDirectories.append(fileURL)
+                        }
+                    }
+                    
+                    
+                   
+                } else {
+                    print("APPENDED: \(fileURL.path)")
+                    fileURLs.append(fileURL)
+                }
             }
+            
+           
         }
         
         print("List of Directories")
@@ -401,6 +423,9 @@ class SelectionViewModel: ObservableObject {
                 
             case .success(let contents):
                 
+                
+               
+                
                 if contents!.contains(where: { name in name.name == subdirectory.lastPathComponent}) {
                     print("FULL PATH OF: \(subdirectory.lastPathComponent)")
                     print("\(subdirectory.path)")
@@ -435,6 +460,7 @@ class SelectionViewModel: ObservableObject {
                    
                     
                     self.makeDirectoryCommand(path: joined) { result in
+                       
                         switch result {
                         case .success:
                             print("Success")
@@ -452,6 +478,7 @@ class SelectionViewModel: ObservableObject {
                 }
                 
             case .failure:
+                print("Fail in: \(#function)")
                 temp.removeAll()
                 self.projectDirectories.removeAll()
                 self.displayErrorMessage()
@@ -534,7 +561,19 @@ class SelectionViewModel: ObservableObject {
                         self.transferFiles(files: copiedFiles)
                         
                     case .failure(_):
-                        self.state = .failed
+                        DispatchQueue.main.async {
+                           
+                            print("Transfer Failure")
+                            print("\(joined)")
+                            self.state = .failed
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                self.state = .idle
+                            }
+                            
+                        }
+                        
+                        
                         self.displayErrorMessage()
                     }
                 }
@@ -564,6 +603,7 @@ class SelectionViewModel: ObservableObject {
                         self.transferFiles(files: copiedFiles)
                         
                     case .failure(_):
+                        print("Transfer Failure - 2")
                         self.state = .failed
                         self.displayErrorMessage()
                     }
@@ -576,30 +616,33 @@ class SelectionViewModel: ObservableObject {
                     self.transferFiles(files: copiedFiles)
                    
 
-                }
-                
-                
-                var tempURL = selectedUrl.pathComponents
-                tempURL.removeFirst(12)
-                let joined = tempURL.joined(separator: "/")
-                print("File transfer modified path: \(joined)")
+                } else {
+                    var tempURL = selectedUrl.pathComponents
+                    
+                    tempURL.removeFirst(12)
+                    let joined = tempURL.joined(separator: "/")
+                    print("File transfer modified path: \(joined)")
 
 
 
-                print("Updated Path:\(joined)")
+                    print("Updated Path:\(joined)")
 
 
-                writeFileCommand(path: joined, data: data) { result in
-                    switch result {
-                    case .success(_):
-                        copiedFiles.removeFirst()
-                        self.transferFiles(files: copiedFiles)
-                    case .failure(_):
-                        print("Failed")
-                       // self.displayErrorMessage()
+                    writeFileCommand(path: joined, data: data) { result in
+                        switch result {
+                        case .success(_):
+                            copiedFiles.removeFirst()
+                            self.transferFiles(files: copiedFiles)
+                        case .failure(let error):
+                            print("Failed: \(error): \(result)")
+                           // self.displayErrorMessage()
 
+                        }
                     }
                 }
+                
+                
+                
             }
         }
         

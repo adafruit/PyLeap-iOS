@@ -8,6 +8,9 @@
 import SwiftUI
 import FileTransferClient
 
+class SpotlightCounter: ObservableObject {
+    @Published var counter = 0
+}
 
 struct SelectionView: View {
     
@@ -18,16 +21,17 @@ struct SelectionView: View {
     @StateObject var globalString = GlobalString()
     @StateObject var btConnectionViewModel = BTConnectionViewModel()
     @StateObject private var rootModel = RootViewModel()
-    
-    
+    @StateObject var downloadModel = DownloadViewModel()
+   @StateObject var spotlight = SpotlightCounter()
     
     //clearKnownPeripheralUUIDs
     
     @State private var isConnected = false
-    @State private var switchedView = false
+    //@State private var switchedView = false
     @State private var errorOccured = false
     @State private var downloadState = DownloadState.idle
     @State private var scrollViewID = UUID()
+    @State var currentHightlight: Int = 0
     
     // Data
     enum ActiveAlert: Identifiable {
@@ -43,7 +47,7 @@ struct SelectionView: View {
     
     @State private var activeAlert: ActiveAlert?
     @State private var internetAlert = false
-    
+    @State private var showAlert1 = false
     let selectedPeripheral = FileTransferConnectionManager.shared.selectedPeripheral
     
     
@@ -51,6 +55,8 @@ struct SelectionView: View {
     
     
     @State private var inConnectedInSelectionView = true
+    
+    @AppStorage("shouldShowOnboarding123") var switchedView: Bool = false
     
     var body: some View {
         
@@ -76,6 +82,7 @@ struct SelectionView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .minimumScaleFactor(0.01)
+                
                     .padding(.horizontal, 60)
                     .fixedSize(horizontal: false, vertical: true)
                 
@@ -86,9 +93,10 @@ struct SelectionView: View {
                     
                     Text("Connected!")
                         .font(Font.custom("ReadexPro-Regular", size: 36))
+                        .padding(.horizontal, 30)
                         .minimumScaleFactor(0.01)
                         .multilineTextAlignment(.center)
-                        .lineLimit(2)
+                        .lineLimit(0)
                     
                     
                     
@@ -97,10 +105,10 @@ struct SelectionView: View {
                         Image("cpb")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: 300.0, height: 300.0)
+                            .frame(width: 200, height: 226)
                             .minimumScaleFactor(0.01)
                         
-                            .padding(.horizontal, 60)
+                            .padding(.horizontal, 95)
                             .fixedSize(horizontal: false, vertical: true)
                         
                         Text("Circuit Playground Bluefruit")
@@ -163,16 +171,19 @@ struct SelectionView: View {
                     
                     
                     HeaderView()
-
+                   
+                    // Sub-Header
                     VStack {
                         
                         if boardBootInfo == "circuitplayground_bluefruit" {
                             Text("Connected to Circuit Playground Bluefruit")
                                 .font(Font.custom("ReadexPro-Regular", size: 16))
+                                
                         }
                         if boardBootInfo == "clue_nrf52840_express" {
                             Text("Connected to Adafruit CLUE")
                                 .font(Font.custom("ReadexPro-Regular", size: 16))
+                               
                         }
                         
                     }
@@ -181,7 +192,7 @@ struct SelectionView: View {
                     .frame(maxHeight: 40)
                     .background(Color("pyleap_green"))
                     .foregroundColor(.white)
-
+                    //.spotlight(enabled: spotlight.counter == 0, title: "Welcome to PyLeap!")
                
                 
                     ScrollView(.vertical, showsIndicators: true) {
@@ -189,6 +200,8 @@ struct SelectionView: View {
                         ScrollViewReader { scroll in
                             
                             SubHeaderView()
+                              //  .spotlight(enabled: spotlight.counter == 1, title: "1")
+                              
                             
                             ForEach(model.pdemos) { demo in
                                 DemoViewCell(result: demo, isConnected: $inConnectedInSelectionView, bootOne: $boardBootInfo, onViewGeometryChanged: {
@@ -196,57 +209,41 @@ struct SelectionView: View {
                                         scroll.scrollTo(demo.id)
                                     }
                                 }, stateBinder: $downloadState)
+                               
                                 
                             }
+                            
                         }
+                        
                         .id(self.scrollViewID)
                     }
                     
                 }
+                .alert("Cannot Write To Device", isPresented: $errorOccured) {
+                            Button("OK") {
+                                // Handle acknowledgement.
+                                print("OK")
+                                errorOccured = false
+                            }
+                        } message: {
+                            Text("""
+                                 Unplug device from computer and use external power source.
+                                 
+                                 Then press RESET on device to continue.
+                                 """)
+                            .multilineTextAlignment(.leading)
+                        }
                 
+
+                
+                .onTapGesture {
+                    spotlight.counter += 1
+                    print("\(spotlight.counter)")
+                }
             }
         }
         .background(Color.white)
-        
         .environmentObject(globalString)
-        
-        //        .onChange(of: viewModel.writeError, perform: { newValue in
-        //            print("changed value")
-        //            errorOccured = newValue
-        //            if newValue {
-        //                errorOccured = true
-        //            } else {
-        //                errorOccured = false
-        //            }
-        //
-        //
-        //        })
-        
-        //        .onChange(of: globalString.numberOfTimesDownloaded, perform: { newValue in
-        //            viewModel.getProjectURL(nameOf: globalString.projectString)
-        //            print("Current project...\(globalString.projectString)")
-        //            print("Number of downloads: \(newValue)")
-        //        })
-        
-        .alert(isPresented: $errorOccured) {
-            Alert(title: Text("Cannot write to device"), message: Text("""
-Please unplug from computer and use external power source
-Then press RESET on device to continue
-"""), dismissButton: .destructive(Text("Got it!"), action: {
-                DispatchQueue.main.asyncAfter(deadline: .now()) {
-                    //   selectionModel.writeError = false
-                    
-                }
-            }))
-        }
-        
-        .alert(isPresented: $internetAlert) {
-            Alert(
-                title: Text("Title"),
-                message: Text("Message")
-            )}
-        
-        
         
         .onChange(of: viewModel.isConnectedToInternet, perform: { newValue in
             
@@ -262,13 +259,17 @@ Then press RESET on device to continue
         .onChange(of: viewModel.state, perform: { newValue in
             print("State: \(newValue)")
             downloadState = newValue
+            print("State Change: \(newValue )")
+            if newValue == .failed {
+                print("Failed Value")
+                errorOccured = true
+            }
         })
         
         .onChange(of: viewModel.writeError, perform: { newValue in
             print("Change happened! \(newValue)")
             
             globalString.bundleHasBeenDownloaded = newValue
-            errorOccured = newValue
         })
         
         .onChange(of: viewModel.sendingBundle, perform: { newValue in
@@ -297,10 +298,28 @@ Then press RESET on device to continue
         })
         
         .onChange(of: globalString.projectString, perform: { newValue in
-            viewModel.getProjectURL(nameOf: newValue)
+          print("Start Transfer")
+          //  viewModel.getProjectURL(nameOf: newValue)
             
         })
         
+        .onChange(of: globalString.attemptToDownload, perform: { newValue in
+            print("Start Download Process\(globalString.downloadLinkString) - \(globalString.projectString)")
+            downloadModel.startDownload(urlString: globalString.downloadLinkString, projectTitle: globalString.projectString)
+            
+        })
+        
+        .onChange(of: globalString.attemptToSend, perform: { newValue in
+           
+            viewModel.getProjectURL(nameOf: globalString.projectString)
+            
+        })
+        
+        .onChange(of: downloadModel.attemptToSendBunle, perform: { newValue in
+            print("Attempting transfer of: \(globalString.projectString)")
+            viewModel.getProjectURL(nameOf: globalString.projectString)
+            
+        })
         
         
         .onChange(of: connectionManager.selectedClient) { selectedClient in
@@ -310,7 +329,7 @@ Then press RESET on device to continue
             print("SelectionView")
             viewModel.setup(fileTransferClient: connectionManager.selectedClient)
             viewModel.readFile(filename: "boot_out.txt")
-            
+           
         }
         
     }

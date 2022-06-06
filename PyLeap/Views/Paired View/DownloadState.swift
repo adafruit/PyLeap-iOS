@@ -20,3 +20,8 @@ enum InternetState {
     case noInternetConnection
     case connectedToInternet
 }
+
+enum ErrorConnecting {
+    case noError
+    case peerInformationError
+}

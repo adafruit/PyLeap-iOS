@@ -33,13 +33,10 @@ struct FillerView: View {
         }
         .onChange(of: model.isStartupFinished) { isStartupFinished in
             if isStartupFinished {
-                // .fileTransfer 
                 rootViewModel.goToMain()
-            
             }
         }
     }
-
 }
 
 

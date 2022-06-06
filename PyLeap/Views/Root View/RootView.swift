@@ -15,8 +15,7 @@ struct RootView: View {
     @AppStorage("onboarding") var onboardingSeen = true
     
     var data = OnboardingDataModel.data
-
-    @State private var isBTConnectVisible = false
+    @State var isReconnecting = false
     
     var body: some View {
         
@@ -44,20 +43,13 @@ struct RootView: View {
             case .fileTransfer:
                 SelectionView()
                 
-            case .test:
-               
-                TestingView()
-                
+//            case .test:
+//                ReconnectionView()
+//
             default:
                 FillerView()
             }
         }
-//        .onChange(of: model.destination, perform: { newValue in
-//            if model.destination == .test {
-//                model.destination = .test
-//            }
-//        
-//        })
         
         .onReceive(NotificationCenter.default.publisher(for: .didUpdateBleState)) { notification in
             if !Config.isSimulatingBluetooth {
@@ -69,10 +61,19 @@ struct RootView: View {
             
             if !isConnectedOrReconnecting, model.destination == .fileTransfer {
                 model.destination = .bluetoothPairing
-                print("Should go to pairing view...")
             }
         }
         
+        .onChange(of: connectionManager.isSelectedPeripheralReconnecting) { isConnectedOrReconnecting in
+            
+            if isConnectedOrReconnecting, model.destination == .fileTransfer {
+                model.destination = .fileTransfer
+                isReconnecting = true
+                
+            } else {
+                isReconnecting = false
+            }
+        }
         
         
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in

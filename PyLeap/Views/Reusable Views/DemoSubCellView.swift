@@ -8,15 +8,21 @@
 import SwiftUI
 import FileTransferClient
 
+
+
 class GlobalString: ObservableObject {
     @Published var projectString = ""
+    @Published var downloadLinkString = ""
     @Published var compatibilityString = ""
+    
     
     @Published var counterG = 0
     @Published var numberOfFilesG = 0
     @Published var isSendingG = false
     @Published var bundleHasBeenDownloaded = false
     @Published var numberOfTimesDownloaded = 0
+    @Published var attemptToDownload = false
+    @Published var attemptToSend = false
 }
 
 struct DemoSubview: View {
@@ -47,41 +53,36 @@ struct DemoSubview: View {
     
     @State private var showWebViewPopover: Bool = false
     @State var errorOccured = false
+    @State private var presentAlert = false
+    
+    @State var offlineWithoutProject = false
+    
     
     
     var body: some View {
         
         VStack {
-            ImageWithURL(image)
-                .scaledToFit()
-                .frame(maxWidth: .infinity)
-                .cornerRadius(14)
-                .padding(.leading, 30)
-                .padding(.trailing, 30)
             
             
             
-//            AsyncImage(url: URL(string: image)) { image in
-//                image.resizable()
-//                    .scaledToFit()
-//                    .frame(maxWidth: .infinity)
-//                    .cornerRadius(14)
-//                    .padding(.leading, 30)
-//                    .padding(.trailing, 30)
-//            } placeholder: {
-//                ProgressView()
-//                    .frame(width: 100, height: 100)
-//            }
+            VStack(alignment: .leading, spacing: 0, content: {
+                
+                ImageWithURL(image)
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity)
+                    .cornerRadius(14)
+                    .padding(.top, 30)
 
-            
-            VStack(alignment: .leading, spacing: 10) {
+                
                 Text(description)
                     .font(Font.custom("ReadexPro-Regular", size: 18))
-                    .fontWeight(.regular)
                     .multilineTextAlignment(.leading)
                     .minimumScaleFactor(0.1)
+                    .padding(.top, 20)
                 Text("Compatible with:")
                     .font(Font.custom("ReadexPro-SemiBold", size: 18))
+                    .padding(.top, 5)
+                    
                 
                 ForEach(compatibility, id: \.self) { string in
                     if string == "circuitplayground_bluefruit" {
@@ -95,6 +96,7 @@ struct DemoSubview: View {
                                 .font(Font.custom("ReadexPro-Regular", size: 18))
                                 .foregroundColor(.black)
                         }
+                        .padding(.top, 10)
                     }
                     
                     if string  == "clue_nrf52840_express" {
@@ -107,27 +109,20 @@ struct DemoSubview: View {
                             Text("Adafruit CLUE")
                                 .font(Font.custom("ReadexPro-Regular", size: 18))
                                 .foregroundColor(.black)
-                            Spacer()
                         }
+                        .padding(.top, 10)
                     }
                 }
-            }
-            .padding(.top, 10)
-            .padding(.horizontal, 20)
+            })
+            .ignoresSafeArea(.all)
+            .padding(.horizontal, 30)
             
             Button(action: {
                 showWebViewPopover = true
                 
             }) {
-                Text("Learn Guide")
-                    .font(.custom("ReadexPro-Regular", size: 25))
-                    .foregroundColor(Color("pyleap_purple"))
-                    .padding(.leading, 60)
-                    .padding(.trailing, 60)
-                    .frame(height: 50)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 25)
-                            .stroke((Color("pyleap_purple")), lineWidth: 3.5))
+                LearnGuideButton()
+                    .padding(.top, 20)
             }
             .sheet(isPresented: $showWebViewPopover, content: {
                 WebView(URLRequest(url: learnGuideLink.url!))
@@ -139,70 +134,103 @@ struct DemoSubview: View {
             if isConnected {
                 
                 if compatibility.contains(bindingString) {
+                  
+                       
                     
                     if downloadStateBinder == .idle {
+                        
+                       
+                        
                         Button(action: {
-                            downloadModel.startDownload(urlString: downloadLink, projectTitle: title)
 
+                            downloadStateBinder = .transferring
+                            globalString.isSendingG = true
+                            
+                            globalString.downloadLinkString = downloadLink
+                            globalString.projectString = title
+                            globalString.attemptToDownload.toggle()
+                            
+
+                            
+                            if selectionModel.isConnectedToInternet == false {
+                                print("Going offline...")
+                                downloadStateBinder = .transferring
+                                
+                                globalString.projectString = title
+                                globalString.attemptToSend.toggle()
+                            }
+                            
+                            if viewModel.projectDownloaded == false && selectionModel.isConnectedToInternet == false {
+                                offlineWithoutProject = true
+                                downloadStateBinder = .idle
+                                
+                            }
+                            
+                            if viewModel.projectDownloaded == false {
+                                
+                            }
+                            
                         }) {
                             
                             RunItButton()
+                            .padding(.top, 20)
+                              
                         }
                     }
                     
+                    if downloadStateBinder == .failed {
+                        
+                        FailedButton()
+                            .padding(.top, 20)
+                    }
                     
                     
                     if downloadStateBinder == .transferring {
                         
                         Button(action: {
+                           
                             print("Project Selected: \(title) - DemoSubView")
-                            
+
                             globalString.projectString = title
                             globalString.numberOfTimesDownloaded += 1
-                            
+
                         }) {
-                            
+
                             DownloadingButton()
+                                .padding(.top, 20)
                         }
                         .disabled(true)
-                        
+
+
+
+                        if globalString.isSendingG {
+
+                            VStack(alignment: .center, spacing: 0) {
+                                ProgressView("", value: CGFloat(globalString.counterG), total: CGFloat(globalString.numberOfFilesG) )
+                                    .padding(.horizontal, 90)
+                                    .padding(.top, -8)
+                                    .padding(.bottom, 10)
+                                    .accentColor(Color.gray)
+                                    .scaleEffect(x: 1, y: 2, anchor: .center)
+                                    .cornerRadius(10)
+                                    .frame(height: 10)
+
+                                ProgressView()
+                            }
+
+                        }
 
                         
-                        if globalString.isSendingG {
-                            ProgressView("", value: CGFloat(globalString.counterG), total: CGFloat(globalString.numberOfFilesG) )
-                                .padding(.horizontal, 90)
-                                .padding(.top, -8)
-                                .padding(.bottom, 10)
-                                .accentColor(Color.gray)
-                                .scaleEffect(x: 1, y: 2, anchor: .center)             .cornerRadius(10)
-                                .frame(height: 10)
-                            
-                            
-                        }else {
-                            
-                        }
-                        
                     }
                     
-                    if downloadStateBinder == .downloading {
-                        
-                        Button(action: {
-                            print("Download Button Pressed!")
-                        //    downloadModel.startDownload(urlString: downloadLink, projectTitle: title)
-                          //  DownloadViewModel.shared.startDownload(urlString: downloadLink, projectTitle: title)
-                        }) {
-                            
-                           DownloadingButton()
-                        }
-                        .disabled(true)
-                    }
+
                     
                     if downloadStateBinder == .complete {
-                    
-                    CompleteButton()
+                        
+                        CompleteButton()
+                            .padding(.top, 20)
                     }
-                    Spacer()
-                        .frame(height: 40)
+                    
                 }
                 
                 
@@ -211,19 +239,34 @@ struct DemoSubview: View {
                 Button  {
                     rootViewModel.goTobluetoothPairing()
                 } label: {
-                    Text("Connect")
-                        .font(Font.custom("ReadexPro-Regular", size: 25))
-                        .foregroundColor(Color.white)
-                        .padding(.horizontal, 60)
-                        .frame(height: 50)
-                        .background(Color("adafruit_blue"))
-                        .clipShape(Capsule())
-                    
+                    ConnectButton()
+                        .padding(.top, 20)
                 }
                 
             }
         }
-                
+        Spacer()
+            .frame(height: 30)
+        .ignoresSafeArea(.all)
+        
+        
+    
+        .alert("Project Not Found", isPresented: $offlineWithoutProject) {
+                    Button("OK") {
+                        // Handle acknowledgement.
+                        print("OK")
+                        offlineWithoutProject = false
+                        downloadStateBinder = .idle
+                        selectionModel.state = .idle
+                        print("\(offlineWithoutProject)")
+                    }
+                } message: {
+                    Text("""
+                         To use this project, connect to the internet.
+                         """)
+                    .multilineTextAlignment(.leading)
+                }
+        
         .onChange(of: downloadModel.isDownloading, perform: { newValue in
             viewModel.getProjectForSubClass(nameOf: title)
         })
@@ -235,10 +278,12 @@ struct DemoSubview: View {
             
             if newValue {
                 DispatchQueue.main.async {
+                    print("Getting project from Subclass \(title)")
                     viewModel.getProjectForSubClass(nameOf: title)
                     isDownloaded = true
                 }
             }else {
+                print("Is not downloaded")
                 isDownloaded = false
             }
             
@@ -256,3 +301,5 @@ struct DemoSubview: View {
         
     }
 }
+
+
