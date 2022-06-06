@@ -19,6 +19,8 @@ struct MainSelectionView: View {
     @EnvironmentObject private var connectionManager: FileTransferConnectionManager
     
     @State private var showWebViewPopover: Bool = false
+    
+    
     @ObservedObject var model = NetworkService()
     
     @State private var isConnected = false
@@ -29,8 +31,10 @@ struct MainSelectionView: View {
     
     @EnvironmentObject var rootViewModel: RootViewModel
     
+    @AppStorage("shouldShowOnboarding") var shouldShowOnboarding: Bool = true
+    
     var body: some View {
-        // rootViewModel.goTobluetoothPairing()
+
         VStack(spacing: 0) {
             HeaderView()
             
@@ -43,7 +47,7 @@ struct MainSelectionView: View {
                     Text("Connect Now")
                         .font(Font.custom("ReadexPro-Regular", size: 16))
                         .underline()
-                        .spotlight(enabled: true, title: "TEST")
+                       
                         
                 }
 
@@ -58,6 +62,8 @@ struct MainSelectionView: View {
             
                 ScrollViewReader { scroll in
                    
+                  
+                    
                    SubHeaderView()
                     
                     ForEach(model.pdemos) { demo in
@@ -73,6 +79,10 @@ struct MainSelectionView: View {
 
         }
         
+        
+        .fullScreenCover(isPresented: $shouldShowOnboarding, content: {
+            ExampleView(shouldShowOnboarding: $shouldShowOnboarding)
+        })
         .preferredColorScheme(.light)
         .background(Color.white)
         .navigationBarColor(UIColor(named: "pyleap_gray"))

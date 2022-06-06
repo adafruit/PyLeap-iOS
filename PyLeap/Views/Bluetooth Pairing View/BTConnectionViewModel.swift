@@ -22,6 +22,8 @@ class BTConnectionViewModel: ObservableObject {
     }
     
     @Published var destination: Destination? = nil
+    @Published var showError: Bool = false
+    
     
     enum ConnectionStatus {
         case scanning
@@ -33,8 +35,9 @@ class BTConnectionViewModel: ObservableObject {
         case fileTransferReady
         case disconnected(error: Error?)
     }
+   
     @Published var connectionStatus: ConnectionStatus = .scanning
-    
+    @Published var errorStatus: ErrorConnecting = .noError
     @Published var selectedPeripheral: BlePeripheral? = nil
     @Published var numPeripheralsScanned = 0
     @Published var numAdafruitPeripheralsScanned = 0
@@ -193,6 +196,7 @@ class BTConnectionViewModel: ObservableObject {
     private func didFailToReconnectToKnownPeripheral(_ notification: Notification) {
         if !bleManager.isScanning {
             DLog("Reconnect Failed. Start Scanning")
+            showError = true
             startScanning()
         }
     }
@@ -233,6 +237,7 @@ class BTConnectionViewModel: ObservableObject {
 
         // Show error if needed
         connectionStatus = .disconnected(error: bleManager.error(from: notification))
+        errorStatus = .peerInformationError
     }
 
     private func peripheralDidUpdateName(notification: Notification) {

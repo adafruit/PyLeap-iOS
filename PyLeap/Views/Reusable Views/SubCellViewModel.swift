@@ -23,6 +23,7 @@ class SubCellViewModel: ObservableObject {
                     if fileURL.lastPathComponent == project {
                         failedProjectLaunch = false
                         projectDownloaded = true
+                        print(#function)
                         print("Searching for... \(project)")
                         print("URL Path: \(fileURL.path)")
                         print("URL : \(fileURL)")
@@ -33,6 +34,7 @@ class SubCellViewModel: ObservableObject {
                         failedProjectLaunch = true
                         projectDownloaded = false
                         print("Project was not found...")
+                        
                     }
                     
                 

@@ -13,10 +13,8 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     let cachesPath = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
     
-    
     static let shared = DownloadViewModel()
-    
-    
+    @StateObject var globalString = GlobalString()
     
     // Alert
     @Published var alertMsg = ""
@@ -35,8 +33,13 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
     // Saving Download task refernce for cancelling...
     @Published var downloadtaskSession : URLSessionDownloadTask!
     
+    @Published var attemptToSendBunle = false
+    
+    @Published var state: DownloadState = .idle
+    
     // MARK:- Download
     func startDownload(urlString: String, projectTitle: String) {
+        print("Starting Download...")
         isDownloading = true
         // Check for valid URL
         guard let validURL = URL(string: urlString) else {
@@ -52,6 +55,26 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
         downloadTaskSession.resume()
         
         unzipProjectFile(urlString: urlString, projectTitle: projectTitle)
+    }
+    
+    func startDownload(urlString: String, projectTitle: String, compeletion: () -> ()) {
+        print("Starting Download...")
+        isDownloading = true
+        // Check for valid URL
+        guard let validURL = URL(string: urlString) else {
+            self.reportError(error: "Invalid URL!")
+            return
+        }
+        downloadProgress = 0
+        
+        // Download Task...
+        let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+        
+        downloadTaskSession = session.downloadTask(with: validURL)
+        downloadTaskSession.resume()
+        
+        unzipProjectFile(urlString: urlString, projectTitle: projectTitle)
+          
     }
     
     func makeFileDirectory() {
@@ -97,7 +120,15 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
                         try FileManager.default.removeItem(at: CPZipName)
                         
                     } catch {
+                        print("Zip ERROR")
                         print("Error: \(error)")
+                        
+                        self.state = .failed
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                            self.state = .idle
+                        }
+                        
                     }
                 }
             }.resume()
@@ -182,11 +213,16 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
         
         try? FileManager.default.removeItem(at: destinationURL)
         
+       
+        
+        
+        
+        print(#function)
         do {
             
             // Copy temp file to directory.
             try FileManager.default.copyItem(at: location, to: destinationURL)
-            
+           
             DispatchQueue.main.async {
                 // If Successful...
                 print("Successful Download")
@@ -196,7 +232,13 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
                 print("\(self.didDownloadBundle) CURRENT STATE")
                 self.didDownloadBundle = true
                 print("\(self.didDownloadBundle) CURRENT STATE")
-
+                  
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    self.attemptToSendBunle.toggle()
+                }
+                
+                
+               
             }
             
         } catch {

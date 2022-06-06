@@ -18,15 +18,15 @@ class RootViewModel: ObservableObject {
         case bluetoothPairing
         case bluetoothStatus
         case fileTransfer
-        case test
+        //case test
         case mainSelection
     }
     
-    @Published var destination: Destination = AppEnvironment.isRunningTests ? .test : .startup
+    @Published var destination: Destination = AppEnvironment.isRunningTests ? .mainSelection : .startup
     
     
     func goToTest(){
-        destination = .test
+        //destination = .test
     }
     
     func goTobluetoothPairing() {
