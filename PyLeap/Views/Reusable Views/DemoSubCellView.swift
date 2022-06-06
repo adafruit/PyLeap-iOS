@@ -145,10 +145,15 @@ struct DemoSubview: View {
 
                             downloadStateBinder = .transferring
                             globalString.isSendingG = true
+                            globalString.counterG = 0
+                            globalString.numberOfFilesG = 1
+                            
                             
                             globalString.downloadLinkString = downloadLink
                             globalString.projectString = title
                             globalString.attemptToDownload.toggle()
+                            
+                           
                             
 
                             
