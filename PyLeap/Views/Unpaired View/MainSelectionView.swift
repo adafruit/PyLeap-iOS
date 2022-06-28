@@ -62,8 +62,6 @@ struct MainSelectionView: View {
             
                 ScrollViewReader { scroll in
                    
-                  
-                    
                    SubHeaderView()
                     
                     ForEach(model.pdemos) { demo in

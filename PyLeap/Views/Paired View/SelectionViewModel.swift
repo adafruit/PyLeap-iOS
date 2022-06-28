@@ -3,22 +3,24 @@
 //  SwiftUI File Manager
 //
 //  Created by Trevor Beaton on 7/11/21.
-//
 
 import SwiftUI
 import Zip
 import FileTransferClient
 
 class SelectionViewModel: ObservableObject {
-   
+    
     @StateObject var globalString = GlobalString()
     
     private weak var fileTransferClient: FileTransferClient?
     @Published var entries = [BlePeripheral.DirectoryEntry]()
     @Published var isTransmiting = false
+    @Published var boardInfo = ""
     @Published var bootUpInfo = ""
+    @Published var cpVersion = ""
     
     var projectDirectories: [URL] = []
+    var projectDirectoriesChecker: [URL] = []
     @Published var sendingBundle = false
     @Published var didCompleteTranfer = false
     @Published var writeError = false
@@ -27,7 +29,7 @@ class SelectionViewModel: ObservableObject {
     @Published var counter = 0
     @Published var numOfFiles = 0
     
-
+    
     
     @Published var fileArray: [ContentFile] = []
     @Published var contentList: [URLData] = []
@@ -40,9 +42,9 @@ class SelectionViewModel: ObservableObject {
     @Published var isConnectedToInternet = false
     @Published var showAlert = false
     
-    var downloadPhases: String = "" 
+    var downloadPhases: String = ""
     
-
+    
     @Published var state: DownloadState = .idle
     
     
@@ -53,14 +55,14 @@ class SelectionViewModel: ObservableObject {
     enum ProjectViewError: LocalizedError {
         case fileTransferUndefined
     }
-
+    
     func displayErrorMessage() {
         
         DispatchQueue.main.async {
             self.writeError = true
             self.sendingBundle = false
         }
-
+        
     }
     
     func internetMonitoring() {
@@ -90,28 +92,28 @@ class SelectionViewModel: ObservableObject {
     }
     
     /// Deletes all files and dic. on Bluefruit device *Except boot_out.txt*
-       func removeAllFiles(){
-           self.listDirectoryCommand(path: "") { result in
-               
-               switch result {
-                   
-               case .success(let contents):
-                   
-                   for i in contents! where i.name != "boot_out.txt" {
-                       self.deleteFileCommand(path: i.name) { deletionResult in
-                           switch deletionResult {
-                           case .success:
-                               print("Successfully Deleted")
-                           case .failure:
-                               print("Failed to delete.")
-                           }
-                       }
-                   }
-               case .failure:
-                   print("No content listed")
-               }
-           }
-       }
+    func removeAllFiles(){
+        self.listDirectoryCommand(path: "") { result in
+            
+            switch result {
+                
+            case .success(let contents):
+                
+                for i in contents! where i.name != "boot_out.txt" {
+                    self.deleteFileCommand(path: i.name) { deletionResult in
+                        switch deletionResult {
+                        case .success:
+                            print("Successfully Deleted")
+                        case .failure:
+                            print("Failed to delete.")
+                        }
+                    }
+                }
+            case .failure:
+                print("No content listed")
+            }
+        }
+    }
     
     
     /*
@@ -125,7 +127,7 @@ class SelectionViewModel: ObservableObject {
         counter = 0
         state = .transferring
         if let enumerator = FileManager.default.enumerator(at: directoryPath, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
-           // for case condition: Only process URLs
+            // for case condition: Only process URLs
             for case let fileURL as URL in enumerator {
                 
                 do {
@@ -134,7 +136,7 @@ class SelectionViewModel: ObservableObject {
                     if fileURL.lastPathComponent == project {
                         
                         print("Searching for... \(project)")
-                       
+                        
                         do {
                             print(#function)
                             print("Found \(project) project at this location...")
@@ -170,20 +172,22 @@ class SelectionViewModel: ObservableObject {
         var files = [URL]()
         // Returns a directory enumerator object that can be used to perform a deep enumeration of the directory at the specified URL.
         if let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
-           // for case condition: Only process URLs
+            // for case condition: Only process URLs
             for case let fileURL as URL in enumerator {
                 
                 do {
                     let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey, .addedToDirectoryDateKey,.isDirectoryKey])
                     
-                    print("INCOMING FILE: \(fileURL.path)")
+                    let filteredFiles = files.filter {
+                        $0.path.contains("CircuitPython 8.x")
+                    }
                     
+                    // Filter for these paths adafruit-circuitpython-bundle-8.x & adafruit-circuitpython-bundle-7.x
                     if fileURL.path.contains("adafruit-circuitpython-bundle-7.x-mpy") {
-                        print("Removing adafruit-circuitpython-bundle-7.x-mpy: \(fileURL.path)")
+                        
                         
                     } else {
                         
-                        print("FILTERED INCOMING FILE: \(fileURL.path)")
                         contentList.append(.init(urlTitle: fileURL))
                         if fileAttributes.isRegularFile! {
                             
@@ -203,20 +207,16 @@ class SelectionViewModel: ObservableObject {
                     
                     
                     
-                  
+                    
                     
                 } catch { print(error, fileURL) }
             }
             
             startFileTransfer(url: url)
             
-            numOfFiles = files.count
-            print("Contents in URL \(fileArray.count)")
-            print("Number of Files in URL \(files.count)")
-           
             for i in contentList {
                 
-               print("CL: \(i.urlTitle.pathComponents)")
+                print("CL: \(i.urlTitle.pathComponents)")
             }
             
             contentList.removeAll()
@@ -260,49 +260,55 @@ class SelectionViewModel: ObservableObject {
                         if fileURL.pathComponents.count > 12 {
                             print("File Path component count: \(fileURL.pathComponents.count)")
                             projectDirectories.append(fileURL)
+                            projectDirectoriesChecker.append(fileURL)
                         }
                     }
                     
                     
-                   
+                    
                 } else {
-                    print("APPENDED: \(fileURL.path)")
                     fileURLs.append(fileURL)
                 }
             }
             
-           
-        }
-        
-        print("List of Directories")
-        for i in projectDirectories {
-            print("Directory: \(i.path)")
-        }
-        print("List of Files")
-        for i in fileURLs {
-            print("Files: \(i.path)")
+            
         }
         
         DispatchQueue.main.async {
             self.sendingBundle = true
         }
-
-     
-        print("Current projectDirectories: \(projectDirectories[0])")
         
-        sortDirectory(dirList: projectDirectories, filesUrls: fileURLs)
+        //let modifiedDirectories = contents?.filter { $0.isDirectory && $0.name != ".fseventsd"}
+        
+        print("Current projectDirectories: \(projectDirectories)")
+        
+        var versionToRemove = ""
+        
+        if cpVersion == "CP7" {
+            versionToRemove = "CircuitPython 8.x"
+        }
+        if cpVersion == "CP8" {
+            versionToRemove = "CircuitPython 7.x"
+        }
+        
+        let filteredDirectory = projectDirectories.filter { !$0.pathComponents.contains("adafruit-circuitpython-bundle") && !$0.pathComponents.contains(versionToRemove)}
+        
+        print("Valk - filtered List \(filteredDirectory)")
+        
+        sortDirectory(dirList: filteredDirectory, filesUrls: fileURLs)
     }
     
     
     func sortDirectory(dirList: [URL], filesUrls: [URL]) {
-
+        
         print(#function)
         //Creates a sorted list of directories
+        
         var tempDirectory = dirList.sorted(by: { $1.pathComponents.count > $0.pathComponents.count} )
         print("Evaluating: \(String(describing: tempDirectory.first?.lastPathComponent))")
         print("With Path: \(String(describing: tempDirectory.first?.path))")
         
-        print("Sorted Directory")
+        print("Sorted Directory:")
         for i in tempDirectory{
             
             print(i.lastPathComponent)
@@ -329,12 +335,12 @@ class SelectionViewModel: ObservableObject {
         }
         self.projectDirectories.removeAll()
     }
-   
+    
     //Make lib/ Directory
     func mkLibDir(libDirectory: URL, copiedDirectory: [URL], filesUrl: [URL]) {
         print(#function)
         var temp = copiedDirectory
-       // print(temp)
+        // print(temp)
         
         print("mkLibDir list")
         for i in temp {
@@ -362,7 +368,7 @@ class SelectionViewModel: ObservableObject {
                     
                     let joined = tempURL.joined(separator: "/")
                     print("FIXED PATHxx:\(joined)")
-                
+                    
                     
                     self.makeDirectoryCommand(path: joined) { result in
                         switch result {
@@ -390,12 +396,12 @@ class SelectionViewModel: ObservableObject {
         }
     }
     
-   
+    
     func mkSubLibDir(subdirectory: URL, copiedDirectory: [URL], filesURL: [URL]) {
         print(#function)
         var temp = copiedDirectory
-       
-       print("List of Directories Currently in mkSubLibDir")
+        
+        print("List of Directories Currently in mkSubLibDir")
         for i in temp {
             
             print("\(i.path)")
@@ -424,7 +430,7 @@ class SelectionViewModel: ObservableObject {
             case .success(let contents):
                 
                 
-               
+                
                 
                 if contents!.contains(where: { name in name.name == subdirectory.lastPathComponent}) {
                     print("FULL PATH OF: \(subdirectory.lastPathComponent)")
@@ -442,7 +448,7 @@ class SelectionViewModel: ObservableObject {
                     var tempURL = subdirectory.pathComponents
                     
                     print("Incoming URL: \(tempURL)")
-                   
+                    
                     tempURL.removeFirst(12)
                     
                     print("Modified Path without seperators: \(tempURL)")
@@ -457,17 +463,17 @@ class SelectionViewModel: ObservableObject {
                     
                     
                     print("pathDirectoryForListCommandJoined: \(pathDirectoryForListCommandJoined)")
-                   
+                    
                     
                     self.makeDirectoryCommand(path: joined) { result in
-                       
+                        
                         switch result {
                         case .success:
                             print("Success")
-
+                            
                             temp.removeFirst()
                             self.sortDirectory(dirList: temp, filesUrls: filesURL)
-
+                            
                         case .failure:
                             print("Failed to create directory - 2")
                             temp.removeAll()
@@ -487,14 +493,14 @@ class SelectionViewModel: ObservableObject {
     }
     
     func completedTransfer() {
-       
-       
+        
+        
         DispatchQueue.main.async {
             self.didCompleteTranfer = true
             self.numOfFiles = 0
             self.counter = 0
             self.state = .complete
-
+            
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             self.didCompleteTranfer = false
@@ -503,22 +509,38 @@ class SelectionViewModel: ObservableObject {
         }
     }
     
+    
+    
+    
     func transferFiles(files: [URL]) {
         print(#function)
-        var copiedFiles = files
-        print("Number of files in filesArray \(files.count)")
-        print(files)
+        // let filteredDirectory = projectDirectories.filter { !$0.pathComponents.contains("CircuitPython 8.x")}
+        var versionToRemove = ""
+        
+        if cpVersion == "CP7" {
+            versionToRemove = "CircuitPython 8.x"
+        }
+        if cpVersion == "CP8" {
+            versionToRemove = "CircuitPython 7.x"
+        }
+        
+        var copiedFiles = files.filter { !$0.pathComponents.contains(versionToRemove)}
+        print("Number of files in copiedFiles: \(copiedFiles.count)")
+        print(copiedFiles)
+        
+        DispatchQueue.main.async {
+            self.numOfFiles = copiedFiles.count
+        }
+        
+        
         
         if files.isEmpty {
             print("Array of contents empty - Check other directories")
             self.completedTransfer()
             
-            
-            
             DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                 self.sendingBundle = false
                 self.counter = 0
-                
                 self.numOfFiles = 0
                 self.contentList.removeAll()
             }
@@ -535,155 +557,435 @@ class SelectionViewModel: ObservableObject {
                 return
             }
             
+            
+            
             if selectedUrl.deletingLastPathComponent().lastPathComponent == "CircuitPython 7.x"{
                 
                 print("Selected Path: \(selectedUrl.path)")
                 
                 var tempURL = selectedUrl.pathComponents
-
                 tempURL.removeFirst(12)
                 let joined = tempURL.joined(separator: "/")
-               
                 
-                var newModPath = tempURL
-                newModPath.removeLast()
-                print("Test file path: \(tempURL)")
+                print("File transfer modified path - 1: \(joined)")
                 
-                print("File transfer modified path xx: \(joined)")
-                
-                
-                
-                self.writeFileCommand(path: joined, data: data) { result in
+                listDirectoryCommand(path: "") { result in
                     switch result {
                         
-                    case .success(_):
-                        copiedFiles.removeFirst()
-                        self.transferFiles(files: copiedFiles)
+                    case .success(let contents):
                         
-                    case .failure(_):
-                        DispatchQueue.main.async {
-                           
-                            print("Transfer Failure")
-                            print("\(joined)")
-                            self.state = .failed
-                            
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                self.state = .idle
-                            }
-                            
+                        for i in contents! {
+                            print("Name of contents @root/: \(i.name)")
                         }
                         
+                        if selectedUrl.lastPathComponent == "code.py" {
+                            
+                            self.writeFileCommand(path: joined, data: data) { result in
+                                switch result {
+                                case .success(_):
+                                    print("Successful write, \(#line)")
+                                    print("Transferring code.py")
+                                    let modifiedArray = copiedFiles.filter {$0.lastPathComponent != selectedUrl.lastPathComponent}
+                                    self.transferFiles(files: modifiedArray)
+                                case .failure(_):
+                                    print("Failed, \(#line)")
+                                    DispatchQueue.main.async {
+                                        self.state = .failed
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                            self.state = .idle
+                                        }
+                                    }
+                                    self.displayErrorMessage()
+                                }
+                            }
+                        } else {
+                            print("else check - 1 \(#line)")
+                            if contents!.contains(where: { name in name.name == selectedUrl.lastPathComponent}) {
+                                print("Found: \(selectedUrl.lastPathComponent)")
+                                // If a file is found, remove that file from copiedFiles array and start recursion - execept for code.py.
+                                let modifiedArray = copiedFiles.filter {$0.lastPathComponent != selectedUrl.lastPathComponent}
+                                print("Modified Array: \(modifiedArray)")
+                                self.transferFiles(files: modifiedArray)
+                            } else {
+                                
+                                DispatchQueue.global(qos: .userInitiated).async {
+                                    
+                                    self.writeFileCommand(path: joined, data: data) { result in
+                                        switch result {
+                                            
+                                        case .success(_):
+                                            print("Existing File found \(selectedUrl.lastPathComponent). Removing from Queue. \(#line)")
+                                            let modifiedArray = copiedFiles.filter {$0.lastPathComponent != selectedUrl.lastPathComponent}
+                                            print("Modified Array - in else: \(modifiedArray)")
+                                            self.transferFiles(files: modifiedArray)
+                                            
+                                        case .failure(_):
+                                            print("Failed, \(#line)")
+                                            DispatchQueue.main.async {
+                                                
+                                                print("Transfer Failure")
+                                                print("\(joined)")
+                                                self.state = .failed
+                                                
+                                                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                                    self.state = .idle
+                                                }
+                                                
+                                            }
+                                            
+                                            
+                                            self.displayErrorMessage()
+                                        }
+                                    }
+                                }
+                                
+                            }
+                        }
                         
-                        self.displayErrorMessage()
+                    case .failure(_):
+                        print("Failed, \(#line)")
                     }
                 }
+                
+                
+                
+                
+                
             }
             
             
             
             else if selectedUrl.deletingLastPathComponent().lastPathComponent == "lib" {
                 
-                
-                
                 var tempURL = selectedUrl.pathComponents
+                
                 tempURL.removeFirst(12)
                 let joined = tempURL.joined(separator: "/")
-                print("File transfer modified path 11:\(joined)")
-                
-                
-                
-                print("Updated Path:\(joined)")
-                
-                
-                
-                writeFileCommand(path: joined, data: data) { result in
+                print("joined \(joined)")
+                listDirectoryCommand(path: "lib/") { result in
                     switch result {
-                    case .success(_):
-                        copiedFiles.removeFirst()
-                        self.transferFiles(files: copiedFiles)
                         
+                    case .success(let libContents):
+                        print("Selected URL: \(selectedUrl)")
+                        if libContents!.contains(where: { name in name.name == selectedUrl.lastPathComponent}) {
+                           // print("Contents for lib: \(libContents)")
+                            
+                            let modifiedArray = copiedFiles.filter {$0.lastPathComponent != selectedUrl.lastPathComponent}
+
+                            // If selected URL exists, remove from array and use recursion.
+                            print("Existing File found \(selectedUrl.lastPathComponent). Removing from Queue. \(#line)")
+                            self.transferFiles(files: modifiedArray)
+                        } else {
+                            print("In Else, \(#line)")
+                            // Selected URL does not exist, so write to disc.
+                            self.writeFileCommand(path: joined, data: data) { result in
+                                switch result {
+                                case .success(_):
+                                    print("Successful write, \(#line)")
+                                    print(selectedUrl)
+                                    copiedFiles.removeFirst()
+                                    self.transferFiles(files: copiedFiles)
+                                case .failure(let error):
+                                    print("Failed: \(error): \(result)")
+                                    // self.displayErrorMessage()
+                                }
+                            }
+                        }
                     case .failure(_):
-                        print("Transfer Failure - 2")
-                        self.state = .failed
-                        self.displayErrorMessage()
+                        print("Failed, \(#line)")
                     }
                 }
+                
+                
+                //                listDirectoryCommand(path: "lib") { result in
+                //                    switch result {
+                //
+                //                    case .success(let contents):
+                //                        print("Successfully in loop -  listDirectoryCommand(path: lib) { result in")
+                //                        for i in contents! {
+                //                            print("Name of files in Lib/: \(i.name)")
+                //                        }
+                //
+                //                        if contents!.contains(where: { name in name.name == selectedUrl.lastPathComponent}) {
+                //                            print("Found: \(selectedUrl.lastPathComponent)")
+                //                            // If a file is found, remove that file from copiedFiles array and start recursion - execept for code.py
+                //                            let modifiedArray = copiedFiles.filter {$0.lastPathComponent != selectedUrl.lastPathComponent}
+                //                            print("Modified Array: \(modifiedArray)")
+                //                            print("Reset")
+                //                            self.transferFiles(files: modifiedArray)
+                //                        } else {
+                //                            print("Trying else block")
+                //                            DispatchQueue.global(qos: .userInitiated).async {
+                //
+                //                            self.writeFileCommand(path: joined, data: data) { result in
+                //                                switch result {
+                //
+                //                                case .success(_):
+                //                                    let modifiedArray = copiedFiles.filter {$0.lastPathComponent != selectedUrl.lastPathComponent}
+                //                                    print("Modified Array - in else: \(modifiedArray)")
+                //                                    self.transferFiles(files: modifiedArray)
+                //
+                //                                case .failure(_):
+                //                                    DispatchQueue.main.async {
+                //
+                //                                        print("Transfer Failure")
+                //                                        print("\(joined)")
+                //                                        self.state = .failed
+                //
+                //                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                //                                            self.state = .idle
+                //                                        }
+                //
+                //                                    }
+                //
+                //
+                //                                    self.displayErrorMessage()
+                //                                }
+                //                            }
+                //                        }
+                //
+                //                        }
+                //                    case .failure(_):
+                //                        print("Failure")
+                //                    }
+                //                }
+                
+                
+                
+                
+                
+                
             } else {
                 
                 if selectedUrl.lastPathComponent == "README.txt" {
                     print("Got one")
                     copiedFiles.removeFirst()
                     self.transferFiles(files: copiedFiles)
-                   
-
-                } else {
-                    var tempURL = selectedUrl.pathComponents
                     
+                    
+                } else {
+                    print("else, \(#line)")
+                   
+                    
+                    var tempURL = selectedUrl.pathComponents
                     tempURL.removeFirst(12)
                     let joined = tempURL.joined(separator: "/")
-                    print("File transfer modified path: \(joined)")
-
-
-
-                    print("Updated Path:\(joined)")
-
-
+                    
+                    
+                    var testURL = selectedUrl.pathComponents
+                    testURL.removeFirst(12)
+                    testURL.removeLast()
+                    let joinedTest = testURL.joined(separator: "/")
+                    
+                    
+                    print("Last selected path: \(tempURL)")
+                    // Remove the first 11 compontents and last compontent
+                    
+                    
+                    print("Joined Selected URL: \(joinedTest)/")
+                    
+                    print("Last write command: \(joined)")
+                    
+                    print("Selected: \(selectedUrl.lastPathComponent)")
+                    
                     writeFileCommand(path: joined, data: data) { result in
-                        switch result {
-                        case .success(_):
-                            copiedFiles.removeFirst()
-                            self.transferFiles(files: copiedFiles)
-                        case .failure(let error):
-                            print("Failed: \(error): \(result)")
-                           // self.displayErrorMessage()
-
-                        }
-                    }
+                                            switch result {
+                                            case .success(_):
+                                                copiedFiles.removeFirst()
+                                                self.transferFiles(files: copiedFiles)
+                                            case .failure(let error):
+                                                print("Failed: \(error): \(result)")
+                                               // self.displayErrorMessage()
+                                            }
+                                        }
+                    
+//                    var tempURL = selectedUrl.pathComponents
+//
+//                    tempURL.removeFirst(12)
+//                    let joined = tempURL.joined(separator: "/")
+//                    print("File transfer modified path: \(joined)")
+//
+//
+//
+//                    print("Updated Path - 2:\(joined)")
+//
+//
+//                    writeFileCommand(path: joined, data: data) { result in
+//                        switch result {
+//                        case .success(_):
+//                            copiedFiles.removeFirst()
+//                            self.transferFiles(files: copiedFiles)
+//                        case .failure(let error):
+//                            print("Failed: \(error): \(result)")
+//                            // self.displayErrorMessage()
+//                        }
+//                    }
                 }
+                print("Outta scope \(selectedUrl.lastPathComponent)")
                 
-                
+//                var tempURL = selectedUrl.pathComponents
+//                tempURL.removeFirst(12)
+//                let joined = tempURL.joined(separator: "/")
+//
+//
+//                var testURL = selectedUrl.pathComponents
+//                testURL.removeFirst(12)
+//                testURL.removeLast()
+//                let joinedTest = testURL.joined(separator: "/")
+//
+//                print("zxc\(joinedTest)")
+//
+//
+//                                    writeFileCommand(path: joined, data: data) { result in
+//                                        switch result {
+//                                        case .success(_):
+//                                            copiedFiles.removeFirst()
+//                                            self.transferFiles(files: copiedFiles)
+//                                        case .failure(let error):
+//                                            print("Failed: \(error): \(result)")
+//                                            // self.displayErrorMessage()
+//                                        }
+//                                    }
                 
             }
+            print("Outta scope - 2")
+            
         }
         
         DispatchQueue.main.async {
             self.sendingBundle = true
         }
+        
+        //        var memo: [BlePeripheral.DirectoryEntry] = []
+        //
+        //        listDirectoryCommand(path: "lib/") { result in
+        //            switch result {
+        //
+        //            case .success(let contents):
+        //                let modifiedDirectories = contents?.filter { $0.isDirectory}
+        //                print("Moded Dir: \(modifiedDirectories)")
+        //
+        //                for i in modifiedDirectories! {
+        //                    print("\(i.name)")
+        //                    self.listDirectoryCommand(path: i.name) { result in
+        //                        switch result {
+        //
+        //                        case .success(let contents):
+        //                            print("Contents Loop: \(contents)")
+        //                            let modifiedDirectories = contents?.filter { !$0.isDirectory}
+        //                            print("Moded Dir - 2: \(modifiedDirectories)")
+        //
+        //                            for i in modifiedDirectories! {
+        //                                print(i.name)
+        //                                self.listDirectoryCommand(path: "lib/\(i.name)") { result in
+        //                                    switch result {
+        //
+        //                                    case .success(let contentsw):
+        //                                        print("lib/\(i.name)")
+        //                                        print(" 3 \(contentsw)")
+        //                                    case .failure(_):
+        //                                        print("Failed")
+        //                                    }
+        //                                }
+        //                            }
+        //
+        //                        case .failure(_):
+        //                            print("Fail")
+        //                        }
+        //                    }
+        //                }
+        //
+        //            case .failure(_):
+        //                print("Failed")
+        //            }
+        //            }
+    }
+    var listOfDirectoriesOnDisc: [BlePeripheral.DirectoryEntry] = []
+    
+    func checkNestedDirectories(incoming array: [BlePeripheral.DirectoryEntry]) {
+        var listOfDirectoriesOnDiscK: [BlePeripheral.DirectoryEntry] = []
+        var listOfDescendentDirectories: [String] = []
+        // Search root directory
+        listDirectoryCommand(path: "") { results in
+            switch results {
+                
+            case .success(let contents):
+                print("Found Contents")
+                
+                let modifiedDirectories = contents?.filter { $0.isDirectory && $0.name != ".fseventsd"}
+                print("Print directories found on disc @root/ : \(modifiedDirectories)")
+                
+                for i in modifiedDirectories! {
+                    
+                    print("\(i.name)")
+                    listOfDirectoriesOnDiscK.append(i)
+                    listOfDescendentDirectories.append("\(i.name)/")
+                    
+                }
+                self.listDirectoryCommand(path: "\(listOfDirectoriesOnDiscK[0].name)") { result in
+                    switch result {
+                        
+                    case .success(let contentsq):
+                        print("success")
+                        let modifiedDirectories2 = contentsq?.filter { $0.isDirectory}
+                        
+                        print(contentsq)
+                        for i in modifiedDirectories2! {
+                            print("\(i.name)")
+                        }
+                    case .failure(_):
+                        print("fail")
+                    }
+                }
+            case .failure(let error):
+                print(error)
+            }
+        }
+        
+        
+        
+    }
+    
+    
+    func secondFunction() {
+        //  checkNestedDirectories(incoming: listOfDirectoriesOnDisc)
     }
     
     
     
     
     
-    
-    
-    
-    
-    
-    
-    func readMyStatus() {
-       // model.readFile(filename: "boot_out.txt")
+    func readBoardStatus() {
+        // model.readFile(filename: "boot_out.txt")
         print(#function)
-
-        print("BOOT INFO: \(bootUpInfo)")
+        
+        print("BOOT INFO: \(boardInfo)")
         
         switch bootUpInfo.description {
             
         case let str where str.contains("circuitplayground_bluefruit"):
             print("Circuit Playground Bluefruit device")
             bootUpInfo = "circuitplayground_bluefruit"
-//            DispatchQueue.main.async { [self] in
-//                    self.globalString.compatibilityString = "circuitplayground_bluefruit"
-//            }
+            
         case let str where str.contains("clue_nrf52840_express"):
             print("Clue device")
             bootUpInfo = "clue_nrf52840_express"
-//            DispatchQueue.main.async { [self] in
-//                globalString.compatibilityString = "clue_nrf52840_express"
-//
-//            }
+            
         default:
             print("Unknown Device")
+        }
+        
+        switch cpVersion.description {
+            
+        case let str where str.contains("CircuitPython 7"):
+            print("RUNNING CIRCUITPY 7")
+            cpVersion = "CP7"
+        case let str where str.contains("CircuitPython 8"):
+            print("RUNNING CIRCUITPY 8")
+            cpVersion = "CP8"
+        default:
+            print("UNKNOWN CP Ver.")
+            cpVersion = "CP7"
         }
         
     }
@@ -737,13 +1039,13 @@ class SelectionViewModel: ObservableObject {
     }
     @Published var lastTransmit: TransmissionLog? =  TransmissionLog(type: .write(size: 334))
     
-
+    
     @Published var activeAlert: ActiveAlert?
     
     // Data
     private let bleManager = BleManager.shared
     
-
+    
     
     // MARK: - Setup
     func onAppear() {
@@ -778,6 +1080,7 @@ class SelectionViewModel: ObservableObject {
                     self.lastTransmit = TransmissionLog(type: .read(data: data))
                     let str = String(decoding: data, as: UTF8.self)
                     print("Read: \(str)")
+                    self.cpVersion = str
                     self.bootUpInfo = str
                     
                 case .failure(let error):

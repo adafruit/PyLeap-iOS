@@ -8,11 +8,11 @@
 
 import Foundation
 
-struct RootResults: Decodable {
+public struct RootResults: Decodable {
     let projects: [ResultItem]
 }
 
-struct ResultItem: Codable, Identifiable {
+public struct ResultItem: Codable, Identifiable {
     enum CodingKeys: CodingKey {
         case projectName
         case projectImage
@@ -22,7 +22,7 @@ struct ResultItem: Codable, Identifiable {
         case compatibility
     }
     
-    var id = UUID()
+    public var id = UUID()
     let uniqueID = String()
     let projectName: String
     let projectImage: String
@@ -30,4 +30,10 @@ struct ResultItem: Codable, Identifiable {
     let bundleLink: String
     let learnGuideLink: String
     let compatibility: [String]
+}
+
+extension ResultItem: Equatable {}
+
+public func == (lhs: ResultItem, rhs: ResultItem) -> Bool {
+  return lhs.id == rhs.id
 }

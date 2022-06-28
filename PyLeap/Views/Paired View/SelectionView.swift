@@ -13,7 +13,6 @@ class SpotlightCounter: ObservableObject {
 }
 
 struct SelectionView: View {
-    
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject private var connectionManager: FileTransferConnectionManager
     @StateObject var viewModel = SelectionViewModel()
@@ -22,13 +21,16 @@ struct SelectionView: View {
     @StateObject var btConnectionViewModel = BTConnectionViewModel()
     @StateObject private var rootModel = RootViewModel()
     @StateObject var downloadModel = DownloadViewModel()
-   @StateObject var spotlight = SpotlightCounter()
+    @StateObject var spotlight = SpotlightCounter()
     
     //clearKnownPeripheralUUIDs
     
     @State private var isConnected = false
     //@State private var switchedView = false
+    // Error Alert triggers
     @State private var errorOccured = false
+    @State private var zipAlert = false
+    
     @State private var downloadState = DownloadState.idle
     @State private var scrollViewID = UUID()
     @State var currentHightlight: Int = 0
@@ -194,6 +196,12 @@ struct SelectionView: View {
                     .foregroundColor(.white)
                     //.spotlight(enabled: spotlight.counter == 0, title: "Welcome to PyLeap!")
                
+                    Button {
+                        viewModel.secondFunction()
+                    } label: {
+                       FailedButton()
+                    }
+                    
                 
                     ScrollView(.vertical, showsIndicators: true) {
                         
@@ -204,6 +212,9 @@ struct SelectionView: View {
                               
                             
                             ForEach(model.pdemos) { demo in
+                                
+                                
+                                
                                 DemoViewCell(result: demo, isConnected: $inConnectedInSelectionView, bootOne: $boardBootInfo, onViewGeometryChanged: {
                                     withAnimation {
                                         scroll.scrollTo(demo.id)
@@ -234,7 +245,20 @@ struct SelectionView: View {
                             .multilineTextAlignment(.leading)
                         }
                 
-
+                        .alert("Download Error", isPresented: $zipAlert) {
+                                    Button("OK") {
+                                        // Handle acknowledgement.
+                                        print("OK")
+                                        zipAlert = false
+                                    }
+                                } message: {
+                                    Text("""
+                                         Unable to download this project bundle.
+                                         
+                                         Try again later.
+                                         """)
+                                    .multilineTextAlignment(.leading)
+                                }
                 
                 .onTapGesture {
                     spotlight.counter += 1
@@ -292,7 +316,7 @@ struct SelectionView: View {
         })
         
         .onChange(of: viewModel.bootUpInfo, perform: { newValue in
-            viewModel.readMyStatus()
+            viewModel.readBoardStatus()
             print("newValue \(newValue)")
             boardBootInfo = newValue
         })
@@ -326,6 +350,7 @@ struct SelectionView: View {
             viewModel.setup(fileTransferClient: selectedClient)
         }
         .onAppear {
+            downloadModel.delegate = self
             print("SelectionView")
             viewModel.setup(fileTransferClient: connectionManager.selectedClient)
             viewModel.readFile(filename: "boot_out.txt")
@@ -372,6 +397,24 @@ struct SelectionView: View {
                 })
         }
     }
+}
+
+extension SelectionView: DownloadDelegate {
+    func errorHappened() {
+        print("Error Occurred")
+        zipAlert = true
+        
+        DispatchQueue.main.async {
+            downloadState = .failed
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            downloadState = .idle
+        }
+    }
+
+    
+    
 }
 
 

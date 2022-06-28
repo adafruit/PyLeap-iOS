@@ -35,13 +35,13 @@
 		D5597C0C26AF018800DF17C0 /* View+If.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5597C0926AF018800DF17C0 /* View+If.swift */; };
 		D5597C3B26B98E1E00DF17C0 /* NumbersOnly.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5597C3A26B98E1E00DF17C0 /* NumbersOnly.swift */; };
 		D5640216271B54BF00AE1519 /* MainSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5640215271B54BF00AE1519 /* MainSelectionView.swift */; };
+		D56805572850061C00E2B661 /* pairingAni.gif in Resources */ = {isa = PBXBuildFile; fileRef = D56805552850061C00E2B661 /* pairingAni.gif */; };
+		D56805582850061C00E2B661 /* pairingAnimation.gif in Resources */ = {isa = PBXBuildFile; fileRef = D56805562850061C00E2B661 /* pairingAnimation.gif */; };
+		D568055A2850063200E2B661 /* completedPair.gif in Resources */ = {isa = PBXBuildFile; fileRef = D56805592850063200E2B661 /* completedPair.gif */; };
 		D56F640C270242CA000E5975 /* UIColor+LightAndDark.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F6407270242CA000E5975 /* UIColor+LightAndDark.swift */; };
 		D56F640D270242CA000E5975 /* FileTransferPathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F640A270242CA000E5975 /* FileTransferPathUtils.swift */; };
 		D56F640E270242CA000E5975 /* String+DeletingPrefix.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F6408270242CA000E5975 /* String+DeletingPrefix.swift */; };
-		D57858E9283277AF008E8BE4 /* pairingAnimation.gif in Resources */ = {isa = PBXBuildFile; fileRef = D57858E8283277AF008E8BE4 /* pairingAnimation.gif */; };
-		D57858EB28327AC4008E8BE4 /* pairingAni.gif in Resources */ = {isa = PBXBuildFile; fileRef = D57858EA28327AC4008E8BE4 /* pairingAni.gif */; };
 		D57858ED28327E18008E8BE4 /* PairingTutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57858EC28327E18008E8BE4 /* PairingTutorialView.swift */; };
-		D57858EF283289DF008E8BE4 /* completedPair.gif in Resources */ = {isa = PBXBuildFile; fileRef = D57858EE283289DF008E8BE4 /* completedPair.gif */; };
 		D57858F12832D9C8008E8BE4 /* CreditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57858F02832D9C8008E8BE4 /* CreditView.swift */; };
 		D57858F328333CBC008E8BE4 /* TroubleshootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57858F228333CBC008E8BE4 /* TroubleshootView.swift */; };
 		D58182FB27F732E40091C43B /* SubCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58182FA27F732E40091C43B /* SubCellViewModel.swift */; };
@@ -110,13 +110,13 @@
 		D5597C0926AF018800DF17C0 /* View+If.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+If.swift"; sourceTree = "<group>"; };
 		D5597C3A26B98E1E00DF17C0 /* NumbersOnly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumbersOnly.swift; sourceTree = "<group>"; };
 		D5640215271B54BF00AE1519 /* MainSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSelectionView.swift; sourceTree = "<group>"; };
+		D56805552850061C00E2B661 /* pairingAni.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = pairingAni.gif; sourceTree = "<group>"; };
+		D56805562850061C00E2B661 /* pairingAnimation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = pairingAnimation.gif; sourceTree = "<group>"; };
+		D56805592850063200E2B661 /* completedPair.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = completedPair.gif; sourceTree = "<group>"; };
 		D56F6407270242CA000E5975 /* UIColor+LightAndDark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+LightAndDark.swift"; sourceTree = "<group>"; };
 		D56F6408270242CA000E5975 /* String+DeletingPrefix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+DeletingPrefix.swift"; sourceTree = "<group>"; };
 		D56F640A270242CA000E5975 /* FileTransferPathUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTransferPathUtils.swift; sourceTree = "<group>"; };
-		D57858E8283277AF008E8BE4 /* pairingAnimation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = pairingAnimation.gif; path = ../../../../Desktop/pairingAnimation.gif; sourceTree = "<group>"; };
-		D57858EA28327AC4008E8BE4 /* pairingAni.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = pairingAni.gif; path = ../../../../Desktop/pairingAni.gif; sourceTree = "<group>"; };
 		D57858EC28327E18008E8BE4 /* PairingTutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingTutorialView.swift; sourceTree = "<group>"; };
-		D57858EE283289DF008E8BE4 /* completedPair.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = completedPair.gif; path = ../../../../Desktop/completedPair.gif; sourceTree = "<group>"; };
 		D57858F02832D9C8008E8BE4 /* CreditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditView.swift; sourceTree = "<group>"; };
 		D57858F228333CBC008E8BE4 /* TroubleshootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TroubleshootView.swift; sourceTree = "<group>"; };
 		D58182FA27F732E40091C43B /* SubCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubCellViewModel.swift; sourceTree = "<group>"; };
@@ -209,9 +209,9 @@
 				D59DFDB5268CD052001737F6 /* AppEnvironment.swift */,
 				D534F3FB280B59090053699C /* ExampleView.swift */,
 				D544A2502822D4730038D483 /* Spotlight Extension.swift */,
-				D57858EE283289DF008E8BE4 /* completedPair.gif */,
-				D57858EA28327AC4008E8BE4 /* pairingAni.gif */,
-				D57858E8283277AF008E8BE4 /* pairingAnimation.gif */,
+				D56805592850063200E2B661 /* completedPair.gif */,
+				D56805552850061C00E2B661 /* pairingAni.gif */,
+				D56805562850061C00E2B661 /* pairingAnimation.gif */,
 				D5C74DF027EB92E900730505 /* Model */,
 				D59DFDB2268CCEAC001737F6 /* Views */,
 				D5C74DEE27EB91D600730505 /* Networking */,
@@ -512,13 +512,13 @@
 			files = (
 				D52F7E7B2672F4C500911D43 /* Preview Assets.xcassets in Resources */,
 				D5C474C827E39FD7002DD160 /* ReadexPro-Medium.ttf in Resources */,
-				D57858E9283277AF008E8BE4 /* pairingAnimation.gif in Resources */,
-				D57858EB28327AC4008E8BE4 /* pairingAni.gif in Resources */,
+				D568055A2850063200E2B661 /* completedPair.gif in Resources */,
+				D56805572850061C00E2B661 /* pairingAni.gif in Resources */,
 				D5C74DF727EBA47E00730505 /* ReadexPro-SemiBold.ttf in Resources */,
 				D5C474C927E39FDA002DD160 /* ReadexPro-Regular.ttf in Resources */,
-				D57858EF283289DF008E8BE4 /* completedPair.gif in Resources */,
 				D5C474CA27E39FDD002DD160 /* ReadexPro-Light.ttf in Resources */,
 				D5C474CB27E39FE1002DD160 /* ReadexPro-Bold.ttf in Resources */,
+				D56805582850061C00E2B661 /* pairingAnimation.gif in Resources */,
 				D52F7E782672F4C500911D43 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -717,7 +717,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
@@ -727,7 +727,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.adafruit.PyLeap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
@@ -744,7 +744,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
@@ -754,7 +754,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.adafruit.PyLeap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;

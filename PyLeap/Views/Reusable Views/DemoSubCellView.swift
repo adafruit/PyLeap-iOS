@@ -8,7 +8,7 @@
 import SwiftUI
 import FileTransferClient
 
-
+// The state should be used in the viewModel
 
 class GlobalString: ObservableObject {
     @Published var projectString = ""
@@ -25,7 +25,9 @@ class GlobalString: ObservableObject {
     @Published var attemptToSend = false
 }
 
-struct DemoSubview: View {
+
+struct DemoSubview: View{
+ 
     @State var transferInProgress = false
     @State var isDownloaded = false
     
@@ -135,7 +137,8 @@ struct DemoSubview: View {
                 
                 if compatibility.contains(bindingString) {
                   
-                       
+                    
+
                     
                     if downloadStateBinder == .idle {
                         
@@ -143,36 +146,38 @@ struct DemoSubview: View {
                         
                         Button(action: {
 
+                           
+                            
                             downloadStateBinder = .transferring
                             globalString.isSendingG = true
                             globalString.counterG = 0
                             globalString.numberOfFilesG = 1
-                            
-                            
+
+
                             globalString.downloadLinkString = downloadLink
                             globalString.projectString = title
                             globalString.attemptToDownload.toggle()
-                            
-                           
-                            
 
-                            
+
+
+
+
                             if selectionModel.isConnectedToInternet == false {
                                 print("Going offline...")
                                 downloadStateBinder = .transferring
-                                
+
                                 globalString.projectString = title
                                 globalString.attemptToSend.toggle()
                             }
-                            
+
                             if viewModel.projectDownloaded == false && selectionModel.isConnectedToInternet == false {
                                 offlineWithoutProject = true
                                 downloadStateBinder = .idle
-                                
+
                             }
-                            
+
                             if viewModel.projectDownloaded == false {
-                                
+
                             }
                             
                         }) {

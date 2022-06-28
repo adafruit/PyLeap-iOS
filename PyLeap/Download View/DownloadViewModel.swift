@@ -8,10 +8,16 @@
 import SwiftUI
 import Zip
 
+protocol DownloadDelegate {
+    func errorHappened()
+}
+
 class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate {
     
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     let cachesPath = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+    
+    var delegate: DownloadDelegate?
     
     static let shared = DownloadViewModel()
     @StateObject var globalString = GlobalString()
@@ -36,6 +42,8 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
     @Published var attemptToSendBunle = false
     
     @Published var state: DownloadState = .idle
+    
+    @Published var errorZip = false
     
     // MARK:- Download
     func startDownload(urlString: String, projectTitle: String) {
@@ -112,22 +120,18 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
                     do {
                         
                         let zipData = try Data(contentsOf: zipTempFileUrl)
-                        
+
                         try zipData.write(to: CPZipName)
-                        
+
                         let unzipDirectory = try Zip.quickUnzipFile(CPZipName) // Unzip
-                        
+
                         try FileManager.default.removeItem(at: CPZipName)
                         
                     } catch {
                         print("Zip ERROR")
                         print("Error: \(error)")
                         
-                        self.state = .failed
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                            self.state = .idle
-                        }
+                        self.delegate?.errorHappened()
                         
                     }
                 }
