@@ -196,12 +196,7 @@ struct SelectionView: View {
                     .foregroundColor(.white)
                     //.spotlight(enabled: spotlight.counter == 0, title: "Welcome to PyLeap!")
                
-                    Button {
-                        viewModel.secondFunction()
-                    } label: {
-                       FailedButton()
-                    }
-                    
+              
                 
                     ScrollView(.vertical, showsIndicators: true) {
                         
