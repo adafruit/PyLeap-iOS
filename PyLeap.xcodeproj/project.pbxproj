@@ -64,7 +64,6 @@
 		D5C474CB27E39FE1002DD160 /* ReadexPro-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D5C474C227E39FAD002DD160 /* ReadexPro-Bold.ttf */; };
 		D5C74DF327EB92FA00730505 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C74DF227EB92FA00730505 /* View+Extensions.swift */; };
 		D5C74DF527EB93E300730505 /* DemoViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C74DF427EB93E300730505 /* DemoViewCell.swift */; };
-		D5C74DF727EBA47E00730505 /* ReadexPro-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D5C74DF627EBA47C00730505 /* ReadexPro-SemiBold.ttf */; };
 		D5CC6BAE2816FD27008629FB /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CC6BAD2816FD27008629FB /* Config.swift */; };
 		D5CC6BB02816FDA1008629FB /* BluetoothStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CC6BAF2816FDA1008629FB /* BluetoothStatusView.swift */; };
 		D5CC6BB428173AE0008629FB /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CC6BB328173AE0008629FB /* HeaderView.swift */; };
@@ -139,7 +138,6 @@
 		D5C474C727E39FC8002DD160 /* ReadexPro-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ReadexPro-Regular.ttf"; sourceTree = "<group>"; };
 		D5C74DF227EB92FA00730505 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		D5C74DF427EB93E300730505 /* DemoViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoViewCell.swift; sourceTree = "<group>"; };
-		D5C74DF627EBA47C00730505 /* ReadexPro-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "ReadexPro-SemiBold.ttf"; path = "../../../../../../../Downloads/Nunito,Readex_Pro-2/Readex_Pro/static/ReadexPro-SemiBold.ttf"; sourceTree = "<group>"; };
 		D5CC6BAD2816FD27008629FB /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		D5CC6BAF2816FDA1008629FB /* BluetoothStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothStatusView.swift; sourceTree = "<group>"; };
 		D5CC6BB328173AE0008629FB /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
@@ -350,7 +348,6 @@
 				D5C474C727E39FC8002DD160 /* ReadexPro-Regular.ttf */,
 				D5C474C527E39FC8002DD160 /* ReadexPro-Light.ttf */,
 				D5C474C227E39FAD002DD160 /* ReadexPro-Bold.ttf */,
-				D5C74DF627EBA47C00730505 /* ReadexPro-SemiBold.ttf */,
 			);
 			path = ReadexPro;
 			sourceTree = "<group>";
@@ -514,7 +511,6 @@
 				D5C474C827E39FD7002DD160 /* ReadexPro-Medium.ttf in Resources */,
 				D568055A2850063200E2B661 /* completedPair.gif in Resources */,
 				D56805572850061C00E2B661 /* pairingAni.gif in Resources */,
-				D5C74DF727EBA47E00730505 /* ReadexPro-SemiBold.ttf in Resources */,
 				D5C474C927E39FDA002DD160 /* ReadexPro-Regular.ttf in Resources */,
 				D5C474CA27E39FDD002DD160 /* ReadexPro-Light.ttf in Resources */,
 				D5C474CB27E39FE1002DD160 /* ReadexPro-Bold.ttf in Resources */,

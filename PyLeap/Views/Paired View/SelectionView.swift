@@ -196,7 +196,7 @@ struct SelectionView: View {
                     .foregroundColor(.white)
                     //.spotlight(enabled: spotlight.counter == 0, title: "Welcome to PyLeap!")
                
-              
+               
                 
                     ScrollView(.vertical, showsIndicators: true) {
                         

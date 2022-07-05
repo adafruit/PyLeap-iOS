@@ -10,6 +10,11 @@ import FileTransferClient
 
 class SelectionViewModel: ObservableObject {
     
+    enum CircuitPythonVersion {
+        case circuitPython7
+        case circuitPython8
+    }
+    
     @StateObject var globalString = GlobalString()
     
     private weak var fileTransferClient: FileTransferClient?
@@ -184,7 +189,7 @@ class SelectionViewModel: ObservableObject {
                     }
                     
                     // Filter for these paths adafruit-circuitpython-bundle-8.x & adafruit-circuitpython-bundle-7.x
-                    if fileURL.path.contains("adafruit-circuitpython-bundle-7.x-mpy") {
+                    if fileURL.path.contains("adafruit-circuitpython-bundle") {
                         
                         
                     } else {
@@ -243,8 +248,8 @@ class SelectionViewModel: ObservableObject {
                 continue
             }
             
-            if fileURL.path.contains("adafruit-circuitpython-bundle-7.x-mpy") {
-                print("Removing adafruit-circuitpython-bundle-7.x-mpy: \(fileURL.path)")
+            if fileURL.path.contains("adafruit-circuitpython-bundle") {
+                print("Removing Nested Bundle: \(fileURL.path)")
                 
             } else {
                 if isDirectory {
@@ -259,6 +264,7 @@ class SelectionViewModel: ObservableObject {
                         print("Bad file - \(fileURL)")
                     } else {
                         if fileURL.pathComponents.count > 12 {
+                            print("startFileTransfer passed: \(fileURL.path)")
                             print("File Path component count: \(fileURL.pathComponents.count)")
                             projectDirectories.append(fileURL)
                             projectDirectoriesChecker.append(fileURL)
@@ -269,6 +275,7 @@ class SelectionViewModel: ObservableObject {
                     
                 } else {
                     fileURLs.append(fileURL)
+                    print("FilesURL startFileTransfer \(fileURLs)")
                 }
             }
             
@@ -316,7 +323,20 @@ class SelectionViewModel: ObservableObject {
           if dirList.isEmpty {
               print("No directories left in queue")
               projectDirectories.removeAll()
-              self.transferFiles(files: filesUrls)
+              
+              
+              var versionToRemove = ""
+              
+              if cpVersion == "CP7" {
+                  versionToRemove = "CircuitPython 8.x"
+              }
+              if cpVersion == "CP8" {
+                  versionToRemove = "CircuitPython 7.x"
+              }
+              
+              let filteredDirectory = filesUrls.filter { !$0.pathComponents.contains("adafruit-circuitpython-bundle") && !$0.pathComponents.contains(versionToRemove)}
+              
+              self.transferFiles(files: filteredDirectory)
               
           } else {
               guard let firstDirectory = tempDirectory.first else {
@@ -545,6 +565,15 @@ class SelectionViewModel: ObservableObject {
                 return
             }
             
+            //clue_bgBMP.bmp
+            if selectedUrl.lastPathComponent == "clue_bgBMP.bmp" {
+                print("Got one")
+                copiedFiles.removeFirst()
+                self.transferFiles(files: copiedFiles)
+               
+
+            }
+            
             if selectedUrl.deletingLastPathComponent().lastPathComponent == "CircuitPython 7.x"{
                 
                 print("Selected Path: \(selectedUrl.path)")
@@ -623,6 +652,8 @@ class SelectionViewModel: ObservableObject {
                     }
                 }
             } else {
+                
+                
                 
                 if selectedUrl.lastPathComponent == "README.txt" {
                     print("Got one")
