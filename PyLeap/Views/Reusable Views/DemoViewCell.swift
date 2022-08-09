@@ -9,11 +9,10 @@ import Foundation
 
 struct DemoViewCell: View {
     
-    
-    
     @StateObject var spotlight = SpotlightCounter()
     
     let result : ResultItem
+    
     @State private var isExpanded: Bool = false {
         didSet {
             onViewGeometryChanged()
@@ -22,6 +21,7 @@ struct DemoViewCell: View {
     @Binding var isConnected: Bool
     @Binding var bootOne: String
    
+    
     let onViewGeometryChanged: ()->Void
     
     @Binding var stateBinder: DownloadState
@@ -41,16 +41,11 @@ struct DemoViewCell: View {
             if isExpanded {
                 
                 Group {
-                    DemoSubview(bindingString: $bootOne, downloadStateBinder: $stateBinder, title: result.projectName,
-                                image: result.projectImage,
-                                description: result.description,
-                                learnGuideLink: URLRequest(url: URL(string: result.learnGuideLink)!),
-                                downloadLink: result.bundleLink,
-                                compatibility: result.compatibility,
+                    DemoSubview(bindingString: $bootOne, downloadStateBinder: $stateBinder, resultItem: result,
                                 isConnected: $isConnected)
                 }
                 .onTapGesture {
-                    print("sub \(spotlight.counter)")
+                    print("Is Expanded: State - DemoViewCell.swift - ; \(stateBinder)")
                 }
             }
         }

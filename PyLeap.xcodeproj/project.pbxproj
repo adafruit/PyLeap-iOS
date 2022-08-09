@@ -34,6 +34,7 @@
 		D5597C0B26AF018800DF17C0 /* HideKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5597C0726AF018800DF17C0 /* HideKeyboard.swift */; };
 		D5597C0C26AF018800DF17C0 /* View+If.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5597C0926AF018800DF17C0 /* View+If.swift */; };
 		D5597C3B26B98E1E00DF17C0 /* NumbersOnly.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5597C3A26B98E1E00DF17C0 /* NumbersOnly.swift */; };
+		D562FD8B2898CED0006E482E /* WrappedStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = D562FD8A2898CED0006E482E /* WrappedStruct.swift */; };
 		D5640216271B54BF00AE1519 /* MainSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5640215271B54BF00AE1519 /* MainSelectionView.swift */; };
 		D56805572850061C00E2B661 /* pairingAni.gif in Resources */ = {isa = PBXBuildFile; fileRef = D56805552850061C00E2B661 /* pairingAni.gif */; };
 		D56805582850061C00E2B661 /* pairingAnimation.gif in Resources */ = {isa = PBXBuildFile; fileRef = D56805562850061C00E2B661 /* pairingAnimation.gif */; };
@@ -108,6 +109,7 @@
 		D5597C0726AF018800DF17C0 /* HideKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideKeyboard.swift; sourceTree = "<group>"; };
 		D5597C0926AF018800DF17C0 /* View+If.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+If.swift"; sourceTree = "<group>"; };
 		D5597C3A26B98E1E00DF17C0 /* NumbersOnly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumbersOnly.swift; sourceTree = "<group>"; };
+		D562FD8A2898CED0006E482E /* WrappedStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedStruct.swift; sourceTree = "<group>"; };
 		D5640215271B54BF00AE1519 /* MainSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSelectionView.swift; sourceTree = "<group>"; };
 		D56805552850061C00E2B661 /* pairingAni.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = pairingAni.gif; sourceTree = "<group>"; };
 		D56805562850061C00E2B661 /* pairingAnimation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = pairingAnimation.gif; sourceTree = "<group>"; };
@@ -406,6 +408,7 @@
 				D59E31A9281B8DD300D24211 /* DownloadState.swift */,
 				D5507ACB26C668BC00512BAA /* SelectionView.swift */,
 				D5507ACC26C668BC00512BAA /* SelectionViewModel.swift */,
+				D562FD8A2898CED0006E482E /* WrappedStruct.swift */,
 			);
 			path = "Paired View";
 			sourceTree = "<group>";
@@ -548,6 +551,7 @@
 				D58358EE27DA5C0F0069F7F5 /* NetworkError.swift in Sources */,
 				D5597C0B26AF018800DF17C0 /* HideKeyboard.swift in Sources */,
 				D5D1F4A627EBA9C80040E2BF /* DemoSubCellView.swift in Sources */,
+				D562FD8B2898CED0006E482E /* WrappedStruct.swift in Sources */,
 				D57858F12832D9C8008E8BE4 /* CreditView.swift in Sources */,
 				D59DFDB6268CD052001737F6 /* AppEnvironment.swift in Sources */,
 				D5CC6BB428173AE0008629FB /* HeaderView.swift in Sources */,
@@ -713,7 +717,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
@@ -723,7 +727,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.adafruit.PyLeap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
@@ -740,7 +744,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
@@ -750,7 +754,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.adafruit.PyLeap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;

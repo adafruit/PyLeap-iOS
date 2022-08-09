@@ -50,13 +50,7 @@ class SelectionViewModel: ObservableObject {
     
     var downloadPhases: String = ""
     
-    
     @Published var state: DownloadState = .idle
-    
-    
-    
-    
-    
     
     enum ProjectViewError: LocalizedError {
         case fileTransferUndefined
@@ -68,7 +62,6 @@ class SelectionViewModel: ObservableObject {
             self.writeError = true
             self.sendingBundle = false
         }
-        
     }
     
     func internetMonitoring() {
@@ -565,14 +558,14 @@ class SelectionViewModel: ObservableObject {
                 return
             }
             
-            //clue_bgBMP.bmp
-            if selectedUrl.lastPathComponent == "clue_bgBMP.bmp" {
-                print("Got one")
-                copiedFiles.removeFirst()
-                self.transferFiles(files: copiedFiles)
-               
-
-            }
+//            //clue_bgBMP.bmp
+//            if selectedUrl.lastPathComponent == "clue_bgBMP.bmp" {
+//                print("Got one")
+//                copiedFiles.removeFirst()
+//                self.transferFiles(files: copiedFiles)
+//
+//
+//            }
             
             if selectedUrl.deletingLastPathComponent().lastPathComponent == "CircuitPython 7.x"{
                 
@@ -622,6 +615,22 @@ class SelectionViewModel: ObservableObject {
 
             }
             
+//            if selectedUrl.deletingLastPathComponent().lastPathComponent == "clue_bgBMP.bmp"{
+//                
+//                self.listDirectoryCommand(path: "") { result in
+//                    switch result {
+//                        
+//                    case .success(let contents):
+//                        if contents!.contains(where: { name in name.name == selectedUrl.lastPathComponent}) {
+//                        print("yur we got one")
+//                        }
+//                            
+//                    case .failure(_):
+//                        print("Failure")
+//                    }
+//                }
+//                
+//            }
             
             
             else if selectedUrl.deletingLastPathComponent().lastPathComponent == "lib" {
@@ -736,8 +745,6 @@ class SelectionViewModel: ObservableObject {
                 print(error)
             }
         }
-        
-        
         
     }
     

@@ -8,8 +8,6 @@
 import SwiftUI
 import FileTransferClient
 
-// The state should be used in the viewModel
-
 class GlobalString: ObservableObject {
     @Published var projectString = ""
     @Published var downloadLinkString = ""
@@ -26,10 +24,13 @@ class GlobalString: ObservableObject {
 }
 
 
-struct DemoSubview: View{
- 
+struct DemoSubview: View {
+    @EnvironmentObject private var connectionManager: FileTransferConnectionManager
+
     @State var transferInProgress = false
     @State var isDownloaded = false
+    
+  //  @State private var testState = DownloadState.idle
     
     @EnvironmentObject var globalString : GlobalString
     
@@ -39,12 +40,13 @@ struct DemoSubview: View{
     
     @State private var toggleView: Bool = false
     
-    let title: String
-    let image: String
-    let description: String
-    let learnGuideLink: URLRequest
-    let downloadLink: String
-    let compatibility: [String]
+    let resultItem: ResultItem
+    
+//    @ObservedObject private var testState: WrappedStruct<DownloadState>
+//    init(testState:DownloadState) {
+//        _testState = ObservedObject(wrappedValue: WrappedStruct(withItem: testState))
+//       }
+    
     
     @EnvironmentObject var rootViewModel: RootViewModel
     @StateObject var downloadModel = DownloadViewModel()
@@ -69,14 +71,41 @@ struct DemoSubview: View{
             
             VStack(alignment: .leading, spacing: 0, content: {
                 
-                ImageWithURL(image)
+                ImageWithURL(resultItem.projectImage)
                     .scaledToFit()
                     .frame(maxWidth: .infinity)
                     .cornerRadius(14)
                     .padding(.top, 30)
 
+                Text("Test Button")
+                    .padding(.top, 30)
+                    .onAppear(){
+                        print("On Appear: \(viewModel.texttest)")
+                    }
+                    .onTapGesture {
+                       print("Attempting to transfer...")
+                        viewModel.getProjectURL(nameOf: resultItem.projectName)
+                    }
                 
-                Text(description)
+//                switch testState {
+//                case .idle:
+//                    Text("Is idle")
+//                    
+//                case .downloading:
+//                    Text("Is downloading")
+//                    
+//                case .transferring:
+//                    Text("Is transferring")
+//                    
+//                case .complete:
+//                    Text("Is complete")
+//                case .failed:
+//                    Text("Is failed")
+//                default:
+//                    Text("default")
+//                }
+                
+                Text(resultItem.description)
                     .font(Font.custom("ReadexPro-Regular", size: 18))
                     .multilineTextAlignment(.leading)
                     .minimumScaleFactor(0.1)
@@ -86,7 +115,7 @@ struct DemoSubview: View{
                     .padding(.top, 5)
                     
                 
-                ForEach(compatibility, id: \.self) { string in
+                ForEach(resultItem.compatibility, id: \.self) { string in
                     if string == "circuitplayground_bluefruit" {
                         
                         HStack {
@@ -127,7 +156,7 @@ struct DemoSubview: View{
                     .padding(.top, 20)
             }
             .sheet(isPresented: $showWebViewPopover, content: {
-                WebView(URLRequest(url: learnGuideLink.url!))
+                WebView(URLRequest(url: URL(string: resultItem.learnGuideLink)! ))
             })
             
             
@@ -135,44 +164,26 @@ struct DemoSubview: View{
             
             if isConnected {
                 
-                if compatibility.contains(bindingString) {
+                if resultItem.compatibility.contains(bindingString) {
                   
                     
-
-                    
-                    if downloadStateBinder == .idle {
-                        
-                       
+                    if viewModel.state == .idle {
                         
                         Button(action: {
 
-                           
-                            
-                            downloadStateBinder = .transferring
-                            globalString.isSendingG = true
-                            globalString.counterG = 0
-                            globalString.numberOfFilesG = 1
-
-
-                            globalString.downloadLinkString = downloadLink
-                            globalString.projectString = title
-                            globalString.attemptToDownload.toggle()
-
-
-
-
-
+                            viewModel.state = .transferring
+                            viewModel.getProjectURL(nameOf: resultItem.projectName)
+                          
                             if selectionModel.isConnectedToInternet == false {
                                 print("Going offline...")
-                                downloadStateBinder = .transferring
-
-                                globalString.projectString = title
-                                globalString.attemptToSend.toggle()
+                                viewModel.state = .transferring
+                                viewModel.getProjectURL(nameOf: resultItem.projectName)
                             }
 
                             if viewModel.projectDownloaded == false && selectionModel.isConnectedToInternet == false {
+                                print("No Internet Connection and Project not downloaded.")
                                 offlineWithoutProject = true
-                                downloadStateBinder = .idle
+                                viewModel.state  = .idle
 
                             }
 
@@ -188,22 +199,18 @@ struct DemoSubview: View{
                         }
                     }
                     
-                    if downloadStateBinder == .failed {
+                    if viewModel.state  == .failed {
                         
                         FailedButton()
                             .padding(.top, 20)
                     }
                     
                     
-                    if downloadStateBinder == .transferring {
+                    if viewModel.state  == .transferring {
+                        
                         
                         Button(action: {
-                           
-                            print("Project Selected: \(title) - DemoSubView")
-
-                            globalString.projectString = title
-                            globalString.numberOfTimesDownloaded += 1
-
+                            print("Project Selected: \(resultItem.projectName) - DemoSubView")
                         }) {
 
                             DownloadingButton()
@@ -211,31 +218,25 @@ struct DemoSubview: View{
                         }
                         .disabled(true)
 
+                        VStack(alignment: .center, spacing: 0) {
+                            ProgressView("", value: CGFloat(viewModel.counter), total: CGFloat(viewModel.numOfFiles) )
+                                .padding(.horizontal, 90)
+                                .padding(.top, -8)
+                                .padding(.bottom, 10)
+                                .accentColor(Color.gray)
+                                .scaleEffect(x: 1, y: 2, anchor: .center)
+                                .cornerRadius(10)
+                                .frame(height: 10)
 
-
-                        if globalString.isSendingG {
-
-                            VStack(alignment: .center, spacing: 0) {
-                                ProgressView("", value: CGFloat(globalString.counterG), total: CGFloat(globalString.numberOfFilesG) )
-                                    .padding(.horizontal, 90)
-                                    .padding(.top, -8)
-                                    .padding(.bottom, 10)
-                                    .accentColor(Color.gray)
-                                    .scaleEffect(x: 1, y: 2, anchor: .center)
-                                    .cornerRadius(10)
-                                    .frame(height: 10)
-
-                                ProgressView()
-                            }
-
+                            ProgressView()
                         }
-
+                        
                         
                     }
                     
 
                     
-                    if downloadStateBinder == .complete {
+                    if viewModel.state  == .complete {
                         
                         CompleteButton()
                             .padding(.top, 20)
@@ -266,7 +267,7 @@ struct DemoSubview: View{
                         // Handle acknowledgement.
                         print("OK")
                         offlineWithoutProject = false
-                        downloadStateBinder = .idle
+                        viewModel.state = .idle
                         selectionModel.state = .idle
                         print("\(offlineWithoutProject)")
                     }
@@ -278,28 +279,42 @@ struct DemoSubview: View{
                 }
         
         .onChange(of: downloadModel.isDownloading, perform: { newValue in
-            viewModel.getProjectForSubClass(nameOf: title)
+            viewModel.getProjectForSubClass(nameOf: resultItem.projectName)
         })
         
         .onChange(of: downloadModel.didDownloadBundle, perform: { newValue in
-            print("For project: \(title), project download is \(newValue)")
+            print("For project: \(resultItem.projectName), project download is \(newValue)")
             
-            globalString.projectString = title
+            globalString.projectString = resultItem.projectName
             
             if newValue {
                 DispatchQueue.main.async {
-                    print("Getting project from Subclass \(title)")
-                    viewModel.getProjectForSubClass(nameOf: title)
+                    print("Getting project from Subclass \(resultItem.projectName)")
+                    viewModel.getProjectForSubClass(nameOf: resultItem.projectName)
                     isDownloaded = true
                 }
             }else {
-                print("Is not downloaded")
+                print("was not downloaded")
                 isDownloaded = false
             }
             
         })
+        
+        .onChange(of: connectionManager.selectedClient) { selectedClient in
+            viewModel.setup(fileTransferClient: selectedClient)
+        }
+        .onAppear {
+           // downloadModel.delegate = self
+            print("SelectionView")
+            viewModel.setup(fileTransferClient: connectionManager.selectedClient)
+            print("in cell model")
+            viewModel.readFile(filename: "boot_out.txt")
+            viewModel.readBoardStatus()
+        }
+    
+        
         .onAppear(perform: {
-            viewModel.getProjectForSubClass(nameOf: title)
+            viewModel.getProjectForSubClass(nameOf: resultItem.projectName)
             if viewModel.projectDownloaded {
                 isDownloaded = true
             } else {
@@ -310,6 +325,8 @@ struct DemoSubview: View{
         .padding(.top, 8)
         
     }
+    
+
 }
 
 

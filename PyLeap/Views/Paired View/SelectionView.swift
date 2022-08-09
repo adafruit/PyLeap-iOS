@@ -22,7 +22,7 @@ struct SelectionView: View {
     @StateObject private var rootModel = RootViewModel()
     @StateObject var downloadModel = DownloadViewModel()
     @StateObject var spotlight = SpotlightCounter()
-    
+    @StateObject var subCellViewModel = SubCellViewModel()
     //clearKnownPeripheralUUIDs
     
     @State private var isConnected = false
@@ -285,6 +285,8 @@ struct SelectionView: View {
             }
         })
         
+
+        
         .onChange(of: viewModel.writeError, perform: { newValue in
             print("Change happened! \(newValue)")
             
@@ -324,6 +326,7 @@ struct SelectionView: View {
         
         .onChange(of: globalString.attemptToDownload, perform: { newValue in
             print("Start Download Process\(globalString.downloadLinkString) - \(globalString.projectString)")
+            
             downloadModel.startDownload(urlString: globalString.downloadLinkString, projectTitle: globalString.projectString)
             
         })
