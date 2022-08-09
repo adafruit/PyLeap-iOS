@@ -34,7 +34,6 @@
 		<string>ReadexPro-Regular.ttf</string>
 		<string>ReadexPro-Light.ttf</string>
 		<string>ReadexPro-Bold.ttf</string>
-		<string>ReadexPro-SemiBold.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
