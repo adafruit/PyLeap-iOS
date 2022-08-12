@@ -80,7 +80,7 @@ struct DemoSubview: View {
                     .minimumScaleFactor(0.1)
                     .padding(.top, 20)
                 Text("Compatible with:")
-                    .font(Font.custom("ReadexPro-SemiBold", size: 18))
+                    .font(Font.custom("ReadexPro-Bold", size: 18))
                     .padding(.top, 5)
                     
                 

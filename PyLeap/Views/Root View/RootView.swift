@@ -43,6 +43,9 @@ struct RootView: View {
             case .fileTransfer:
                 SelectionView()
                 
+            case .wifi:
+                WifiView()
+                
 //            case .test:
 //                ReconnectionView()
 //

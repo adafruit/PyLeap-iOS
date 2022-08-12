@@ -44,15 +44,7 @@ struct HeaderView: View {
         .frame(maxHeight: 120)
         .background(Color("pyleap_gray"))
       
-//        Button(action: {
-//                    self.showSheetView.toggle()
-//                }) {
-//                    PairingTutorialButton()
-//                }.sheet(isPresented: $showSheetView) {
-//                    PairingTutorialView()
-//                }
-        
-        
+
     }
 }
 

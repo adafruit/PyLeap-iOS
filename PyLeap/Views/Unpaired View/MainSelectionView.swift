@@ -38,6 +38,25 @@ struct MainSelectionView: View {
         VStack(spacing: 0) {
             HeaderView()
             
+            
+            HStack(alignment: .center, spacing: 8, content: {
+                
+                Button {
+                    rootViewModel.goToWifiView()
+                } label: {
+                    Text("Connect to Wifi")
+                        .font(Font.custom("ReadexPro-Regular", size: 16))
+                        .underline()
+                }
+
+            })
+            .padding(.all, 0.0)
+            .frame(maxWidth: .infinity)
+            .frame(maxHeight: 40)
+            .background(Color("pyleap_blue"))
+            .foregroundColor(.white)
+            
+            
             HStack(alignment: .center, spacing: 8, content: {
                 Text("Not Connected to a Device.")
                     .font(Font.custom("ReadexPro-Regular", size: 16))
@@ -47,8 +66,6 @@ struct MainSelectionView: View {
                     Text("Connect Now")
                         .font(Font.custom("ReadexPro-Regular", size: 16))
                         .underline()
-                       
-                        
                 }
 
             })

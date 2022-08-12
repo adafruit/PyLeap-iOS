@@ -18,6 +18,7 @@ class RootViewModel: ObservableObject {
         case bluetoothPairing
         case bluetoothStatus
         case fileTransfer
+        case wifi
         //case test
         case mainSelection
     }
@@ -27,6 +28,10 @@ class RootViewModel: ObservableObject {
     
     func goToTest(){
         //destination = .test
+    }
+    
+    func goToWifiView() {
+        destination = .wifi
     }
     
     func goTobluetoothPairing() {

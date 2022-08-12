@@ -38,10 +38,7 @@
 		D56F640C270242CA000E5975 /* UIColor+LightAndDark.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F6407270242CA000E5975 /* UIColor+LightAndDark.swift */; };
 		D56F640D270242CA000E5975 /* FileTransferPathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F640A270242CA000E5975 /* FileTransferPathUtils.swift */; };
 		D56F640E270242CA000E5975 /* String+DeletingPrefix.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F6408270242CA000E5975 /* String+DeletingPrefix.swift */; };
-		D57858E9283277AF008E8BE4 /* pairingAnimation.gif in Resources */ = {isa = PBXBuildFile; fileRef = D57858E8283277AF008E8BE4 /* pairingAnimation.gif */; };
-		D57858EB28327AC4008E8BE4 /* pairingAni.gif in Resources */ = {isa = PBXBuildFile; fileRef = D57858EA28327AC4008E8BE4 /* pairingAni.gif */; };
 		D57858ED28327E18008E8BE4 /* PairingTutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57858EC28327E18008E8BE4 /* PairingTutorialView.swift */; };
-		D57858EF283289DF008E8BE4 /* completedPair.gif in Resources */ = {isa = PBXBuildFile; fileRef = D57858EE283289DF008E8BE4 /* completedPair.gif */; };
 		D57858F12832D9C8008E8BE4 /* CreditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57858F02832D9C8008E8BE4 /* CreditView.swift */; };
 		D57858F328333CBC008E8BE4 /* TroubleshootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57858F228333CBC008E8BE4 /* TroubleshootView.swift */; };
 		D58182FB27F732E40091C43B /* SubCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58182FA27F732E40091C43B /* SubCellViewModel.swift */; };
@@ -49,6 +46,10 @@
 		D58358EE27DA5C0F0069F7F5 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58358ED27DA5C0F0069F7F5 /* NetworkError.swift */; };
 		D585CABE276CFC040010185A /* FileTransferClient in Frameworks */ = {isa = PBXBuildFile; productRef = D585CABD276CFC040010185A /* FileTransferClient */; };
 		D58D887B26CC02B60085604A /* OnboardingViewPure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58D887A26CC02B60085604A /* OnboardingViewPure.swift */; };
+		D58E1C8828A2B10B00AB683E /* WifiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58E1C8728A2B10B00AB683E /* WifiView.swift */; };
+		D58E1C8A28A2B15E00AB683E /* WifiViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58E1C8928A2B15E00AB683E /* WifiViewModel.swift */; };
+		D58E1C8D28A2B32C00AB683E /* Wifi_ifaddrs.m in Sources */ = {isa = PBXBuildFile; fileRef = D58E1C8C28A2B32C00AB683E /* Wifi_ifaddrs.m */; };
+		D58E1C8F28A30A5300AB683E /* WifiNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58E1C8E28A30A5300AB683E /* WifiNetworkService.swift */; };
 		D595FC2E2812C23D00569D8C /* Image Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D595FC2D2812C23D00569D8C /* Image Extension.swift */; };
 		D59DFD8F268A4A4D001737F6 /* BTConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFD8E268A4A4D001737F6 /* BTConnectionView.swift */; };
 		D59DFDB6268CD052001737F6 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFDB5268CD052001737F6 /* AppEnvironment.swift */; };
@@ -64,7 +65,6 @@
 		D5C474CB27E39FE1002DD160 /* ReadexPro-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D5C474C227E39FAD002DD160 /* ReadexPro-Bold.ttf */; };
 		D5C74DF327EB92FA00730505 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C74DF227EB92FA00730505 /* View+Extensions.swift */; };
 		D5C74DF527EB93E300730505 /* DemoViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C74DF427EB93E300730505 /* DemoViewCell.swift */; };
-		D5C74DF727EBA47E00730505 /* ReadexPro-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D5C74DF627EBA47C00730505 /* ReadexPro-SemiBold.ttf */; };
 		D5CC6BAE2816FD27008629FB /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CC6BAD2816FD27008629FB /* Config.swift */; };
 		D5CC6BB02816FDA1008629FB /* BluetoothStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CC6BAF2816FDA1008629FB /* BluetoothStatusView.swift */; };
 		D5CC6BB428173AE0008629FB /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5CC6BB328173AE0008629FB /* HeaderView.swift */; };
@@ -113,10 +113,7 @@
 		D56F6407270242CA000E5975 /* UIColor+LightAndDark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+LightAndDark.swift"; sourceTree = "<group>"; };
 		D56F6408270242CA000E5975 /* String+DeletingPrefix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+DeletingPrefix.swift"; sourceTree = "<group>"; };
 		D56F640A270242CA000E5975 /* FileTransferPathUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTransferPathUtils.swift; sourceTree = "<group>"; };
-		D57858E8283277AF008E8BE4 /* pairingAnimation.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = pairingAnimation.gif; path = ../../../../Desktop/pairingAnimation.gif; sourceTree = "<group>"; };
-		D57858EA28327AC4008E8BE4 /* pairingAni.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = pairingAni.gif; path = ../../../../Desktop/pairingAni.gif; sourceTree = "<group>"; };
 		D57858EC28327E18008E8BE4 /* PairingTutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingTutorialView.swift; sourceTree = "<group>"; };
-		D57858EE283289DF008E8BE4 /* completedPair.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = completedPair.gif; path = ../../../../Desktop/completedPair.gif; sourceTree = "<group>"; };
 		D57858F02832D9C8008E8BE4 /* CreditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditView.swift; sourceTree = "<group>"; };
 		D57858F228333CBC008E8BE4 /* TroubleshootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TroubleshootView.swift; sourceTree = "<group>"; };
 		D58182FA27F732E40091C43B /* SubCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubCellViewModel.swift; sourceTree = "<group>"; };
@@ -124,6 +121,11 @@
 		D58358ED27DA5C0F0069F7F5 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		D585CABC276CF97B0010185A /* FileTransferClient */ = {isa = PBXFileReference; lastKnownFileType = folder; path = FileTransferClient; sourceTree = "<group>"; };
 		D58D887A26CC02B60085604A /* OnboardingViewPure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewPure.swift; sourceTree = "<group>"; };
+		D58E1C8728A2B10B00AB683E /* WifiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiView.swift; sourceTree = "<group>"; };
+		D58E1C8928A2B15E00AB683E /* WifiViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiViewModel.swift; sourceTree = "<group>"; };
+		D58E1C8B28A2B32B00AB683E /* PyLeap-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PyLeap-Bridging-Header.h"; sourceTree = "<group>"; };
+		D58E1C8C28A2B32C00AB683E /* Wifi_ifaddrs.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Wifi_ifaddrs.m; sourceTree = "<group>"; };
+		D58E1C8E28A30A5300AB683E /* WifiNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiNetworkService.swift; sourceTree = "<group>"; };
 		D595FC2D2812C23D00569D8C /* Image Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image Extension.swift"; sourceTree = "<group>"; };
 		D59DFD8E268A4A4D001737F6 /* BTConnectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTConnectionView.swift; sourceTree = "<group>"; };
 		D59DFDB5268CD052001737F6 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
@@ -139,7 +141,6 @@
 		D5C474C727E39FC8002DD160 /* ReadexPro-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ReadexPro-Regular.ttf"; sourceTree = "<group>"; };
 		D5C74DF227EB92FA00730505 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		D5C74DF427EB93E300730505 /* DemoViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoViewCell.swift; sourceTree = "<group>"; };
-		D5C74DF627EBA47C00730505 /* ReadexPro-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "ReadexPro-SemiBold.ttf"; path = "../../../../../../../Downloads/Nunito,Readex_Pro-2/Readex_Pro/static/ReadexPro-SemiBold.ttf"; sourceTree = "<group>"; };
 		D5CC6BAD2816FD27008629FB /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		D5CC6BAF2816FDA1008629FB /* BluetoothStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothStatusView.swift; sourceTree = "<group>"; };
 		D5CC6BB328173AE0008629FB /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
@@ -209,9 +210,6 @@
 				D59DFDB5268CD052001737F6 /* AppEnvironment.swift */,
 				D534F3FB280B59090053699C /* ExampleView.swift */,
 				D544A2502822D4730038D483 /* Spotlight Extension.swift */,
-				D57858EE283289DF008E8BE4 /* completedPair.gif */,
-				D57858EA28327AC4008E8BE4 /* pairingAni.gif */,
-				D57858E8283277AF008E8BE4 /* pairingAnimation.gif */,
 				D5C74DF027EB92E900730505 /* Model */,
 				D59DFDB2268CCEAC001737F6 /* Views */,
 				D5C74DEE27EB91D600730505 /* Networking */,
@@ -289,9 +287,22 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		D58E1C8628A2B0DE00AB683E /* Wifi_test */ = {
+			isa = PBXGroup;
+			children = (
+				D58E1C8728A2B10B00AB683E /* WifiView.swift */,
+				D58E1C8928A2B15E00AB683E /* WifiViewModel.swift */,
+				D58E1C8E28A30A5300AB683E /* WifiNetworkService.swift */,
+				D58E1C8C28A2B32C00AB683E /* Wifi_ifaddrs.m */,
+				D58E1C8B28A2B32B00AB683E /* PyLeap-Bridging-Header.h */,
+			);
+			path = Wifi_test;
+			sourceTree = "<group>";
+		};
 		D59DFDB2268CCEAC001737F6 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D58E1C8628A2B0DE00AB683E /* Wifi_test */,
 				D5507ACE26C668BC00512BAA /* UI Components */,
 				D59DFDB3268CCEB9001737F6 /* Onboarding Views */,
 				D5C474AA27E1746F002DD160 /* WebView */,
@@ -350,7 +361,6 @@
 				D5C474C727E39FC8002DD160 /* ReadexPro-Regular.ttf */,
 				D5C474C527E39FC8002DD160 /* ReadexPro-Light.ttf */,
 				D5C474C227E39FAD002DD160 /* ReadexPro-Bold.ttf */,
-				D5C74DF627EBA47C00730505 /* ReadexPro-SemiBold.ttf */,
 			);
 			path = ReadexPro;
 			sourceTree = "<group>";
@@ -481,6 +491,7 @@
 				TargetAttributes = {
 					D52F7E6F2672F4C400911D43 = {
 						CreatedOnToolsVersion = 12.5;
+						LastSwiftMigration = 1340;
 					};
 				};
 			};
@@ -512,11 +523,7 @@
 			files = (
 				D52F7E7B2672F4C500911D43 /* Preview Assets.xcassets in Resources */,
 				D5C474C827E39FD7002DD160 /* ReadexPro-Medium.ttf in Resources */,
-				D57858E9283277AF008E8BE4 /* pairingAnimation.gif in Resources */,
-				D57858EB28327AC4008E8BE4 /* pairingAni.gif in Resources */,
-				D5C74DF727EBA47E00730505 /* ReadexPro-SemiBold.ttf in Resources */,
 				D5C474C927E39FDA002DD160 /* ReadexPro-Regular.ttf in Resources */,
-				D57858EF283289DF008E8BE4 /* completedPair.gif in Resources */,
 				D5C474CA27E39FDD002DD160 /* ReadexPro-Light.ttf in Resources */,
 				D5C474CB27E39FE1002DD160 /* ReadexPro-Bold.ttf in Resources */,
 				D52F7E782672F4C500911D43 /* Assets.xcassets in Resources */,
@@ -535,11 +542,13 @@
 				D58182FB27F732E40091C43B /* SubCellViewModel.swift in Sources */,
 				D544A1D2281B9BB70038D483 /* Buttons.swift in Sources */,
 				D5D1F4AE27ECFDA10040E2BF /* GifImage.swift in Sources */,
+				D58E1C8A28A2B15E00AB683E /* WifiViewModel.swift in Sources */,
 				D5C474AC27E174A5002DD160 /* WebView Content.swift in Sources */,
 				D544A2512822D4730038D483 /* Spotlight Extension.swift in Sources */,
 				D56F640D270242CA000E5975 /* FileTransferPathUtils.swift in Sources */,
 				D5507AD326C668BC00512BAA /* SelectionView.swift in Sources */,
 				D58182FD27FBF09F0091C43B /* BLEPairingView.swift in Sources */,
+				D58E1C8F28A30A5300AB683E /* WifiNetworkService.swift in Sources */,
 				D59DFDC4268CFAB4001737F6 /* OnboardingDataModel.swift in Sources */,
 				D5CC6BB02816FDA1008629FB /* BluetoothStatusView.swift in Sources */,
 				D5597C0426ADDD5E00DF17C0 /* StartupViewModel.swift in Sources */,
@@ -551,6 +560,7 @@
 				D57858ED28327E18008E8BE4 /* PairingTutorialView.swift in Sources */,
 				D58358EE27DA5C0F0069F7F5 /* NetworkError.swift in Sources */,
 				D5597C0B26AF018800DF17C0 /* HideKeyboard.swift in Sources */,
+				D58E1C8828A2B10B00AB683E /* WifiView.swift in Sources */,
 				D5D1F4A627EBA9C80040E2BF /* DemoSubCellView.swift in Sources */,
 				D57858F12832D9C8008E8BE4 /* CreditView.swift in Sources */,
 				D59DFDB6268CD052001737F6 /* AppEnvironment.swift in Sources */,
@@ -583,6 +593,7 @@
 				D5597C0226ADDCE300DF17C0 /* StartupView.swift in Sources */,
 				D5D1F4B027ECFDE00040E2BF /* NavBarModifier.swift in Sources */,
 				D5597C0C26AF018800DF17C0 /* View+If.swift in Sources */,
+				D58E1C8D28A2B32C00AB683E /* Wifi_ifaddrs.m in Sources */,
 				D52BE7EE269DF36E00630900 /* DownloadViewModel.swift in Sources */,
 				D59E31AA281B8DD300D24211 /* DownloadState.swift in Sources */,
 				D5C74DF327EB92FA00730505 /* View+Extensions.swift in Sources */,
@@ -715,6 +726,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 14;
@@ -732,6 +744,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "PyLeap/Views/Wifi_test/PyLeap-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -742,6 +756,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 14;
@@ -759,6 +774,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "PyLeap/Views/Wifi_test/PyLeap-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
