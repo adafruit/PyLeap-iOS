@@ -7,8 +7,21 @@
 
 import Foundation
 
-class WifiNetworkService{
+enum NetworkerError: Error {
+  case badResponse
+  case badStatusCode(Int)
+  case badData
+}
+
+class WifiNetworkService {
     
+    private let session: URLSession
+    
+    init() {
+      let config = URLSessionConfiguration.default
+      session = URLSession(configuration: config)
+    }
+
     func getIPAddress() -> String? {
         var address: String?
         var ifaddr: UnsafeMutablePointer<ifaddrs>? = nil
@@ -38,6 +51,8 @@ class WifiNetworkService{
         }
         return address ?? ""
     }
+    
+    
     
 //    public static func request(_ url: URLConvertible,
 //                               method: HTTPMethod = .get,

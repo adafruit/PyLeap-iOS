@@ -75,6 +75,8 @@
 		D5D1F4B027ECFDE00040E2BF /* NavBarModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D1F4AF27ECFDE00040E2BF /* NavBarModifier.swift */; };
 		D5D1F4B227ECFF760040E2BF /* ProjectsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D1F4B127ECFF760040E2BF /* ProjectsModel.swift */; };
 		D5D1F4B827ED2F4F0040E2BF /* FileManagerCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D1F4B727ED2F4F0040E2BF /* FileManagerCheck.swift */; };
+		D5D7DF2B28B3E321008552D1 /* BasicCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D7DF2A28B3E321008552D1 /* BasicCredentials.swift */; };
+		D5D7DF2D28B489C0008552D1 /* WebDirectoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D7DF2C28B489C0008552D1 /* WebDirectoryModel.swift */; };
 		D5F53CEB2694B524007634C2 /* Blinka Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F53CEA2694B524007634C2 /* Blinka Animation.swift */; };
 		D5F53CED2694B7A9007634C2 /* OnboardingBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F53CEC2694B7A9007634C2 /* OnboardingBackgroundView.swift */; };
 /* End PBXBuildFile section */
@@ -151,6 +153,8 @@
 		D5D1F4AF27ECFDE00040E2BF /* NavBarModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBarModifier.swift; sourceTree = "<group>"; };
 		D5D1F4B127ECFF760040E2BF /* ProjectsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsModel.swift; sourceTree = "<group>"; };
 		D5D1F4B727ED2F4F0040E2BF /* FileManagerCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerCheck.swift; sourceTree = "<group>"; };
+		D5D7DF2A28B3E321008552D1 /* BasicCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicCredentials.swift; sourceTree = "<group>"; };
+		D5D7DF2C28B489C0008552D1 /* WebDirectoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDirectoryModel.swift; sourceTree = "<group>"; };
 		D5F53CEA2694B524007634C2 /* Blinka Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Blinka Animation.swift"; sourceTree = "<group>"; };
 		D5F53CEC2694B7A9007634C2 /* OnboardingBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingBackgroundView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -293,6 +297,7 @@
 				D58E1C8728A2B10B00AB683E /* WifiView.swift */,
 				D58E1C8928A2B15E00AB683E /* WifiViewModel.swift */,
 				D58E1C8E28A30A5300AB683E /* WifiNetworkService.swift */,
+				D5D7DF2A28B3E321008552D1 /* BasicCredentials.swift */,
 				D58E1C8C28A2B32C00AB683E /* Wifi_ifaddrs.m */,
 				D58E1C8B28A2B32B00AB683E /* PyLeap-Bridging-Header.h */,
 			);
@@ -391,6 +396,7 @@
 			isa = PBXGroup;
 			children = (
 				D5D1F4B127ECFF760040E2BF /* ProjectsModel.swift */,
+				D5D7DF2C28B489C0008552D1 /* WebDirectoryModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -552,6 +558,7 @@
 				D59DFDC4268CFAB4001737F6 /* OnboardingDataModel.swift in Sources */,
 				D5CC6BB02816FDA1008629FB /* BluetoothStatusView.swift in Sources */,
 				D5597C0426ADDD5E00DF17C0 /* StartupViewModel.swift in Sources */,
+				D5D7DF2B28B3E321008552D1 /* BasicCredentials.swift in Sources */,
 				D56F640C270242CA000E5975 /* UIColor+LightAndDark.swift in Sources */,
 				D5F53CED2694B7A9007634C2 /* OnboardingBackgroundView.swift in Sources */,
 				D5D1F4B227ECFF760040E2BF /* ProjectsModel.swift in Sources */,
@@ -590,6 +597,7 @@
 				D59DFDBA268CDEEC001737F6 /* RootViewModel.swift in Sources */,
 				D5C74DF527EB93E300730505 /* DemoViewCell.swift in Sources */,
 				D52BE85526A0E5A400630900 /* PeripheralList.swift in Sources */,
+				D5D7DF2D28B489C0008552D1 /* WebDirectoryModel.swift in Sources */,
 				D5597C0226ADDCE300DF17C0 /* StartupView.swift in Sources */,
 				D5D1F4B027ECFDE00040E2BF /* NavBarModifier.swift in Sources */,
 				D5597C0C26AF018800DF17C0 /* View+If.swift in Sources */,

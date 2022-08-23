@@ -65,5 +65,7 @@
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
+	<key></key>
+	<string></string>
 </dict>
 </plist>

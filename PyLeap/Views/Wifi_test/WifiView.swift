@@ -13,7 +13,7 @@ struct WifiView: View {
     @State private var foundIPAddress: String = ""
     // My Wifi - 192.168.1.111
     @State var showConfirmation: Bool = true
-    
+    @ObservedObject var link = WifiViewModel()
     @State private var presentAlert = false
     
     var body: some View {
@@ -46,6 +46,14 @@ struct WifiView: View {
                 }
             }
             
+            Button("Test curl address") {
+                viewModel.getRequest()
+            }
+            
+            Button("Send test file") {
+                viewModel.putRequest()
+            }
+            
             ZStack {
                 Circle()
                     .foregroundColor(Color("pyleap_green"))
@@ -59,7 +67,30 @@ struct WifiView: View {
                 }
             .isHidden(showConfirmation)
             
-
+            List(viewModel.webDirectoryInfo) { post in
+                HStack(){
+                    
+                    if post.directory == true {
+                        Image(systemName: "folder")
+                    } else {
+                        Image(systemName: "doc")
+                    }
+                    
+                    Text(post.name)
+                    
+                    Spacer()
+                    
+                    if post.file_size > 1000 {
+                        
+                        Text("\(post.file_size/1000) KB")
+                        
+                    } else {
+                        Text("\(post.file_size) Bytes")
+                    }
+                    
+                }
+                
+            }
             
         })
         
