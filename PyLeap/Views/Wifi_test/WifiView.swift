@@ -17,6 +17,8 @@ struct WifiView: View {
     @State private var presentAlert = false
     
     var body: some View {
+        NavigationView {
+        
         VStack(alignment: .center, spacing: 12, content: {
           
             TextField("Enter your IP Address:", text: $ipAddressInput)
@@ -50,8 +52,12 @@ struct WifiView: View {
                 viewModel.getRequest()
             }
             
-            Button("Send test file") {
+            Button("Test file creation") {
                 viewModel.putRequest()
+            }
+            
+            Button("NWBrowser test") {
+                viewModel.test()
             }
             
             ZStack {
@@ -68,32 +74,38 @@ struct WifiView: View {
             .isHidden(showConfirmation)
             
             List(viewModel.webDirectoryInfo) { post in
-                HStack(){
-                    
-                    if post.directory == true {
-                        Image(systemName: "folder")
-                    } else {
-                        Image(systemName: "doc")
-                    }
-                    
-                    Text(post.name)
-                    
-                    Spacer()
-                    
-                    if post.file_size > 1000 {
+               
+                NavigationLink(destination: WifiListDetailView(text: post.name)) {
+                    HStack(){
                         
-                        Text("\(post.file_size/1000) KB")
+                        if post.directory == true {
+                            Image(systemName: "folder")
+                        } else {
+                            Image(systemName: "doc")
+                        }
                         
-                    } else {
-                        Text("\(post.file_size) Bytes")
+                        Text(post.name)
+                        
+                        Spacer()
+                        
+                        if post.file_size > 1000 {
+                            
+                            Text("\(post.file_size/1000) KB")
+                            
+                        } else {
+                            Text("\(post.file_size) Bytes")
+                        }
+                        
                     }
-                    
                 }
+
                 
             }
-            
+            .frame(height: UIScreen.main.bounds.height/2)
         })
         
+        .navigationBarTitle(Text("PyLeap - Wi-Fi"))
+            
         .alert("\"\(ipAddressInput)\" was not found", isPresented: $presentAlert) {
                     Button("OK") {
                         // Handle acknowledgement.
@@ -107,6 +119,7 @@ struct WifiView: View {
                          """)
                     .multilineTextAlignment(.leading)
                 }
+    }
     }
 }
 

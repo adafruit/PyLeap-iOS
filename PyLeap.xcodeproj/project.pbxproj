@@ -58,6 +58,7 @@
 		D59DFDC2268CFA36001737F6 /* OnboardingStepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFDC1268CFA36001737F6 /* OnboardingStepView.swift */; };
 		D59DFDC4268CFAB4001737F6 /* OnboardingDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFDC3268CFAB4001737F6 /* OnboardingDataModel.swift */; };
 		D59E31AA281B8DD300D24211 /* DownloadState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59E31A9281B8DD300D24211 /* DownloadState.swift */; };
+		D5BA1F7A28B52A490012FC62 /* WifiListDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BA1F7928B52A490012FC62 /* WifiListDetailView.swift */; };
 		D5C474AC27E174A5002DD160 /* WebView Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C474AB27E174A5002DD160 /* WebView Content.swift */; };
 		D5C474C827E39FD7002DD160 /* ReadexPro-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D5C474C627E39FC8002DD160 /* ReadexPro-Medium.ttf */; };
 		D5C474C927E39FDA002DD160 /* ReadexPro-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D5C474C727E39FC8002DD160 /* ReadexPro-Regular.ttf */; };
@@ -136,6 +137,7 @@
 		D59DFDC1268CFA36001737F6 /* OnboardingStepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStepView.swift; sourceTree = "<group>"; };
 		D59DFDC3268CFAB4001737F6 /* OnboardingDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingDataModel.swift; sourceTree = "<group>"; };
 		D59E31A9281B8DD300D24211 /* DownloadState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadState.swift; sourceTree = "<group>"; };
+		D5BA1F7928B52A490012FC62 /* WifiListDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiListDetailView.swift; sourceTree = "<group>"; };
 		D5C474AB27E174A5002DD160 /* WebView Content.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WebView Content.swift"; sourceTree = "<group>"; };
 		D5C474C227E39FAD002DD160 /* ReadexPro-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ReadexPro-Bold.ttf"; sourceTree = "<group>"; };
 		D5C474C527E39FC8002DD160 /* ReadexPro-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ReadexPro-Light.ttf"; sourceTree = "<group>"; };
@@ -295,6 +297,7 @@
 			isa = PBXGroup;
 			children = (
 				D58E1C8728A2B10B00AB683E /* WifiView.swift */,
+				D5BA1F7928B52A490012FC62 /* WifiListDetailView.swift */,
 				D58E1C8928A2B15E00AB683E /* WifiViewModel.swift */,
 				D58E1C8E28A30A5300AB683E /* WifiNetworkService.swift */,
 				D5D7DF2A28B3E321008552D1 /* BasicCredentials.swift */,
@@ -562,6 +565,7 @@
 				D56F640C270242CA000E5975 /* UIColor+LightAndDark.swift in Sources */,
 				D5F53CED2694B7A9007634C2 /* OnboardingBackgroundView.swift in Sources */,
 				D5D1F4B227ECFF760040E2BF /* ProjectsModel.swift in Sources */,
+				D5BA1F7A28B52A490012FC62 /* WifiListDetailView.swift in Sources */,
 				D52F7E742672F4C400911D43 /* PyLeapApp.swift in Sources */,
 				D534F3FC280B59090053699C /* ExampleView.swift in Sources */,
 				D57858ED28327E18008E8BE4 /* PairingTutorialView.swift in Sources */,

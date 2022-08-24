@@ -20,14 +20,20 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_circuitpython._tcp</string>
+	</array>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>This app needs access to Bluetooth to connect to Adafruit devices</string>
+	<string>PyLeap requires access to Bluetooth to connect to Adafruit devices</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>This app needs access to Bluetooth to connect to Adafruit devices</string>
+	<string>PyLeap requires access to Bluetooth to connect to Adafruit devices</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>PyLeap uses the local network to communicate with your Adafruit device</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>ReadexPro-Medium.ttf</string>

@@ -7,15 +7,14 @@
 
 import SwiftUI
 import Foundation
-import SystemConfiguration.CaptiveNetwork
 import CoreLocation
-import NetworkExtension
+import Network
 
 class WifiViewModel: ObservableObject {
     
     var wifiNetworkService = WifiNetworkService()
     
-    public let hotspot =  NEHotspotNetwork()
+    let parameter = NWParameters()
     
     @Published var webDirectoryInfo = [WebDirectoryModel]()
     
@@ -43,19 +42,11 @@ class WifiViewModel: ObservableObject {
 //    }
     
     
-
-    
-    func getInfo() {
-        var semaphore = DispatchSemaphore (value: 0)
-        
-        NEHotspotNetwork.fetchCurrent { hotspotNetwork in
-            if let ssid = hotspotNetwork?.ssid {
-                           print(ssid)
-                       }
-        }
-        
+    func test() {
+ 
     }
     
+
     func getRequest() {
       
         var semaphore = DispatchSemaphore (value: 0)
