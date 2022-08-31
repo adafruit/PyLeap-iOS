@@ -35,6 +35,7 @@
 		D5597C0C26AF018800DF17C0 /* View+If.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5597C0926AF018800DF17C0 /* View+If.swift */; };
 		D5597C3B26B98E1E00DF17C0 /* NumbersOnly.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5597C3A26B98E1E00DF17C0 /* NumbersOnly.swift */; };
 		D5640216271B54BF00AE1519 /* MainSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5640215271B54BF00AE1519 /* MainSelectionView.swift */; };
+		D567E2B628B81B730009F768 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D567E2B528B81B730009F768 /* Queue.swift */; };
 		D56F640C270242CA000E5975 /* UIColor+LightAndDark.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F6407270242CA000E5975 /* UIColor+LightAndDark.swift */; };
 		D56F640D270242CA000E5975 /* FileTransferPathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F640A270242CA000E5975 /* FileTransferPathUtils.swift */; };
 		D56F640E270242CA000E5975 /* String+DeletingPrefix.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F6408270242CA000E5975 /* String+DeletingPrefix.swift */; };
@@ -59,6 +60,9 @@
 		D59DFDC4268CFAB4001737F6 /* OnboardingDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFDC3268CFAB4001737F6 /* OnboardingDataModel.swift */; };
 		D59E31AA281B8DD300D24211 /* DownloadState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59E31A9281B8DD300D24211 /* DownloadState.swift */; };
 		D5BA1F7A28B52A490012FC62 /* WifiListDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BA1F7928B52A490012FC62 /* WifiListDetailView.swift */; };
+		D5BA1F7F28B66F280012FC62 /* Bonjour.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BA1F7E28B66F280012FC62 /* Bonjour.swift */; };
+		D5BA1F8128B66F920012FC62 /* CircuitPythonService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BA1F8028B66F920012FC62 /* CircuitPythonService.swift */; };
+		D5BA1F8328B68ED40012FC62 /* NetworkPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BA1F8228B68ED40012FC62 /* NetworkPeripheral.swift */; };
 		D5C474AC27E174A5002DD160 /* WebView Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C474AB27E174A5002DD160 /* WebView Content.swift */; };
 		D5C474C827E39FD7002DD160 /* ReadexPro-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D5C474C627E39FC8002DD160 /* ReadexPro-Medium.ttf */; };
 		D5C474C927E39FDA002DD160 /* ReadexPro-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D5C474C727E39FC8002DD160 /* ReadexPro-Regular.ttf */; };
@@ -113,6 +117,8 @@
 		D5597C0926AF018800DF17C0 /* View+If.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+If.swift"; sourceTree = "<group>"; };
 		D5597C3A26B98E1E00DF17C0 /* NumbersOnly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumbersOnly.swift; sourceTree = "<group>"; };
 		D5640215271B54BF00AE1519 /* MainSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSelectionView.swift; sourceTree = "<group>"; };
+		D567E2B428B80DC10009F768 /* Outline.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Outline.md; sourceTree = "<group>"; };
+		D567E2B528B81B730009F768 /* Queue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 		D56F6407270242CA000E5975 /* UIColor+LightAndDark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+LightAndDark.swift"; sourceTree = "<group>"; };
 		D56F6408270242CA000E5975 /* String+DeletingPrefix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+DeletingPrefix.swift"; sourceTree = "<group>"; };
 		D56F640A270242CA000E5975 /* FileTransferPathUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTransferPathUtils.swift; sourceTree = "<group>"; };
@@ -138,6 +144,9 @@
 		D59DFDC3268CFAB4001737F6 /* OnboardingDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingDataModel.swift; sourceTree = "<group>"; };
 		D59E31A9281B8DD300D24211 /* DownloadState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadState.swift; sourceTree = "<group>"; };
 		D5BA1F7928B52A490012FC62 /* WifiListDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiListDetailView.swift; sourceTree = "<group>"; };
+		D5BA1F7E28B66F280012FC62 /* Bonjour.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bonjour.swift; sourceTree = "<group>"; };
+		D5BA1F8028B66F920012FC62 /* CircuitPythonService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircuitPythonService.swift; sourceTree = "<group>"; };
+		D5BA1F8228B68ED40012FC62 /* NetworkPeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkPeripheral.swift; sourceTree = "<group>"; };
 		D5C474AB27E174A5002DD160 /* WebView Content.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WebView Content.swift"; sourceTree = "<group>"; };
 		D5C474C227E39FAD002DD160 /* ReadexPro-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ReadexPro-Bold.ttf"; sourceTree = "<group>"; };
 		D5C474C527E39FC8002DD160 /* ReadexPro-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ReadexPro-Light.ttf"; sourceTree = "<group>"; };
@@ -216,6 +225,7 @@
 				D59DFDB5268CD052001737F6 /* AppEnvironment.swift */,
 				D534F3FB280B59090053699C /* ExampleView.swift */,
 				D544A2502822D4730038D483 /* Spotlight Extension.swift */,
+				D567E2B428B80DC10009F768 /* Outline.md */,
 				D5C74DF027EB92E900730505 /* Model */,
 				D59DFDB2268CCEAC001737F6 /* Views */,
 				D5C74DEE27EB91D600730505 /* Networking */,
@@ -297,9 +307,13 @@
 			isa = PBXGroup;
 			children = (
 				D58E1C8728A2B10B00AB683E /* WifiView.swift */,
-				D5BA1F7928B52A490012FC62 /* WifiListDetailView.swift */,
 				D58E1C8928A2B15E00AB683E /* WifiViewModel.swift */,
+				D567E2B528B81B730009F768 /* Queue.swift */,
+				D5BA1F7928B52A490012FC62 /* WifiListDetailView.swift */,
+				D5BA1F7E28B66F280012FC62 /* Bonjour.swift */,
+				D5BA1F8028B66F920012FC62 /* CircuitPythonService.swift */,
 				D58E1C8E28A30A5300AB683E /* WifiNetworkService.swift */,
+				D5BA1F8228B68ED40012FC62 /* NetworkPeripheral.swift */,
 				D5D7DF2A28B3E321008552D1 /* BasicCredentials.swift */,
 				D58E1C8C28A2B32C00AB683E /* Wifi_ifaddrs.m */,
 				D58E1C8B28A2B32B00AB683E /* PyLeap-Bridging-Header.h */,
@@ -557,6 +571,7 @@
 				D56F640D270242CA000E5975 /* FileTransferPathUtils.swift in Sources */,
 				D5507AD326C668BC00512BAA /* SelectionView.swift in Sources */,
 				D58182FD27FBF09F0091C43B /* BLEPairingView.swift in Sources */,
+				D5BA1F8128B66F920012FC62 /* CircuitPythonService.swift in Sources */,
 				D58E1C8F28A30A5300AB683E /* WifiNetworkService.swift in Sources */,
 				D59DFDC4268CFAB4001737F6 /* OnboardingDataModel.swift in Sources */,
 				D5CC6BB02816FDA1008629FB /* BluetoothStatusView.swift in Sources */,
@@ -567,6 +582,7 @@
 				D5D1F4B227ECFF760040E2BF /* ProjectsModel.swift in Sources */,
 				D5BA1F7A28B52A490012FC62 /* WifiListDetailView.swift in Sources */,
 				D52F7E742672F4C400911D43 /* PyLeapApp.swift in Sources */,
+				D567E2B628B81B730009F768 /* Queue.swift in Sources */,
 				D534F3FC280B59090053699C /* ExampleView.swift in Sources */,
 				D57858ED28327E18008E8BE4 /* PairingTutorialView.swift in Sources */,
 				D58358EE27DA5C0F0069F7F5 /* NetworkError.swift in Sources */,
@@ -589,6 +605,7 @@
 				D5507AD026C668BC00512BAA /* SelectionViewModel.swift in Sources */,
 				D5597C3B26B98E1E00DF17C0 /* NumbersOnly.swift in Sources */,
 				D5D1F4A427EBA7E30040E2BF /* NetworkManager.swift in Sources */,
+				D5BA1F8328B68ED40012FC62 /* NetworkPeripheral.swift in Sources */,
 				D59DFDBC268CE0EB001737F6 /* RootView.swift in Sources */,
 				D595FC2E2812C23D00569D8C /* Image Extension.swift in Sources */,
 				D59DFD8F268A4A4D001737F6 /* BTConnectionView.swift in Sources */,
@@ -608,6 +625,7 @@
 				D58E1C8D28A2B32C00AB683E /* Wifi_ifaddrs.m in Sources */,
 				D52BE7EE269DF36E00630900 /* DownloadViewModel.swift in Sources */,
 				D59E31AA281B8DD300D24211 /* DownloadState.swift in Sources */,
+				D5BA1F7F28B66F280012FC62 /* Bonjour.swift in Sources */,
 				D5C74DF327EB92FA00730505 /* View+Extensions.swift in Sources */,
 				D5640216271B54BF00AE1519 /* MainSelectionView.swift in Sources */,
 				D505B99C2755323C00386E9F /* NetworkMonitor.swift in Sources */,

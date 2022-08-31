@@ -99,6 +99,8 @@ struct DemoSubview: View {
                         .padding(.top, 10)
                     }
                     
+                  
+                    
                     if string  == "clue_nrf52840_express" {
                         
                         HStack {

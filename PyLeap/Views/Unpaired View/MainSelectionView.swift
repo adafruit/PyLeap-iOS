@@ -11,6 +11,7 @@ import FileTransferClient
 enum AdafruitDevices {
     case clue_nrf52840_express
     case circuitplayground_bluefruit
+    case esp32s2
 }
 
 struct MainSelectionView: View {

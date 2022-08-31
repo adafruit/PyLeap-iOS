@@ -8,13 +8,13 @@
 import Foundation
 import Network
 
- class NetworkMonitor {
+class NetworkMonitor {
     
     let queue = DispatchQueue(label: "Monitor")
     let monitor: NWPathMonitor
     
     public private(set) var isConnected: Bool = false
-    
+
     public private(set) var connectionType: ConnectionType = .unknown
     
     enum ConnectionType{
@@ -23,11 +23,13 @@ import Network
         case unknown
     }
     
-     init() {
+    init() {
         monitor = NWPathMonitor()
+        startMonitoring()
     }
     
     public func startMonitoring(){
+        print("Start Internet monitoring")
         monitor.start(queue: queue)
     }
     
@@ -36,12 +38,14 @@ import Network
     }
     
     
-    private func getConnectionType(_ path: NWPath){
+    public func getConnectionType(_ path: NWPath){
         if path.usesInterfaceType(.wifi) {
             connectionType = .wifi
+            print("Wifi")
         }
         else if path.usesInterfaceType(.cellular){
             connectionType = .cellular
+            print("cellular")
         }
     }
     

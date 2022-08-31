@@ -9,11 +9,11 @@ import SwiftUI
 
 struct WifiView: View {
     @StateObject var viewModel = WifiViewModel()
+    
     @State private var ipAddressInput: String = ""
     @State private var foundIPAddress: String = ""
     // My Wifi - 192.168.1.111
     @State var showConfirmation: Bool = true
-    @ObservedObject var link = WifiViewModel()
     @State private var presentAlert = false
     
     var body: some View {
@@ -26,39 +26,28 @@ struct WifiView: View {
                 
                 .foregroundColor(.black)
             
-            Button("Check Wifi") {
-                // Handle acknowledgement.
-                if let addr = viewModel.wifiNetworkService.getIPAddress() {
-                 //   print(addr)
-                    print(foundIPAddress)
-                    print(ipAddressInput)
-
-                    foundIPAddress = addr
-                } else {
-                    print("No WiFi address")
-                }
-                
-                if ipAddressInput != foundIPAddress {
-                    //Show alert
-                    print("No match")
-                    presentAlert = true
-                } else {
-                    print("Matches")
-                    showConfirmation.toggle()
-                }
+            Button("Make Directory") {
+              //  viewModel.putDirectory()
             }
             
-            Button("Test curl address") {
+            Button("GET Request") {
                 viewModel.getRequest()
             }
             
-            Button("Test file creation") {
+            Button("PUT Request") {
                 viewModel.putRequest()
             }
             
-            Button("NWBrowser test") {
-                viewModel.test()
+            Button("DELETE Request") { viewModel.deleteRequest() }
+            
+            Button("Single IP Addr.") { print(viewModel.wifiService.getIPAddress()) }
+            
+            Button("IP Addr. List") { print(viewModel.wifiService.getIFAddresses()) }
+           
+            Button("Get Project") {
+                viewModel.projectValidation(nameOf: "ESP32-S2 NeoPixel LED")
             }
+            
             
             ZStack {
                 Circle()
@@ -104,7 +93,7 @@ struct WifiView: View {
             .frame(height: UIScreen.main.bounds.height/2)
         })
         
-        .navigationBarTitle(Text("PyLeap - Wi-Fi"))
+      //  .navigationBarTitle(Text("PyLeap - Wi-Fi"))
             
         .alert("\"\(ipAddressInput)\" was not found", isPresented: $presentAlert) {
                     Button("OK") {
@@ -120,8 +109,14 @@ struct WifiView: View {
                     .multilineTextAlignment(.leading)
                 }
     }
+        .onAppear(){
+           // viewModel.internetMonitoring()
+            
+        }
     }
+       
 }
+    
 
 struct WifiView_Previews: PreviewProvider {
     static var previews: some View {
