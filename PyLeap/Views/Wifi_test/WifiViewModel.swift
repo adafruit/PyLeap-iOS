@@ -313,35 +313,95 @@ class WifiViewModel: ObservableObject {
         print("Current projectDirectories: \(projectDirectories[0])")
         
         
-       // sortDirectory(directoryArray: projectDirectories, fileArray: fileURLs)
-        pathManipulation(arrayOfAny: projectDirectories)
+        // sortDirectory(directoryArray: projectDirectories, fileArray: fileURLs)
+        pathManipulation(arrayOfAny: filterOutCPDirectories(fileArray: projectDirectories), fileArray: fileURLs)
         
     }
     
-    
-    func pathManipulation(arrayOfAny: [URL]){
+    func intakeArray(path: URL) {
         
         var indexOfCP = 0
-        
-        var tempPath = arrayOfAny.first
-       // tempPath?.pathComponents.firstIndex(of: "CircuitPython%208.x")
-        print("CircuitPython%207.x \(String(describing: tempPath?.pathComponents.firstIndex(of: "CircuitPython 7.x")))")
-        
-       // indexOfCP = tempPath?.pathComponents.firstIndex(of: "CircuitPython 7.x")
+        //path.pathComponents.removeSubrange(0...indexOfCP)
     }
     
-    func sortDirectory(directoryArray: [URL], fileArray: [URL]) {
+    func filterOutCPDirectories(fileArray: [URL]) -> [URL] {
+        
+        let test = fileArray.filter {
+            $0.lastPathComponent != ("CircuitPython 8.x")
+        }
+        
+        let test2 = test.filter {
+            $0.lastPathComponent != ("CircuitPython 7.x")
+        }
+        
+        return test2
+        
+    }
+    
+    func exit() {
+        
+    }
+    
+    var returnedArray = [[String]]()
+    
+    func pathManipulation(arrayOfAny: [URL], fileArray: [URL]) {
         print(#function)
+        var indexOfCP = 0
         
-        var sortedDirectoryArray = directoryArray.sorted(by: { $1.pathComponents.count > $0.pathComponents.count} )
-        var sortedFileArray = fileArray.sorted(by: { $1.pathComponents.count > $0.pathComponents.count} )
-        validateDirectory(directoryArray: sortedDirectoryArray, fileArray: sortedFileArray)
+        
+        print("RETURNED PATHS: \(returnedArray)")
+        
+        var tempArray = arrayOfAny
+        
+        if arrayOfAny.isEmpty {
+            // Continue
+            print("Done!")
+            validateDirectory(directoryArray: returnedArray, fileArray: fileArray)
+            
+        } else {
+            
+            var tempPath = arrayOfAny[0].pathComponents
+            
+            if arrayOfAny[0].pathComponents.contains("CircuitPython 7.x") {
+                print("Found CircuitPython 8.x")
+                
+                indexOfCP = arrayOfAny[0].pathComponents.firstIndex(of: "CircuitPython 7.x")!
+                
+                tempPath.removeSubrange(0...indexOfCP)
+                
+                tempArray.removeFirst()
+                returnedArray.append(tempPath)
+                pathManipulation(arrayOfAny: tempArray, fileArray: fileArray)
+            }
+            
+            if arrayOfAny[0].pathComponents.contains("CircuitPython 8.x") {
+                print("Found CircuitPython 7.x")
+                indexOfCP = arrayOfAny[0].pathComponents.firstIndex(of: "CircuitPython 8.x")!
+                
+                tempPath.removeSubrange(0...indexOfCP)
+                
+                tempArray.removeFirst()
+                returnedArray.append(tempPath)
+                pathManipulation(arrayOfAny: tempArray, fileArray: fileArray)
+                
+            }
+            
+        }
+        
     }
     
-    func validateDirectory(directoryArray: [URL], fileArray: [URL]) {
+    //    func sortDirectory(directoryArray: [URL], fileArray: [URL]) {
+    //        print(#function)
+    //
+    //        var sortedDirectoryArray = directoryArray.sorted(by: { $1.pathComponents.count > $0.pathComponents.count} )
+    //        var sortedFileArray = fileArray.sorted(by: { $1.pathComponents.count > $0.pathComponents.count} )
+    //        validateDirectory(directoryArray: sortedDirectoryArray, fileArray: sortedFileArray)
+    //    }
+    
+    func validateDirectory(directoryArray: [[String]], fileArray: [URL]) {
         print(#function)
         // Use Recursion to go through each directory
-        if directoryArray.isEmpty {
+        if self.returnedArray.isEmpty {
             print("No directories left in queue")
             print("Start file transfer...")
             // self.transferFiles(files: fileArray)
@@ -353,24 +413,21 @@ class WifiViewModel: ObservableObject {
                 return
             }
             
-            print("Array count \(directoryArray.count)")
+            print("Array count \(returnedArray.count)")
             
-            makeDirectory(directoryArray: directoryArray, fileArray: fileArray, firstDirectory: firstDirectory)
+            makeDirectory(fileArray: fileArray)
             
         }
         
     }
     
-    func makeDirectory(directoryArray: [URL], fileArray: [URL], firstDirectory: URL) {
+    func makeDirectory(fileArray: [URL]) {
         print(#function)
-        var temp = directoryArray
         
         
         
         
-        var tempPath = firstDirectory.pathComponents
-        tempPath.removeFirst(12)
-        print("Original Path: \(firstDirectory.absoluteURL)")
+        var tempPath = returnedArray[0]
         let joined = tempPath.joined(separator: "/")
         print("Outgoing path:\(joined)")
         
@@ -380,8 +437,8 @@ class WifiViewModel: ObservableObject {
                 
             case .success(let consent):
                 print("Successful")
-                 temp.removeFirst()
-                self.validateDirectory(directoryArray: temp, fileArray: fileArray)
+                self.returnedArray.removeFirst()
+                self.validateDirectory(directoryArray: self.returnedArray, fileArray: fileArray)
                 
             case .failure(let error):
                 print("Error: \(error)")
@@ -391,101 +448,196 @@ class WifiViewModel: ObservableObject {
     }
     
     func makeFile(files: [URL]) {
-
+        print(#function)
         var copiedArray = files
-
+        
         if files.isEmpty {
             print("Transfer Complete")
         } else {
-
-
-           // let file = files[0].pathComponents.removeFirst(12) //this is the file. we will write to and read from it
-
-
+            
+            
+            // let file = files[0].pathComponents.removeFirst(12) //this is the file. we will write to and read from it
+            
+            
             if copiedArray.first?.lastPathComponent == "README.txt" {
-               print("Removing README")
+                print("Removing README")
                 copiedArray.removeFirst()
                 makeFile(files: copiedArray)
-
+                
             } else {
-                var tempURL = copiedArray[0].pathComponents
-                tempURL.removeFirst(12)
-                let joined = tempURL.joined(separator: "/")
-                print()
-
-                var text = "some text" //just a text
-
+                
+                //                print("copiedArray[0] \(copiedArray[0].pathComponents)")
+                //                var tempURL = copiedArray[0].pathComponents
+                //                tempURL.removeFirst(12)
+                //                let joined = tempURL.joined(separator: "/")
+                //                print("Joined \(joined)")
+                
+                
+                
+                
+                
+                
+                // var text = "some text" //just a text
+                
                 guard let data = try? Data(contentsOf: URL(fileURLWithPath: copiedArray[0].path, relativeTo: copiedArray[0])) else {
                     print("File not found")
                     return
                 }
                 
                 
+                var tempPath = copiedArray[0].pathComponents
+                print("PRINT INCOMING: \(tempPath)")
                 
-                sendPutRequest(the: joined, to: copiedArray[0].absoluteURL, body: data) { result in
-                    switch result {
+                if copiedArray[0].pathComponents.contains("CircuitPython 7.x") {
+                    print("Found CircuitPython 7.x")
+                    
+                    var indexOfCP = 0
+                    
+                    indexOfCP = copiedArray[0].pathComponents.firstIndex(of: "CircuitPython 7.x")!
+                    
+                    tempPath.removeSubrange(0...indexOfCP)
+                    
+                    let joined = tempPath.joined(separator: "/")
+                    
+                    
+                    
+                    if (copiedArray[0].pathExtension == "py") || (copiedArray[0].pathExtension == "txt") {
                         
-                    case .success(_):
-                        print("Success")
+                        putRequest(fileName: joined, fileContent: data) { result in
+                            switch result {
+                                
+                            case .success(let content):
+                                copiedArray.removeFirst()
+                                self.makeFile(files: copiedArray)
+                            case .failure(let error):
+                                print("Failed write")
+                            }
+                        }
                         
-                        copiedArray.removeFirst()
-                        self.makeFile(files: copiedArray)
-                    case .failure(_):
-                        print("Failed to write")
+                    } else {
+                        
+                        sendPutRequest(fileName: joined, body: data) { result in
+                            switch result {
+                                
+                            case .success(_):
+                                print("Success")
+                                
+                                copiedArray.removeFirst()
+                                self.makeFile(files: copiedArray)
+                            case .failure(_):
+                                print("Failed to write")
+                            }
+                        }
+                        
                     }
+                    
+                    
+                    
                 }
                 
                 
                 
-//                do {
-//                    let text2 = try String(contentsOf: copiedArray[10], encoding: .utf8)
-//                    text = text2
-//
-//
-//
-//
-////                    putRequest(fileName: joined, fileContent: data) { result in
-////                        switch result {
-////
-////                        case .success(let content):
-////                            copiedArray.removeFirst()
-////                            self.makeFile(files: copiedArray)
-////                        case .failure(let error):
-////                            print("Failed write")
-////                        }
-////                    }
-//
-//                } catch {
-//                    print("catch error")
-//                }
-
+                if copiedArray[0].pathComponents.contains("CircuitPython 8.x") {
+                    print("Found CircuitPython 8.x")
+                    var tempPath = copiedArray[0].pathComponents
+                    
+                    var indexOfCP = Int()
+                    
+                    indexOfCP = copiedArray[0].pathComponents.firstIndex(of: "CircuitPython 8.x")!
+                    
+                    tempPath.removeSubrange(0...indexOfCP)
+                    let joined = tempPath.joined(separator: "/")
+                    print("joined : \(joined)")
+                    
+                    if (copiedArray[0].pathExtension == "py") || (copiedArray[0].pathExtension == "txt") {
+                        
+                        putRequest(fileName: joined, fileContent: data) { result in
+                            switch result {
+                                
+                            case .success(let content):
+                                copiedArray.removeFirst()
+                                self.makeFile(files: copiedArray)
+                            case .failure(let error):
+                                print("Failed write")
+                            }
+                        }
+                        
+                    } else {
+                        
+                        sendPutRequest(fileName: joined, body: data) { result in
+                            switch result {
+                                
+                            case .success(_):
+                                print("Success")
+                                
+                                copiedArray.removeFirst()
+                                self.makeFile(files: copiedArray)
+                            case .failure(_):
+                                print("Failed to write")
+                            }
+                        }
+                        
+                    }
+                    
+                    
+                }
+                
+            }
             
-               //
-               //        do {
-               //                let text2 = try String(contentsOf: fileURLs[0], encoding: .utf8)
-               //                text = text2
-               //            putRequest(fileName: file, fileContent: text)
-               //            }
-               //            catch {/* error handling here */}
-               //
-               //        print("Reading File:")
-               //        print("""
-               //\(text)
-               //""")
-               
-                }
-
-//            var tempURL = files[0].pathComponents
-//            tempURL.removeFirst(12)
-//            print(tempURL.joined(separator: "/"))
-
-
+            
+            
+            
+            
+            
+            
+            //                do {
+            //                    let text2 = try String(contentsOf: copiedArray[10], encoding: .utf8)
+            //                    text = text2
+            //
+            //
+            //
+            //
+            ////                    putRequest(fileName: joined, fileContent: data) { result in
+            ////                        switch result {
+            ////
+            ////                        case .success(let content):
+            ////                            copiedArray.removeFirst()
+            ////                            self.makeFile(files: copiedArray)
+            ////                        case .failure(let error):
+            ////                            print("Failed write")
+            ////                        }
+            ////                    }
+            //
+            //                } catch {
+            //                    print("catch error")
+            //                }
+            
+            
+            //
+            //        do {
+            //                let text2 = try String(contentsOf: fileURLs[0], encoding: .utf8)
+            //                text = text2
+            //            putRequest(fileName: file, fileContent: text)
+            //            }
+            //            catch {/* error handling here */}
+            //
+            //        print("Reading File:")
+            //        print("""
+            //\(text)
+            //""")
+            
         }
-
+        
+        //            var tempURL = files[0].pathComponents
+        //            tempURL.removeFirst(12)
+        //            print(tempURL.joined(separator: "/"))
+        
+        
     }
     
     
-    func sendPutRequest(the fileName: String, to url: URL,
+    
+    func sendPutRequest(fileName: String,
                         body: Data,
                         then handler: @escaping(Result<Data, Error>) -> Void) {
         
@@ -519,26 +671,26 @@ class WifiViewModel: ObservableObject {
         print(request.cURL(pretty: true))
         
         let task = urlSession.dataTask(
-                   with: request,
-                   completionHandler: { data, response, error in
-                       // Validate response and call handler
-                       
-                       if let error = error  {
-                           print("File write error")
-
-                           handler(.failure(error))
-                           
-                       }
-                       
-                       if let data = data {
-                           print("File write success!")
-                           handler(.success(data))
-                       }
-                       
-                   }
-               )
-
-               task.resume()
+            with: request,
+            completionHandler: { data, response, error in
+                // Validate response and call handler
+                
+                if let error = error  {
+                    print("File write error")
+                    
+                    handler(.failure(error))
+                    
+                }
+                
+                if let data = data {
+                    print("File write success!")
+                    handler(.success(data))
+                }
+                
+            }
+        )
+        
+        task.resume()
         
     }
     
@@ -670,8 +822,8 @@ class WifiViewModel: ObservableObject {
         semaphore.wait()
         return outgoingString
     }
-//  func putDirectory(directoryPath: String, completion: @escaping (Result<Data?, Error>) -> Void) {
-
+    //  func putDirectory(directoryPath: String, completion: @escaping (Result<Data?, Error>) -> Void) {
+    
     func putRequest(fileName: String, fileContent: Data, completion: @escaping (Result<Data?, Error>) -> Void) {
         print("Test Transfer")
         let parameters = fileContent
@@ -701,7 +853,7 @@ class WifiViewModel: ObservableObject {
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error  {
                 print("File write error")
-
+                
                 completion(.failure(error))
                 
             }
@@ -711,7 +863,7 @@ class WifiViewModel: ObservableObject {
                 completion(.success(data))
             }
             
-           // print(String(data: data, encoding: .utf8)!)
+            // print(String(data: data, encoding: .utf8)!)
             
         }
         task.resume()
@@ -739,7 +891,7 @@ class WifiViewModel: ObservableObject {
         print(request.cURL(pretty: true))
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
-           
+            
             
             if let error = error  {
                 completion(.failure(error))
@@ -802,9 +954,6 @@ class WifiViewModel: ObservableObject {
     
     func deleteRequest() {
         
-        
-        
-        
         let username = ""
         let password = "passw0rd"
         let loginString = "\(username):\(password)"
@@ -843,6 +992,40 @@ class WifiViewModel: ObservableObject {
         task.resume()
     }
     
+    @Published var projectDownloaded = false
+    @Published var failedProjectLaunch = false
+    
+    
+    
+    func getProjectForSubClass(nameOf project: String) {
+        
+        if let enumerator = FileManager.default.enumerator(at: directoryPath, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
+           // for case condition: Only process URLs
+            for case let fileURL as URL in enumerator {
+            
+                    if fileURL.lastPathComponent == project {
+                        failedProjectLaunch = false
+                        projectDownloaded = true
+                        print(#function)
+                        print("Searching for... \(project)")
+                        print("URL Path: \(fileURL.path)")
+                        print("URL : \(fileURL)")
+                       
+                    return
+                        
+                    } else {
+                        failedProjectLaunch = true
+                        projectDownloaded = false
+                        print("Project was not found...")
+                        
+                    }
+                    
+                
+            }
+            
+        }
+        
+    }
     
     
     //    Enter IP Adress

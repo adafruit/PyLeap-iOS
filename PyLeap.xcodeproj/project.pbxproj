@@ -36,6 +36,9 @@
 		D5597C3B26B98E1E00DF17C0 /* NumbersOnly.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5597C3A26B98E1E00DF17C0 /* NumbersOnly.swift */; };
 		D5640216271B54BF00AE1519 /* MainSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5640215271B54BF00AE1519 /* MainSelectionView.swift */; };
 		D567E2B628B81B730009F768 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D567E2B528B81B730009F768 /* Queue.swift */; };
+		D567E2B828C137880009F768 /* WifiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D567E2B728C137880009F768 /* WifiCell.swift */; };
+		D567E2BA28C1382E0009F768 /* WifiSubViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D567E2B928C1382E0009F768 /* WifiSubViewCell.swift */; };
+		D567E2BC28C1527F0009F768 /* WifiSubViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D567E2BB28C1527F0009F768 /* WifiSubViewCellModel.swift */; };
 		D56F640C270242CA000E5975 /* UIColor+LightAndDark.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F6407270242CA000E5975 /* UIColor+LightAndDark.swift */; };
 		D56F640D270242CA000E5975 /* FileTransferPathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F640A270242CA000E5975 /* FileTransferPathUtils.swift */; };
 		D56F640E270242CA000E5975 /* String+DeletingPrefix.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F6408270242CA000E5975 /* String+DeletingPrefix.swift */; };
@@ -119,6 +122,9 @@
 		D5640215271B54BF00AE1519 /* MainSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSelectionView.swift; sourceTree = "<group>"; };
 		D567E2B428B80DC10009F768 /* Outline.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Outline.md; sourceTree = "<group>"; };
 		D567E2B528B81B730009F768 /* Queue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
+		D567E2B728C137880009F768 /* WifiCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiCell.swift; sourceTree = "<group>"; };
+		D567E2B928C1382E0009F768 /* WifiSubViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiSubViewCell.swift; sourceTree = "<group>"; };
+		D567E2BB28C1527F0009F768 /* WifiSubViewCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiSubViewCellModel.swift; sourceTree = "<group>"; };
 		D56F6407270242CA000E5975 /* UIColor+LightAndDark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+LightAndDark.swift"; sourceTree = "<group>"; };
 		D56F6408270242CA000E5975 /* String+DeletingPrefix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+DeletingPrefix.swift"; sourceTree = "<group>"; };
 		D56F640A270242CA000E5975 /* FileTransferPathUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTransferPathUtils.swift; sourceTree = "<group>"; };
@@ -308,6 +314,9 @@
 			children = (
 				D58E1C8728A2B10B00AB683E /* WifiView.swift */,
 				D58E1C8928A2B15E00AB683E /* WifiViewModel.swift */,
+				D567E2B728C137880009F768 /* WifiCell.swift */,
+				D567E2B928C1382E0009F768 /* WifiSubViewCell.swift */,
+				D567E2BB28C1527F0009F768 /* WifiSubViewCellModel.swift */,
 				D567E2B528B81B730009F768 /* Queue.swift */,
 				D5BA1F7928B52A490012FC62 /* WifiListDetailView.swift */,
 				D5BA1F7E28B66F280012FC62 /* Bonjour.swift */,
@@ -608,6 +617,7 @@
 				D5BA1F8328B68ED40012FC62 /* NetworkPeripheral.swift in Sources */,
 				D59DFDBC268CE0EB001737F6 /* RootView.swift in Sources */,
 				D595FC2E2812C23D00569D8C /* Image Extension.swift in Sources */,
+				D567E2BA28C1382E0009F768 /* WifiSubViewCell.swift in Sources */,
 				D59DFD8F268A4A4D001737F6 /* BTConnectionView.swift in Sources */,
 				D58D887B26CC02B60085604A /* OnboardingViewPure.swift in Sources */,
 				D52BE85426A0E39100630900 /* BTConnectionViewModel.swift in Sources */,
@@ -617,9 +627,11 @@
 				D5507AD126C668BC00512BAA /* SearchBarView.swift in Sources */,
 				D59DFDBA268CDEEC001737F6 /* RootViewModel.swift in Sources */,
 				D5C74DF527EB93E300730505 /* DemoViewCell.swift in Sources */,
+				D567E2BC28C1527F0009F768 /* WifiSubViewCellModel.swift in Sources */,
 				D52BE85526A0E5A400630900 /* PeripheralList.swift in Sources */,
 				D5D7DF2D28B489C0008552D1 /* WebDirectoryModel.swift in Sources */,
 				D5597C0226ADDCE300DF17C0 /* StartupView.swift in Sources */,
+				D567E2B828C137880009F768 /* WifiCell.swift in Sources */,
 				D5D1F4B027ECFDE00040E2BF /* NavBarModifier.swift in Sources */,
 				D5597C0C26AF018800DF17C0 /* View+If.swift in Sources */,
 				D58E1C8D28A2B32C00AB683E /* Wifi_ifaddrs.m in Sources */,

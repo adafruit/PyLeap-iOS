@@ -11,7 +11,7 @@ struct SubHeaderView: View {
     var body: some View {
         HStack {
             
-            Text("Browse all of the available PyLeap Projects")
+            Text("Browse available Wi-Fi PyLeap Projects")
                 .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                 .font(Font.custom("ReadexPro-Regular", size: 25))
             

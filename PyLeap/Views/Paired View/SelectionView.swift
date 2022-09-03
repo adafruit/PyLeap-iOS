@@ -202,8 +202,13 @@ struct SelectionView: View {
                             SubHeaderView()
                               //  .spotlight(enabled: spotlight.counter == 1, title: "1")
                               
+                           let check = model.pdemos.filter {
+                                $0.compatibility[0] == boardBootInfo
+                            }
                             
                             ForEach(model.pdemos) { demo in
+                                
+                                
                                 DemoViewCell(result: demo, isConnected: $inConnectedInSelectionView, bootOne: $boardBootInfo, onViewGeometryChanged: {
                                     withAnimation {
                                         scroll.scrollTo(demo.id)

@@ -191,7 +191,7 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
         // Since URL Session will be running in the background thread
         // UI will be done on the main thread
         DispatchQueue.main.async {
-
+            
             self.downloadProgress = numeralProgress
             print("Recorded downloadProgress Progress: \(self.downloadProgress)")
             print("Recorded numeralProgress Progress: \(numeralProgress)")
