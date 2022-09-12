@@ -60,7 +60,7 @@ struct SelectionView: View {
     
     var body: some View {
         
-        let connectedPeripherals = connectionManager.peripherals.filter{$0.state == .connected}
+        let connectedPeripherals = connectionManager.peripherals.filter{$0.state == .connected }
         let selectedPeripheral = FileTransferConnectionManager.shared.selectedPeripheral
         
         VStack {
@@ -202,11 +202,11 @@ struct SelectionView: View {
                             SubHeaderView()
                               //  .spotlight(enabled: spotlight.counter == 1, title: "1")
                               
-                           let check = model.pdemos.filter {
+                           let check = NetworkService.shared.pdemos.filter {
                                 $0.compatibility[0] == boardBootInfo
                             }
                             
-                            ForEach(model.pdemos) { demo in
+                            ForEach(NetworkService.shared.pdemos) { demo in
                                 
                                 
                                 DemoViewCell(result: demo, isConnected: $inConnectedInSelectionView, bootOne: $boardBootInfo, onViewGeometryChanged: {

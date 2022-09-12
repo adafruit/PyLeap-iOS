@@ -46,9 +46,8 @@ struct RootView: View {
             case .wifi:
                 WifiView()
                 
-//            case .test:
-//                ReconnectionView()
-//
+            case .settings:
+                SettingsView()
             default:
                 FillerView()
             }

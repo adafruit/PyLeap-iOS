@@ -24,7 +24,6 @@
  *Notes*
  The User should be able to switch to Bluetooth Mode while in Wi-Fi mode.
  
- 
  Entities:
  [RootResult] -> ProjectDemos
  These are references that need to be validated to make sure they exist in File Manager, then transferred.
@@ -59,7 +58,17 @@
  
  Prepare to start file transfer.
  
+ File Transfer notes will continue...
  
+ New topic, States for Wifi View
+
+When the user uses wifi view, these are the things that should happen:
+Check connection status.
+
+Check stored IP address.
+
+ - If IP Address was not stored, show alert prompt that allows 
+ - If IP stored, 
  
 
 ## Topics

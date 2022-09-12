@@ -84,7 +84,7 @@ struct MainSelectionView: View {
                     
                    SubHeaderView()
                     
-                    ForEach(model.pdemos) { demo in
+                    ForEach(NetworkService.shared.pdemos) { demo in
                         DemoViewCell(result: demo, isConnected: $isConnected, bootOne: $test, onViewGeometryChanged: {
                             withAnimation {
                                 scroll.scrollTo(demo.id)

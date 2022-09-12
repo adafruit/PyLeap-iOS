@@ -20,10 +20,15 @@ struct WifiCell: View {
     
     @Binding var isConnected: Bool
     @Binding var bootOne: String
-   
+    @Binding var stateBinder: DownloadState
+    
+    var showRunItButton = false
+    
     let onViewGeometryChanged: ()->Void
     
-    @Binding var stateBinder: DownloadState
+   
+    
+    
     
     var body: some View {
         content

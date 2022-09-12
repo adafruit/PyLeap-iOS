@@ -9,9 +9,6 @@ import Foundation
 
 class CircuitPythonService:Equatable{
     
-
-    
-    
     var netService:NetService
     var ipAddress:String
     

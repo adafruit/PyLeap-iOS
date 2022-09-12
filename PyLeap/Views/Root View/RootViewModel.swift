@@ -19,7 +19,7 @@ class RootViewModel: ObservableObject {
         case bluetoothStatus
         case fileTransfer
         case wifi
-        //case test
+        case settings
         case mainSelection
     }
     
@@ -64,6 +64,9 @@ class RootViewModel: ObservableObject {
         destination = .fileTransfer
     }
     
+    func goToSettings(){
+        destination = .settings
+    }
     
     func showWarningIfBluetoothStateIsNotReady() {
         let bluetoothState = BleManager.shared.state

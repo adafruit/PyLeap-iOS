@@ -1,18 +1,32 @@
 //
-//  HeaderView.swift
+//  WifiHeaderView.swift
 //  PyLeap
 //
-//  Created by Trevor Beaton on 4/25/22.
+//  Created by Trevor Beaton on 9/7/22.
 //
 
 import SwiftUI
 
-struct HeaderView: View {
+struct WifiHeaderView: View {
     @State var showSheetView = false
+    @EnvironmentObject var rootViewModel: RootViewModel
+
     var body: some View {
 
         VStack {
             HStack {
+                
+                Button {
+                    rootViewModel.goToMain()
+                } label: {
+                    Image(systemName: "arrow.backward")
+                        .resizable()
+                        .frame(width: 30, height: 30, alignment: .center)
+                        .offset(y: 15)
+                        .foregroundColor(.white)
+                }
+                
+                .padding()
                 
                 Spacer()
                 Image("pyleap_logo_white")
@@ -20,21 +34,19 @@ struct HeaderView: View {
                     .scaledToFit()
                     .frame(width: 125, height: 125)
                     .offset(y: 12)
-                    .padding(.leading, 60)
+                  //  .padding(.leading, 60)
                 
                 Spacer()
                 
                 Button {
-                    self.showSheetView.toggle()
+                    rootViewModel.goToSettings()
                 } label: {
-                    Image(systemName: "info.circle")
+                    Image(systemName: "gearshape")
                         .resizable()
                         .frame(width: 30, height: 30, alignment: .center)
                         .offset(y: 15)
                         .foregroundColor(.white)
-                }.sheet(isPresented: $showSheetView) {
-                    CreditView(isPresented: $showSheetView)
-                                    }
+                }
                 
                 .padding()
             }
@@ -48,8 +60,8 @@ struct HeaderView: View {
     }
 }
 
-struct HeaderView_Previews: PreviewProvider {
+struct WifiHeaderView_Previews: PreviewProvider {
     static var previews: some View {
-        HeaderView()
+        WifiHeaderView()
     }
 }

@@ -7,23 +7,88 @@
 
 
 import SwiftUI
-import Foundation
+import UIKit
 import CoreLocation
 import Network
 
+enum ConnectionStatus {
+    case noConnection
+    case connecting
+    case connected
+}
+
 class WifiViewModel: ObservableObject {
     
-    var networkMonitor = NetworkMonitor()
-    var wifiService = WifiNetworkService()
-    let bonjour = Bonjour()
+    let userDefaults = UserDefaults.standard
     
+   var networkMonitor = NetworkMonitor()
+   public var wifiService = WifiNetworkService()
+ 
+    @Published var wifiServiceManager = WifiServiceManager()
     @Published var webDirectoryInfo = [WebDirectoryModel]()
     
     // File Manager Data
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     @Published var fileArray: [ContentFile] = []
     @Published var contentList: [URLData] = []
+    
     var projectDirectories: [URL] = []
+    
+    func noConnectionView() {
+   //     connectionStatus = .noConnection
+    }
+    
+    func connectingView() {
+   //     connectionStatus = .connecting
+    }
+    
+    func connectedView() {
+   //     connectionStatus = .connected
+    }
+    
+        // @Published var connectionStatus: ConnectionStatus = AppEnvironment.isRunningTests ? .connected : .noConnection
+    
+    
+
+     func clearKnownIPAddress() {
+        userDefaults.set(nil, forKey: "ipAddress" )
+        print(userDefaults.object(forKey: "ipAddress"))
+    }
+    
+     func checkIfIPAddressIsNil() -> Bool {
+         var isIpStored = false
+         
+         if userDefaults.object(forKey: "ipAddress") != nil {
+             isIpStored = true
+         }
+        print(userDefaults.object(forKey: "ipAddress"))
+
+        return isIpStored
+    }
+    
+    func validateIP(ipAddress: String) {
+        
+            
+        for service in wifiServiceManager.services {
+            
+            var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+                guard let data = service.addresses?.first else { return }
+                data.withUnsafeBytes { (pointer:UnsafePointer<sockaddr>) -> Void in
+                    guard getnameinfo(pointer, socklen_t(data.count), &hostname, socklen_t(hostname.count), nil, 0, NI_NUMERICHOST) == 0 else {
+                        return
+                    }
+                }
+                
+            let ipAddress = String(cString:hostname)
+            print(ipAddress)
+                // Store IP Address here??
+                
+        }
+        
+        
+    }
+    
+
     
     
     func projectValidation(nameOf project: String) {
@@ -698,7 +763,7 @@ class WifiViewModel: ObservableObject {
     
     
     func test() {
-        bonjour.startDiscovery()
+        wifiServiceManager.startDiscovery()
     }
     
     public func internetMonitoring() {
