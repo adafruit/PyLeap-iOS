@@ -14,7 +14,9 @@ struct WifiSubViewCell: View {
     
     @EnvironmentObject var globalString : GlobalString
     
-    @StateObject var viewModel = WifiViewModel()
+    @StateObject var wifiFileTransfer = WifiFileTransfer()
+    
+    
     
     @Binding var bindingString: String
     
@@ -123,8 +125,8 @@ struct WifiSubViewCell: View {
                     Button {
                         print("Wifi Project Attempt \(title)")
                         
-                        if viewModel.projectDownloaded {
-                            viewModel.projectValidation(nameOf: title)
+                        if wifiFileTransfer.projectDownloaded {
+                            wifiFileTransfer.projectValidation(nameOf: title)
                         } else {
                             downloadModel.startDownload(urlString: downloadLink, projectTitle: title) {
                                 print("DONE")
@@ -275,7 +277,7 @@ struct WifiSubViewCell: View {
                 }
         
         .onChange(of: downloadModel.isDownloading, perform: { newValue in
-            viewModel.getProjectForSubClass(nameOf: title)
+            wifiFileTransfer.getProjectForSubClass(nameOf: title)
         })
         
         .onChange(of: downloadModel.didDownloadBundle, perform: { newValue in
@@ -287,7 +289,7 @@ struct WifiSubViewCell: View {
                 DispatchQueue.main.async {
                     print("Getting project from Subclass \(title)")
                    // viewModel.getProjectForSubClass(nameOf: title)
-                    viewModel.projectValidation(nameOf: title)
+                    wifiFileTransfer.projectValidation(nameOf: title)
                     
                     isDownloaded = true
                 }
@@ -298,8 +300,8 @@ struct WifiSubViewCell: View {
             
         })
         .onAppear(perform: {
-            viewModel.getProjectForSubClass(nameOf: title)
-            if viewModel.projectDownloaded {
+            wifiFileTransfer.getProjectForSubClass(nameOf: title)
+            if wifiFileTransfer.projectDownloaded {
                 isDownloaded = true
             } else {
                 isDownloaded = false

@@ -26,10 +26,6 @@ struct WifiCell: View {
     
     let onViewGeometryChanged: ()->Void
     
-   
-    
-    
-    
     var body: some View {
         content
             .frame(maxWidth: .infinity)

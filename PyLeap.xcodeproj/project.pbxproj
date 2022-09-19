@@ -88,6 +88,9 @@
 		D5D1F4B827ED2F4F0040E2BF /* FileManagerCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D1F4B727ED2F4F0040E2BF /* FileManagerCheck.swift */; };
 		D5D7DF2B28B3E321008552D1 /* BasicCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D7DF2A28B3E321008552D1 /* BasicCredentials.swift */; };
 		D5D7DF2D28B489C0008552D1 /* WebDirectoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D7DF2C28B489C0008552D1 /* WebDirectoryModel.swift */; };
+		D5DD39A728D11817000FAEB8 /* WifiFileTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DD39A628D11817000FAEB8 /* WifiFileTransfer.swift */; };
+		D5DD39A928D11962000FAEB8 /* WifiTransferService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DD39A828D11962000FAEB8 /* WifiTransferService.swift */; };
+		D5DD39AB28D234C3000FAEB8 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DD39AA28D234C3000FAEB8 /* SettingsViewModel.swift */; };
 		D5F53CEB2694B524007634C2 /* Blinka Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F53CEA2694B524007634C2 /* Blinka Animation.swift */; };
 		D5F53CED2694B7A9007634C2 /* OnboardingBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F53CEC2694B7A9007634C2 /* OnboardingBackgroundView.swift */; };
 /* End PBXBuildFile section */
@@ -177,6 +180,9 @@
 		D5D1F4B727ED2F4F0040E2BF /* FileManagerCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerCheck.swift; sourceTree = "<group>"; };
 		D5D7DF2A28B3E321008552D1 /* BasicCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicCredentials.swift; sourceTree = "<group>"; };
 		D5D7DF2C28B489C0008552D1 /* WebDirectoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDirectoryModel.swift; sourceTree = "<group>"; };
+		D5DD39A628D11817000FAEB8 /* WifiFileTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiFileTransfer.swift; sourceTree = "<group>"; };
+		D5DD39A828D11962000FAEB8 /* WifiTransferService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiTransferService.swift; sourceTree = "<group>"; };
+		D5DD39AA28D234C3000FAEB8 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		D5ECF4B828C8E3C600FBF93D /* PyLeap-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PyLeap-Bridging-Header.h"; sourceTree = "<group>"; };
 		D5F53CEA2694B524007634C2 /* Blinka Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Blinka Animation.swift"; sourceTree = "<group>"; };
 		D5F53CEC2694B7A9007634C2 /* OnboardingBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingBackgroundView.swift; sourceTree = "<group>"; };
@@ -320,6 +326,7 @@
 			isa = PBXGroup;
 			children = (
 				D567E2DE28C8D40C0009F768 /* SettingsView.swift */,
+				D5DD39AA28D234C3000FAEB8 /* SettingsViewModel.swift */,
 			);
 			path = SettingsView;
 			sourceTree = "<group>";
@@ -329,6 +336,8 @@
 			children = (
 				D58E1C8728A2B10B00AB683E /* WifiView.swift */,
 				D58E1C8928A2B15E00AB683E /* WifiViewModel.swift */,
+				D5DD39A628D11817000FAEB8 /* WifiFileTransfer.swift */,
+				D5DD39A828D11962000FAEB8 /* WifiTransferService.swift */,
 				D567E2B728C137880009F768 /* WifiCell.swift */,
 				D5AA27F728CA785B001CCE25 /* CircuitPythonType.swift */,
 				D5AA27F928CA8D46001CCE25 /* WifiStatusHeaderBarView.swift */,
@@ -623,6 +632,7 @@
 				D5CC6BB628173B91008629FB /* SubHeaderView.swift in Sources */,
 				D544A24B281F92840038D483 /* ImageCaching.swift in Sources */,
 				D517F68126C5771D002996E8 /* FillerView.swift in Sources */,
+				D5DD39A728D11817000FAEB8 /* WifiFileTransfer.swift in Sources */,
 				D5AA27FA28CA8D46001CCE25 /* WifiStatusHeaderBarView.swift in Sources */,
 				D5F53CEB2694B524007634C2 /* Blinka Animation.swift in Sources */,
 				D5597BF826A9E14B00DF17C0 /* AppDelegate.swift in Sources */,
@@ -632,6 +642,7 @@
 				D5507AD026C668BC00512BAA /* SelectionViewModel.swift in Sources */,
 				D5597C3B26B98E1E00DF17C0 /* NumbersOnly.swift in Sources */,
 				D5D1F4A427EBA7E30040E2BF /* NetworkManager.swift in Sources */,
+				D5DD39AB28D234C3000FAEB8 /* SettingsViewModel.swift in Sources */,
 				D5BA1F8328B68ED40012FC62 /* NetworkPeripheral.swift in Sources */,
 				D59DFDBC268CE0EB001737F6 /* RootView.swift in Sources */,
 				D595FC2E2812C23D00569D8C /* Image Extension.swift in Sources */,
@@ -639,6 +650,7 @@
 				D59DFD8F268A4A4D001737F6 /* BTConnectionView.swift in Sources */,
 				D58D887B26CC02B60085604A /* OnboardingViewPure.swift in Sources */,
 				D52BE85426A0E39100630900 /* BTConnectionViewModel.swift in Sources */,
+				D5DD39A928D11962000FAEB8 /* WifiTransferService.swift in Sources */,
 				D59DFDC2268CFA36001737F6 /* OnboardingStepView.swift in Sources */,
 				D5CC6BAE2816FD27008629FB /* Config.swift in Sources */,
 				D544A24F282046840038D483 /* OnAnimationComplete.swift in Sources */,

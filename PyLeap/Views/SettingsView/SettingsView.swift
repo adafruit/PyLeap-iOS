@@ -10,7 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     
     
-    @State private var jsonFileName: String = "ter"
+    @State private var jsonFileName: String = ""
     @State private var pythonFileName: String = ""
     
     @State private var presentJSONAlert = false
@@ -18,6 +18,10 @@ struct SettingsView: View {
     
     @EnvironmentObject var rootViewModel: RootViewModel
     @ObservedObject var networkModel = NetworkService()
+    @StateObject var viewModel = SettingsViewModel()
+    
+    private let kPrefix = Bundle.main.bundleIdentifier!
+    let userDefaults = UserDefaults.standard
     
     
     var body: some View {
@@ -27,16 +31,53 @@ struct SettingsView: View {
             Form {
 
                 VStack() {
-                    Button("Real Test") {
-                        alertTF(title: "Login test", message: "Message", hintText: "Hint text", primaryTitle: "primaryTitle", secondaryTitle: "secondaryTitle") { text in
-                            print(text)
-                        } secondaryAction: {
-                            print("Cancel")
+                    
+                    if viewModel.connectedToDevice {
+                        
+                        Section() {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Host Name:")
+                                    .bold()
+                                Text(viewModel.hostName)
+                                Text("IP Address:")
+                                    .bold()
+                                Text(viewModel.ipAddress)
+                                Text("Device:")
+                                    .bold()
+                                Text(viewModel.device)
+                                    
+                            }
+                            .padding(.leading,0)
                         }
+                        
+                    } else {
+                        
+                        Section() {
+                            Button {
+                                rootViewModel.goToWifiView()
+                            } label: {
+                                Text("Connect to Adafruit Device")
+                            }
 
+                        }
+                        
                     }
+                    
                 }
 
+                if viewModel.connectedToDevice {
+                    Section() {
+                        Button {
+                            viewModel.clearKnownIPAddress()
+                            rootViewModel.goToWifiView()
+                        } label: {
+                        Text("Disconnect")
+                        }
+                    }
+                }
+                
+                
+                
                 Section {
                     Toggle(isOn: .constant(false)) {
                         Text("Dark Mode")
@@ -72,8 +113,6 @@ struct SettingsView: View {
                 
                 Section {
                    
-                    
-                    
                     Button("Create Python File"){
                         presentPythonAlert = true
                     }
@@ -81,9 +120,6 @@ struct SettingsView: View {
                                 
                         TextField("bbhj", text: $pythonFileName)
                         
-                       
-                        
-                     
                         Button("Add", action: {})
                                 
                         Button("Cancel", role: .cancel, action: {})
@@ -153,7 +189,8 @@ struct SettingsView: View {
                 }
             }
         }
-
+        .onAppear() {
+        }
     }
 }
 
@@ -166,10 +203,10 @@ struct SettingsView_Previews: PreviewProvider {
 
 extension View {
    
-    func alertMessage(title: String, cancel: @escaping()->()){
+    func alertMessage(title: String, exitTitle: String, cancel: @escaping()->()){
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
         
-        alert.addAction(.init(title: nil, style: .cancel, handler: { _ in
+        alert.addAction(.init(title: exitTitle, style: .cancel, handler: { _ in
 cancel()
             
         }))

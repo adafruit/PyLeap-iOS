@@ -6,22 +6,31 @@
 //
 
 import SwiftUI
-
+import Foundation
 
 struct WifiStatusConnectedView: View {
+    
+    let userDefaults = UserDefaults.standard
+    private let kPrefix = Bundle.main.bundleIdentifier!
+
+    @Binding var hostName: String
+
+    
+    
     var body: some View {
         HStack(alignment: .center, spacing: 8, content: {
         
-            Text("")
+//            print(userDefaults.object(forKey: kPrefix+".storeResolvedAddress.ipAddress"))
+//            print(userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName"))
+//            print(userDefaults.object(forKey: kPrefix+".storeResolvedAddress.device"))
+            
+            
         
             Button {
 
             } label: {
-                Text("Connect To xxxxxx")
+                Text("Connected To \(hostName)")
                     .font(Font.custom("ReadexPro-Regular", size: 16))
-                Text("xxxx")
-                    .font(Font.custom("ReadexPro-Regular", size: 16))
-        
             }
         
         })
@@ -64,7 +73,7 @@ struct WifiStatusConnectingView: View {
             Button {
 
             } label: {
-                Text("Connecting...")
+                Text("Searching for Adafruit Devices...")
                     .font(Font.custom("ReadexPro-Regular", size: 16))
 
             }

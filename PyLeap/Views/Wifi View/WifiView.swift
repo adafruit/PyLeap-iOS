@@ -5,135 +5,97 @@
 //  Created by Trevor Beaton on 8/9/22.
 //
 
+// My IP Address - 192.168.1.111
+
 import SwiftUI
 import Combine
 
 struct WifiView: View {
-    
-    let userDefaults = UserDefaults.standard
-    
-    
-    func showIPAddressAlert() {
-       
-       alertTF(title: "Enter Device IP Address", message: "PyLeap will use this IP address to search for Adafruit devices on your local network", hintText: "IP Address ...", primaryTitle: "Done", secondaryTitle: "Cancel") { text in
-           
-         //  setIP(ipAddress: text)
-           
-           
-           // Validate IP Address from Services array
-           
-       } secondaryAction: {
-           print("Cancel")
-       }
-   }
-    
-    
-    func showValidationPrompt() {
-       
-       alertTF(title: "Enter Device IP Address", message: "PyLeap will use this IP address to search for Adafruit devices on your local network", hintText: "IP Address ...", primaryTitle: "Done", secondaryTitle: "Cancel") { text in
-           setIP(ipAddress: text)
-           
-       } secondaryAction: {
-           print("Cancel")
-       }
-       
-   }
 
-    
-    func checkIP() {
-        
-        if viewModel.checkIfIPAddressIsNil() == true {
-            print("true")
-            print(userDefaults.object(forKey: "ipAddress"))
-        } else {
-            showIPAddressAlert()
-            print(userDefaults.object(forKey: "ipAddress"))
-            
-        }
-        
-    }
-
-    func setIP(ipAddress: String) {
-        userDefaults.set(ipAddress, forKey: "ipAddress" )
-        
-    }
-    
     @StateObject var viewModel = WifiViewModel()
-    
-  //  @StateObject var wifiService = WifiServiceManager()
+    private let kPrefix = Bundle.main.bundleIdentifier!
+
+    // User Defaults
+    let userDefaults = UserDefaults.standard
     
     @State private var downloadState = DownloadState.idle
     @State private var scrollViewID = UUID()
     @State private var inConnectedInWifiView = true
     @State private var boardBootInfo = "esp32-s2"
+    @State var hostName = ""
     
-    @State private var ipAddressInput: String = ""
-    @State private var foundIPAddress: String = ""
+    func showValidationPrompt() {
+        alertTF(title: "Enter Device IP Address", message: "PyLeap will use this IP address to search for Adafruit devices on your local network", hintText: "IP Address ...", primaryTitle: "Done", secondaryTitle: "Cancel") { text in
+               viewModel.checkServices(ip: text)
+           
+       } secondaryAction: {
+           print("Cancel")
+       }
+   }
     
-    @State private var savedIPAddress = false
+    func showAlertMessage() {
+        alertMessage(title: "IP address Not Found", exitTitle: "Ok") {
+            showValidationPrompt()
+        }
+    }
     
-    // My Wifi - 192.168.1.111
-    @State var showConfirmation: Bool = true
-    @State private var presentAlert = false
+    func initialIPStoreCheck() {
+        if userDefaults.object(forKey: kPrefix+".storedIP") == nil {
+            print("Nothing stored.")
+            showValidationPrompt()
+        } else {
+            viewModel.connectionStatus = .connected
+            print("Stored: \(String(describing: userDefaults.object(forKey: kPrefix+".storedIP"))), @: \(kPrefix+".storedIP")")
+            
+        }
+    }
+    
+    func postNotification() {
+        NotificationCenter.default.post(name: .didUpdateState, object: nil, userInfo: nil)
+    }
+    
+
     
     var body: some View {
 
-        
         VStack(spacing: 0) {
             WifiHeaderView()
            
-
             Group{
-                switch viewModel.wifiServiceManager.connectionStatus {
-                    
+                switch viewModel.connectionStatus {
                     case .connected:
-                        WifiStatusConnectedView()
+                    WifiStatusConnectedView(hostName: $hostName)
+                        
                     case .noConnection:
                         WifiStatusNoConnectionView()
                     case .connecting:
                         WifiStatusConnectingView()
                     }
-                      
+            }
+
+            if !viewModel.ipAddressStored {
+                HStack(alignment: .center, content: {
+                
+                    Button {
+                        showValidationPrompt()
+                       
+                    } label: {
+                        Text("Enter IP address")
+                            .font(Font.custom("ReadexPro-Regular", size: 16))
+                    }
+                    
+                })
+                .padding(.all, 0.0)
+                .frame(maxWidth: .infinity)
+                .frame(maxHeight: 40)
+                .background(Color.clear)
+                .foregroundColor(.black)
+            } else {
+                
             }
             
             
-            HStack(alignment: .center, spacing: 12, content: {
-            
-                Button {
-                    viewModel.checkIfIPAddressIsNil()
-                } label: {
-                    Text("Check IP")
-                        .font(Font.custom("ReadexPro-Regular", size: 16))
-                }
-                
-                Button {
-                    viewModel.clearKnownIPAddress()
-                } label: {
-                    Text("clearKnownIPAddress")
-                        .font(Font.custom("ReadexPro-Regular", size: 16))
-                }
-            
-                Button {
-                    showIPAddressAlert()
-                } label: {
-                    Text("Show Alert")
-                        .font(Font.custom("ReadexPro-Regular", size: 16))
-                }
-                
-                Button {
-                    setIP(ipAddress: "")
-                } label: {
-                    Text("Set IP")
-                        .font(Font.custom("ReadexPro-Regular", size: 16))
-                }
-                
-            })
-            .padding(.all, 0.0)
-            .frame(maxWidth: .infinity)
-            .frame(maxHeight: 40)
-            .background(Color("pyleap_green"))
-            .foregroundColor(.white)
-            
+
 
             
             ScrollView(.vertical, showsIndicators: true) {
@@ -142,14 +104,7 @@ struct WifiView: View {
                     
                     SubHeaderView()
                       //  .spotlight(enabled: spotlight.counter == 1, title: "1")
-                    Button("Real Test") {
-                        alertTF(title: "Login test", message: "Message", hintText: "Hint text", primaryTitle: "primaryTitle", secondaryTitle: "secondaryTitle") { text in
-                            print(text)
-                        } secondaryAction: {
-                            print("Cancel")
-                        }
-
-                    }
+                    
                     //{$0.state == .connected }
                     let check =  NetworkService.shared.pdemos.filter {
                         $0.compatibility.contains(boardBootInfo)
@@ -172,62 +127,34 @@ struct WifiView: View {
                 .id(self.scrollViewID)
             }
             .foregroundColor(.black)
-            
-            
-         
-            
-//            List(viewModel.webDirectoryInfo) { post in
-//
-//                NavigationLink(destination: WifiListDetailView(text: post.name)) {
-//                    HStack(){
-//
-//                        if post.directory == true {
-//                            Image(systemName: "folder")
-//                        } else {
-//                            Image(systemName: "doc")
-//                        }
-//
-//                        Text(post.name)
-//
-//                        Spacer()
-//
-//                        if post.file_size > 1000 {
-//
-//                            Text("\(post.file_size/1000) KB")
-//
-//                        } else {
-//                            Text("\(post.file_size) Bytes")
-//                        }
-//
-//                    }
-//                }
-//
-//
-//            }
-          //  .frame(height: UIScreen.main.bounds.height)
         }
         
-      //  .navigationBarTitle(Text("PyLeap - Wi-Fi"))
-            
-        .alert("\"\(ipAddressInput)\" was not found", isPresented: $presentAlert) {
-                    Button("OK") {
-                        // Handle acknowledgement.
-                        print("OK")
-                        presentAlert = false
-                        
-                    }
-                } message: {
-                    Text("""
-                         The IP address you've entered was not found.
-                         """)
-                    .multilineTextAlignment(.leading)
-                }
-    
+        .onChange(of: viewModel.connectionStatus, perform: { newValue in
+            if newValue == .connected {
+                hostName = userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName") as! String
+            }
+        })
+        
+        .onChange(of: viewModel.isInvalidIP, perform: { newValue in
+            print("viewModel.isInvalidIP .onChange")
+            if newValue {
+                showAlertMessage()
+                viewModel.isInvalidIP.toggle()
+            }
+                
+        })
+        
         .onAppear(){
-           // viewModel.internetMonitoring()
             
-           checkIP()
-           
+          //  viewModel.checkStoredIP()
+            initialIPStoreCheck()
+            
+            if userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName") == nil {
+                print("Nothing stored.")
+            } else {
+                hostName = userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName") as! String
+            }
+            
         }
     }
        
@@ -238,4 +165,10 @@ struct WifiView_Previews: PreviewProvider {
     static var previews: some View {
         WifiView()
     }
+}
+
+extension Notification.Name {
+    private static let kPrefix = Bundle.main.bundleIdentifier!
+    public static let didUpdateState = Notification.Name(kPrefix+".test")
+    public static let invalidIPNotif = Notification.Name(kPrefix+".invalidIPNotif")
 }

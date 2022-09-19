@@ -8,10 +8,10 @@
 import Foundation
 import SwiftUI
 
-
-protocol ServiceFindDelegate {
-   func serviceInfoChanged(index : Int)
-   func serviceListResolved()
+struct ResolvedService {
+    var ipAddress: String
+    var hostName: String
+    var device: String
 }
 
 class WifiServiceManager: NSObject, ObservableObject {
@@ -23,8 +23,8 @@ class WifiServiceManager: NSObject, ObservableObject {
     var isSearching = false
     var discoveredService: NetService?
     var services = [NetService]()
-    
-    var delegate : ServiceFindDelegate!
+        
+    var resolvedServices = [ResolvedService]()
     
     @Published var connectionStatus: ConnectionStatus = .noConnection
     
@@ -43,13 +43,15 @@ class WifiServiceManager: NSObject, ObservableObject {
     }
     
     func findService() {
+        resolvedServices.removeAll()
+        
         if isSearching == false {
             startDiscovery()
         }
     }
     
     func startDiscovery() {
-        connectionStatus = .connecting
+        connectionStatus = .connected
         print("Start Scan")
         isSearching = true
         self.serviceManagerBrowser.searchForServices(ofType: CircuitPythonType.serviceType, inDomain: CircuitPythonType.serviceDomain)
@@ -87,7 +89,7 @@ extension WifiServiceManager: NetServiceBrowserDelegate, NetServiceDelegate {
         print(#function)
         discoveredService = service
         discoveredService?.delegate = self
-        discoveredService?.resolve(withTimeout: 5)
+        discoveredService?.resolve(withTimeout: 10)
 
         if services.contains(service) {
             print("All ready in service array")
@@ -100,11 +102,11 @@ extension WifiServiceManager: NetServiceBrowserDelegate, NetServiceDelegate {
 //           services.append(service)
 //        }
         
-        if service.addresses?.count == 0 {
-            service.resolve(withTimeout: 100)
-           service.delegate = self
-        }
-        
+//        if service.addresses?.count == 0 {
+//            service.resolve(withTimeout: 100)
+//           service.delegate = self
+//        }
+//        
         if moreComing == false {
            browser.stop()
          //  delegate.serviceListResolved()
@@ -124,22 +126,35 @@ extension WifiServiceManager: NetServiceBrowserDelegate, NetServiceDelegate {
        // print(sender.name)
        // print(sender.hostName)
 
+        var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+            guard let data = sender.addresses?.first else { return }
+            data.withUnsafeBytes { (pointer:UnsafePointer<sockaddr>) -> Void in
+                guard getnameinfo(pointer, socklen_t(data.count), &hostname, socklen_t(hostname.count), nil, 0, NI_NUMERICHOST) == 0 else {
+                    return
+                }
+            }
+        
+        let ipAddress = String(cString:hostname)
+        
+        
+        
+        print("IP address: \(ipAddress)")
+        
+        //print("Host Name: \(service.hostName?.replacingOccurrences(of: ".local", with: ""))")
+        let removeLocalFromSubString = sender.hostName?.replacingOccurrences(of: ".local", with: "")
+        let updatedHostName = removeLocalFromSubString?.replacingOccurrences(of: ".", with: "")
+        print("Host Name: \(updatedHostName)")
+        print("Name: \(sender.name)")
+        
+        let resolvedService = ResolvedService(ipAddress: ipAddress, hostName: updatedHostName ?? "Unknown", device: sender.name)
+                    
+        resolvedServices.append(resolvedService)
+        print("resolvedServices count: \(resolvedServices.count)")
+        
+        
         for service in services {
          
-            var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
-                guard let data = service.addresses?.first else { return }
-                data.withUnsafeBytes { (pointer:UnsafePointer<sockaddr>) -> Void in
-                    guard getnameinfo(pointer, socklen_t(data.count), &hostname, socklen_t(hostname.count), nil, 0, NI_NUMERICHOST) == 0 else {
-                        return
-                    }
-                }
-            
-            let ipAddress = String(cString:hostname)
-            
-            print("Address: \(service.addresses)")
-            print("Host Name: \(service.hostName)")
-            print("Name: \(service.name)")
-                        
+           
         }
         
         
