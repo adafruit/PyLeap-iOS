@@ -15,24 +15,11 @@ struct WifiStatusConnectedView: View {
 
     @Binding var hostName: String
 
-    
-    
     var body: some View {
         HStack(alignment: .center, spacing: 8, content: {
-        
-//            print(userDefaults.object(forKey: kPrefix+".storeResolvedAddress.ipAddress"))
-//            print(userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName"))
-//            print(userDefaults.object(forKey: kPrefix+".storeResolvedAddress.device"))
-            
-            
-        
-            Button {
-
-            } label: {
-                Text("Connected To \(hostName)")
-                    .font(Font.custom("ReadexPro-Regular", size: 16))
-            }
-        
+ 
+            Text("Connected To \(hostName)")
+                .font(Font.custom("ReadexPro-Regular", size: 16))
         })
         .padding(.all, 0.0)
         .frame(maxWidth: .infinity)
@@ -46,13 +33,8 @@ struct WifiStatusNoConnectionView: View {
     var body: some View {
 
         HStack(alignment: .center, spacing: 8, content: {
-            Button {
-
-            } label: {
-                Text("No Device Detected")
-                    .font(Font.custom("ReadexPro-Regular", size: 16))
-
-            }
+            Text("No Device Detected")
+                .font(Font.custom("ReadexPro-Regular", size: 16))
         
         })
         .padding(.all, 0.0)
@@ -67,17 +49,8 @@ struct WifiStatusNoConnectionView: View {
 struct WifiStatusConnectingView: View {
     var body: some View {
         HStack(alignment: .center, spacing: 8, content: {
-        
-            Text("")
-        
-            Button {
-
-            } label: {
-                Text("Searching for Adafruit Devices...")
-                    .font(Font.custom("ReadexPro-Regular", size: 16))
-
-            }
-        
+            Text("Searching for Adafruit Devices...")
+                .font(Font.custom("ReadexPro-Regular", size: 16))
         })
         .padding(.all, 0.0)
         .frame(maxWidth: .infinity)

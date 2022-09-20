@@ -41,7 +41,7 @@ struct WifiView: View {
     
     func initialIPStoreCheck() {
         if userDefaults.object(forKey: kPrefix+".storedIP") == nil {
-            print("Nothing stored.")
+            print("No IP address found.")
             showValidationPrompt()
         } else {
             viewModel.connectionStatus = .connected
@@ -49,12 +49,6 @@ struct WifiView: View {
             
         }
     }
-    
-    func postNotification() {
-        NotificationCenter.default.post(name: .didUpdateState, object: nil, userInfo: nil)
-    }
-    
-
     
     var body: some View {
 
@@ -65,7 +59,6 @@ struct WifiView: View {
                 switch viewModel.connectionStatus {
                     case .connected:
                     WifiStatusConnectedView(hostName: $hostName)
-                        
                     case .noConnection:
                         WifiStatusNoConnectionView()
                     case .connecting:
@@ -94,21 +87,15 @@ struct WifiView: View {
                 
             }
             
-            
-
-
-            
+           
             ScrollView(.vertical, showsIndicators: true) {
                 
                 ScrollViewReader { scroll in
                     
                     SubHeaderView()
-                      //  .spotlight(enabled: spotlight.counter == 1, title: "1")
-                    
-                    //{$0.state == .connected }
+
                     let check =  NetworkService.shared.pdemos.filter {
                         $0.compatibility.contains(boardBootInfo)
-                        
                     }
                     
                     ForEach(check) { demo in

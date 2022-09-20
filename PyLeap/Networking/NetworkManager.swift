@@ -14,10 +14,8 @@ class NetworkService: ObservableObject {
     
     @Published var pdemos : [ResultItem] = []
     
-    let baseURL = "https://adafruit.github.io/pyleap.github.io/pyleapProjects.json"
-    
     init(){
-        fetch(stringURL: baseURL)
+        fetch(stringURL: AdafruitInfo.baseURL)
     }
     
     private var dataTask: URLSessionDataTask?
@@ -41,16 +39,16 @@ class NetworkService: ObservableObject {
         
         if let data = cache.cachedResponse(for: request)?.data {
             print("got image from cache")
-            //self.projectInfo = data
             let projectData = try? JSONDecoder().decode(RootResults.self, from: data)
             self.pdemos = projectData!.projects
         }
         
-        print("fetching...")
-        session.dataTask(with: URL(string: baseURL)!) { (data, _, _) in
+        print("Fetching...")
+        session.dataTask(with: URL(string: AdafruitInfo.baseURL)!) { (data, _, _) in
             
             guard let data = data else {
                 print("No data found")
+                
                 return }
             
             do {
@@ -71,10 +69,10 @@ class NetworkService: ObservableObject {
         }.resume()
     }
     
-    func fetchThirdParyProject(stringURL: String) {
+    func fetchThirdParyProject(urlString: String) {
         print(#function)
         let cache = URLCache.shared
-        let request = URLRequest(url: URL(string: stringURL)!, cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData, timeoutInterval: 60.0)
+        let request = URLRequest(url: URL(string: urlString)!, cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData, timeoutInterval: 60.0)
         
         //        if let data = cache.cachedResponse(for: request)?.data {
         //            print("got image from cache")
@@ -83,11 +81,11 @@ class NetworkService: ObservableObject {
         //            self.pdemos = projectData!.projects
         //        }
         
-        print("fetching...")
-        session.dataTask(with: URL(string: stringURL)!) { (data, _, error) in
+        print("Fetching custom project...")
+        session.dataTask(with: URL(string: urlString)!) { (data, _, error) in
             
             if let error = error {
-                print("Invalid URL: \(stringURL)")
+                print("Could not load project. Please check your URL Invalid URL: \(urlString)")
                 return
             }
             
@@ -104,14 +102,11 @@ class NetworkService: ObservableObject {
                         
                        // self.pdemos.append(contentsOf: projects)
                         print(NetworkService.shared.pdemos)
-                        
-                        
                         if let data = cache.cachedResponse(for: request)?.data {
                             print("got image from cache")
                             self.projectInfo = data
                             self.pdemos.append(contentsOf: projects)
-//                            let projectData = try? JSONDecoder().decode(RootResults.self, from: data)
-//                            self.pdemos = projectData!.projects
+
                         }
                         
                         // https://trevknows.github.io/testLeap.github.io/testLeap.json
@@ -126,11 +121,8 @@ class NetworkService: ObservableObject {
                 print(error.localizedDescription)
             }
             
-            
-            
         }.resume()
     }
-    
 }
 
 

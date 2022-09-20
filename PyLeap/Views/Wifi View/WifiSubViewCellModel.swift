@@ -36,8 +36,6 @@ class WifiSubViewCellModel: ObservableObject {
                         print("Project was not found...")
                         
                     }
-                    
-                
             }
             
         }

@@ -95,11 +95,11 @@ class WifiViewModel: ObservableObject {
     }
     
     func noConnectionView() {
-   //     connectionStatus = .noConnection
+        connectionStatus = .noConnection
     }
     
     func connectingView() {
-   //     connectionStatus = .connecting
+        connectionStatus = .connecting
     }
     
     func connectedView() {
@@ -138,7 +138,7 @@ class WifiViewModel: ObservableObject {
      }
     
     // Attempt to insert non-property list object when trying to save a custom object in Swift
-//https://stackoverflow.com/questions/41355427/attempt-to-insert-non-property-list-object-when-trying-to-save-a-custom-object-i
+// https://stackoverflow.com/questions/41355427/attempt-to-insert-non-property-list-object-when-trying-to-save-a-custom-object-i
     
     func checkServices(ip: String) {
         

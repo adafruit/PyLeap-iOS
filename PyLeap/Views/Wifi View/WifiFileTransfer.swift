@@ -11,7 +11,6 @@ import SwiftUI
 class WifiFileTransfer: ObservableObject {
     
     @StateObject var wifiTransferService = WifiTransferService()
-
     
     // File Manager Data
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -21,45 +20,46 @@ class WifiFileTransfer: ObservableObject {
     @Published var projectDownloaded = false
     @Published var failedProjectLaunch = false
     
-    
     var projectDirectories: [URL] = []
-    
     var returnedArray = [[String]]()
-
+    
+    func removeFileArrayElements() {
+        fileArray.removeAll()
+    }
+    
+    func appendFileArrayElements(fileContent: ContentFile) {
+        fileArray.append(fileContent)
+    }
+    
     func getProjectForSubClass(nameOf project: String) {
-           
-           if let enumerator = FileManager.default.enumerator(at: directoryPath, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
-              // for case condition: Only process URLs
-               for case let fileURL as URL in enumerator {
-               
-                       if fileURL.lastPathComponent == project {
-                           failedProjectLaunch = false
-                           projectDownloaded = true
-                           print(#function)
-                           print("Searching for... \(project)")
-                           print("URL Path: \(fileURL.path)")
-                           print("URL : \(fileURL)")
-                          
-                       return
-                           
-                       } else {
-                           failedProjectLaunch = true
-                           projectDownloaded = false
-                           print("Project was not found...")
-                           
-                       }
-                       
-                   
-               }
-               
-           }
-           
-       }
+        
+        if let enumerator = FileManager.default.enumerator(at: directoryPath, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
+            // for case condition: Only process URLs
+            for case let fileURL as URL in enumerator {
+                
+                if fileURL.lastPathComponent == project {
+                    failedProjectLaunch = false
+                    projectDownloaded = true
+                    print(#function)
+                    print("Searching for... \(project)")
+                    print("URL Path: \(fileURL.path)")
+                    print("URL : \(fileURL)")
+                    
+                    return
+                    
+                } else {
+                    failedProjectLaunch = true
+                    projectDownloaded = false
+                    print("Project was not found...")
+                    
+                }
+            }
+        }
+    }
     
     func projectValidation(nameOf project: String) {
         print("getProjectURL called")
-        // counter = 0
-        // state = .transferring
+
         if let enumerator = FileManager.default.enumerator(at: directoryPath, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
             // for case condition: Only process URLs
             for case let fileURL as URL in enumerator {
@@ -85,7 +85,7 @@ class WifiFileTransfer: ObservableObject {
                     } else {
                         
                         print("Project was not found for...\(project)")
-     
+                        
                     }
                     
                 }
@@ -116,19 +116,17 @@ class WifiFileTransfer: ObservableObject {
                 
             } else {
                 if isDirectory {
-                    print("Directories Found")
                     print(fileURL.lastPathComponent)
                     if name == "_extras" {
                         dirEnumerator.skipDescendants()
                     }
                     //adafruit-circuitpython-bundle
                     if fileURL.lastPathComponent.contains("adafruit-circuitpython-bundle") {
-                        print("We got one!")
                         print("Bad file - \(fileURL)")
                     } else {
                         if fileURL.pathComponents.count > 12 {
                             print("File Path component count: \(fileURL.pathComponents.count)")
-                            projectDirectories.append(fileURL)
+                         appendDirectories(fileURL)
                         }
                     }
                     
@@ -143,10 +141,14 @@ class WifiFileTransfer: ObservableObject {
         
     }
     
+    func appendDirectories(_ url: URL) {
+        projectDirectories.append(url)
+    }
+    
     func fileFilter(Project path: URL) {
         
         var files = [URL]()
-        fileArray.removeAll()
+        removeFileArrayElements()
         
         if let enumerator = FileManager.default.enumerator(at: path, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
             for case let fileURL as URL in enumerator {
@@ -170,11 +172,11 @@ class WifiFileTransfer: ObservableObject {
                             let fileSize = resources.fileSize!
                             
                             let addedFile = ContentFile(title: fileURL.lastPathComponent, fileSize: fileSize)
-                            fileArray.append(addedFile)
+                            appendFileArrayElements(fileContent: addedFile)
                         }
                         
                         let addedFile = ContentFile(title: fileURL.lastPathComponent, fileSize: 0 )
-                        fileArray.append(addedFile)
+                        appendFileArrayElements(fileContent: addedFile)
                     }
                     
                 } catch { print(error, fileURL) }
@@ -186,7 +188,7 @@ class WifiFileTransfer: ObservableObject {
     }
     
     func filesDownloaded(url: URL) {
-        fileArray.removeAll()
+        removeFileArrayElements()
         
         var files = [URL]()
         // Returns a directory enumerator object that can be used to perform a deep enumeration of the directory at the specified URL.
@@ -214,11 +216,11 @@ class WifiFileTransfer: ObservableObject {
                             let fileSize = resources.fileSize!
                             
                             let addedFile = ContentFile(title: fileURL.lastPathComponent, fileSize: fileSize)
-                            fileArray.append(addedFile)
+                            appendFileArrayElements(fileContent: addedFile)
                         }
                         
                         let addedFile = ContentFile(title: fileURL.lastPathComponent, fileSize: 0 )
-                        fileArray.append(addedFile)
+                        appendFileArrayElements(fileContent: addedFile)
                     }
                     
                 } catch { print(error, fileURL) }
@@ -269,7 +271,7 @@ class WifiFileTransfer: ObservableObject {
                     } else {
                         if fileURL.pathComponents.count > 12 {
                             print("File Path component count: \(fileURL.pathComponents.count)")
-                            projectDirectories.append(fileURL)
+                            appendDirectories(fileURL)
                         }
                     }
                     
@@ -279,7 +281,7 @@ class WifiFileTransfer: ObservableObject {
                 }
             }
         }
-
+        
         print("Current projectDirectories: \(projectDirectories[0])")
         
         pathManipulation(arrayOfAny: filterOutCPDirectories(fileArray: projectDirectories), fileArray: fileURLs)
@@ -300,7 +302,7 @@ class WifiFileTransfer: ObservableObject {
         
     }
     
-
+    
     
     func pathManipulation(arrayOfAny: [URL], fileArray: [URL]) {
         print(#function)
@@ -348,13 +350,7 @@ class WifiFileTransfer: ObservableObject {
         
     }
     
-    //    func sortDirectory(directoryArray: [URL], fileArray: [URL]) {
-    //        print(#function)
-    //
-    //        var sortedDirectoryArray = directoryArray.sorted(by: { $1.pathComponents.count > $0.pathComponents.count} )
-    //        var sortedFileArray = fileArray.sorted(by: { $1.pathComponents.count > $0.pathComponents.count} )
-    //        validateDirectory(directoryArray: sortedDirectoryArray, fileArray: sortedFileArray)
-    //    }
+
     
     func validateDirectory(directoryArray: [[String]], fileArray: [URL]) {
         print(#function)
@@ -370,9 +366,7 @@ class WifiFileTransfer: ObservableObject {
             guard let firstDirectory = directoryArray.first else {
                 return
             }
-            
             print("Array count \(returnedArray.count)")
-            
             makeDirectory(fileArray: fileArray)
             
         }
@@ -381,9 +375,6 @@ class WifiFileTransfer: ObservableObject {
     
     func makeDirectory(fileArray: [URL]) {
         print(#function)
-        
-        
-        
         
         var tempPath = returnedArray[0]
         let joined = tempPath.joined(separator: "/")
@@ -595,64 +586,64 @@ class WifiFileTransfer: ObservableObject {
     
     
     
-//    func sendPutRequest(fileName: String,
-//                        body: Data,
-//                        then handler: @escaping(Result<Data, Error>) -> Void) {
-//
-//        var urlSession = URLSession.shared
-//
-//        print(#function)
-//        let parameters = body
-//        let postData = parameters
-//
-//        postData.base64EncodedData(options: []).description.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-//
-//        let username = ""
-//        let password = "passw0rd"
-//        let loginString = "\(username):\(password)"
-//
-//        guard let loginData = loginString.data(using: String.Encoding.utf8) else {
-//            return
-//        }
-//        let base64LoginString = loginData.base64EncodedString()
-//
-//        // var request = URLRequest(url: URL(string: "http://cpy-9cbe10.local/fs/")!,timeoutInterval: Double.infinity)
-//        var request = URLRequest(url: URL(string: "http://cpy-9cbe10.local/fs/\(fileName)")!,timeoutInterval: Double.infinity)
-//        request.addValue("application/json", forHTTPHeaderField: "Accept")
-//        request.addValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
-//        request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-//
-//        request.httpMethod = "PUT"
-//        request.httpBody = postData
-//
-//        print("Print curl:")
-//        print(request.cURL(pretty: true))
-//
-//        let task = urlSession.dataTask(
-//            with: request,
-//            completionHandler: { data, response, error in
-//                // Validate response and call handler
-//
-//                if let error = error  {
-//                    print("File write error")
-//
-//                    handler(.failure(error))
-//
-//                }
-//
-//                if let data = data {
-//                    print("File write success!")
-//                    handler(.success(data))
-//                }
-//
-//            }
-//        )
-//
-//        task.resume()
-//
-//    }
-
+    //    func sendPutRequest(fileName: String,
+    //                        body: Data,
+    //                        then handler: @escaping(Result<Data, Error>) -> Void) {
+    //
+    //        var urlSession = URLSession.shared
+    //
+    //        print(#function)
+    //        let parameters = body
+    //        let postData = parameters
+    //
+    //        postData.base64EncodedData(options: []).description.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+    //
+    //        let username = ""
+    //        let password = "passw0rd"
+    //        let loginString = "\(username):\(password)"
+    //
+    //        guard let loginData = loginString.data(using: String.Encoding.utf8) else {
+    //            return
+    //        }
+    //        let base64LoginString = loginData.base64EncodedString()
+    //
+    //        // var request = URLRequest(url: URL(string: "http://cpy-9cbe10.local/fs/")!,timeoutInterval: Double.infinity)
+    //        var request = URLRequest(url: URL(string: "http://cpy-9cbe10.local/fs/\(fileName)")!,timeoutInterval: Double.infinity)
+    //        request.addValue("application/json", forHTTPHeaderField: "Accept")
+    //        request.addValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
+    //        request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+    //
+    //        request.httpMethod = "PUT"
+    //        request.httpBody = postData
+    //
+    //        print("Print curl:")
+    //        print(request.cURL(pretty: true))
+    //
+    //        let task = urlSession.dataTask(
+    //            with: request,
+    //            completionHandler: { data, response, error in
+    //                // Validate response and call handler
+    //
+    //                if let error = error  {
+    //                    print("File write error")
+    //
+    //                    handler(.failure(error))
+    //
+    //                }
+    //
+    //                if let data = data {
+    //                    print("File write success!")
+    //                    handler(.success(data))
+    //                }
+    //
+    //            }
+    //        )
+    //
+    //        task.resume()
+    //
+    //    }
     
-
+    
+    
     
 }

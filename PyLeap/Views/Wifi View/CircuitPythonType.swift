@@ -12,3 +12,7 @@ struct CircuitPythonType{
     static let servicePort = 80
     static let serviceDomain = "local"
 }
+
+struct AdafruitInfo {
+    static let baseURL = "https://adafruit.github.io/pyleap.github.io/pyleapProjects.json"
+}

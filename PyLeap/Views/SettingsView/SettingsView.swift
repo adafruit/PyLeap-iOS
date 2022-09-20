@@ -23,16 +23,31 @@ struct SettingsView: View {
     private let kPrefix = Bundle.main.bundleIdentifier!
     let userDefaults = UserDefaults.standard
     
+    func showInvalidURLEntry() {
+        alertMessage(title: "Invalid URL entered", exitTitle: "Ok") {
+        }
+    }
+    
+    func showDisconnectionPrompt() {
+        comfirmationAlertMessage(title: "Are you sure you want to disconnect?", exitTitle: "Cancel", primaryTitle: "Disconnect") {
+            viewModel.clearKnownIPAddress()
+            rootViewModel.goToWifiView()
+        } cancel: {
+            
+        }
+
+    }
     
     var body: some View {
         
         NavigationView {
-          
+            
             Form {
-
+                
                 VStack() {
                     
                     if viewModel.connectedToDevice {
+                        
                         
                         Section() {
                             VStack(alignment: .leading, spacing: 8) {
@@ -45,7 +60,7 @@ struct SettingsView: View {
                                 Text("Device:")
                                     .bold()
                                 Text(viewModel.device)
-                                    
+                                
                             }
                             .padding(.leading,0)
                         }
@@ -58,37 +73,34 @@ struct SettingsView: View {
                             } label: {
                                 Text("Connect to Adafruit Device")
                             }
-
+                            
                         }
                         
                     }
                     
                 }
-
+                
                 if viewModel.connectedToDevice {
                     Section() {
                         Button {
-                            viewModel.clearKnownIPAddress()
-                            rootViewModel.goToWifiView()
+                            showDisconnectionPrompt()
                         } label: {
-                        Text("Disconnect")
+                            Text("Disconnect")
                         }
                     }
                 }
-                
-                
                 
                 Section {
                     Toggle(isOn: .constant(false)) {
                         Text("Dark Mode")
                     }
-
-                }
-            
-            header: {
-                    Text("Display")
                 }
                 
+            header: {
+                Text("Display")
+            }
+                
+                if viewModel.connectedToDevice {
                 
                 Section {
                     Text("Enter project URL")
@@ -96,15 +108,11 @@ struct SettingsView: View {
                         .keyboardType(.URL)
                         .textContentType(.URL)
                         .onSubmit {
-                            NetworkService.shared.fetchThirdParyProject(stringURL: pythonFileName)
+                            NetworkService.shared.fetchThirdParyProject(urlString: pythonFileName)
                             print(pythonFileName)
                             pythonFileName = ""
                         }
-                        //.padding(7)
-                     //   .padding(.horizontal, 8)
-                      //  .background(Color(.systemGray6))
-                        //.cornerRadius(8)
-
+                    
                 } header: {
                     Text("Add Project")
                 }
@@ -112,63 +120,49 @@ struct SettingsView: View {
                 
                 
                 Section {
-                   
+                    
                     Button("Create Python File"){
                         presentPythonAlert = true
                     }
                     .alert("Create Python File", isPresented: $presentPythonAlert, actions: {
-                                
-                        TextField("bbhj", text: $pythonFileName)
+                        
+                        TextField("", text: $pythonFileName)
                         
                         Button("Add", action: {})
-                                
-                        Button("Cancel", role: .cancel, action: {})
-                            }, message: {
-                                Text("Please enter your username and password.")
-                            })
-                    
+                        
+                        Button("Cancel", role: .cancel, action: {
+                            presentPythonAlert = false
+                        })
+                    }, message: {
+                        Text("Please enter your username and password.")
+                    })
                     
                     
                     Button("Create JSON File"){
-                        presentPythonAlert = true
+                        presentJSONAlert = true
                     }
-                    .alert("Create Python File", isPresented: $presentPythonAlert, actions: {
-                                
+                    .alert("Create JSON File", isPresented: $presentJSONAlert, actions: {
+                        
+                        TextField("", text: $jsonFileName)
                         
                         Button("Add", action: {})
-                                
-                        Button("Cancel", role: .cancel, action: {})
-                            }, message: {
-                                Text("Please enter your username and password.")
-                            })
-                    
-// enter a url
-                    
-                    // add sub
-                    //enter a yurrl
-                    
-                    //https://
-                    
-                    ///
-                    /// fething...
-                    /// could not load proj
-                    /// //plz check url
+                        
+                        Button("Cancel", role: .cancel, action: {
+                            presentJSONAlert = false
+                        })
+                    }, message: {
+                        Text("Please enter your username and password.")
+                    })
                 }
             header: {
                 Text("Create")
             }
+        }
                 
-                
-                
-//            footer: {
-//                Text("Test")
-//            }
-
                 Section{
-                    Label("Go to Adafruit.com", systemImage: "link")
+                    Label("[Go to Adafruit.com](https://www.adafruit.com)", systemImage: "link")
                 }
                 .font(.system(size: 16, weight: .semibold))
-                
                 
             }
             .navigationTitle("Settings")
@@ -183,13 +177,8 @@ struct SettingsView: View {
                             .foregroundColor(.blue)
                     }
                     .padding(8)
-
-                    
-                    
                 }
             }
-        }
-        .onAppear() {
         }
     }
 }
@@ -203,15 +192,28 @@ struct SettingsView_Previews: PreviewProvider {
 
 extension View {
    
+    func comfirmationAlertMessage(title: String, exitTitle: String, primaryTitle: String,disconnect: @escaping() -> (),cancel: @escaping() -> ()){
+        let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+        
+        alert.addAction(.init(title: primaryTitle, style: .destructive, handler: { _ in
+            disconnect()
+        }))
+        
+        alert.addAction(.init(title: exitTitle, style: .cancel, handler: { _ in
+cancel()
+        }))
+        
+        
+        
+        rootController().present(alert, animated: true, completion: nil)
+    }
+    
     func alertMessage(title: String, exitTitle: String, cancel: @escaping()->()){
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
         
         alert.addAction(.init(title: exitTitle, style: .cancel, handler: { _ in
 cancel()
-            
         }))
-        
-        
         rootController().present(alert, animated: true, completion: nil)
     }
     
@@ -223,12 +225,10 @@ cancel()
             field.placeholder = hintText
             
         }
-        
         alert.addAction(.init(title: secondaryTitle, style: .cancel, handler: { _ in
             secondaryAction()
             
         }))
-        
         alert.addAction(.init(title: primaryTitle, style: .default, handler: { _ in
             if let text = alert.textFields?[0].text {
                 primaryAction(text)
@@ -237,9 +237,7 @@ cancel()
             }
             
         }))
-        
         rootController().present(alert, animated: true, completion: nil)
-        
     }
     
     func rootController()->UIViewController{

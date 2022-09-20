@@ -18,29 +18,20 @@ class SettingsViewModel: ObservableObject {
     var connectedToDevice = false
     
     
-    init() {
-        check()
-    }
+    init() { check() }
     
     func check() {
         print(#function)
        if userDefaults.object(forKey: kPrefix+".storedIP") == nil {
-           print("Nothing stored.")
            connectedToDevice = false
        } else {
-           print(#function)
            print("Stored: \(String(describing: userDefaults.object(forKey: kPrefix+".storedIP"))), @: \(kPrefix+".storedIP")")
-           
            
            connectedToDevice = true
            
            ipAddress = userDefaults.object(forKey: kPrefix+".storeResolvedAddress.ipAddress") as! String
-           
            hostName = userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName") as! String
-           
            device = userDefaults.object(forKey: kPrefix+".storeResolvedAddress.device") as! String
-           
-           
        }
    }
     
