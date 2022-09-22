@@ -15,7 +15,7 @@ struct WifiSubViewCell: View {
     @EnvironmentObject var globalString : GlobalString
     
     @StateObject var wifiFileTransfer = WifiFileTransfer()
-    
+   
     
     
     @Binding var bindingString: String
@@ -47,8 +47,6 @@ struct WifiSubViewCell: View {
     var body: some View {
         
         VStack {
-            
-            
             
             VStack(alignment: .leading, spacing: 0, content: {
                 
@@ -121,126 +119,26 @@ struct WifiSubViewCell: View {
             if isConnected {
                 
                 if compatibility.contains(bindingString) {
-                  
-                    Button {
-                        print("Wifi Project Attempt \(title)")
-                        
-                        if wifiFileTransfer.projectDownloaded {
-                            wifiFileTransfer.projectValidation(nameOf: title)
-                        } else {
-                            downloadModel.startDownload(urlString: downloadLink, projectTitle: title) {
-                                print("DONE")
+                                          
+                        Button {
+                            print("Wifi Project Attempt \(title)")
+                            
+                            if wifiFileTransfer.projectDownloaded {
+                                wifiFileTransfer.projectValidation(nameOf: title)
+                            } else {
+                                downloadModel.startDownload(urlString: downloadLink, projectTitle: title) {
+                                    print("DONE")
+                                }
                             }
+                            
+                        } label: {
+                            RunItButton()
+                                .padding(.top, 20)
                         }
                         
-                        
-                        //viewModel.projectValidation(nameOf: title)
-                    } label: {
-                        RunItButton()
-                      .padding(.top, 20)
                     }
-
                     
-//                    if downloadStateBinder == .idle {
-//
-//
-//
-//                        Button(action: {
-//
-//                            downloadStateBinder = .transferring
-//                            globalString.isSendingG = true
-//                            globalString.counterG = 0
-//                            globalString.numberOfFilesG = 1
-//
-//
-//                            globalString.downloadLinkString = downloadLink
-//                            globalString.projectString = title
-//                            globalString.attemptToDownload.toggle()
-//
-//
-//
-//
-//
-//                            if selectionModel.isConnectedToInternet == false {
-//                                print("Going offline...")
-//                                downloadStateBinder = .transferring
-//
-//                                globalString.projectString = title
-//                                globalString.attemptToSend.toggle()
-//                            }
-//
-//                            if viewModel.projectDownloaded == false && selectionModel.isConnectedToInternet == false {
-//                                offlineWithoutProject = true
-//                                downloadStateBinder = .idle
-//
-//                            }
-//
-//                            if viewModel.projectDownloaded == false {
-//
-//                            }
-//
-//                        }) {
-//
-//                            RunItButton()
-//                            .padding(.top, 20)
-//
-//                        }
-//                    }
-//
-//                    if downloadStateBinder == .failed {
-//
-//                        FailedButton()
-//                            .padding(.top, 20)
-//                    }
-//
-//
-//                    if downloadStateBinder == .transferring {
-//
-//                        Button(action: {
-//
-//                            print("Project Selected: \(title) - DemoSubView")
-//
-//                            globalString.projectString = title
-//                            globalString.numberOfTimesDownloaded += 1
-//
-//                        }) {
-//
-//                            DownloadingButton()
-//                                .padding(.top, 20)
-//                        }
-//                        .disabled(true)
-//
-//
-//
-//                        if globalString.isSendingG {
-//
-//                            VStack(alignment: .center, spacing: 0) {
-//                                ProgressView("", value: CGFloat(globalString.counterG), total: CGFloat(globalString.numberOfFilesG) )
-//                                    .padding(.horizontal, 90)
-//                                    .padding(.top, -8)
-//                                    .padding(.bottom, 10)
-//                                    .accentColor(Color.gray)
-//                                    .scaleEffect(x: 1, y: 2, anchor: .center)
-//                                    .cornerRadius(10)
-//                                    .frame(height: 10)
-//
-//                                ProgressView()
-//                            }
-//
-//                        }
-//
-//
-//                    }
-//
-//
-//
-//                    if downloadStateBinder == .complete {
-//
-//                        CompleteButton()
-//                            .padding(.top, 20)
-//                    }
-//
-                }
+                
                 
                 
             } else {

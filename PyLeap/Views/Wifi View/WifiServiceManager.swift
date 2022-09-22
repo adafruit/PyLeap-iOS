@@ -15,18 +15,17 @@ struct ResolvedService {
 }
 
 class WifiServiceManager: NSObject, ObservableObject {
-   // var discovered: [DiscoveredInstance] = []
    
     @EnvironmentObject var wifiViewModel: WifiViewModel
+    @Published var connectionStatus: ConnectionStatus = .noConnection
+    @Published var isSearching = false
     
     let serviceManagerBrowser = NetServiceBrowser()
-    var isSearching = false
     var discoveredService: NetService?
+    
     var services = [NetService]()
-        
     var resolvedServices = [ResolvedService]()
     
-    @Published var connectionStatus: ConnectionStatus = .noConnection
     
     func numberOfService() -> Int {
        return services.count
@@ -43,7 +42,11 @@ class WifiServiceManager: NSObject, ObservableObject {
     }
     
     func findService() {
+        print("Start Scan")
+     //   self.serviceManagerBrowser.searchForServices(ofType: CircuitPythonType.serviceType, inDomain: CircuitPythonType.serviceDomain)
         resolvedServices.removeAll()
+        
+        print("Current state of isSearching: \(isSearching)")
         
         if isSearching == false {
             startDiscovery()
@@ -98,33 +101,21 @@ extension WifiServiceManager: NetServiceBrowserDelegate, NetServiceDelegate {
             services.append(service)
         }
         
-//        if services.firstIndex(of: service) == nil {
-//           services.append(service)
-//        }
-        
-//        if service.addresses?.count == 0 {
-//            service.resolve(withTimeout: 100)
-//           service.delegate = self
-//        }
-//        
         if moreComing == false {
            browser.stop()
-         //  delegate.serviceListResolved()
         }
         
         print("Service count: \(services.count)")
     }
     
     func netServiceDidStop(_ sender: NetService) {
-        print("Stopped")
+        isSearching = false
+        print("isSearching: \(isSearching)")
     }
 
     
     func netServiceDidResolveAddress(_ sender: NetService) {
         print(#function)
-        
-       // print(sender.name)
-       // print(sender.hostName)
 
         var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
             guard let data = sender.addresses?.first else { return }
@@ -135,9 +126,6 @@ extension WifiServiceManager: NetServiceBrowserDelegate, NetServiceDelegate {
             }
         
         let ipAddress = String(cString:hostname)
-        
-        
-        
         print("IP address: \(ipAddress)")
         
         //print("Host Name: \(service.hostName?.replacingOccurrences(of: ".local", with: ""))")
@@ -150,22 +138,7 @@ extension WifiServiceManager: NetServiceBrowserDelegate, NetServiceDelegate {
                     
         resolvedServices.append(resolvedService)
         print("resolvedServices count: \(resolvedServices.count)")
-        
-        
-        for service in services {
-         
-           
-        }
-        
-        
-//        if let index = services.firstIndex(of: sender) {
-//
-//            print("service info change : \(index)")
-//
-//           // delegate.serviceInfoChanged(index: index)
-//             }
-        
-        
+
         }
     
     

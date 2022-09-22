@@ -14,7 +14,7 @@ struct WifiView: View {
 
     @StateObject var viewModel = WifiViewModel()
     private let kPrefix = Bundle.main.bundleIdentifier!
-
+    @StateObject var wifiviewModel = WifiServiceManager()
     // User Defaults
     let userDefaults = UserDefaults.standard
     
@@ -55,6 +55,13 @@ struct WifiView: View {
         VStack(spacing: 0) {
             WifiHeaderView()
            
+            if wifiviewModel.isSearching {
+                NetworkConnectionBanner()
+            } else {
+                
+            }
+            
+            
             Group{
                 switch viewModel.connectionStatus {
                     case .connected:
@@ -76,6 +83,13 @@ struct WifiView: View {
                         Text("Enter IP address")
                             .font(Font.custom("ReadexPro-Regular", size: 16))
                     }
+                    
+                    Button {
+                        wifiviewModel.findService()
+                    } label: {
+                        Text("-Scan Network-")
+                    }
+
                     
                 })
                 .padding(.all, 0.0)
