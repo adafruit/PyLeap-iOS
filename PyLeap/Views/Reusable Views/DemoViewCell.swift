@@ -49,9 +49,7 @@ struct DemoViewCell: View {
                                 compatibility: result.compatibility,
                                 isConnected: $isConnected)
                 }
-                .onTapGesture {
-                    print("sub \(spotlight.counter)")
-                }
+                
             }
         }
     }

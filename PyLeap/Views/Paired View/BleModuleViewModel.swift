@@ -9,7 +9,7 @@ import SwiftUI
 import Zip
 import FileTransferClient
 
-class SelectionViewModel: ObservableObject {
+class BleModuleViewModel: ObservableObject {
    
     @StateObject var globalString = GlobalString()
     
@@ -35,7 +35,7 @@ class SelectionViewModel: ObservableObject {
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     
     var networkMonitor = NetworkMonitor()
-    static let shared = SelectionViewModel()
+    static let shared = BleModuleViewModel()
     
     @Published var isConnectedToInternet = false
     @Published var showAlert = false
@@ -44,10 +44,6 @@ class SelectionViewModel: ObservableObject {
     
 
     @Published var state: DownloadState = .idle
-    
-    
-    
-    
     
     
     enum ProjectViewError: LocalizedError {

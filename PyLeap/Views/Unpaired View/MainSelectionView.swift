@@ -22,10 +22,12 @@ struct MainSelectionView: View {
     @State private var showWebViewPopover: Bool = false
     
     
-    @ObservedObject var model = NetworkService()
+    @ObservedObject var networkModel = NetworkService()
+    @ObservedObject var viewModel = MainSelectionViewModel()
+    
     
     @State private var isConnected = false
-
+    
     @State private var test = ""
     
     @State private var nilBinder = DownloadState.idle
@@ -35,9 +37,9 @@ struct MainSelectionView: View {
     @AppStorage("shouldShowOnboarding") var shouldShowOnboarding: Bool = true
     
     var body: some View {
-
-        VStack(spacing: 0) {
-            HeaderView()
+        
+        VStack(alignment: .center, spacing: 0) {
+            MainHeaderView()
             
             
             HStack(alignment: .center, spacing: 8, content: {
@@ -45,11 +47,11 @@ struct MainSelectionView: View {
                 Button {
                     rootViewModel.goToWifiView()
                 } label: {
-                    Text("Connect to Wifi")
+                    Text("Connect to Wi-Fi Mode")
                         .font(Font.custom("ReadexPro-Regular", size: 16))
                         .underline()
                 }
-
+                
             })
             .padding(.all, 0.0)
             .frame(maxWidth: .infinity)
@@ -68,7 +70,7 @@ struct MainSelectionView: View {
                         .font(Font.custom("ReadexPro-Regular", size: 16))
                         .underline()
                 }
-
+                
             })
             .padding(.all, 0.0)
             .frame(maxWidth: .infinity)
@@ -76,27 +78,74 @@ struct MainSelectionView: View {
             .background(Color("pyleap_burg"))
             .foregroundColor(.white)
             
-            ScrollView {
             
+            
+            
+            ScrollView {
+                
+                MainSubHeaderView()
+                
+                if networkModel.pdemos.isEmpty {
+                    HStack{
+                        Spacer()
+                        ProgressView()
+                            .scaleEffect(2)
+                        Spacer()
+                    }
+                    .padding(0)
+                    
+                }
+                
                 ScrollViewReader { scroll in
-                   
-                  
                     
-                   SubHeaderView()
-                    
-                    ForEach(NetworkService.shared.pdemos) { demo in
+                    ForEach(networkModel.pdemos) { demo in
                         DemoViewCell(result: demo, isConnected: $isConnected, bootOne: $test, onViewGeometryChanged: {
                             withAnimation {
                                 scroll.scrollTo(demo.id)
                             }
                         }, stateBinder: $nilBinder)
                     }
-                    
                 }
             }
-
         }
         
+        
+        
+        /// **Pull down to Refresh feature**
+        //            ScrollRefreshableView(title: "Refresh", tintColor: .purple) {
+        //                HStack{
+        //                    Spacer()
+        //                    MainSubHeaderView()
+        //                    Spacer()
+        //                }
+        //                .padding(0)
+        //
+        //                if networkModel.pdemos.isEmpty {
+        //                    HStack{
+        //                        Spacer()
+        //                        ProgressView()
+        //                            .scaleEffect(2)
+        //                        Spacer()
+        //                    }
+        //                    .padding(0)
+        //
+        //                }
+        //
+        //        }//            } onRefresh: {
+        //                self.networkModel.fetch()
+        //            }
+        //
+        //            }
+        
+        
+        .onChange(of: viewModel.pdemos, perform: { newValue in
+            print("Update")
+            
+            
+        })
+        .onAppear() {
+            networkModel.fetch()
+        }
         
         .fullScreenCover(isPresented: $shouldShowOnboarding, content: {
             ExampleView(shouldShowOnboarding: $shouldShowOnboarding)

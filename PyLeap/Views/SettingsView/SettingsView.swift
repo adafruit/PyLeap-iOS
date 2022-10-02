@@ -23,8 +23,16 @@ struct SettingsView: View {
     private let kPrefix = Bundle.main.bundleIdentifier!
     let userDefaults = UserDefaults.standard
     
-    func showInvalidURLEntry() {
-        alertMessage(title: "Invalid URL entered", exitTitle: "Ok") {
+    
+    func showInvalidURLEntryAlert() {
+        alertMessage(title: "Invalid URL entry", exitTitle: "Ok") {
+            
+        }
+    }
+    
+    func showDownloadConfirmationAlert() {
+        alertMessage(title: "Download Complete", exitTitle: "Ok") {
+            
         }
     }
     
@@ -35,12 +43,32 @@ struct SettingsView: View {
         } cancel: {
             
         }
-
+        
     }
+    
+    
+    
     
     var body: some View {
         
-        NavigationView {
+        VStack {
+            
+            //            HStack {
+            //                Button {
+            //                    rootViewModel.goToWifiView()
+            //                } label: {
+            //                    Text("Back")
+            //                }
+            //                .frame(height: UIScreen.main.bounds.size.height / 20)
+            //
+            //            }
+            HStack {
+                Text("Settings")
+                    .font(.largeTitle)
+                    .bold()
+                    .padding(12)
+                Spacer()
+            }
             
             Form {
                 
@@ -101,63 +129,63 @@ struct SettingsView: View {
             }
                 
                 if viewModel.connectedToDevice {
-                
-                Section {
-                    Text("Enter project URL")
-                    TextField("https://", text: $pythonFileName)
-                        .keyboardType(.URL)
-                        .textContentType(.URL)
-                        .onSubmit {
-                            NetworkService.shared.fetchThirdParyProject(urlString: pythonFileName)
-                            print(pythonFileName)
-                            pythonFileName = ""
+                    
+                    Section {
+                        Text("Enter project URL")
+                        TextField("https://", text: $pythonFileName)
+                            .keyboardType(.URL)
+                            .textContentType(.URL)
+                            .onSubmit {
+                                NetworkService.shared.fetchThirdParyProject(urlString: pythonFileName)
+                                print(pythonFileName)
+                                pythonFileName = ""
+                            }
+                        
+                    } header: {
+                        Text("Add Project")
+                    }
+                    .listRowSeparator(.hidden)
+                    
+                    
+                    Section {
+                        
+                        Button("Create Python File"){
+                            presentPythonAlert = true
                         }
-                    
-                } header: {
-                    Text("Add Project")
-                }
-                .listRowSeparator(.hidden)
-                
-                
-                Section {
-                    
-                    Button("Create Python File"){
-                        presentPythonAlert = true
-                    }
-                    .alert("Create Python File", isPresented: $presentPythonAlert, actions: {
-                        
-                        TextField("", text: $pythonFileName)
-                        
-                        Button("Add", action: {})
-                        
-                        Button("Cancel", role: .cancel, action: {
-                            presentPythonAlert = false
+                        .alert("Create Python File", isPresented: $presentPythonAlert, actions: {
+                            
+                            TextField("", text: $pythonFileName)
+                            
+                            Button("Add", action: {})
+                            
+                            Button("Cancel", role: .cancel, action: {
+                                presentPythonAlert = false
+                            })
+                        }, message: {
+                            Text("Please enter your username and password.")
                         })
-                    }, message: {
-                        Text("Please enter your username and password.")
-                    })
-                    
-                    
-                    Button("Create JSON File"){
-                        presentJSONAlert = true
-                    }
-                    .alert("Create JSON File", isPresented: $presentJSONAlert, actions: {
                         
-                        TextField("", text: $jsonFileName)
                         
-                        Button("Add", action: {})
-                        
-                        Button("Cancel", role: .cancel, action: {
-                            presentJSONAlert = false
+                        Button("Create JSON File"){
+                            presentJSONAlert = true
+                        }
+                        .alert("Create JSON File", isPresented: $presentJSONAlert, actions: {
+                            
+                            TextField("", text: $jsonFileName)
+                            
+                            Button("Add", action: {})
+                            
+                            Button("Cancel", role: .cancel, action: {
+                                presentJSONAlert = false
+                            })
+                        }, message: {
+                            Text("Please enter your username and password.")
                         })
-                    }, message: {
-                        Text("Please enter your username and password.")
-                    })
+                    }
+                header: {
+                    Text("Create")
                 }
-            header: {
-                Text("Create")
-            }
-        }
+                }
                 
                 Section{
                     Label("[Go to Adafruit.com](https://www.adafruit.com)", systemImage: "link")
@@ -165,20 +193,50 @@ struct SettingsView: View {
                 .font(.system(size: 16, weight: .semibold))
                 
             }
+            .onChange(of: viewModel.invalidURL, perform: { newValue in
+                showInvalidURLEntryAlert()
+                viewModel.invalidURL = false
+            })
+            
+            .onChange(of: viewModel.confirmDownload, perform: { newValue in
+                showDownloadConfirmationAlert()
+                viewModel.confirmDownload = false
+            })
+            
             .navigationTitle("Settings")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                   
+                    
                     Button {
                         rootViewModel.goToWifiView()
                     } label: {
                         Text("Back")
-                           // .font(.system(size: 18, weight: .regular, design: .default))
+                        // .font(.system(size: 18, weight: .regular, design: .default))
                             .foregroundColor(.blue)
                     }
-                    .padding(8)
+                    .padding(12)
                 }
             }
+        }
+        //.padding(.all, 11.0)
+        .background(Color(UIColor.systemGroupedBackground))
+
+        .safeAreaInset(edge: .top) {
+            HStack {
+                Button {
+                    rootViewModel.goToWifiView()
+                } label: {
+                    Text("Back")
+                }
+                
+                .padding(.all,20)
+                Spacer()
+            }
+           // .background(Color(UIColor.systemGroupedBackground))
+            
+            
+            
+            
         }
     }
 }
@@ -191,7 +249,7 @@ struct SettingsView_Previews: PreviewProvider {
 
 
 extension View {
-   
+    
     func comfirmationAlertMessage(title: String, exitTitle: String, primaryTitle: String,disconnect: @escaping() -> (),cancel: @escaping() -> ()){
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
         
@@ -200,7 +258,7 @@ extension View {
         }))
         
         alert.addAction(.init(title: exitTitle, style: .cancel, handler: { _ in
-cancel()
+            cancel()
         }))
         
         
@@ -212,7 +270,7 @@ cancel()
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
         
         alert.addAction(.init(title: exitTitle, style: .cancel, handler: { _ in
-cancel()
+            cancel()
         }))
         rootController().present(alert, animated: true, completion: nil)
     }
@@ -243,12 +301,12 @@ cancel()
     func rootController()->UIViewController{
         guard let screen = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
             return .init()
-    }
+        }
         guard let root = screen.windows.first?.rootViewController else {
-    return .init()
-}
-    return root
-}
-
-
+            return .init()
+        }
+        return root
+    }
+    
+    
 }

@@ -12,6 +12,7 @@ struct SubHeaderView: View {
         HStack {
             
             Text("Browse available Wi-Fi PyLeap Projects")
+                .fixedSize(horizontal: false, vertical: true)
                 .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                 .font(Font.custom("ReadexPro-Regular", size: 25))
             
@@ -19,6 +20,21 @@ struct SubHeaderView: View {
         .padding(.vertical,30)
     }
 }
+
+struct MainSubHeaderView: View {
+    var body: some View {
+        HStack {
+            
+            Text("Browse available PyLeap Projects")
+                .fixedSize(horizontal: false, vertical: true)
+                .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                .font(Font.custom("ReadexPro-Regular", size: 25))
+            
+        }
+        .padding(.vertical,30)
+    }
+}
+
 
 struct SubHeaderView_Previews: PreviewProvider {
     static var previews: some View {

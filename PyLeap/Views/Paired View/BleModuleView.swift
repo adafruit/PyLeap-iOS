@@ -12,26 +12,7 @@ class SpotlightCounter: ObservableObject {
     @Published var counter = 0
 }
 
-struct SelectionView: View {
-    
-    @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject private var connectionManager: FileTransferConnectionManager
-    @StateObject var viewModel = SelectionViewModel()
-    @ObservedObject var model = NetworkService()
-    @StateObject var globalString = GlobalString()
-    @StateObject var btConnectionViewModel = BTConnectionViewModel()
-    @StateObject private var rootModel = RootViewModel()
-    @StateObject var downloadModel = DownloadViewModel()
-   @StateObject var spotlight = SpotlightCounter()
-    
-    //clearKnownPeripheralUUIDs
-    
-    @State private var isConnected = false
-    //@State private var switchedView = false
-    @State private var errorOccured = false
-    @State private var downloadState = DownloadState.idle
-    @State private var scrollViewID = UUID()
-    @State var currentHightlight: Int = 0
+struct BleModuleView: View {
     
     // Data
     enum ActiveAlert: Identifiable {
@@ -43,6 +24,28 @@ struct SelectionView: View {
             }
         }
     }
+    
+    
+    @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject private var connectionManager: FileTransferConnectionManager
+    @StateObject var viewModel = BleModuleViewModel()
+    @ObservedObject var networkServiceModel = NetworkService()
+    @StateObject var globalString = GlobalString()
+    @StateObject var btConnectionViewModel = BTConnectionViewModel()
+    @EnvironmentObject var rootViewModel: RootViewModel
+    @StateObject var downloadModel = DownloadViewModel()
+    @StateObject var spotlight = SpotlightCounter()
+    
+    //clearKnownPeripheralUUIDs
+    
+    @State private var isConnected = false
+    //@State private var switchedView = false
+    @State private var errorOccured = false
+    @State private var downloadState = DownloadState.idle
+    @State private var scrollViewID = UUID()
+    @State var currentHightlight: Int = 0
+    
+    
     
     
     @State private var activeAlert: ActiveAlert?
@@ -170,8 +173,27 @@ struct SelectionView: View {
                     
                     
                     
-                    HeaderView()
+                    SubHeaderView()
                    
+                    Button {
+                        print("Disconnect")
+                        
+                        if let bt = btConnectionViewModel.selectedPeripheral  {
+                           // BleManager.shared.disconnect(from: FileTransferClient.)
+                        } else {
+                        print("Nope")
+                            return
+                        }
+                        
+                       
+                        
+                        connectionManager.clearAllPeripheralInfo()
+                        rootViewModel.goToMainSelection()
+                        print("Destination: \(rootViewModel.destination)")
+                    } label: {
+                        Text("Disconnection")
+                    }
+
                     // Sub-Header
                     VStack {
                         
@@ -202,11 +224,11 @@ struct SelectionView: View {
                             SubHeaderView()
                               //  .spotlight(enabled: spotlight.counter == 1, title: "1")
                               
-                           let check = NetworkService.shared.pdemos.filter {
+                           let check = networkServiceModel.pdemos.filter {
                                 $0.compatibility[0] == boardBootInfo
                             }
                             
-                            ForEach(NetworkService.shared.pdemos) { demo in
+                            ForEach(check) { demo in
                                 
                                 
                                 DemoViewCell(result: demo, isConnected: $inConnectedInSelectionView, bootOne: $boardBootInfo, onViewGeometryChanged: {
@@ -330,11 +352,11 @@ struct SelectionView: View {
         .onChange(of: connectionManager.selectedClient) { selectedClient in
             viewModel.setup(fileTransferClient: selectedClient)
         }
+
         .onAppear {
-            print("SelectionView")
+            networkServiceModel.fetch()
             viewModel.setup(fileTransferClient: connectionManager.selectedClient)
             viewModel.readFile(filename: "boot_out.txt")
-           
         }
         
     }

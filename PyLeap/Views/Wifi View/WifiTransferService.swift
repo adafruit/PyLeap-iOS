@@ -129,7 +129,6 @@ class WifiTransferService: ObservableObject {
                 print(String(describing: "Error Found: \(error)"))
                 return
             }
-            // print(String(data: data, encoding: .utf8)!)
             
             do {
                 let wifiIncomingData = try JSONDecoder().decode([WebDirectoryModel].self, from: data)

@@ -23,6 +23,7 @@
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_circuitpython._tcp</string>
+		<string>_bonjour._tcp</string>
 	</array>
 	<key>LSApplicationCategoryType</key>
 	<string></string>

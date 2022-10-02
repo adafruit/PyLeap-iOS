@@ -7,7 +7,24 @@
 
 import Foundation
 
-struct WebDirectoryModel: Codable, Identifiable {
+struct WebDirectoryModel: Codable, Identifiable, Equatable {
+    
+    enum CodingKeys: CodingKey {
+        case name
+        case directory
+        case modified_ns
+        case file_size
+    }
+    
+    var id = UUID()
+    let uniqueID = String()
+    let name: String
+    let directory: Bool
+    let modified_ns:Int
+    let file_size: Int
+}
+
+class WebDirectoryModelx: Codable, Identifiable {
     
     enum CodingKeys: CodingKey {
         case name

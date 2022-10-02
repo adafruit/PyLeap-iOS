@@ -12,7 +12,7 @@ struct RootResults: Decodable {
     let projects: [ResultItem]
 }
 
-struct ResultItem: Codable, Identifiable {
+struct ResultItem: Codable, Identifiable, Equatable {
     enum CodingKeys: CodingKey {
         case projectName
         case projectImage
@@ -23,7 +23,6 @@ struct ResultItem: Codable, Identifiable {
     }
     
     var id = UUID()
-    let uniqueID = String()
     let projectName: String
     let projectImage: String
     let description: String

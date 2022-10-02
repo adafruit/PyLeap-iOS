@@ -327,7 +327,15 @@ public class FileTransferConnectionManager: ObservableObject {
     private func clearKnownPeripheralUUIDs() {
         userDefaults.set(nil, forKey: Self.knownPeripheralsKey )
     }
+    
+    public func clearAllPeripheralInfo() {
+        fileTransferClients = [:]
+        NotificationCenter.default.post(name: .didFailToReconnectToKnownPeripheral, object: nil)
 
+        userDefaults.set(nil, forKey: Self.knownPeripheralsKey )
+    }
+    
+    
     // MARK: - Notifications
     private var willConnectToPeripheralObserver: NSObjectProtocol?
     private var didConnectToPeripheralObserver: NSObjectProtocol?

@@ -47,7 +47,10 @@ struct DemoSubview: View {
     @EnvironmentObject var rootViewModel: RootViewModel
     @StateObject var downloadModel = DownloadViewModel()
     @StateObject var viewModel = SubCellViewModel()
-    @StateObject var selectionModel = SelectionViewModel()
+    @StateObject var selectionModel = BleModuleViewModel()
+    @StateObject var contentTransfer = BleContentTransfer()
+    
+    
     
     @Binding var isConnected : Bool
     
@@ -138,6 +141,13 @@ struct DemoSubview: View {
                 if compatibility.contains(bindingString) {
                   
                        
+                    Button {
+                        contentTransfer.getProjectURL(nameOf: title)
+                    } label: {
+                        Text("XXX")
+                    }
+
+                    
                     
                     if downloadStateBinder == .idle {
                         

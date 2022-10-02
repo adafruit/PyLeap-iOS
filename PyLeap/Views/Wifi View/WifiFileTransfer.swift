@@ -96,96 +96,12 @@ class WifiFileTransfer: ObservableObject {
         
     }
     
-    func directorySort(url: URL) {
-        let localFileManager = FileManager()
-        let resourceKeys = Set<URLResourceKey>([.nameKey, .isDirectoryKey])
-        var fileURLs: [URL] = []
-        
-        let dirEnumerator = localFileManager.enumerator(at: url, includingPropertiesForKeys: Array(resourceKeys), options: .skipsHiddenFiles)!
-        
-        for case let fileURL as URL in dirEnumerator {
-            guard let resourceValues = try? fileURL.resourceValues(forKeys: resourceKeys),
-                  let isDirectory = resourceValues.isDirectory,
-                  let name = resourceValues.name
-            else {
-                continue
-            }
-            
-            if fileURL.path.contains("adafruit-circuitpython-bundle-7.x-mpy") {
-                print("Removing adafruit-circuitpython-bundle-7.x-mpy: \(fileURL.path)")
-                
-            } else {
-                if isDirectory {
-                    print(fileURL.lastPathComponent)
-                    if name == "_extras" {
-                        dirEnumerator.skipDescendants()
-                    }
-                    //adafruit-circuitpython-bundle
-                    if fileURL.lastPathComponent.contains("adafruit-circuitpython-bundle") {
-                        print("Bad file - \(fileURL)")
-                    } else {
-                        if fileURL.pathComponents.count > 12 {
-                            print("File Path component count: \(fileURL.pathComponents.count)")
-                         appendDirectories(fileURL)
-                        }
-                    }
-                    
-                } else {
-                    print("APPENDED: \(fileURL.path)")
-                    fileURLs.append(fileURL)
-                }
-                
-            }
-            
-        }
-        
-    }
+
     
     func appendDirectories(_ url: URL) {
         projectDirectories.append(url)
     }
     
-    func fileFilter(Project path: URL) {
-        
-        var files = [URL]()
-        removeFileArrayElements()
-        
-        if let enumerator = FileManager.default.enumerator(at: path, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
-            for case let fileURL as URL in enumerator {
-                
-                do {
-                    let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey, .addedToDirectoryDateKey,.isDirectoryKey])
-                    
-                    print("INCOMING FILE: \(fileURL.path)")
-                    
-                    if fileURL.path.contains("adafruit-circuitpython-bundle-7.x-mpy") {
-                        print("Removing adafruit-circuitpython-bundle-7.x-mpy: \(fileURL.path)")
-                        
-                    } else {
-                        
-                        contentList.append(.init(urlTitle: fileURL))
-                        if fileAttributes.isRegularFile! {
-                            
-                            files.append(fileURL)
-                            
-                            let resources = try fileURL.resourceValues(forKeys:[.fileSizeKey])
-                            let fileSize = resources.fileSize!
-                            
-                            let addedFile = ContentFile(title: fileURL.lastPathComponent, fileSize: fileSize)
-                            appendFileArrayElements(fileContent: addedFile)
-                        }
-                        
-                        let addedFile = ContentFile(title: fileURL.lastPathComponent, fileSize: 0 )
-                        appendFileArrayElements(fileContent: addedFile)
-                    }
-                    
-                } catch { print(error, fileURL) }
-                
-            }
-            
-        }
-        
-    }
     
     func filesDownloaded(url: URL) {
         removeFileArrayElements()
@@ -242,7 +158,7 @@ class WifiFileTransfer: ObservableObject {
         print("Project Location: \(url)")
         let localFileManager = FileManager()
         let resourceKeys = Set<URLResourceKey>([.nameKey, .isDirectoryKey])
-        var fileURLs: [URL] = []
+        var regularFileUrls: [URL] = []
         
         let dirEnumerator = localFileManager.enumerator(at: url, includingPropertiesForKeys: Array(resourceKeys), options: .skipsHiddenFiles)!
         
@@ -258,13 +174,15 @@ class WifiFileTransfer: ObservableObject {
                 print("Removing adafruit-circuitpython-bundle-7.x-mpy: \(fileURL.path)")
                 
             } else {
+                
                 if isDirectory {
                     print("Directories Found")
                     print(fileURL.lastPathComponent)
                     if name == "_extras" {
                         dirEnumerator.skipDescendants()
                     }
-                    //adafruit-circuitpython-bundle
+                    
+                    
                     if fileURL.lastPathComponent.contains("adafruit-circuitpython-bundle") {
                         print("We got one!")
                         print("Bad file - \(fileURL)")
@@ -276,15 +194,15 @@ class WifiFileTransfer: ObservableObject {
                     }
                     
                 } else {
-                    print("APPENDED: \(fileURL.path)")
-                    fileURLs.append(fileURL)
+                    print("Regular Files: \(fileURL.path)")
+                    regularFileUrls.append(fileURL)
                 }
             }
         }
         
-        print("Current projectDirectories: \(projectDirectories[0])")
         
-        pathManipulation(arrayOfAny: filterOutCPDirectories(fileArray: projectDirectories), fileArray: fileURLs)
+        
+        pathManipulation(arrayOfAny: filterOutCPDirectories(fileArray: projectDirectories), fileArray: regularFileUrls)
         
     }
     

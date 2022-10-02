@@ -18,6 +18,10 @@ struct WifiView: View {
     // User Defaults
     let userDefaults = UserDefaults.standard
     
+    @ObservedObject var networkModel = NetworkService()
+
+    @EnvironmentObject var rootViewModel: RootViewModel
+
     @State private var downloadState = DownloadState.idle
     @State private var scrollViewID = UUID()
     @State private var inConnectedInWifiView = true
@@ -25,7 +29,11 @@ struct WifiView: View {
     @State var hostName = ""
     
     func showValidationPrompt() {
-        alertTF(title: "Enter Device IP Address", message: "PyLeap will use this IP address to search for Adafruit devices on your local network", hintText: "IP Address ...", primaryTitle: "Done", secondaryTitle: "Cancel") { text in
+        alertTF(title: "Enter Device IP Address",
+                message: "PyLeap will use this IP address to search for Adafruit devices on your local network",
+                hintText: "IP Address...",
+                primaryTitle: "Done",
+                secondaryTitle: "Cancel") { text in
                viewModel.checkServices(ip: text)
            
        } secondaryAction: {
@@ -87,7 +95,13 @@ struct WifiView: View {
                     Button {
                         wifiviewModel.findService()
                     } label: {
-                        Text("-Scan Network-")
+                        Text("Scan Network")
+                    }
+                    
+                    Button {
+                        rootViewModel.goTobluetoothPairing()
+                    } label: {
+                        Text("BLE Mode")
                     }
 
                     
@@ -108,7 +122,7 @@ struct WifiView: View {
                     
                     SubHeaderView()
 
-                    let check =  NetworkService.shared.pdemos.filter {
+                    let check =  networkModel.pdemos.filter {
                         $0.compatibility.contains(boardBootInfo)
                     }
                     
@@ -147,6 +161,8 @@ struct WifiView: View {
         
         .onAppear(){
             
+            networkModel.fetch()
+            
           //  viewModel.checkStoredIP()
             initialIPStoreCheck()
             
@@ -172,4 +188,6 @@ extension Notification.Name {
     private static let kPrefix = Bundle.main.bundleIdentifier!
     public static let didUpdateState = Notification.Name(kPrefix+".test")
     public static let invalidIPNotif = Notification.Name(kPrefix+".invalidIPNotif")
+    public static let invalidCustomNetworkRequest = Notification.Name(kPrefix+".invalidCustomNetworkRequest")
+    public static let didCollectCustomProject = Notification.Name(kPrefix+".didCollectCustomProject")
 }

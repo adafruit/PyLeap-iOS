@@ -16,9 +16,43 @@ class SettingsViewModel: ObservableObject {
     @Published var device = ""
     @Published var ipAddress = ""
     var connectedToDevice = false
+    @Published var invalidURL = false
+    @Published var confirmDownload = false
+    
+    init() {
+        check()
+        registerNotifications(enabled: true)
+    }
+    
+    private weak var errorObserver: NSObjectProtocol?
+    private weak var confirmDownloadObserver: NSObjectProtocol?
+    private weak var invalidIPObserver: NSObjectProtocol?
     
     
-    init() { check() }
+    private func registerNotifications(enabled: Bool) {
+        let notificationCenter = NotificationCenter.default
+        
+        if enabled {
+errorObserver = notificationCenter.addObserver(forName: .invalidCustomNetworkRequest, object: nil, queue: .main, using: {[weak self] _ in self?.showError()})
+            
+       
+            confirmDownloadObserver = notificationCenter.addObserver(forName: .didCollectCustomProject, object: nil, queue: .main, using: {[weak self] _ in self?.showConfirmationAlert()})
+            
+            
+        } else {
+            if let testObserver = errorObserver {notificationCenter.removeObserver(testObserver)}
+            
+        }
+    }
+    
+    
+    func showError() {
+        invalidURL = true
+    }
+    
+    func showConfirmationAlert() {
+        confirmDownload = true
+    }
     
     func check() {
         print(#function)

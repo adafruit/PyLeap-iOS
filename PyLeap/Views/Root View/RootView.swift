@@ -41,7 +41,7 @@ struct RootView: View {
                 MainSelectionView()
 
             case .fileTransfer:
-                SelectionView()
+                BleModuleView()
                 
             case .wifi:
                 WifiView()

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import FileTransferClient
 
 struct WifiSubViewCell: View {
     @State var transferInProgress = false

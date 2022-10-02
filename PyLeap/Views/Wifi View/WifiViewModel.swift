@@ -27,9 +27,11 @@ class WifiViewModel: ObservableObject {
     
     //Dependencies
     var networkMonitor = NetworkMonitor()
+    var networkAuth = LocalNetworkAuthorization()
     public var wifiNetworkService = WifiNetworkService()
     @Published var wifiTransferService =  WifiTransferService()
     @Published var wifiServiceManager = WifiServiceManager()
+    
     
     
     @Published var webDirectoryInfo = [WebDirectoryModel]()

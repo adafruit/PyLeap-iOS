@@ -10,6 +10,7 @@
 		D505B99C2755323C00386E9F /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D505B99B2755323C00386E9F /* NetworkMonitor.swift */; };
 		D505B99E2756894300386E9F /* ViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D505B99D2756894300386E9F /* ViewModifier.swift */; };
 		D517F68126C5771D002996E8 /* FillerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D517F68026C5771D002996E8 /* FillerView.swift */; };
+		D5199A2F28DD16F100ACC34C /* BleContentTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5199A2E28DD16F100ACC34C /* BleContentTransfer.swift */; };
 		D52BE7EE269DF36E00630900 /* DownloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE7EA269DF36E00630900 /* DownloadViewModel.swift */; };
 		D52BE7F3269DF62100630900 /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = D52BE7F2269DF62100630900 /* Zip */; };
 		D52BE82A26A0660200630900 /* KeyboardUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54D38B82691E0D000FBFE47 /* KeyboardUtils.swift */; };
@@ -20,13 +21,16 @@
 		D52F7E782672F4C500911D43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D52F7E772672F4C500911D43 /* Assets.xcassets */; };
 		D52F7E7B2672F4C500911D43 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D52F7E7A2672F4C500911D43 /* Preview Assets.xcassets */; };
 		D534F3FC280B59090053699C /* ExampleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D534F3FB280B59090053699C /* ExampleView.swift */; };
+		D535E21628E1FA910096E548 /* ScrollRefreshableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D535E21528E1FA910096E548 /* ScrollRefreshableView.swift */; };
 		D544A1D2281B9BB70038D483 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = D544A1D1281B9BB70038D483 /* Buttons.swift */; };
 		D544A24B281F92840038D483 /* ImageCaching.swift in Sources */ = {isa = PBXBuildFile; fileRef = D544A24A281F92840038D483 /* ImageCaching.swift */; };
 		D544A24F282046840038D483 /* OnAnimationComplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = D544A24E282046840038D483 /* OnAnimationComplete.swift */; };
 		D544A2512822D4730038D483 /* Spotlight Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D544A2502822D4730038D483 /* Spotlight Extension.swift */; };
-		D5507AD026C668BC00512BAA /* SelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACC26C668BC00512BAA /* SelectionViewModel.swift */; };
+		D5482F4928E63DB7000B0C8E /* MainSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5482F4828E63DB7000B0C8E /* MainSelectionViewModel.swift */; };
+		D5482F4B28E75053000B0C8E /* LocalNetworkAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5482F4A28E75053000B0C8E /* LocalNetworkAuth.swift */; };
+		D5507AD026C668BC00512BAA /* BleModuleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACC26C668BC00512BAA /* BleModuleViewModel.swift */; };
 		D5507AD126C668BC00512BAA /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACF26C668BC00512BAA /* SearchBarView.swift */; };
-		D5507AD326C668BC00512BAA /* SelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACB26C668BC00512BAA /* SelectionView.swift */; };
+		D5507AD326C668BC00512BAA /* BleModuleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5507ACB26C668BC00512BAA /* BleModuleView.swift */; };
 		D5597BF826A9E14B00DF17C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5597BF726A9E14B00DF17C0 /* AppDelegate.swift */; };
 		D5597C0226ADDCE300DF17C0 /* StartupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5597C0126ADDCE300DF17C0 /* StartupView.swift */; };
 		D5597C0426ADDD5E00DF17C0 /* StartupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5597C0326ADDD5E00DF17C0 /* StartupViewModel.swift */; };
@@ -86,6 +90,7 @@
 		D5D1F4B027ECFDE00040E2BF /* NavBarModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D1F4AF27ECFDE00040E2BF /* NavBarModifier.swift */; };
 		D5D1F4B227ECFF760040E2BF /* ProjectsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D1F4B127ECFF760040E2BF /* ProjectsModel.swift */; };
 		D5D1F4B827ED2F4F0040E2BF /* FileManagerCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D1F4B727ED2F4F0040E2BF /* FileManagerCheck.swift */; };
+		D5D5BB3928DD19F000E5D93F /* BleContentCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D5BB3828DD19F000E5D93F /* BleContentCommands.swift */; };
 		D5D7DF2B28B3E321008552D1 /* BasicCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D7DF2A28B3E321008552D1 /* BasicCredentials.swift */; };
 		D5D7DF2D28B489C0008552D1 /* WebDirectoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D7DF2C28B489C0008552D1 /* WebDirectoryModel.swift */; };
 		D5DD39A728D11817000FAEB8 /* WifiFileTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DD39A628D11817000FAEB8 /* WifiFileTransfer.swift */; };
@@ -100,6 +105,7 @@
 		D505B99B2755323C00386E9F /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		D505B99D2756894300386E9F /* ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifier.swift; sourceTree = "<group>"; };
 		D517F68026C5771D002996E8 /* FillerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FillerView.swift; sourceTree = "<group>"; };
+		D5199A2E28DD16F100ACC34C /* BleContentTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleContentTransfer.swift; sourceTree = "<group>"; };
 		D52BE7EA269DF36E00630900 /* DownloadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadViewModel.swift; sourceTree = "<group>"; };
 		D52BE85326A0E39100630900 /* BTConnectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTConnectionViewModel.swift; sourceTree = "<group>"; };
 		D52F7E702672F4C400911D43 /* PyLeap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PyLeap.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -108,15 +114,18 @@
 		D52F7E7A2672F4C500911D43 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D52F7E7C2672F4C500911D43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D534F3FB280B59090053699C /* ExampleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleView.swift; sourceTree = "<group>"; };
+		D535E21528E1FA910096E548 /* ScrollRefreshableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollRefreshableView.swift; sourceTree = "<group>"; };
 		D544A1D1281B9BB70038D483 /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		D544A24A281F92840038D483 /* ImageCaching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCaching.swift; sourceTree = "<group>"; };
 		D544A24E282046840038D483 /* OnAnimationComplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnAnimationComplete.swift; sourceTree = "<group>"; };
 		D544A2502822D4730038D483 /* Spotlight Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Spotlight Extension.swift"; sourceTree = "<group>"; };
+		D5482F4828E63DB7000B0C8E /* MainSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSelectionViewModel.swift; sourceTree = "<group>"; };
+		D5482F4A28E75053000B0C8E /* LocalNetworkAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNetworkAuth.swift; sourceTree = "<group>"; };
 		D54D38B82691E0D000FBFE47 /* KeyboardUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardUtils.swift; sourceTree = "<group>"; };
 		D54D38C52692044800FBFE47 /* PeripheralList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralList.swift; sourceTree = "<group>"; };
 		D54D38C62692044800FBFE47 /* PeripheralAutoConnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralAutoConnect.swift; sourceTree = "<group>"; };
-		D5507ACB26C668BC00512BAA /* SelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionView.swift; sourceTree = "<group>"; };
-		D5507ACC26C668BC00512BAA /* SelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionViewModel.swift; sourceTree = "<group>"; };
+		D5507ACB26C668BC00512BAA /* BleModuleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleModuleView.swift; sourceTree = "<group>"; };
+		D5507ACC26C668BC00512BAA /* BleModuleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleModuleViewModel.swift; sourceTree = "<group>"; };
 		D5507ACF26C668BC00512BAA /* SearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
 		D5597BF726A9E14B00DF17C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D5597C0126ADDCE300DF17C0 /* StartupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupView.swift; sourceTree = "<group>"; };
@@ -178,6 +187,7 @@
 		D5D1F4AF27ECFDE00040E2BF /* NavBarModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBarModifier.swift; sourceTree = "<group>"; };
 		D5D1F4B127ECFF760040E2BF /* ProjectsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsModel.swift; sourceTree = "<group>"; };
 		D5D1F4B727ED2F4F0040E2BF /* FileManagerCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerCheck.swift; sourceTree = "<group>"; };
+		D5D5BB3828DD19F000E5D93F /* BleContentCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleContentCommands.swift; sourceTree = "<group>"; };
 		D5D7DF2A28B3E321008552D1 /* BasicCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicCredentials.swift; sourceTree = "<group>"; };
 		D5D7DF2C28B489C0008552D1 /* WebDirectoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDirectoryModel.swift; sourceTree = "<group>"; };
 		D5DD39A628D11817000FAEB8 /* WifiFileTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiFileTransfer.swift; sourceTree = "<group>"; };
@@ -341,6 +351,7 @@
 				D5DD39A828D11962000FAEB8 /* WifiTransferService.swift */,
 				D567E2B728C137880009F768 /* WifiCell.swift */,
 				D5AA27F728CA785B001CCE25 /* CircuitPythonType.swift */,
+				D5482F4A28E75053000B0C8E /* LocalNetworkAuth.swift */,
 				D5AA27F928CA8D46001CCE25 /* WifiStatusHeaderBarView.swift */,
 				D567E2B928C1382E0009F768 /* WifiSubViewCell.swift */,
 				D567E2BB28C1527F0009F768 /* WifiSubViewCellModel.swift */,
@@ -457,6 +468,7 @@
 			isa = PBXGroup;
 			children = (
 				D5C74DF427EB93E300730505 /* DemoViewCell.swift */,
+				D535E21528E1FA910096E548 /* ScrollRefreshableView.swift */,
 				D5D1F4A527EBA9C80040E2BF /* DemoSubCellView.swift */,
 				D58182FA27F732E40091C43B /* SubCellViewModel.swift */,
 			);
@@ -467,6 +479,7 @@
 			isa = PBXGroup;
 			children = (
 				D5640215271B54BF00AE1519 /* MainSelectionView.swift */,
+				D5482F4828E63DB7000B0C8E /* MainSelectionViewModel.swift */,
 			);
 			path = "Unpaired View";
 			sourceTree = "<group>";
@@ -475,8 +488,10 @@
 			isa = PBXGroup;
 			children = (
 				D59E31A9281B8DD300D24211 /* DownloadState.swift */,
-				D5507ACB26C668BC00512BAA /* SelectionView.swift */,
-				D5507ACC26C668BC00512BAA /* SelectionViewModel.swift */,
+				D5507ACB26C668BC00512BAA /* BleModuleView.swift */,
+				D5507ACC26C668BC00512BAA /* BleModuleViewModel.swift */,
+				D5199A2E28DD16F100ACC34C /* BleContentTransfer.swift */,
+				D5D5BB3828DD19F000E5D93F /* BleContentCommands.swift */,
 			);
 			path = "Paired View";
 			sourceTree = "<group>";
@@ -598,13 +613,14 @@
 				D5D1F4B827ED2F4F0040E2BF /* FileManagerCheck.swift in Sources */,
 				D52BE82A26A0660200630900 /* KeyboardUtils.swift in Sources */,
 				D58182FB27F732E40091C43B /* SubCellViewModel.swift in Sources */,
+				D5D5BB3928DD19F000E5D93F /* BleContentCommands.swift in Sources */,
 				D544A1D2281B9BB70038D483 /* Buttons.swift in Sources */,
 				D5D1F4AE27ECFDA10040E2BF /* GifImage.swift in Sources */,
 				D58E1C8A28A2B15E00AB683E /* WifiViewModel.swift in Sources */,
 				D5C474AC27E174A5002DD160 /* WebView Content.swift in Sources */,
 				D544A2512822D4730038D483 /* Spotlight Extension.swift in Sources */,
 				D56F640D270242CA000E5975 /* FileTransferPathUtils.swift in Sources */,
-				D5507AD326C668BC00512BAA /* SelectionView.swift in Sources */,
+				D5507AD326C668BC00512BAA /* BleModuleView.swift in Sources */,
 				D58182FD27FBF09F0091C43B /* BLEPairingView.swift in Sources */,
 				D5BA1F8128B66F920012FC62 /* CircuitPythonService.swift in Sources */,
 				D58E1C8F28A30A5300AB683E /* WifiNetworkService.swift in Sources */,
@@ -639,7 +655,8 @@
 				D56F640E270242CA000E5975 /* String+DeletingPrefix.swift in Sources */,
 				D57858F328333CBC008E8BE4 /* TroubleshootView.swift in Sources */,
 				D5C6D42128C8EA0700F5C7C9 /* WifiHeaderView.swift in Sources */,
-				D5507AD026C668BC00512BAA /* SelectionViewModel.swift in Sources */,
+				D5507AD026C668BC00512BAA /* BleModuleViewModel.swift in Sources */,
+				D5482F4928E63DB7000B0C8E /* MainSelectionViewModel.swift in Sources */,
 				D5597C3B26B98E1E00DF17C0 /* NumbersOnly.swift in Sources */,
 				D5D1F4A427EBA7E30040E2BF /* NetworkManager.swift in Sources */,
 				D5DD39AB28D234C3000FAEB8 /* SettingsViewModel.swift in Sources */,
@@ -658,6 +675,7 @@
 				D59DFDBA268CDEEC001737F6 /* RootViewModel.swift in Sources */,
 				D5C74DF527EB93E300730505 /* DemoViewCell.swift in Sources */,
 				D567E2DF28C8D40C0009F768 /* SettingsView.swift in Sources */,
+				D5482F4B28E75053000B0C8E /* LocalNetworkAuth.swift in Sources */,
 				D567E2BC28C1527F0009F768 /* WifiSubViewCellModel.swift in Sources */,
 				D52BE85526A0E5A400630900 /* PeripheralList.swift in Sources */,
 				D5D7DF2D28B489C0008552D1 /* WebDirectoryModel.swift in Sources */,
@@ -671,6 +689,8 @@
 				D5BA1F7F28B66F280012FC62 /* WifiServiceManager.swift in Sources */,
 				D5C74DF327EB92FA00730505 /* View+Extensions.swift in Sources */,
 				D5AA27F828CA785B001CCE25 /* CircuitPythonType.swift in Sources */,
+				D5199A2F28DD16F100ACC34C /* BleContentTransfer.swift in Sources */,
+				D535E21628E1FA910096E548 /* ScrollRefreshableView.swift in Sources */,
 				D5640216271B54BF00AE1519 /* MainSelectionView.swift in Sources */,
 				D505B99C2755323C00386E9F /* NetworkMonitor.swift in Sources */,
 			);
@@ -808,7 +828,7 @@
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = PyLeap/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -838,7 +858,7 @@
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = PyLeap/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

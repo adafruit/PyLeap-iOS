@@ -54,7 +54,7 @@ class WifiServiceManager: NSObject, ObservableObject {
     }
     
     func startDiscovery() {
-        connectionStatus = .connected
+       // connectionStatus = .connected
         print("Start Scan")
         isSearching = true
         self.serviceManagerBrowser.searchForServices(ofType: CircuitPythonType.serviceType, inDomain: CircuitPythonType.serviceDomain)

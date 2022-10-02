@@ -17,7 +17,7 @@ struct ImageWithURL: View {
     }
 
     var body: some View {
-          Image(uiImage: UIImage(data: self.imageLoader.imageData) ?? UIImage())
+          Image(uiImage: UIImage(data: self.imageLoader.imageData) ?? UIImage(named: "adafruit_logo_original")!)
               .resizable()
               .clipped()
     }
