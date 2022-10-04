@@ -18,9 +18,13 @@ struct HeaderView: View {
                 Button {
                     rootViewModel.goToWifiView()
                 } label: {
-                    Text("Wi-Fi Mode")
+                    Image(systemName: "wifi.circle")
+                        .resizable()
+                        .frame(width: 30, height: 30, alignment: .center)
+                        .offset(y: 15)
+                        .foregroundColor(.white)
+                
                 }
-                .foregroundColor(.white)
                 .padding()
 
                 
@@ -30,7 +34,7 @@ struct HeaderView: View {
                     .scaledToFit()
                     .frame(width: 125, height: 125)
                     .offset(y: 12)
-                    .padding(.leading, 60)
+                   // .padding(.leading, 60)
                 
                 Spacer()
                 

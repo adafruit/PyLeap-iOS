@@ -14,6 +14,7 @@ struct WifiHeaderView: View {
     var body: some View {
 
         VStack {
+        
             HStack {
                 
                 Button {

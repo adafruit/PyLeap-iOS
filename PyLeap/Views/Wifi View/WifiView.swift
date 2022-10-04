@@ -90,18 +90,30 @@ struct WifiView: View {
                     } label: {
                         Text("Enter IP address")
                             .font(Font.custom("ReadexPro-Regular", size: 16))
+                            .foregroundColor(.white)
+                            .background(.indigo)
+                          //  .cornerRadius(15)
+                            .padding(5)
                     }
                     
                     Button {
                         wifiviewModel.findService()
                     } label: {
                         Text("Scan Network")
+                            .foregroundColor(.white)
+                            .background(.indigo)
+                         //   .cornerRadius(15)
+                            .padding(5)
                     }
                     
                     Button {
                         rootViewModel.goTobluetoothPairing()
                     } label: {
                         Text("BLE Mode")
+                            .foregroundColor(.white)
+                            .background(.indigo)
+                        //    .cornerRadius(15)
+                            .padding(5)
                     }
 
                     
@@ -160,7 +172,7 @@ struct WifiView: View {
         })
         
         .onAppear(){
-            
+            print("On Appear")
             networkModel.fetch()
             
           //  viewModel.checkStoredIP()

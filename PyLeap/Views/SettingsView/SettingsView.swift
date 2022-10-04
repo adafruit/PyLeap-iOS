@@ -24,6 +24,8 @@ struct SettingsView: View {
     let userDefaults = UserDefaults.standard
     
     
+     
+    
     func showInvalidURLEntryAlert() {
         alertMessage(title: "Invalid URL entry", exitTitle: "Ok") {
             
@@ -31,7 +33,7 @@ struct SettingsView: View {
     }
     
     func showDownloadConfirmationAlert() {
-        alertMessage(title: "Download Complete", exitTitle: "Ok") {
+        alertMessage(title: "Added to Project List", exitTitle: "Ok") {
             
         }
     }
@@ -50,25 +52,31 @@ struct SettingsView: View {
     
     
     var body: some View {
-        
+    
         VStack {
             
-            //            HStack {
-            //                Button {
-            //                    rootViewModel.goToWifiView()
-            //                } label: {
-            //                    Text("Back")
-            //                }
-            //                .frame(height: UIScreen.main.bounds.size.height / 20)
-            //
-            //            }
+                        HStack {
+                            Button {
+                                rootViewModel.goToWifiView()
+                            } label: {
+                                Text("Back")
+                            }
+            
+                            .padding(.all,20)
+                            Spacer()
+                        }
+//.frame(width: .infinity)
+                        .frame(height: UIScreen.main.bounds.height / 19)
+                        .background(Color(.systemGroupedBackground))
+            
             HStack {
                 Text("Settings")
-                    .font(.largeTitle)
-                    .bold()
-                    .padding(12)
+                    .font(.largeTitle)                
+                
+                .padding(.all,20)
                 Spacer()
             }
+            .background(Color(.systemGroupedBackground))
             
             Form {
                 
@@ -185,6 +193,7 @@ struct SettingsView: View {
                 header: {
                     Text("Create")
                 }
+                    
                 }
                 
                 Section{
@@ -221,31 +230,27 @@ struct SettingsView: View {
         //.padding(.all, 11.0)
         .background(Color(UIColor.systemGroupedBackground))
 
-        .safeAreaInset(edge: .top) {
-            HStack {
-                Button {
-                    rootViewModel.goToWifiView()
-                } label: {
-                    Text("Back")
-                }
-                
-                .padding(.all,20)
-                Spacer()
-            }
-           // .background(Color(UIColor.systemGroupedBackground))
-            
-            
-            
-            
-        }
+//        .safeAreaInset(edge: .top) {
+//            HStack {
+//                Button {
+//                    rootViewModel.goToWifiView()
+//                } label: {
+//                    Text("Back")
+//                }
+//
+//                .padding(.all,20)
+//                Spacer()
+//            }
+//           // .background(Color(UIColor.systemGroupedBackground))
+//
+//
+//
+//
+//        }
     }
 }
 
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsView()
-    }
-}
+
 
 
 extension View {

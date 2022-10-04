@@ -27,7 +27,13 @@ struct BleModuleView: View {
     
     
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject private var connectionManager: FileTransferConnectionManager
+    
+    
+    @ObservedObject var connectionManager = FileTransferConnectionManager.shared
+    let selectedPeripheral = FileTransferConnectionManager.shared.selectedPeripheral
+    
+    
+    
     @StateObject var viewModel = BleModuleViewModel()
     @ObservedObject var networkServiceModel = NetworkService()
     @StateObject var globalString = GlobalString()
@@ -51,7 +57,6 @@ struct BleModuleView: View {
     @State private var activeAlert: ActiveAlert?
     @State private var internetAlert = false
     @State private var showAlert1 = false
-    let selectedPeripheral = FileTransferConnectionManager.shared.selectedPeripheral
     
     
     @State private var boardBootInfo = ""
@@ -63,7 +68,7 @@ struct BleModuleView: View {
     
     var body: some View {
         
-        let connectedPeripherals = connectionManager.peripherals.filter{$0.state == .connected }
+        var connectedPeripherals = connectionManager.peripherals.filter{$0.state == .connected }
         let selectedPeripheral = FileTransferConnectionManager.shared.selectedPeripheral
         
         VStack {
@@ -171,28 +176,26 @@ struct BleModuleView: View {
                 
                 VStack(spacing: 0) {
                     
+                    HeaderView()
                     
-                    
-                    SubHeaderView()
-                   
-                    Button {
-                        print("Disconnect")
-                        
-                        if let bt = btConnectionViewModel.selectedPeripheral  {
-                           // BleManager.shared.disconnect(from: FileTransferClient.)
-                        } else {
-                        print("Nope")
-                            return
-                        }
-                        
-                       
-                        
-                        connectionManager.clearAllPeripheralInfo()
-                        rootViewModel.goToMainSelection()
-                        print("Destination: \(rootViewModel.destination)")
-                    } label: {
-                        Text("Disconnection")
-                    }
+//                    Button {
+//                        print("Disconnect")
+//
+//                        activeAlert = .confirmUnpair(blePeripheral: connectedPeripherals[0])
+//                        connectedPeripherals = []
+//
+//                        connectionManager.isConnectedOrReconnecting = false
+//                        FileTransferConnectionManager.shared
+//                        connectionManager.selectedPeripheral = nil
+//                        connectionManager.isAnyPeripheralConnecting = false
+//                        connectionManager.isSelectedPeripheralReconnecting = false
+//                       // connectionManager.clearAllPeripheralInfo()
+//                        rootViewModel.goToMain()
+//
+//                        print("Destination: \(rootViewModel.destination)")
+//                    } label: {
+//                        Text("Disconnection")
+//                    }
 
                     // Sub-Header
                     VStack {
@@ -214,14 +217,14 @@ struct BleModuleView: View {
                     .frame(maxHeight: 40)
                     .background(Color("pyleap_green"))
                     .foregroundColor(.white)
-                    //.spotlight(enabled: spotlight.counter == 0, title: "Welcome to PyLeap!")
-               
+                    
+                    
                 
                     ScrollView(.vertical, showsIndicators: true) {
                         
                         ScrollViewReader { scroll in
                             
-                            SubHeaderView()
+                            MainSubHeaderView()
                               //  .spotlight(enabled: spotlight.counter == 1, title: "1")
                               
                            let check = networkServiceModel.pdemos.filter {
@@ -264,8 +267,8 @@ struct BleModuleView: View {
 
                 
                 .onTapGesture {
-                    spotlight.counter += 1
-                    print("\(spotlight.counter)")
+                    
+                    print("\(networkServiceModel.pdemos.count)")
                 }
             }
         }
@@ -353,7 +356,9 @@ struct BleModuleView: View {
             viewModel.setup(fileTransferClient: selectedClient)
         }
 
-        .onAppear {
+        .onAppear(){
+            
+            print("On Appear")
             networkServiceModel.fetch()
             viewModel.setup(fileTransferClient: connectionManager.selectedClient)
             viewModel.readFile(filename: "boot_out.txt")

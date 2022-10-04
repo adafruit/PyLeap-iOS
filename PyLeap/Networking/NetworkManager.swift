@@ -4,9 +4,11 @@
 //
 //  Created by Trevor Beaton on 3/23/22.
 //
-
+/// Single project
 // https://trevknows.github.io/testLeap.github.io/testLeap.json
 
+/// Multiple projects - 3
+// https://trevknows.github.io/multiple-project-test/multipleProjects.json
 
 import Foundation
 import SwiftUI
@@ -14,50 +16,107 @@ import SwiftUI
 class NetworkService: ObservableObject {
     
     static let shared = NetworkService()
-    
-    
+        
     @Published var pdemos : [ResultItem] = []
     @State var storedURL = ""
     
     let userDefaults = UserDefaults.standard
     
     init(){
-         // fetch()
+        load()
+        loadCustProjects()
     }
+    
+    func loadCustProjects() {
+        
+        if let savedProjects = userDefaults.object(forKey: "CustomProjects") as? Data {
+            
+            let decoder = JSONDecoder()
+            
+            if let loadedProjects = try? decoder.decode([ResultItem].self, from: savedProjects) {
+                
+                print("++++Custom Projects++++")
+                for i in loadedProjects {
+                    print("\(i.projectName)")
+                }
+            }
+        }
+    }
+    
     
     func save(content: [ResultItem]) {
         print("Saving JSON response...")
         let encoder = JSONEncoder()
         if let encoded = try? encoder.encode(content) {
-          let defaults = UserDefaults.standard
-          defaults.set(encoded, forKey: "SavedProjects")
+            let defaults = UserDefaults.standard
+            defaults.set(encoded, forKey: "SavedProjects")
         }
         
     }
     
-    func saveCustomProjects(content: [ResultItem]) {
+    func save(customProjects: [ResultItem]) {
+        
         NotificationCenter.default.post(name: .didCollectCustomProject, object: nil, userInfo: nil)
-      //  if let newIncoming = content.contains()
         
         let encoder = JSONEncoder()
-        if let encoded = try? encoder.encode(content) {
-          let defaults = UserDefaults.standard
-          defaults.set(encoded, forKey: "CustomProjects")
+        
+        if let encoded = try? encoder.encode(customProjects) {
+            let defaults = UserDefaults.standard
+            defaults.set(encoded, forKey: "CustomProjects")
+        }
+    }
+    
+    func saveCustomProjects(content: [ResultItem]) {
+        NotificationCenter.default.post(name: .didCollectCustomProject, object: nil, userInfo: nil)
+        //  if let newIncoming = content.contains()
+        
+        var customList: [ResultItem] = []
+        
+        
+        if let savedProjects = userDefaults.object(forKey: "CustomProjects") as? Data {
+            
+            let decoder = JSONDecoder()
+            
+            if let loadedProjects = try? decoder.decode([ResultItem].self, from: savedProjects) {
+                print("Loading previous list")
+                
+                for i in loadedProjects {
+                    print("\(i.projectName)")
+                }
+                
+                customList = loadedProjects
+                print("Appending new content")
+                
+                customList.append(contentsOf: content)
+                
+                for i in customList {
+                    print("\(i.projectName)")
+                }
+                
+                let encoder = JSONEncoder()
+                if let encoded = try? encoder.encode(customList) {
+                    let defaults = UserDefaults.standard
+                    print("Saved new custom list.")
+                    defaults.set(encoded, forKey: "CustomProjects")
+                }
+                
+                
+            }
         }
         
     }
     
     func verifyIncomingProject(json response: [ResultItem]){
-     
+        
         if let savedProjects = userDefaults.object(forKey: "CustomProjects") as? Data {
-          
-            let decoder = JSONDecoder()
-       
-            if let loadedProjects = try? decoder.decode([ResultItem].self, from: savedProjects) {
-              /// Does incoming project exist already?
-                /// Check with object's property URL
-
             
+            let decoder = JSONDecoder()
+            
+            if let loadedProjects = try? decoder.decode([ResultItem].self, from: savedProjects) {
+                /// Does incoming project exist already?
+                /// Check with object's property URL
+                
+                
                 if loadedProjects.contains(where: { $0.bundleLink == response[0].bundleLink
                 }) {
                     print("does exist")
@@ -69,30 +128,35 @@ class NetworkService: ObservableObject {
                 
                 print(loadedProjects)
                 
-          }
-
+            }
+            
         }
-       
+        
     }
     
     func loadCustomProjects() -> [ResultItem]{
         print(#function)
         var customList: [ResultItem] = []
         if let savedProjects = userDefaults.object(forKey: "CustomProjects") as? Data {
-          
+            
             let decoder = JSONDecoder()
-       
+            
             if let loadedProjects = try? decoder.decode([ResultItem].self, from: savedProjects) {
                 
-                print("Load saved projects")
-                print(loadedProjects)
+                print("Load custom projectsxo")
+                // print(loadedProjects)
+                
+                for i in loadedProjects {
+                    print("\(i.projectName)")
+                }
+                
                 customList = loadedProjects
                 
             }
         }
         return customList
     }
-
+    
     func mergeProjects() {
         print(#function)
         
@@ -100,27 +164,27 @@ class NetworkService: ObservableObject {
         var customList: [ResultItem] = []
         
         if let savedProjects = userDefaults.object(forKey: "SavedProjects") as? Data {
-          
+            
             let decoder = JSONDecoder()
-       
+            
             if let loadedProjects = try? decoder.decode([ResultItem].self, from: savedProjects) {
-              
+                
                 print("Load saved projects")
                 
-               // let check = loadedProjects.map { $0.bundleLink == "" }
+                // let check = loadedProjects.map { $0.bundleLink == "" }
                 
                 pdemos = loadedProjects
-
+                
                 print(loadedProjects)
                 
-          }
+            }
         }
         
         
         if let savedProjects = userDefaults.object(forKey: "CustomProjects") as? Data {
-          
+            
             let decoder = JSONDecoder()
-       
+            
             if let loadedProjects = try? decoder.decode([ResultItem].self, from: savedProjects) {
                 
                 print("Load saved projects")
@@ -132,24 +196,37 @@ class NetworkService: ObservableObject {
     }
     
     func load() {
-        print(#function)
+        
         if let savedProjects = userDefaults.object(forKey: "SavedProjects") as? Data {
-          
+            
             let decoder = JSONDecoder()
-       
+            
             if let loadedProjects = try? decoder.decode([ResultItem].self, from: savedProjects) {
-              
-                print("Load saved projects")
                 
-              //  let check = loadedProjects.map { $0.bundleLink == "" }
                 
                 let mergedList = loadedProjects + loadCustomProjects()
                 
+                // save(content: <#T##[ResultItem]#>)
+                
                 pdemos = mergedList
-                print("Load saved projects")
-          }
+                
+                
+                print("----Standard Projects----")
+                for i in loadedProjects {
+                    print("\(i.projectName)")
+                }
+                
+                print("++++Custom Projects++++")
+                for i in loadCustomProjects() {
+                    print("\(i.projectName)")
+                }
+                
+                
+                
+            }
+            
         }
-
+        
         
     }
     
@@ -203,7 +280,7 @@ class NetworkService: ObservableObject {
                 
                 print("Updating UIList with Cached data...")
                 DispatchQueue.main.async {
-                 self.load()
+                    self.load()
                 }
             }
         }
@@ -212,7 +289,7 @@ class NetworkService: ObservableObject {
     
     func fetchThirdParyProject(urlString: String?) {
         let cache = URLCache.shared
-
+        
         guard let urlString = urlString else {
             print("Error")
             return
@@ -224,15 +301,15 @@ class NetworkService: ObservableObject {
         }
         
         let request = URLRequest(url: URL(string: urlString)!, cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData, timeoutInterval: 60.0)
-
+        
         
         print("Making Network Request for Custom Project.")
-      
+        
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
-
+            
             if let error = error {
                 print("Could not load project. Please check your URL Invalid URL: \(urlString)")
-                 
+                
                 NotificationCenter.default.post(name: .invalidCustomNetworkRequest, object: nil, userInfo: nil)
                 
                 return
@@ -246,16 +323,21 @@ class NetworkService: ObservableObject {
                 if let projects = projectData?.projects {
                     
                     DispatchQueue.main.async {
-                        self.pdemos.append(contentsOf: projects)
+                        print(#function)
+                        for i in projects {
+                            print("\(i.projectName)")
+                        }
+                        //  self.pdemos.append(contentsOf: projects)
                         self.saveCustomProjects(content: projects)
+                        
                     }
                     
                 }
                 
             }
-
+            
         }
-            task.resume()
+        task.resume()
     }
 }
 

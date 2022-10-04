@@ -11,7 +11,7 @@ import FileTransferClient
 struct RootView: View {
     
     @StateObject private var model = RootViewModel()
-    @ObservedObject private var connectionManager = FileTransferConnectionManager.shared
+    @ObservedObject var connectionManager = FileTransferConnectionManager.shared
     @AppStorage("onboarding") var onboardingSeen = true
     
     var data = OnboardingDataModel.data
