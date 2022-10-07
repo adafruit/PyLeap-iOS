@@ -37,7 +37,7 @@ class WifiFileTransfer: ObservableObject {
     }
     
     func searchPathForProject(nameOf project: String) {
-        var manager = FileManager.default
+        let manager = FileManager.default
         let nestedFolderURL = directoryPath.appendingPathComponent(project)
         
         if manager.fileExists(atPath: nestedFolderURL.relativePath) {
@@ -55,7 +55,8 @@ class WifiFileTransfer: ObservableObject {
         
         if manager.fileExists(atPath: nestedFolderURL.relativePath) {
           print("Exist")
-          filesDownloaded(url: <#T##URL#>)
+            //Start Here for Wifi
+        //  filesDownloaded(url: )
         } else {
             print("Does not exist")
             

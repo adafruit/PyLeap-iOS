@@ -180,7 +180,7 @@ struct WifiView: View {
             initialIPStoreCheck()
             
             if userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName") == nil {
-                print("Nothing stored.")
+                print("storeResolvedAddress - not stored")
             } else {
                 hostName = userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName") as! String
             }

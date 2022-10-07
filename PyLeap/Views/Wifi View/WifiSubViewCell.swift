@@ -10,8 +10,7 @@ import SwiftUI
 struct WifiSubViewCell: View {
     @State var transferInProgress = false
     @State var isDownloaded = false
-    
-    
+        
     @StateObject var wifiFileTransfer = WifiFileTransfer()
    
     
@@ -156,25 +155,8 @@ struct WifiSubViewCell: View {
         
         
     
-        .alert("Project Not Found", isPresented: $offlineWithoutProject) {
-                    Button("OK") {
-                        // Handle acknowledgement.
-                        print("OK")
-                        offlineWithoutProject = false
-                        downloadStateBinder = .idle
-                       // selectionModel.state = .idle
-                        print("\(offlineWithoutProject)")
-                    }
-                } message: {
-                    Text("""
-                         To use this project, connect to the internet.
-                         """)
-                    .multilineTextAlignment(.leading)
-                }
-        
-        .onChange(of: downloadModel.isDownloading, perform: { newValue in
-            wifiFileTransfer.getProjectForSubClass(nameOf: title)
-        })
+   
+    
         
         .onChange(of: downloadModel.didDownloadBundle, perform: { newValue in
             print("For project: \(title), project download is \(newValue)")
@@ -196,7 +178,8 @@ struct WifiSubViewCell: View {
             
         })
         .onAppear(perform: {
-            wifiFileTransfer.getProjectForSubClass(nameOf: title)
+            
+            wifiFileTransfer.searchPathForProject(nameOf: title)
             if wifiFileTransfer.projectDownloaded {
                 isDownloaded = true
             } else {

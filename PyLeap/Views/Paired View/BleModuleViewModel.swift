@@ -55,6 +55,10 @@ class BleModuleViewModel: ObservableObject {
     }
     
     @Published var transmissionProgress: TransmissionProgress?
+    @Published var lastTransmit: TransmissionLog? =  TransmissionLog(type: .write(size: 334))
+    @Published var activeAlert: ActiveAlert?
+    // Data
+    private let bleManager = BleManager.shared
     
     struct TransmissionLog: Equatable {
         enum TransmissionType: Equatable {
@@ -81,16 +85,7 @@ class BleModuleViewModel: ObservableObject {
             return modeText
         }
     }
-    @Published var lastTransmit: TransmissionLog? =  TransmissionLog(type: .write(size: 334))
-    
 
-    @Published var activeAlert: ActiveAlert?
-    
-    // Data
-    private let bleManager = BleManager.shared
-    
-
-    
     // MARK: - Setup
     func onAppear() {
         //registerNotifications(enabled: true)

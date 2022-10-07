@@ -243,7 +243,7 @@ class BleContentTransfer: ObservableObject {
                 } catch { print(error, fileURL) }
             }
             
-            startFileTransfer(url: url)
+            
             
             DispatchQueue.main.async {
                 self.numOfFiles = files.count
@@ -257,6 +257,7 @@ class BleContentTransfer: ObservableObject {
                print("CL: \(i.urlTitle.pathComponents)")
             }
             
+            startFileTransfer(url: url)
             contentList.removeAll()
         }
     }
