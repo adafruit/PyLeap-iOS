@@ -13,7 +13,7 @@ class BleContentTransfer: ObservableObject {
     private weak var fileTransferClient: FileTransferClient?
     @Published var entries = [BlePeripheral.DirectoryEntry]()
     @ObservedObject var downloadModel = DownloadViewModel()
-
+    
     var manager = FileManager.default
 
     @Published var downloadState: DownloadState = .idle

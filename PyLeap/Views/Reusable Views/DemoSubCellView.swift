@@ -12,30 +12,17 @@ struct DemoSubview: View {
     
     @Binding var bindingString: String
     
-    let title: String
-    let image: String
-    let description: String
-    let learnGuideLink: URLRequest
-    let downloadLink: String
-    let compatibility: [String]
+    let result: ResultItem
     
     @EnvironmentObject var rootViewModel: RootViewModel
-    @StateObject var downloadModel = DownloadViewModel()
     @StateObject var viewModel = SubCellViewModel()
-    @StateObject var selectionModel = BleModuleViewModel()
     @StateObject var contentTransfer = BleContentTransfer()
     
     @ObservedObject var connectionManager = FileTransferConnectionManager.shared
     
-    
     @Binding var isConnected : Bool
-    
     @State private var showWebViewPopover: Bool = false
-    @State var errorOccured = false
-    @State private var presentAlert = false
-    
-    @State var offlineWithoutProject = false
-    
+        
     func showAlertMessage() {
         alertMessage(title: """
 There's a problem with your internet connection.
@@ -48,9 +35,9 @@ Try again later.
         alertMessage(title: """
 Transfer Failed
 
-Disconnect from the computer.
+Disconnect device from the computer.
 
-Press "Reset" on the device.
+Press "Reset" on the device and use a battery source.
 """, exitTitle: "Retry") {
             contentTransfer.transferError = false
         }
@@ -78,14 +65,14 @@ Press "Reset" on the device.
             
             VStack(alignment: .leading, spacing: 0, content: {
                 
-                ImageWithURL(image)
+                ImageWithURL(result.projectImage)
                     .scaledToFit()
                     .frame(maxWidth: .infinity)
                     .cornerRadius(14)
                     .padding(.top, 30)
                 
                 
-                Text(description)
+                Text(result.description)
                     .font(Font.custom("ReadexPro-Regular", size: 18))
                     .multilineTextAlignment(.leading)
                     .minimumScaleFactor(0.1)
@@ -95,7 +82,7 @@ Press "Reset" on the device.
                     .padding(.top, 5)
                 
                 
-                ForEach(compatibility, id: \.self) { string in
+                ForEach(result.compatibility, id: \.self) { string in
                     if string == "circuitplayground_bluefruit" {
                         
                         HStack {
@@ -143,7 +130,7 @@ Press "Reset" on the device.
                     .padding(.top, 20)
             }
             .sheet(isPresented: $showWebViewPopover, content: {
-                WebView(URLRequest(url: learnGuideLink.url!))
+                WebView(URLRequest(url: URL(string: result.learnGuideLink)!))
             })
             
             
@@ -151,7 +138,7 @@ Press "Reset" on the device.
             
             if isConnected {
                 
-                if compatibility.contains(bindingString) {
+                if result.compatibility.contains(bindingString) {
                     
                     Button {
                         viewModel.deleteStoredFilesInFM()
@@ -173,7 +160,7 @@ Press "Reset" on the device.
                             if viewModel.projectDownloaded == false && viewModel.isConnectedToInternet == false {
                                 showAlertMessage()
                             } else {
-                                contentTransfer.testFileExistance(for: title, bundleLink: downloadLink)
+                                contentTransfer.testFileExistance(for: result.projectName, bundleLink: result.bundleLink)
                             }
                             
                         }) {
@@ -244,7 +231,7 @@ Press "Reset" on the device.
             })
         
             .onAppear(perform: {
-                viewModel.getProjectForSubClass(nameOf: title)
+                viewModel.searchPathForProject(nameOf: result.projectName)
                 if viewModel.projectDownloaded {
                     viewModel.projectDownloaded = true
                 } else {

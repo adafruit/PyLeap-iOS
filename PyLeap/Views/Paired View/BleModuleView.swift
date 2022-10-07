@@ -8,10 +8,6 @@
 import SwiftUI
 import FileTransferClient
 
-class SpotlightCounter: ObservableObject {
-    @Published var counter = 0
-}
-
 struct BleModuleView: View {
     
     // Data
@@ -25,39 +21,22 @@ struct BleModuleView: View {
         }
     }
     
-    
     @Environment(\.presentationMode) var presentationMode
-    
     
     @ObservedObject var connectionManager = FileTransferConnectionManager.shared
     let selectedPeripheral = FileTransferConnectionManager.shared.selectedPeripheral
     
-    
-    
-
-
     @StateObject var viewModel = BleModuleViewModel()
     @ObservedObject var networkServiceModel = NetworkService()
-    @StateObject var btConnectionViewModel = BTConnectionViewModel()
     @EnvironmentObject var rootViewModel: RootViewModel
-    @StateObject var downloadModel = DownloadViewModel()
-    @StateObject var spotlight = SpotlightCounter()
     
     //clearKnownPeripheralUUIDs
     
     @State private var isConnected = false
-    //@State private var switchedView = false
     @State private var errorOccured = false
-    @State private var downloadState = DownloadState.idle
     @State private var scrollViewID = UUID()
-    @State var currentHightlight: Int = 0
-    
-    
-    
     
     @State private var activeAlert: ActiveAlert?
-    @State private var internetAlert = false
-    @State private var showAlert1 = false
     
     
     @State private var boardBootInfo = ""
@@ -219,8 +198,6 @@ struct BleModuleView: View {
                     .background(Color("pyleap_green"))
                     .foregroundColor(.white)
                     
-                    
-                
                     ScrollView(.vertical, showsIndicators: true) {
                         
                         ScrollViewReader { scroll in
@@ -236,7 +213,7 @@ struct BleModuleView: View {
                             ForEach(check) { demo in
                                 
                                 
-                                DemoViewCell(result: demo, isConnected: $inConnectedInSelectionView, bootOne: $boardBootInfo, onViewGeometryChanged: {
+                                DemoViewCell(result: demo, isConnected: $inConnectedInSelectionView, deviceInfo: $boardBootInfo, onViewGeometryChanged: {
                                     withAnimation {
                                         scroll.scrollTo(demo.id)
                                     }
@@ -259,6 +236,7 @@ struct BleModuleView: View {
 
         .onChange(of: viewModel.bootUpInfo, perform: { newValue in
             viewModel.readMyStatus()
+            
             print("newValue \(newValue)")
             boardBootInfo = newValue
         })
@@ -276,24 +254,6 @@ struct BleModuleView: View {
         }
         
     }
-    
-    enum ButtonStatus: CaseIterable, Identifiable {
-      case download
-      case transfer
-      case complete
-      
-      var id: String { return title }
-      
-      var title: String {
-        switch self {
-        case .download: return "Download"
-        case .transfer: return "Transfer"
-        case .complete: return "Complete"
-        }
-      }
-      
-    }
-    
     
     struct Alerts: ViewModifier {
         @Binding var activeAlert: ActiveAlert?

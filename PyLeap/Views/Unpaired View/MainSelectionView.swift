@@ -99,7 +99,7 @@ struct MainSelectionView: View {
                 ScrollViewReader { scroll in
                     
                     ForEach(networkModel.pdemos) { demo in
-                        DemoViewCell(result: demo, isConnected: $isConnected, bootOne: $test, onViewGeometryChanged: {
+                        DemoViewCell(result: demo, isConnected: $isConnected, deviceInfo: $test, onViewGeometryChanged: {
                             withAnimation {
                                 scroll.scrollTo(demo.id)
                             }

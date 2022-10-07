@@ -14,32 +14,22 @@ class WifiSubViewCellModel: ObservableObject {
     
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     
-    func getProjectForSubClass(nameOf project: String) {
+    func searchPathForProject(nameOf project: String) {
+        var manager = FileManager.default
+
+        let nestedFolderURL = directoryPath.appendingPathComponent(project)
         
-        if let enumerator = FileManager.default.enumerator(at: directoryPath, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
-           // for case condition: Only process URLs
-            for case let fileURL as URL in enumerator {
-            
-                    if fileURL.lastPathComponent == project {
-                        failedProjectLaunch = false
-                        projectDownloaded = true
-                        print(#function)
-                        print("Searching for... \(project)")
-                        print("URL Path: \(fileURL.path)")
-                        print("URL : \(fileURL)")
-                       
-                    return
-                        
-                    } else {
-                        failedProjectLaunch = true
-                        projectDownloaded = false
-                        print("Project was not found...")
-                        
-                    }
-            }
-            
+
+        if manager.fileExists(atPath: nestedFolderURL.relativePath) {
+          print("\(project) - Exist")
+            projectDownloaded = true
+        } else {
+            print("Does not exist - \(project)")
+           projectDownloaded = false
         }
-        
     }
+    
+    
+
     
 }

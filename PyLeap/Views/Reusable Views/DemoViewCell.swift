@@ -9,21 +9,17 @@ import Foundation
 
 struct DemoViewCell: View {
     
-    
-    
-    @StateObject var spotlight = SpotlightCounter()
-    
     let result : ResultItem
     @State private var isExpanded: Bool = false {
         didSet {
             onViewGeometryChanged()
         }
     }
+    
     @Binding var isConnected: Bool
-    @Binding var bootOne: String
+    @Binding var deviceInfo: String
    
     let onViewGeometryChanged: ()->Void
-    
     
     var body: some View {
         content
@@ -34,19 +30,10 @@ struct DemoViewCell: View {
         VStack(alignment: .leading, spacing: 8) {
             header
                
-            
-            
-            
             if isExpanded {
                 
                 Group {
-                    DemoSubview(bindingString: $bootOne, title: result.projectName,
-                                image: result.projectImage,
-                                description: result.description,
-                                learnGuideLink: URLRequest(url: URL(string: result.learnGuideLink)!),
-                                downloadLink: result.bundleLink,
-                                compatibility: result.compatibility,
-                                isConnected: $isConnected)
+                    DemoSubview(bindingString: $deviceInfo, result: result, isConnected: $isConnected)
                 }
                 
             }
