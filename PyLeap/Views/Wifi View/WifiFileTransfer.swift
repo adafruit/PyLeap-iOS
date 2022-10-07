@@ -14,6 +14,11 @@ class WifiFileTransfer: ObservableObject {
     
     // File Manager Data
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    
+    var manager = FileManager.default
+    
+    
+    
     @Published var fileArray: [ContentFile] = []
     @Published var contentList: [URLData] = []
     
@@ -57,6 +62,17 @@ class WifiFileTransfer: ObservableObject {
         }
     }
     
+    func testFileExistance(for project: String) {
+        let nestedFolderURL = directoryPath.appendingPathComponent(project)
+        
+        if manager.fileExists(atPath: nestedFolderURL.relativePath) {
+          print("Exist")
+        } else {
+            print("Does not exist")
+            
+        }
+    }
+    
     func projectValidation(nameOf project: String) {
         print("getProjectURL called")
 
@@ -96,7 +112,6 @@ class WifiFileTransfer: ObservableObject {
         
     }
     
-
     
     func appendDirectories(_ url: URL) {
         projectDirectories.append(url)

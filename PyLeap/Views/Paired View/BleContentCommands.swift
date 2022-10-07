@@ -14,7 +14,7 @@ class BleContentCommands {
     @Published var transmissionProgress: TransmissionProgress?
     @Published var isTransmiting = false
     @Published var bootUpInfo = String()
-    
+    @Published var counter = 0
     
     enum ProjectViewError: LocalizedError {
         case fileTransferUndefined
@@ -235,7 +235,7 @@ class BleContentCommands {
         guard let fileTransferClient = fileTransferClient else { completion?(.failure(ProjectViewError.fileTransferUndefined)); return }
         
         DispatchQueue.main.async {
-           
+            self.counter += 1
         }
         
         

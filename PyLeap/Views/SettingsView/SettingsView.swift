@@ -55,28 +55,7 @@ struct SettingsView: View {
     
         VStack {
             
-                        HStack {
-                            Button {
-                                rootViewModel.goToWifiView()
-                            } label: {
-                                Text("Back")
-                            }
-            
-                            .padding(.all,20)
-                            Spacer()
-                        }
-//.frame(width: .infinity)
-                        .frame(height: UIScreen.main.bounds.height / 19)
-                        .background(Color(.systemGroupedBackground))
-            
-            HStack {
-                Text("Settings")
-                    .font(.largeTitle)                
-                
-                .padding(.all,20)
-                Spacer()
-            }
-            .background(Color(.systemGroupedBackground))
+
             
             Form {
                 
@@ -227,8 +206,37 @@ struct SettingsView: View {
                 }
             }
         }
-        //.padding(.all, 11.0)
+
         .background(Color(UIColor.systemGroupedBackground))
+        .safeAreaInset(edge: .top) {
+            VStack {
+                HStack {
+                    Button {
+                        rootViewModel.goToWifiView()
+                    } label: {
+                        Text("Back")
+                    }
+    
+                    .padding(.leading,20)
+                    Spacer()
+                }
+                
+                .frame(height: UIScreen.main.bounds.height / 19)
+                .background(Color(.systemGroupedBackground))
+    
+    HStack {
+        Text("Settings")
+            .font(.largeTitle)
+            .bold()
+        
+            .padding(.leading,20)
+        Spacer()
+    }
+    .background(Color(.systemGroupedBackground))
+            }
+            .padding(.top, 25)
+            
+        }
 
 //        .safeAreaInset(edge: .top) {
 //            HStack {

@@ -12,7 +12,19 @@ class BleContentTransfer: ObservableObject {
     
     private weak var fileTransferClient: FileTransferClient?
     @Published var entries = [BlePeripheral.DirectoryEntry]()
+    @ObservedObject var downloadModel = DownloadViewModel()
+
+    var manager = FileManager.default
+
+    @Published var downloadState: DownloadState = .idle
+    
+    
     @Published var isTransmiting = false
+    
+    @Published var isTransferring = false
+    
+    @Published var transferError = false
+    
     @Published var bootUpInfo = ""
     
     @Published var contentCommands = BleContentCommands()
@@ -23,7 +35,6 @@ class BleContentTransfer: ObservableObject {
     @Published var writeError = false
     
     
-    @Published var counter = 0
     @Published var numOfFiles = 0
     
     @Published var fileArray: [ContentFile] = []
@@ -36,46 +47,104 @@ class BleContentTransfer: ObservableObject {
     
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
 
-    @Published var state: DownloadState = .idle
     
     enum ProjectViewError: LocalizedError {
         case fileTransferUndefined
     }
     
-    func displayErrorMessage() {
+    @objc func displayErrorMessage(_ notification: Notification) {
         
         DispatchQueue.main.async {
-            self.writeError = true
-            self.sendingBundle = false
+            self.transferError = true
+            self.downloadState = .failed
         }
 
     }
     
+    init() {
+        registerNotification(enabled: true)
+    }
+    private weak var didCompleteZip: NSObjectProtocol?
+    private weak var didEncounterTransferError: NSObjectProtocol?
+
+    
+    private func registerNotification(enabled: Bool) {
+        print("\(#function) @Line: \(#line)")
+        
+        let notificationCenter = NotificationCenter.default
+        
+        if enabled {
+            
+            NotificationCenter.default.addObserver(self, selector: #selector(zipSuccess(_:)), name: .didCompleteZip,object: nil)
+            
+            NotificationCenter.default.addObserver(self, selector: #selector(displayErrorMessage(_:)), name: .didEncounterTransferError,object: nil)
+            
+        } else {
+            if let testObserver = didCompleteZip {notificationCenter.removeObserver(testObserver)}
+        
+        }
+    }
+    
+    
+    @objc func zipSuccess(_ notification: NSNotification) {
+        print("Zip - Success.")
+      print("\(#function) @Line: \(#line)")
+        if let projectInfo = notification.userInfo as Dictionary? {
+            if let title = projectInfo["projectTitle"] as? String, let link = projectInfo["projectLink"] as? String {
+                testFileExistance(for: title, bundleLink: link)
+            }
+        }
+    }
+    
+    
+    func testFileExistance(for project: String, bundleLink: String) {
+        
+        DispatchQueue.main.async {
+            self.downloadState = .transferring
+        }
+       
+        
+        let nestedFolderURL = directoryPath.appendingPathComponent(project)
+        
+        if manager.fileExists(atPath: nestedFolderURL.relativePath) {
+          print("Exist")
+          
+        filesDownloaded(url: nestedFolderURL)
+            
+        } else {
+            print("Does not exist - downloading \(project)")
+            
+            downloadModel.trueDownload(useProject: bundleLink, projectName: project)
+        }
+    }
+    
+
+    
     
     /// Deletes all files and directories on Bluefruit device *Except boot_out.txt*
     
-       func removeAllFiles(){
-           contentCommands.listDirectoryCommand(path: "") { result in
-               
-               switch result {
-                   
-               case .success(let contents):
-                   
-                   for i in contents! where i.name != "boot_out.txt" {
-                       self.contentCommands.deleteFileCommand(path: i.name) { deletionResult in
-                           switch deletionResult {
-                           case .success:
-                               print("Successfully Deleted")
-                           case .failure:
-                               print("Failed to delete.")
-                           }
-                       }
-                   }
-               case .failure:
-                   print("No content listed")
-               }
-           }
-       }
+    func removeAllFiles(){
+        contentCommands.listDirectoryCommand(path: "") { result in
+            
+            switch result {
+                
+            case .success(let contents):
+                
+                for i in contents! where i.name != "boot_out.txt" {
+                    self.contentCommands.deleteFileCommand(path: i.name) { deletionResult in
+                        switch deletionResult {
+                        case .success:
+                            print("Successfully Deleted")
+                        case .failure:
+                            print("Failed to delete.")
+                        }
+                    }
+                }
+            case .failure:
+                print("No content listed")
+            }
+        }
+    }
     
     func appendDirectories(_ url: URL) {
         projectDirectories.append(url)
@@ -91,8 +160,11 @@ class BleContentTransfer: ObservableObject {
     
     func getProjectURL(nameOf project: String) {
         print("getProjectURL called")
-        counter = 0
-        state = .transferring
+        DispatchQueue.main.async {
+            self.contentCommands.counter = 0
+        }
+        
+        downloadState = .transferring
         if let enumerator = FileManager.default.enumerator(at: directoryPath, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
            // for case condition: Only process URLs
             
@@ -120,8 +192,6 @@ class BleContentTransfer: ObservableObject {
                     } else {
                         
                         print("Project was not found for...\(project)")
-                        print("\(state)")
-                        state = .idle
                         
                     }
                     
@@ -131,7 +201,6 @@ class BleContentTransfer: ObservableObject {
         }
         
     }
-    
     
     func filesDownloaded(url: URL) {
         print("filesDownloaded was called")
@@ -176,7 +245,10 @@ class BleContentTransfer: ObservableObject {
             
             startFileTransfer(url: url)
             
-            numOfFiles = files.count
+            DispatchQueue.main.async {
+                self.numOfFiles = files.count
+            }
+           
             print("Contents in URL \(fileArray.count)")
             print("Number of Files in URL \(files.count)")
            
@@ -188,9 +260,6 @@ class BleContentTransfer: ObservableObject {
             contentList.removeAll()
         }
     }
-    
-    
-    
     
     func startFileTransfer(url: URL) {
         print("Project Location: \(url)")
@@ -258,7 +327,6 @@ class BleContentTransfer: ObservableObject {
         
         sortDirectory(dirList: projectDirectories, filesUrls: fileURLs)
     }
-    
     
     func sortDirectory(dirList: [URL], filesUrls: [URL]) {
 
@@ -342,7 +410,7 @@ class BleContentTransfer: ObservableObject {
                             print("Failed to create directory \(joined)")
                             temp.removeAll()
                             self.projectDirectories.removeAll()
-                            self.displayErrorMessage()
+                            NotificationCenter.default.post(name: .didEncounterTransferError, object: nil, userInfo: nil)
                         }
                     }
                 }
@@ -351,12 +419,11 @@ class BleContentTransfer: ObservableObject {
                 print("Failure - mkLibDir")
                 temp.removeAll()
                 self.projectDirectories.removeAll()
-                self.displayErrorMessage()
+                NotificationCenter.default.post(name: .didEncounterTransferError, object: nil, userInfo: nil)
             }
         }
     }
     
-   
     func mkSubLibDir(subdirectory: URL, copiedDirectory: [URL], filesURL: [URL]) {
         print(#function)
         var temp = copiedDirectory
@@ -438,8 +505,7 @@ class BleContentTransfer: ObservableObject {
                             print("Failed to create directory - 2")
                             temp.removeAll()
                             self.projectDirectories.removeAll()
-                            self.displayErrorMessage()
-                        }
+                            NotificationCenter.default.post(name: .didEncounterTransferError, object: nil, userInfo: nil)                        }
                     }
                 }
                 
@@ -448,24 +514,27 @@ class BleContentTransfer: ObservableObject {
                 print("\(tempURL)")
                 temp.removeAll()
                 self.projectDirectories.removeAll()
-                self.displayErrorMessage()
+                NotificationCenter.default.post(name: .didEncounterTransferError, object: nil, userInfo: nil)
             }
         }
     }
     
+
+    
     func completedTransfer() {
        
+        
        
         DispatchQueue.main.async {
+            self.downloadState = .complete
             self.didCompleteTranfer = true
             self.numOfFiles = 0
-            self.counter = 0
-            self.state = .complete
+            self.contentCommands.counter = 0
 
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             self.didCompleteTranfer = false
-            self.state = .idle
+            self.downloadState = .idle
             
         }
     }
@@ -484,8 +553,7 @@ class BleContentTransfer: ObservableObject {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2){
                 self.sendingBundle = false
-                self.counter = 0
-                
+                self.completedTransfer()
                 self.numOfFiles = 0
                 self.contentList.removeAll()
             }
@@ -532,16 +600,15 @@ class BleContentTransfer: ObservableObject {
                            
                             print("Transfer Failure")
                             print("\(joined)")
-                            self.state = .failed
+                            self.downloadState = .failed
                             
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                self.state = .idle
+                                self.downloadState = .idle
                             }
                             
                         }
                         
-                        
-                        self.displayErrorMessage()
+                        NotificationCenter.default.post(name: .didEncounterTransferError, object: nil, userInfo: nil)
                     }
                 }
             }
@@ -571,8 +638,8 @@ class BleContentTransfer: ObservableObject {
                         
                     case .failure(_):
                         print("Transfer Failure - 2")
-                        self.state = .failed
-                        self.displayErrorMessage()
+                        self.downloadState = .failed
+                        NotificationCenter.default.post(name: .didEncounterTransferError, object: nil, userInfo: nil)
                     }
                 }
             } else {
@@ -602,7 +669,7 @@ class BleContentTransfer: ObservableObject {
                             self.transferFiles(files: copiedFiles)
                         case .failure(let error):
                             print("Failed: \(error): \(result)")
-                           // self.displayErrorMessage()
+                            NotificationCenter.default.post(name: .didEncounterTransferError, object: nil, userInfo: nil)
 
                         }
                     }
@@ -617,16 +684,6 @@ class BleContentTransfer: ObservableObject {
             self.sendingBundle = true
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     func readMyStatus() {
        // model.readFile(filename: "boot_out.txt")
@@ -654,9 +711,6 @@ class BleContentTransfer: ObservableObject {
         }
         
     }
-    
-    
-    
     
     
 }

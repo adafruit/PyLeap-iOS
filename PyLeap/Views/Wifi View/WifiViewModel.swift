@@ -56,10 +56,10 @@ class WifiViewModel: ObservableObject {
         wifiServiceManager.findService()
     }
     
-    private weak var testObserver: NSObjectProtocol?
+    
     private weak var invalidIPObserver: NSObjectProtocol?
     
-    
+    private weak var testObserver: NSObjectProtocol?
     private func registerNotifications(enabled: Bool) {
         let notificationCenter = NotificationCenter.default
         
@@ -75,6 +75,9 @@ class WifiViewModel: ObservableObject {
         }
     }
     
+    
+    
+
     
     func checkIP() {
         

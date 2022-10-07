@@ -103,7 +103,7 @@ struct MainSelectionView: View {
                             withAnimation {
                                 scroll.scrollTo(demo.id)
                             }
-                        }, stateBinder: $nilBinder)
+                        })
                     }
                 }
             }

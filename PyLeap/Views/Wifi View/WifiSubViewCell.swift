@@ -11,7 +11,6 @@ struct WifiSubViewCell: View {
     @State var transferInProgress = false
     @State var isDownloaded = false
     
-    @EnvironmentObject var globalString : GlobalString
     
     @StateObject var wifiFileTransfer = WifiFileTransfer()
    

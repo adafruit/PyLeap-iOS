@@ -171,6 +171,7 @@ struct WifiView: View {
                 
         })
         
+        
         .onAppear(){
             print("On Appear")
             networkModel.fetch()
@@ -198,8 +199,14 @@ struct WifiView_Previews: PreviewProvider {
 
 extension Notification.Name {
     private static let kPrefix = Bundle.main.bundleIdentifier!
+    public static let testNotificationName = Notification.Name(kPrefix+".testNotificationName")
     public static let didUpdateState = Notification.Name(kPrefix+".test")
     public static let invalidIPNotif = Notification.Name(kPrefix+".invalidIPNotif")
     public static let invalidCustomNetworkRequest = Notification.Name(kPrefix+".invalidCustomNetworkRequest")
     public static let didCollectCustomProject = Notification.Name(kPrefix+".didCollectCustomProject")
+    public static let didEncounterZipError = Notification.Name(kPrefix+".didEncounterZipError")
+    public static let didCompleteZip = Notification.Name(kPrefix+".didCompleteZip")
+    public static let didCompleteTransfer = Notification.Name(kPrefix+".didCompleteTransfer")
+    public static let didEncounterTransferError = Notification.Name(kPrefix+".didEncounterTransferError")
+
 }

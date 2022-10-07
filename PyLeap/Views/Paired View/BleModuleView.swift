@@ -34,9 +34,10 @@ struct BleModuleView: View {
     
     
     
+
+
     @StateObject var viewModel = BleModuleViewModel()
     @ObservedObject var networkServiceModel = NetworkService()
-    @StateObject var globalString = GlobalString()
     @StateObject var btConnectionViewModel = BTConnectionViewModel()
     @EnvironmentObject var rootViewModel: RootViewModel
     @StateObject var downloadModel = DownloadViewModel()
@@ -227,9 +228,10 @@ struct BleModuleView: View {
                             MainSubHeaderView()
                               //  .spotlight(enabled: spotlight.counter == 1, title: "1")
                               
-                           let check = networkServiceModel.pdemos.filter {
-                                $0.compatibility[0] == boardBootInfo
+                            let check = networkServiceModel.pdemos.filter {
+                                $0.compatibility.contains(boardBootInfo)
                             }
+                            
                             
                             ForEach(check) { demo in
                                 
@@ -238,7 +240,7 @@ struct BleModuleView: View {
                                     withAnimation {
                                         scroll.scrollTo(demo.id)
                                     }
-                                }, stateBinder: $downloadState)
+                                })
                                
                                 
                             }
@@ -249,108 +251,17 @@ struct BleModuleView: View {
                     }
                     
                 }
-                .alert("Cannot Write To Device", isPresented: $errorOccured) {
-                            Button("OK") {
-                                // Handle acknowledgement.
-                                print("OK")
-                                errorOccured = false
-                            }
-                        } message: {
-                            Text("""
-                                 Unplug device from computer and use external power source.
-                                 
-                                 Then press RESET on device to continue.
-                                 """)
-                            .multilineTextAlignment(.leading)
-                        }
-                
 
-                
-                .onTapGesture {
-                    
-                    print("\(networkServiceModel.pdemos.count)")
-                }
             }
         }
         .background(Color.white)
-        .environmentObject(globalString)
-        
-        .onChange(of: viewModel.isConnectedToInternet, perform: { newValue in
-            
-            if newValue {
-                internetAlert = false
-            } else {
-                internetAlert = true
-            }
-        })
-        
-        .modifier(Alerts(activeAlert: $activeAlert))
-        
-        .onChange(of: viewModel.state, perform: { newValue in
-            print("State: \(newValue)")
-            downloadState = newValue
-            print("State Change: \(newValue )")
-            if newValue == .failed {
-                print("Failed Value")
-                errorOccured = true
-            }
-        })
-        
-        .onChange(of: viewModel.writeError, perform: { newValue in
-            print("Change happened! \(newValue)")
-            
-            globalString.bundleHasBeenDownloaded = newValue
-        })
-        
-        .onChange(of: viewModel.sendingBundle, perform: { newValue in
-            globalString.isSendingG = newValue
-            if newValue {
-                print("Is transferring...")
-            } else {
-                print("Not transferring...")
-            }
-        })
-        
-        .onChange(of: viewModel.numOfFiles, perform: { newValue in
-            globalString.numberOfFilesG = newValue
-            print("NumOfFiles: \(newValue)")
-        })
-        
-        .onChange(of: viewModel.counter, perform: { newValue in
-            globalString.counterG = newValue
-            print("Change for counterG happened: Value should be \(newValue)")
-        })
-        
+
+
         .onChange(of: viewModel.bootUpInfo, perform: { newValue in
             viewModel.readMyStatus()
             print("newValue \(newValue)")
             boardBootInfo = newValue
         })
-        
-        .onChange(of: globalString.projectString, perform: { newValue in
-          print("Start Transfer")
-          //  viewModel.getProjectURL(nameOf: newValue)
-            
-        })
-        
-        .onChange(of: globalString.attemptToDownload, perform: { newValue in
-            print("Start Download Process\(globalString.downloadLinkString) - \(globalString.projectString)")
-            downloadModel.startDownload(urlString: globalString.downloadLinkString, projectTitle: globalString.projectString)
-            
-        })
-        
-        .onChange(of: globalString.attemptToSend, perform: { newValue in
-           
-            viewModel.getProjectURL(nameOf: globalString.projectString)
-            
-        })
-        
-        .onChange(of: downloadModel.attemptToSendBunle, perform: { newValue in
-            print("Attempting transfer of: \(globalString.projectString)")
-            viewModel.getProjectURL(nameOf: globalString.projectString)
-            
-        })
-        
         
         .onChange(of: connectionManager.selectedClient) { selectedClient in
             viewModel.setup(fileTransferClient: selectedClient)

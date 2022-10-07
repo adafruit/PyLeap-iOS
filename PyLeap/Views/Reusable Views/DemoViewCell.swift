@@ -24,7 +24,6 @@ struct DemoViewCell: View {
    
     let onViewGeometryChanged: ()->Void
     
-    @Binding var stateBinder: DownloadState
     
     var body: some View {
         content
@@ -41,7 +40,7 @@ struct DemoViewCell: View {
             if isExpanded {
                 
                 Group {
-                    DemoSubview(bindingString: $bootOne, downloadStateBinder: $stateBinder, title: result.projectName,
+                    DemoSubview(bindingString: $bootOne, title: result.projectName,
                                 image: result.projectImage,
                                 description: result.description,
                                 learnGuideLink: URLRequest(url: URL(string: result.learnGuideLink)!),

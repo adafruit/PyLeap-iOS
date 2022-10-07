@@ -8,34 +8,9 @@
 import SwiftUI
 import FileTransferClient
 
-
-
-class GlobalString: ObservableObject {
-    @Published var projectString = ""
-    @Published var downloadLinkString = ""
-    @Published var compatibilityString = ""
-    
-    
-    @Published var counterG = 0
-    @Published var numberOfFilesG = 0
-    @Published var isSendingG = false
-    @Published var bundleHasBeenDownloaded = false
-    @Published var numberOfTimesDownloaded = 0
-    @Published var attemptToDownload = false
-    @Published var attemptToSend = false
-}
-
 struct DemoSubview: View {
-    @State var transferInProgress = false
-    @State var isDownloaded = false
-    
-    @EnvironmentObject var globalString : GlobalString
     
     @Binding var bindingString: String
-    
-    @Binding var downloadStateBinder: DownloadState
-    
-    @State private var toggleView: Bool = false
     
     let title: String
     let image: String
@@ -50,6 +25,7 @@ struct DemoSubview: View {
     @StateObject var selectionModel = BleModuleViewModel()
     @StateObject var contentTransfer = BleContentTransfer()
     
+    @ObservedObject var connectionManager = FileTransferConnectionManager.shared
     
     
     @Binding var isConnected : Bool
@@ -60,13 +36,45 @@ struct DemoSubview: View {
     
     @State var offlineWithoutProject = false
     
+    func showAlertMessage() {
+        alertMessage(title: """
+There's a problem with your internet connection.
+Try again later.
+""", exitTitle: "Ok") {
+        }
+    }
     
+    func showTransferErrorMessage() {
+        alertMessage(title: """
+Transfer Failed
+
+Disconnect from the computer.
+
+Press "Reset" on the device.
+""", exitTitle: "Retry") {
+            contentTransfer.transferError = false
+        }
+    }
     
     var body: some View {
         
         VStack {
             
-            
+            if viewModel.projectDownloaded {
+                
+                HStack {
+                    Spacer()
+                    
+                    Text("Downloaded")
+                        .foregroundColor(.green)
+                        .padding(.trailing, -15)
+                    Circle()
+                        .fill(.green)
+                        .frame(width: 15, height: 15)
+                        .padding()
+                }
+                .padding(.vertical, -8)
+            }
             
             VStack(alignment: .leading, spacing: 0, content: {
                 
@@ -75,7 +83,7 @@ struct DemoSubview: View {
                     .frame(maxWidth: .infinity)
                     .cornerRadius(14)
                     .padding(.top, 30)
-
+                
                 
                 Text(description)
                     .font(Font.custom("ReadexPro-Regular", size: 18))
@@ -85,7 +93,7 @@ struct DemoSubview: View {
                 Text("Compatible with:")
                     .font(Font.custom("ReadexPro-Bold", size: 18))
                     .padding(.top, 5)
-                    
+                
                 
                 ForEach(compatibility, id: \.self) { string in
                     if string == "circuitplayground_bluefruit" {
@@ -102,7 +110,7 @@ struct DemoSubview: View {
                         .padding(.top, 10)
                     }
                     
-                  
+                    
                     
                     if string  == "clue_nrf52840_express" {
                         
@@ -123,7 +131,12 @@ struct DemoSubview: View {
             .padding(.horizontal, 30)
             
             Button(action: {
-                showWebViewPopover = true
+                if !viewModel.isConnectedToInternet {
+                    showAlertMessage()
+                } else {
+                    showWebViewPopover = true
+                    
+                }
                 
             }) {
                 LearnGuideButton()
@@ -139,117 +152,67 @@ struct DemoSubview: View {
             if isConnected {
                 
                 if compatibility.contains(bindingString) {
-                  
-                       
+                    
                     Button {
-                        contentTransfer.getProjectURL(nameOf: title)
+                        viewModel.deleteStoredFilesInFM()
                     } label: {
-                        Text("XXX")
+                        Text("Delete File Manager Contents")
+                            .bold()
+                            .padding(12)
                     }
-
                     
-                    
-                    if downloadStateBinder == .idle {
-                        
-                       
+                    if contentTransfer.downloadState == .idle {
                         
                         Button(action: {
-
-                            downloadStateBinder = .transferring
-                            globalString.isSendingG = true
-                            globalString.counterG = 0
-                            globalString.numberOfFilesG = 1
                             
+                            /// Condition: Connected to the internet
+                            ///- If you're not connected to the internet, but you've downloaded the project...
+                            /// - If you're not connected to the internet, and you're project is not downloaded...
+                            /// *Show Alert*
                             
-                            globalString.downloadLinkString = downloadLink
-                            globalString.projectString = title
-                            globalString.attemptToDownload.toggle()
-                            
-                           
-                            
-
-                            
-                            if selectionModel.isConnectedToInternet == false {
-                                print("Going offline...")
-                                downloadStateBinder = .transferring
-                                
-                                globalString.projectString = title
-                                globalString.attemptToSend.toggle()
-                            }
-                            
-                            if viewModel.projectDownloaded == false && selectionModel.isConnectedToInternet == false {
-                                offlineWithoutProject = true
-                                downloadStateBinder = .idle
-                                
-                            }
-                            
-                            if viewModel.projectDownloaded == false {
-                                
+                            if viewModel.projectDownloaded == false && viewModel.isConnectedToInternet == false {
+                                showAlertMessage()
+                            } else {
+                                contentTransfer.testFileExistance(for: title, bundleLink: downloadLink)
                             }
                             
                         }) {
                             
                             RunItButton()
-                            .padding(.top, 20)
-                              
+                                .padding(.top, 20)
+                            
                         }
                     }
                     
-                    if downloadStateBinder == .failed {
-                        
+                    if contentTransfer.downloadState == .failed {
                         FailedButton()
                             .padding(.top, 20)
                     }
                     
-                    
-                    if downloadStateBinder == .transferring {
+                    if contentTransfer.downloadState == .transferring {
+                        DownloadingButton()
+                            .padding(.top, 20)
+                            .disabled(true)
                         
-                        Button(action: {
-                           
-                            print("Project Selected: \(title) - DemoSubView")
-
-                            globalString.projectString = title
-                            globalString.numberOfTimesDownloaded += 1
-
-                        }) {
-
-                            DownloadingButton()
-                                .padding(.top, 20)
+                        VStack(alignment: .center, spacing: 5) {
+                            ProgressView("", value: CGFloat(contentTransfer.contentCommands.counter), total: CGFloat(contentTransfer.numOfFiles) )
+                                .padding(.horizontal, 90)
+                                .padding(.top, -8)
+                                .padding(.bottom, 10)
+                                .accentColor(Color.gray)
+                                .scaleEffect(x: 1, y: 2, anchor: .center)
+                                .cornerRadius(10)
+                                .frame(height: 10)
+                            
+                            ProgressView()
                         }
-                        .disabled(true)
-
-
-
-                        if globalString.isSendingG {
-
-                            VStack(alignment: .center, spacing: 0) {
-                                ProgressView("", value: CGFloat(globalString.counterG), total: CGFloat(globalString.numberOfFilesG) )
-                                    .padding(.horizontal, 90)
-                                    .padding(.top, -8)
-                                    .padding(.bottom, 10)
-                                    .accentColor(Color.gray)
-                                    .scaleEffect(x: 1, y: 2, anchor: .center)
-                                    .cornerRadius(10)
-                                    .frame(height: 10)
-
-                                ProgressView()
-                            }
-
-                        }
-
-                        
                     }
                     
-
-                    
-                    if downloadStateBinder == .complete {
-                        
+                    if contentTransfer.downloadState == .complete {
                         CompleteButton()
                             .padding(.top, 20)
                     }
-                    
                 }
-                
                 
             } else {
                 
@@ -264,58 +227,31 @@ struct DemoSubview: View {
         }
         Spacer()
             .frame(height: 30)
-        .ignoresSafeArea(.all)
+            .ignoresSafeArea(.all)
         
         
-    
-        .alert("Project Not Found", isPresented: $offlineWithoutProject) {
-                    Button("OK") {
-                        // Handle acknowledgement.
-                        print("OK")
-                        offlineWithoutProject = false
-                        downloadStateBinder = .idle
-                        selectionModel.state = .idle
-                        print("\(offlineWithoutProject)")
-                    }
-                } message: {
-                    Text("""
-                         To use this project, connect to the internet.
-                         """)
-                    .multilineTextAlignment(.leading)
-                }
-        
-        .onChange(of: downloadModel.isDownloading, perform: { newValue in
-            viewModel.getProjectForSubClass(nameOf: title)
-        })
-        
-        .onChange(of: downloadModel.didDownloadBundle, perform: { newValue in
-            print("For project: \(title), project download is \(newValue)")
-            
-            globalString.projectString = title
-            
-            if newValue {
-                DispatchQueue.main.async {
-                    print("Getting project from Subclass \(title)")
-                    viewModel.getProjectForSubClass(nameOf: title)
-                    isDownloaded = true
-                }
-            }else {
-                print("Is not downloaded")
-                isDownloaded = false
+            .onAppear(){
+                
+                print("On Appear")
+                contentTransfer.contentCommands.setup(fileTransferClient: connectionManager.selectedClient)
+                // viewModel.readFile(filename: "boot_out.txt")
             }
-            
-        })
-        .onAppear(perform: {
-            viewModel.getProjectForSubClass(nameOf: title)
-            if viewModel.projectDownloaded {
-                isDownloaded = true
-            } else {
-                isDownloaded = false
-            }
-            print("is downloaded? \(isDownloaded)")
-        })
-        .padding(.top, 8)
         
+            .onChange(of: contentTransfer.transferError, perform: { newValue in
+                if newValue {
+                    showTransferErrorMessage()
+                }
+            })
+        
+            .onAppear(perform: {
+                viewModel.getProjectForSubClass(nameOf: title)
+                if viewModel.projectDownloaded {
+                    viewModel.projectDownloaded = true
+                } else {
+                    viewModel.projectDownloaded = false
+                }
+            })
+            .padding(.top, 8)
     }
 }
 

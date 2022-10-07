@@ -11,7 +11,9 @@ import FileTransferClient
 
 class BleModuleViewModel: ObservableObject {
    
-    @StateObject var globalString = GlobalString()
+    
+    @StateObject var downloadModel = DownloadViewModel()
+
     
     private weak var fileTransferClient: FileTransferClient?
     @Published var entries = [BlePeripheral.DirectoryEntry]()
@@ -34,7 +36,8 @@ class BleModuleViewModel: ObservableObject {
     
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     
-    var networkMonitor = NetworkMonitor()
+    var manager = FileManager.default
+    
     static let shared = BleModuleViewModel()
     
     @Published var isConnectedToInternet = false
@@ -59,31 +62,9 @@ class BleModuleViewModel: ObservableObject {
 
     }
     
-    func internetMonitoring() {
-        
-        networkMonitor.startMonitoring()
-        networkMonitor.monitor.pathUpdateHandler = { path in
-            if path.status == .satisfied {
-                print("Connected to internet.")
-                
-                DispatchQueue.main.async {
-                    self.showAlert = false
-                    self.isConnectedToInternet = true
-                }
-            } else {
-                print("No connection.")
-                DispatchQueue.main.async {
-                    self.showAlert = true
-                    self.isConnectedToInternet = false
-                }
-            }
-            print("isExpensive: \(path.isExpensive)")
-        }
-    }
     
-    init() {
-        internetMonitoring()
-    }
+    
+    init() {}
     
     /// Deletes all files and dic. on Bluefruit device *Except boot_out.txt*
        func removeAllFiles(){
@@ -115,6 +96,7 @@ class BleModuleViewModel: ObservableObject {
      - Enumerate thru found URL
      - Get collection of files and directories - then send URL to startFileTransfer
      */
+
     
     func getProjectURL(nameOf project: String) {
         print("getProjectURL called")
