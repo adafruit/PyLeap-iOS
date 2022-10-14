@@ -43,6 +43,18 @@ Press "Reset" on the device and use a battery source.
         }
     }
     
+    func showDownloadErrorMessage() {
+        alertMessage(title: """
+Server Error
+
+This project can not be downloaded at this time
+
+Try again later
+""", exitTitle: "Ok") {
+            contentTransfer.downloaderror = false
+        }
+    }
+    
     var body: some View {
         
         VStack {
@@ -140,13 +152,13 @@ Press "Reset" on the device and use a battery source.
                 
                 if result.compatibility.contains(bindingString) {
                     
-                    Button {
-                        viewModel.deleteStoredFilesInFM()
-                    } label: {
-                        Text("Delete File Manager Contents")
-                            .bold()
-                            .padding(12)
-                    }
+//                    Button {
+//                        viewModel.deleteStoredFilesInFM()
+//                    } label: {
+//                        Text("Delete File Manager Contents")
+//                            .bold()
+//                            .padding(12)
+//                    }
                     
                     if contentTransfer.downloadState == .idle {
                         
@@ -182,7 +194,7 @@ Press "Reset" on the device and use a battery source.
                             .disabled(true)
                         
                         VStack(alignment: .center, spacing: 5) {
-                            ProgressView("", value: CGFloat(contentTransfer.contentCommands.counter), total: CGFloat(contentTransfer.numOfFiles) )
+                            ProgressView("", value: CGFloat(contentTransfer.counter), total: CGFloat(contentTransfer.numOfFiles) )
                                 .padding(.horizontal, 90)
                                 .padding(.top, -8)
                                 .padding(.bottom, 10)
@@ -230,14 +242,30 @@ Press "Reset" on the device and use a battery source.
                 }
             })
         
+            .onChange(of: contentTransfer.downloaderror, perform: { newValue in
+                if newValue {
+                    showDownloadErrorMessage()
+                }
+            })
+        
+        
+//            .onChange(of: connectionManager.selectedClient) { selectedClient in
+//                viewModel.setup(fileTransferClient: selectedClient)
+//            }
+        
             .onAppear(perform: {
+                
+                contentTransfer.readMyStatus()
                 viewModel.searchPathForProject(nameOf: result.projectName)
                 if viewModel.projectDownloaded {
                     viewModel.projectDownloaded = true
                 } else {
                     viewModel.projectDownloaded = false
                 }
-            })
+                
+            }
+            
+            )
             .padding(.top, 8)
     }
 }

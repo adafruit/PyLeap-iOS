@@ -4,7 +4,6 @@
 //
 //  Created by Trevor Beaton on 9/13/22.
 //
-
 import Foundation
 import SwiftUI
 
@@ -14,11 +13,6 @@ class WifiFileTransfer: ObservableObject {
     
     // File Manager Data
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-    
-    var manager = FileManager.default
-    
-    
-    
     @Published var fileArray: [ContentFile] = []
     @Published var contentList: [URLData] = []
     
@@ -36,30 +30,29 @@ class WifiFileTransfer: ObservableObject {
         fileArray.append(fileContent)
     }
     
-    func searchPathForProject(nameOf project: String) {
-        let manager = FileManager.default
-        let nestedFolderURL = directoryPath.appendingPathComponent(project)
+    func getProjectForSubClass(nameOf project: String) {
         
-        if manager.fileExists(atPath: nestedFolderURL.relativePath) {
-          print("\(project) - Exist")
-            projectDownloaded = true
-        } else {
-            print("Does not exist - \(project)")
-           projectDownloaded = false
-        }
-    }
-    
-    
-    func testFileExistance(for project: String) {
-        let nestedFolderURL = directoryPath.appendingPathComponent(project)
-        
-        if manager.fileExists(atPath: nestedFolderURL.relativePath) {
-          print("Exist")
-            //Start Here for Wifi
-        //  filesDownloaded(url: )
-        } else {
-            print("Does not exist")
-            
+        if let enumerator = FileManager.default.enumerator(at: directoryPath, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
+            // for case condition: Only process URLs
+            for case let fileURL as URL in enumerator {
+                
+                if fileURL.lastPathComponent == project {
+                    failedProjectLaunch = false
+                    projectDownloaded = true
+                    print(#function)
+                    print("Searching for... \(project)")
+                    print("URL Path: \(fileURL.path)")
+                    print("URL : \(fileURL)")
+                    
+                    return
+                    
+                } else {
+                    failedProjectLaunch = true
+                    projectDownloaded = false
+                    print("Project was not found...")
+                    
+                }
+            }
         }
     }
     
@@ -102,6 +95,7 @@ class WifiFileTransfer: ObservableObject {
         
     }
     
+
     
     func appendDirectories(_ url: URL) {
         projectDirectories.append(url)
@@ -246,6 +240,7 @@ class WifiFileTransfer: ObservableObject {
             var tempPath = arrayOfAny[0].pathComponents
             
             if arrayOfAny[0].pathComponents.contains("CircuitPython 7.x") {
+                
                 print("Found CircuitPython 8.x")
                 
                 indexOfCP = arrayOfAny[0].pathComponents.firstIndex(of: "CircuitPython 7.x")!
@@ -253,7 +248,9 @@ class WifiFileTransfer: ObservableObject {
                 tempPath.removeSubrange(0...indexOfCP)
                 
                 tempArray.removeFirst()
+                
                 returnedArray.append(tempPath)
+                
                 pathManipulation(arrayOfAny: tempArray, fileArray: fileArray)
             }
             
@@ -264,6 +261,7 @@ class WifiFileTransfer: ObservableObject {
                 tempPath.removeSubrange(0...indexOfCP)
                 
                 tempArray.removeFirst()
+                
                 returnedArray.append(tempPath)
                 pathManipulation(arrayOfAny: tempArray, fileArray: fileArray)
                 

@@ -13,7 +13,7 @@ struct ScrollRefreshableView<Content: View>: View {
     var onRefresh: ()->()
     
     
-    init(title: String, tintColor: Color, @ViewBuilder content: @escaping ()->Content, onRefresh: @escaping ()->()) {
+    init(title: String, tintColor: Color, @ViewBuilder content: @escaping () -> Content, onRefresh: @escaping () -> ()) {
         self.content = content()
         self.onRefresh = onRefresh
         

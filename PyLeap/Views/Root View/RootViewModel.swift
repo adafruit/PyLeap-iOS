@@ -8,7 +8,9 @@
 import Foundation
 import FileTransferClient
 
-class RootViewModel: ObservableObject {
+public class RootViewModel: ObservableObject {
+
+  //  public var shared = RootViewModel()
     
     enum Destination {
         //case splash

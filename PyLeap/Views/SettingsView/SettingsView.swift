@@ -17,14 +17,11 @@ struct SettingsView: View {
     @State private var presentPythonAlert = false
     
     @EnvironmentObject var rootViewModel: RootViewModel
-    @ObservedObject var networkModel = NetworkService()
     @StateObject var viewModel = SettingsViewModel()
     
     private let kPrefix = Bundle.main.bundleIdentifier!
     let userDefaults = UserDefaults.standard
     
-    
-     
     
     func showInvalidURLEntryAlert() {
         alertMessage(title: "Invalid URL entry", exitTitle: "Ok") {
@@ -45,7 +42,6 @@ struct SettingsView: View {
         } cancel: {
             
         }
-        
     }
     
     
@@ -54,8 +50,6 @@ struct SettingsView: View {
     var body: some View {
     
         VStack {
-            
-
             
             Form {
                 
@@ -123,7 +117,7 @@ struct SettingsView: View {
                             .keyboardType(.URL)
                             .textContentType(.URL)
                             .onSubmit {
-                                NetworkService.shared.fetchThirdParyProject(urlString: pythonFileName)
+                                viewModel.networkModel.fetchThirdParyProject(urlString: pythonFileName)
                                 print(pythonFileName)
                                 pythonFileName = ""
                             }

@@ -249,7 +249,8 @@ struct BleModuleView: View {
             
             print("On Appear")
             networkServiceModel.fetch()
-            viewModel.setup(fileTransferClient: connectionManager.selectedClient)
+            
+            viewModel.setup(fileTransferClient:connectionManager.selectedClient)
             viewModel.readFile(filename: "boot_out.txt")
         }
         

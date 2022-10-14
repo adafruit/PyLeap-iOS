@@ -16,7 +16,7 @@ enum AdafruitDevices {
 
 struct MainSelectionView: View {
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.presentationMode) private var presentationMode
     @EnvironmentObject private var connectionManager: FileTransferConnectionManager
     
     @State private var showWebViewPopover: Bool = false
@@ -31,9 +31,9 @@ struct MainSelectionView: View {
     @State private var test = ""
     
     @State private var nilBinder = DownloadState.idle
-    
+   // @ObservedObject var connectionManager = FileTransferConnectionManager.shared
     @EnvironmentObject var rootViewModel: RootViewModel
-    
+   
     @AppStorage("shouldShowOnboarding") var shouldShowOnboarding: Bool = true
     
     var body: some View {
@@ -46,10 +46,12 @@ struct MainSelectionView: View {
                 
                 Button {
                     rootViewModel.goToWifiView()
+                       
                 } label: {
                     Text("Connect to Wi-Fi Mode")
                         .font(Font.custom("ReadexPro-Regular", size: 16))
                         .underline()
+                        .transition(.move(edge: .top))
                 }
                 
             })
@@ -109,7 +111,9 @@ struct MainSelectionView: View {
             }
         }
         
-        
+        .onDisappear() {
+            
+        }
         
         /// **Pull down to Refresh feature**
         //            ScrollRefreshableView(title: "Refresh", tintColor: .purple) {
@@ -156,6 +160,8 @@ struct MainSelectionView: View {
         .navigationBarTitleDisplayMode(.inline)
         
     }
+    
+    
 }
 
 

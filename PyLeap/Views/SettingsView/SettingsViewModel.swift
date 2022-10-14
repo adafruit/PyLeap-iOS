@@ -10,6 +10,8 @@ import SwiftUI
 
 class SettingsViewModel: ObservableObject {
     
+    @ObservedObject var networkModel = NetworkService()
+    
     private let kPrefix = Bundle.main.bundleIdentifier!
     let userDefaults = UserDefaults.standard
     @Published var hostName = ""

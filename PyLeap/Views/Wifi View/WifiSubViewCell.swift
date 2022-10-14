@@ -30,6 +30,9 @@ struct WifiSubViewCell: View {
     
     @EnvironmentObject var rootViewModel: RootViewModel
     @StateObject var downloadModel = DownloadViewModel()
+    @StateObject var viewModel = WifiSubViewCellModel()
+
+    
     
     @Binding var isConnected : Bool
     
@@ -46,6 +49,23 @@ struct WifiSubViewCell: View {
         VStack {
             
             VStack(alignment: .leading, spacing: 0, content: {
+                
+                if viewModel.projectDownloaded {
+                    
+                    HStack {
+                        Spacer()
+                        
+                        Text("Downloaded")
+                            .foregroundColor(.green)
+                            .padding(.trailing, -15)
+                        Circle()
+                            .fill(.green)
+                            .frame(width: 15, height: 15)
+                            .padding()
+                    }
+                    .padding(.vertical, -8)
+                }
+
                 
                 ImageWithURL(image)
                     .scaledToFit()
@@ -118,10 +138,13 @@ struct WifiSubViewCell: View {
                 if compatibility.contains(bindingString) {
                                           
                         Button {
+                            
                             print("Wifi Project Attempt \(title)")
                             
                             if wifiFileTransfer.projectDownloaded {
+                                
                                 wifiFileTransfer.projectValidation(nameOf: title)
+                                
                             } else {
                                 downloadModel.startDownload(urlString: downloadLink, projectTitle: title) {
                                     print("DONE")
@@ -160,9 +183,7 @@ struct WifiSubViewCell: View {
         
         .onChange(of: downloadModel.didDownloadBundle, perform: { newValue in
             print("For project: \(title), project download is \(newValue)")
-            
-         //   globalString.projectString = title
-            
+                        
             if newValue {
                 DispatchQueue.main.async {
                     print("Getting project from Subclass \(title)")
@@ -179,7 +200,10 @@ struct WifiSubViewCell: View {
         })
         .onAppear(perform: {
             
-            wifiFileTransfer.searchPathForProject(nameOf: title)
+            viewModel.searchPathForProject(nameOf: title)
+            
+            wifiFileTransfer.getProjectForSubClass(nameOf: title)
+            
             if wifiFileTransfer.projectDownloaded {
                 isDownloaded = true
             } else {

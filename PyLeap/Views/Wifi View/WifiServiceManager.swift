@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct ResolvedService {
+struct ResolvedService: Equatable {
     var ipAddress: String
     var hostName: String
     var device: String
@@ -39,11 +39,21 @@ class WifiServiceManager: NSObject, ObservableObject {
         super.init()
         serviceManagerBrowser.delegate = self
         findService()
+        
+    }
+    
+    
+    
+    deinit {
+        print("deinit")
+        services = []
+        resolvedServices = []
+        
     }
     
     func findService() {
         print("Start Scan")
-     //   self.serviceManagerBrowser.searchForServices(ofType: CircuitPythonType.serviceType, inDomain: CircuitPythonType.serviceDomain)
+        services = []
         resolvedServices.removeAll()
         
         print("Current state of isSearching: \(isSearching)")
@@ -54,8 +64,7 @@ class WifiServiceManager: NSObject, ObservableObject {
     }
     
     func startDiscovery() {
-       // connectionStatus = .connected
-        print("Start Scan")
+        print("Start Discovery")
         isSearching = true
         self.serviceManagerBrowser.searchForServices(ofType: CircuitPythonType.serviceType, inDomain: CircuitPythonType.serviceDomain)
     }
@@ -64,6 +73,8 @@ class WifiServiceManager: NSObject, ObservableObject {
         if isSearching {
             isSearching = false
             self.serviceManagerBrowser.stop()
+            
+            print(resolvedServices)
         }
         
     }
@@ -88,11 +99,26 @@ extension WifiServiceManager: NetServiceBrowserDelegate, NetServiceDelegate {
           print("didFindDomain")
        }
     
+    func netServiceBrowserDidStopSearch(_ browser: NetServiceBrowser) {
+        print("netServiceBrowserDidStopSearch")
+    }
+ 
+    
+    func netServiceWillResolve(_ sender: NetService) {
+        print("netServiceWillResolve")
+    }
+    
+    func netServiceBrowser(_ browser: NetServiceBrowser, didRemoveDomain domainString: String, moreComing: Bool) {
+        "didRemoveDomain"
+    }
+    
+    
+    
     func netServiceBrowser(_ browser: NetServiceBrowser, didFind service: NetService, moreComing: Bool) {
         print(#function)
         discoveredService = service
         discoveredService?.delegate = self
-        discoveredService?.resolve(withTimeout: 10)
+        discoveredService?.resolve(withTimeout: 7)
 
         if services.contains(service) {
             print("All ready in service array")
@@ -101,12 +127,21 @@ extension WifiServiceManager: NetServiceBrowserDelegate, NetServiceDelegate {
             services.append(service)
         }
         
-        if moreComing == false {
-           browser.stop()
+
+        
+        if !moreComing {
+           serviceManagerBrowser.stop()
+           isSearching = false
         }
         
+        
+        
+        print("Service: \(service)")
+
         print("Service count: \(services.count)")
+        self.serviceManagerBrowser.remove(from: .main, forMode: .common)
     }
+    
     
     func netServiceDidStop(_ sender: NetService) {
         isSearching = false
@@ -148,17 +183,7 @@ extension WifiServiceManager: NetServiceBrowserDelegate, NetServiceDelegate {
     
     
     func netServiceBrowser(_ browser: NetServiceBrowser, didRemove service: NetService, moreComing: Bool) {
-      
-        //self.discovered.removeAll { $0.name == service.name }
+      print("didRemove")
     }
     
-    
-//    func netServiceDidResolveAddress(_ sender: NetService) {
-//        print("netServiceDidResolveAddress")
-//        if let data = sender.txtRecordData() {
-//            let dict = NetService.dictionary(fromTXTRecord: data)
-//            /// do stuff with txtRecord dict here and then add to discovered array.
-//           // discoveredService = nil
-//        }
-//    }
 }

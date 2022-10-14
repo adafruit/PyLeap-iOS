@@ -7,7 +7,6 @@
 
 
 import SwiftUI
-import UIKit
 import CoreLocation
 import Network
 
@@ -23,15 +22,20 @@ class WifiViewModel: ObservableObject {
     private let kPrefix = Bundle.main.bundleIdentifier!
         
     @Published var connectionStatus: ConnectionStatus = .noConnection
+    
     @Published  var isInvalidIP = false
     
     //Dependencies
     var networkMonitor = NetworkMonitor()
     var networkAuth = LocalNetworkAuthorization()
+    
     public var wifiNetworkService = WifiNetworkService()
+    
     @Published var wifiTransferService =  WifiTransferService()
+    
     @Published var wifiServiceManager = WifiServiceManager()
     
+    @ObservedObject var networkModel = NetworkService()
     
     
     @Published var webDirectoryInfo = [WebDirectoryModel]()
@@ -54,6 +58,51 @@ class WifiViewModel: ObservableObject {
         checkIP()
         registerNotifications(enabled: true)
         wifiServiceManager.findService()
+    }
+    
+    /// Makes a network call to populate our project list
+    func fetch() {
+        networkModel.fetch()
+    }
+    
+    @Published var pyleapProjects = [ResultItem]()
+    
+    func appendPyleapProjects() {
+        
+    }
+    
+    func read() {
+        // This method can't be used until the device has permission to communicate.
+        
+        
+        
+        var bootOutInformation = String()
+       // wifiTransferService.getRequest(read: "boot_out.txt")
+//        print("\(wifiTransferService.getRequest(read: "boot_out.txt"))")
+        
+        wifiTransferService.getRequest(read: "boot_out.txt") { result in
+            if result.contains("CircuitPython") {
+                
+                let input = "CircuitPython"
+                let char = result[result.index(input.startIndex, offsetBy: 23)]
+              //  print(char.wholeNumberValue)
+                
+               // print("Contains CP Information\(char.wholeNumberValue")
+            } else {
+                print("Does not contain CircuitPython information.")
+            }
+            
+        }
+        
+        //bootOutInformation = wifiTransferService.getRequest(read: "boot_out.txt")
+        
+        //print("Boot info: \(bootOutInformation)")
+        
+        if bootOutInformation.contains("CircuitPython") {
+            print("Contains CP Information")
+        } else {
+            print("Does not contain CircuitPython information.")
+        }
     }
     
     
@@ -152,10 +201,8 @@ class WifiViewModel: ObservableObject {
             
             let resolvedService = wifiServiceManager.resolvedServices.filter { $0.ipAddress == ip }
 
-            
             // To store in UserDefaults
 
-            
             storeResolvedAddress(service: resolvedService[0])
             storeIPAddress(ipAddress: ip)
             connectionStatus = .connected
@@ -167,6 +214,17 @@ class WifiViewModel: ObservableObject {
         
     }
     
+    func checkServices() {
+        if wifiServiceManager.resolvedServices.isEmpty {
+            
+        } else {
+            
+        }
+        
+        
+    }
+    
+    
     func checkStoredIP() {
         if userDefaults.object(forKey: kPrefix+".storedIP") == nil {
             print("Nothing stored.")
@@ -177,6 +235,8 @@ class WifiViewModel: ObservableObject {
         }
     }
 
+        
+    
     public func internetMonitoring() {
         
         networkMonitor.monitor.pathUpdateHandler = { path in

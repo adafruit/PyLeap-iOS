@@ -15,7 +15,7 @@ import SwiftUI
 
 class NetworkService: ObservableObject {
     
-    static let shared = NetworkService()
+   // static let shared = NetworkService()
         
     @Published var pdemos : [ResultItem] = []
     @State var storedURL = ""
@@ -23,8 +23,10 @@ class NetworkService: ObservableObject {
     let userDefaults = UserDefaults.standard
     
     init(){
-        load()
-        loadCustProjects()
+        fetch()
+          print("NetworkService: \(#function) @Line: \(#line)")
+//        load()
+//        loadCustProjects()
     }
     
     func loadCustProjects() {
@@ -135,7 +137,7 @@ class NetworkService: ObservableObject {
     }
     
     func loadCustomProjects() -> [ResultItem]{
-        print(#function)
+        print("\(#function) is called twice to run. Ignore this method.")
         var customList: [ResultItem] = []
         if let savedProjects = userDefaults.object(forKey: "CustomProjects") as? Data {
             
@@ -211,14 +213,14 @@ class NetworkService: ObservableObject {
                 pdemos = mergedList
                 
                 
-                print("----Standard Projects----")
+           //     print("----Standard Projects----")
                 for i in loadedProjects {
-                    print("\(i.projectName)")
+                  //  print("\(i.projectName)")
                 }
                 
-                print("++++Custom Projects++++")
+           //     print("++++Custom Projects++++")
                 for i in loadCustomProjects() {
-                    print("\(i.projectName)")
+                 //   print("\(i.projectName)")
                 }
                 
                 

@@ -27,8 +27,7 @@ class WifiTransferService: ObservableObject {
     @Published var hostName = ""
     
     func startup() {
-        print(#function)
-        print("Startup")
+          print("\(#function) @Line: \(#line)")
         if (userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName")) != nil {
             print(userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName") as! String)
             
@@ -147,7 +146,9 @@ class WifiTransferService: ObservableObject {
         task.resume()
     }
     
-    func getRequest(incoming: String) -> String {
+    //completion: @escaping (Bool) -> Void
+    
+    func getRequest(read: String, completionHandler: @escaping (String) -> Void) -> Void {
         
         var semaphore = DispatchSemaphore (value: 0)
         
@@ -157,13 +158,13 @@ class WifiTransferService: ObservableObject {
         
         var outgoingString = String()
         
-        guard let loginData = loginString.data(using: String.Encoding.utf8) else {
-            return "Error"
-        }
-        let base64LoginString = loginData.base64EncodedString()
+        let loginData = loginString.data(using: String.Encoding.utf8)
+           
+        
+        let base64LoginString = loginData!.base64EncodedString()
         
         // var request = URLRequest(url: URL(string: "http://cpy-9cbe10.local/fs/")!,timeoutInterval: Double.infinity)
-        var request = URLRequest(url: URL(string: "http://\(hostName).local/fs/\(incoming)")!,timeoutInterval: Double.infinity)
+        var request = URLRequest(url: URL(string: "http://\(hostName).local/fs/\(read)")!,timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
         request.httpMethod = "GET"
@@ -194,11 +195,14 @@ class WifiTransferService: ObservableObject {
             if let str = String(data: data, encoding: .utf8) {
                 print(str)
                 outgoingString = str
+                completionHandler(outgoingString)
+                
+                
             }
         }
         task.resume()
         semaphore.wait()
-        return outgoingString
+        
     }
     //  func putDirectory(directoryPath: String, completion: @escaping (Result<Data?, Error>) -> Void) {
     

@@ -10,8 +10,6 @@ import SwiftUI
 
 class MainSelectionViewModel: ObservableObject {
  
-    @ObservedObject var networkModel = NetworkService()
-
     let userDefaults = UserDefaults.standard
     
     @Published var pdemos : [ResultItem] = []
@@ -22,7 +20,7 @@ class MainSelectionViewModel: ObservableObject {
     }
     
     func makeNetworkCall(){
-        networkModel.fetch()
+      //  networkModel.fetch()
     }
     
     

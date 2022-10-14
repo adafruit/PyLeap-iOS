@@ -41,6 +41,11 @@ class BleModuleViewModel: ObservableObject {
         }
     }
     
+    func readBoardForCircuitPythonVersion() {
+        
+    }
+    
+    
     // MARK: System
     
     struct TransmissionProgress {
@@ -118,8 +123,10 @@ class BleModuleViewModel: ObservableObject {
                 case .success(let data):
                     self.lastTransmit = TransmissionLog(type: .read(data: data))
                     let str = String(decoding: data, as: UTF8.self)
+                    
                     print("Read: \(str)")
                     self.bootUpInfo = str
+                    sharedBootinfo = str
                     
                 case .failure(let error):
                     self.lastTransmit = TransmissionLog(type: .error(message: error.localizedDescription))
@@ -330,6 +337,8 @@ class BleModuleViewModel: ObservableObject {
     
     
 }
+
+public var sharedBootinfo = ""
 
 enum ActiveAlert: Identifiable {
     case error(error: Error)

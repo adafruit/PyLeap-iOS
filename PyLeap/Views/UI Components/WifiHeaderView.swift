@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct WifiHeaderView: View {
+    @Environment(\.presentationMode) var presentationMode
     @State var showSheetView = false
     @EnvironmentObject var rootViewModel: RootViewModel
 
@@ -18,7 +19,9 @@ struct WifiHeaderView: View {
             HStack {
                 
                 Button {
+                    presentationMode.wrappedValue.dismiss()
                     rootViewModel.goToMain()
+                    
                 } label: {
                     Image(systemName: "arrow.backward")
                         .resizable()

@@ -9,7 +9,8 @@ import SwiftUI
 import FileTransferClient
 
 
-class BleContentCommands {
+class BleContentCommands: ObservableObject {
+    
     private weak var fileTransferClient: FileTransferClient?
     @Published var transmissionProgress: TransmissionProgress?
     @Published var isTransmiting = false
@@ -103,6 +104,8 @@ class BleContentCommands {
                     let str = String(decoding: data, as: UTF8.self)
                     print("Read: \(str)")
                     self.bootUpInfo = str
+                    sharedBootinfo = str
+                    
                     
                 case .failure(let error):
                     self.lastTransmit = TransmissionLog(type: .error(message: error.localizedDescription))

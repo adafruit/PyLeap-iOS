@@ -19,7 +19,7 @@ struct RootView: View {
     
     var body: some View {
         
-        Group{
+        Group {
             switch model.destination {
             
             case .onboard :
@@ -51,7 +51,10 @@ struct RootView: View {
             default:
                 FillerView()
             }
+                
         }
+        
+        
         
         .onReceive(NotificationCenter.default.publisher(for: .didUpdateBleState)) { notification in
             if !Config.isSimulatingBluetooth {
@@ -82,6 +85,7 @@ struct RootView: View {
             DLog("App moving to the foreground. Force reconnect")
             FileTransferConnectionManager.shared.reconnect()
         }
+        
         .environmentObject(model)
         .environmentObject(connectionManager)
         .background(Color.white)

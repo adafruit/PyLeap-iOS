@@ -11,22 +11,46 @@ import SwiftUI
 import Combine
 
 struct WifiView: View {
-
+    @Environment(\.dismiss) private var dismiss
     @StateObject var viewModel = WifiViewModel()
     private let kPrefix = Bundle.main.bundleIdentifier!
-    @StateObject var wifiviewModel = WifiServiceManager()
     // User Defaults
     let userDefaults = UserDefaults.standard
-    
-    @ObservedObject var networkModel = NetworkService()
 
     @EnvironmentObject var rootViewModel: RootViewModel
+    @ObservedObject var networkModel = NetworkService()
 
+    
+    
     @State private var downloadState = DownloadState.idle
     @State private var scrollViewID = UUID()
     @State private var inConnectedInWifiView = true
     @State private var boardBootInfo = "esp32-s2"
     @State var hostName = ""
+    
+    
+    func toggleViewModelIP() {
+        viewModel.isInvalidIP.toggle()
+    }
+    
+    func fetch() {
+        viewModel.networkModel.fetch()
+    }
+    
+    func scanNetworkWifi() {
+        viewModel.wifiServiceManager.findService()
+
+    }
+    
+    
+    
+    func checkForStoredIPAddress() {
+        if userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName") == nil {
+            print("storeResolvedAddress - not stored")
+        } else {
+            hostName = userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName") as! String
+        }
+    }
     
     func showValidationPrompt() {
         alertTF(title: "Enter Device IP Address",
@@ -62,8 +86,9 @@ struct WifiView: View {
 
         VStack(spacing: 0) {
             WifiHeaderView()
+                
            
-            if wifiviewModel.isSearching {
+            if viewModel.wifiServiceManager.isSearching {
                 NetworkConnectionBanner()
             } else {
                 
@@ -86,23 +111,29 @@ struct WifiView: View {
                 
                     Button {
                         showValidationPrompt()
-                       
                     } label: {
                         Text("Enter IP address")
                             .font(Font.custom("ReadexPro-Regular", size: 16))
                             .foregroundColor(.white)
                             .background(.indigo)
-                          //  .cornerRadius(15)
                             .padding(5)
                     }
                     
                     Button {
-                        wifiviewModel.findService()
+                        viewModel.read()
+                    } label: {
+                        Text("Read Boot")
+                            .foregroundColor(.white)
+                            .background(.indigo)
+                            .padding(5)
+                    }
+                    
+                    Button {
+                        scanNetworkWifi()
                     } label: {
                         Text("Scan Network")
                             .foregroundColor(.white)
                             .background(.indigo)
-                         //   .cornerRadius(15)
                             .padding(5)
                     }
                     
@@ -112,7 +143,6 @@ struct WifiView: View {
                         Text("BLE Mode")
                             .foregroundColor(.white)
                             .background(.indigo)
-                        //    .cornerRadius(15)
                             .padding(5)
                     }
 
@@ -134,7 +164,7 @@ struct WifiView: View {
                     
                     SubHeaderView()
 
-                    let check =  networkModel.pdemos.filter {
+                    let check = networkModel.pdemos.filter {
                         $0.compatibility.contains(boardBootInfo)
                     }
                     
@@ -155,6 +185,13 @@ struct WifiView: View {
             }
             .foregroundColor(.black)
         }
+        .onDisappear() {
+            print("On Disappear")
+           // presentationMode.wrappedValue.dismiss()
+          
+            dismiss()
+        }
+        
         
         .onChange(of: viewModel.connectionStatus, perform: { newValue in
             if newValue == .connected {
@@ -162,29 +199,55 @@ struct WifiView: View {
             }
         })
         
+        
+        .onChange(of: viewModel.connectionStatus, perform: { newValue in
+            if newValue == .connected {
+            //    viewModel.read()
+            }
+        })
+        
+        .onChange(of: viewModel.wifiServiceManager.resolvedServices, perform: { newValue in
+            print("Credential Check!")
+            print(newValue)
+            
+            guard let isHostName = userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName") else {
+                print("No Host Name Found")
+                return
+            }
+            
+            guard let isIPAddress = userDefaults.object(forKey: kPrefix+".storedIP") else {
+                print("No Host Name Found")
+                return
+            }
+            
+            
+            
+            if newValue.contains(where: { result in
+                result.hostName == userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName") as! String &&
+                result.ipAddress == userDefaults.object(forKey: kPrefix+".storedIP") as! String
+            }) {
+                print("Matched")
+                
+            } else {
+                print("Un-Matched")
+            }
+            
+        })
+        
         .onChange(of: viewModel.isInvalidIP, perform: { newValue in
             print("viewModel.isInvalidIP .onChange")
             if newValue {
                 showAlertMessage()
-                viewModel.isInvalidIP.toggle()
+                toggleViewModelIP()
             }
                 
         })
         
         
         .onAppear(){
-            print("On Appear")
             networkModel.fetch()
-            
-          //  viewModel.checkStoredIP()
             initialIPStoreCheck()
-            
-            if userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName") == nil {
-                print("storeResolvedAddress - not stored")
-            } else {
-                hostName = userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName") as! String
-            }
-            
+            checkForStoredIPAddress()
         }
     }
        
@@ -208,5 +271,6 @@ extension Notification.Name {
     public static let didCompleteZip = Notification.Name(kPrefix+".didCompleteZip")
     public static let didCompleteTransfer = Notification.Name(kPrefix+".didCompleteTransfer")
     public static let didEncounterTransferError = Notification.Name(kPrefix+".didEncounterTransferError")
+    public static let downloadErrorDidOccur = Notification.Name(kPrefix+".downloadErrorDidOccur")
 
 }
