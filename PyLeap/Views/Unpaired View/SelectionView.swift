@@ -31,7 +31,7 @@ struct SelectionView: View {
             VStack {
                 
                 Button {
-                    rootViewModel.goToWifiView()
+                    rootViewModel.goToWiFiServiceSelection()
                 } label: {
                     Text("Wifi")
                         .font(Font.custom("ReadexPro-Regular", size: 25))

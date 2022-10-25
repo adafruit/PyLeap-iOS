@@ -62,7 +62,7 @@ class WifiViewModel: ObservableObject {
         checkIP()
         registerNotifications(enabled: true)
         wifiServiceManager.findService()
-        read()
+        //read()
     }
     
     /// Makes a network call to populate our project list
@@ -159,6 +159,13 @@ class WifiViewModel: ObservableObject {
         printIPStorageAtLocation()
     }
  
+    func printStoredInfo() {
+        print("======Stored UserDefaults======")
+        
+        print(userDefaults.object(forKey: kPrefix+".storeResolvedAddress.ipAddress"))
+        print(userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName"))
+        print(userDefaults.object(forKey: kPrefix+".storeResolvedAddress.device"))
+    }
     
     
     func storeResolvedAddress(service: ResolvedService) {

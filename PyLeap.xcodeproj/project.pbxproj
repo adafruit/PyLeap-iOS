@@ -13,6 +13,7 @@
 		D5199A2F28DD16F100ACC34C /* BleContentTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5199A2E28DD16F100ACC34C /* BleContentTransfer.swift */; };
 		D52A92692906E1A900973B6B /* WifiSearchListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52A92682906E1A900973B6B /* WifiSearchListRowView.swift */; };
 		D52A926D29071DF400973B6B /* SelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52A926C29071DF400973B6B /* SelectionView.swift */; };
+		D52A926F29078E0A00973B6B /* WifiServiceSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52A926E29078E0A00973B6B /* WifiServiceSelectionView.swift */; };
 		D52BE7EE269DF36E00630900 /* DownloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE7EA269DF36E00630900 /* DownloadViewModel.swift */; };
 		D52BE7F3269DF62100630900 /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = D52BE7F2269DF62100630900 /* Zip */; };
 		D52BE82A26A0660200630900 /* KeyboardUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54D38B82691E0D000FBFE47 /* KeyboardUtils.swift */; };
@@ -110,6 +111,7 @@
 		D5199A2E28DD16F100ACC34C /* BleContentTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleContentTransfer.swift; sourceTree = "<group>"; };
 		D52A92682906E1A900973B6B /* WifiSearchListRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiSearchListRowView.swift; sourceTree = "<group>"; };
 		D52A926C29071DF400973B6B /* SelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionView.swift; sourceTree = "<group>"; };
+		D52A926E29078E0A00973B6B /* WifiServiceSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiServiceSelectionView.swift; sourceTree = "<group>"; };
 		D52BE7EA269DF36E00630900 /* DownloadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadViewModel.swift; sourceTree = "<group>"; };
 		D52BE85326A0E39100630900 /* BTConnectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTConnectionViewModel.swift; sourceTree = "<group>"; };
 		D52F7E702672F4C400911D43 /* PyLeap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PyLeap.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -485,6 +487,7 @@
 			children = (
 				D5640215271B54BF00AE1519 /* MainSelectionView.swift */,
 				D52A926C29071DF400973B6B /* SelectionView.swift */,
+				D52A926E29078E0A00973B6B /* WifiServiceSelectionView.swift */,
 				D5482F4828E63DB7000B0C8E /* MainSelectionViewModel.swift */,
 			);
 			path = "Unpaired View";
@@ -668,6 +671,7 @@
 				D5597C3B26B98E1E00DF17C0 /* NumbersOnly.swift in Sources */,
 				D5D1F4A427EBA7E30040E2BF /* NetworkManager.swift in Sources */,
 				D5DD39AB28D234C3000FAEB8 /* SettingsViewModel.swift in Sources */,
+				D52A926F29078E0A00973B6B /* WifiServiceSelectionView.swift in Sources */,
 				D5BA1F8328B68ED40012FC62 /* NetworkPeripheral.swift in Sources */,
 				D59DFDBC268CE0EB001737F6 /* RootView.swift in Sources */,
 				D595FC2E2812C23D00569D8C /* Image Extension.swift in Sources */,

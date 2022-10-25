@@ -158,32 +158,21 @@ struct WifiView: View {
                 
             }
             
-            Button("Show Service") {
-                            self.showPopover = true
-                        }.popover(
-                            isPresented: self.$showPopover,
-                            arrowEdge: .bottom
-                        ) {
-                            
-                            VStack {
-                                
-                                Text("Scanning...")
-                                    .font(.largeTitle)
-                                Text("SELECT PERIPHERAL")
-                                   
-                                
-                                List($wifiServiceViewModel.resolvedServices) { $service in
-                                    WifiRowView(wifiService: service)
-                                        .onTapGesture {
-                                            print(service.hostName)
-                                        }
-                                }
-                                .listStyle(PlainListStyle())
-                                
-                                
-                            }
-                            
-                        }
+//            Button("Show Service") {
+//                            self.showPopover = true
+//                        }.popover(
+//                            isPresented: self.$showPopover,
+//                            arrowEdge: .bottom
+//                        ) {
+//
+//                            VStack {
+//
+//
+//
+//
+//                            }
+//
+//                        }
             
             
             
@@ -278,6 +267,7 @@ struct WifiView: View {
           //  NetworkService.shared.fetch()
             initialIPStoreCheck()
             checkForStoredIPAddress()
+            viewModel.read()
         }
     }
        

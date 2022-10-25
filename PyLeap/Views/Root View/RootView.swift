@@ -43,6 +43,9 @@ struct RootView: View {
             case .fileTransfer:
                 BleModuleView()
                 
+            case .wifiServiceSelection:
+                WifiServiceSelectionView()
+                
             case .wifi:
                 WifiView()
                 

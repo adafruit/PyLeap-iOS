@@ -117,7 +117,7 @@ extension WifiServiceManager: NetServiceBrowserDelegate, NetServiceDelegate {
         print(#function)
         discoveredService = service
         discoveredService?.delegate = self
-        discoveredService?.resolve(withTimeout: 7)
+        discoveredService?.resolve(withTimeout: 9)
 
         if services.contains(service) {
             print("All ready in service array")

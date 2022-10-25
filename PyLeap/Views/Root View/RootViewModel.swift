@@ -23,6 +23,7 @@ public class RootViewModel: ObservableObject {
         case wifi
         case settings
         case mainSelection
+        case wifiServiceSelection
         case selection
     }
     
@@ -31,6 +32,10 @@ public class RootViewModel: ObservableObject {
     
     func goToTest(){
         //destination = .test
+    }
+    
+    func goToWiFiServiceSelection() {
+        destination = .wifiServiceSelection
     }
     
     func goToWifiView() {
