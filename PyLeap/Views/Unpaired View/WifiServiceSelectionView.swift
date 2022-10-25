@@ -55,36 +55,38 @@ struct WifiServiceSelectionView: View {
     var body: some View {
         
         VStack {
+            
             HStack {
-                
+
                 Button {
                     rootViewModel.goToSelection()
-                    
+
                 } label: {
                     Image(systemName: "arrow.backward")
                         .resizable()
-                        .frame(width: 30, height: 30, alignment: .center)
+                        .frame(width: 25, height: 25, alignment: .center)
                         .offset(y: 15)
                         .foregroundColor(.black)
                 }
                 .padding()
-                
+
                 Spacer()
-                
-                Button {
-                    wifiServiceViewModel.findService()
-                } label: {
-                    Image(systemName: "arrow.clockwise")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 30, height: 30, alignment: .center)
-                    
-                        .foregroundColor(.black)
-                }
-                .padding()
-                
+
+//                Button {
+//                    wifiServiceViewModel.findService()
+//                } label: {
+//                    Image(systemName: "arrow.clockwise")
+//                        .resizable()
+//                        .scaledToFit()
+//                        .frame(width: 30, height: 30, alignment: .center)
+//
+//                        .foregroundColor(.black)
+//                }
+//                .padding()
+
             }
-            .padding(.top, 0)
+            .padding(.top, 15)
+            
             
             Text("Scanning...")
                 .font(.largeTitle)
@@ -95,10 +97,10 @@ struct WifiServiceSelectionView: View {
             Button {
                 showValidationPrompt()
             } label: {
-                Text("Enter IP address")
+                Text("Enter IP address here...")
                     .font(Font.custom("ReadexPro-Regular", size: 16))
-                    .foregroundColor(.white)
-                    .background(.indigo)
+                    .foregroundColor(.black)
+                    
                     .padding(5)
             }
             
@@ -114,8 +116,8 @@ struct WifiServiceSelectionView: View {
             }
             .listStyle(PlainListStyle())
         }
+
         
-        .padding(.top, 90)
     }
 }
 struct WifiServiceSelectionView_Previews: PreviewProvider {
