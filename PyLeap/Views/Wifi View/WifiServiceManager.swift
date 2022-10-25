@@ -8,7 +8,8 @@
 import Foundation
 import SwiftUI
 
-struct ResolvedService: Equatable {
+struct ResolvedService: Identifiable, Equatable {
+    var id = UUID()
     var ipAddress: String
     var hostName: String
     var device: String
@@ -24,8 +25,8 @@ class WifiServiceManager: NSObject, ObservableObject {
     var discoveredService: NetService?
     
     var services = [NetService]()
-    var resolvedServices = [ResolvedService]()
-    
+    @Published var resolvedServices = [ResolvedService]()
+    @Published var fetching = false
     
     func numberOfService() -> Int {
        return services.count
@@ -39,17 +40,11 @@ class WifiServiceManager: NSObject, ObservableObject {
         super.init()
         serviceManagerBrowser.delegate = self
         findService()
-        
     }
     
     
     
-    deinit {
-        print("deinit")
-        services = []
-        resolvedServices = []
-        
-    }
+ 
     
     func findService() {
         print("Start Scan")
@@ -74,7 +69,7 @@ class WifiServiceManager: NSObject, ObservableObject {
             isSearching = false
             self.serviceManagerBrowser.stop()
             
-            print(resolvedServices)
+            print("Found ResolvedServices = \(resolvedServices)")
         }
         
     }
@@ -113,8 +108,12 @@ extension WifiServiceManager: NetServiceBrowserDelegate, NetServiceDelegate {
     }
     
     
-    
+    //@MainActor
     func netServiceBrowser(_ browser: NetServiceBrowser, didFind service: NetService, moreComing: Bool) {
+        
+        fetching = true
+        
+        
         print(#function)
         discoveredService = service
         discoveredService?.delegate = self
@@ -145,6 +144,7 @@ extension WifiServiceManager: NetServiceBrowserDelegate, NetServiceDelegate {
     
     func netServiceDidStop(_ sender: NetService) {
         isSearching = false
+        fetching = false
         print("isSearching: \(isSearching)")
     }
 
@@ -152,6 +152,9 @@ extension WifiServiceManager: NetServiceBrowserDelegate, NetServiceDelegate {
     func netServiceDidResolveAddress(_ sender: NetService) {
         print(#function)
 
+        print("sender: \(sender)")
+        
+        
         var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
             guard let data = sender.addresses?.first else { return }
             data.withUnsafeBytes { (pointer:UnsafePointer<sockaddr>) -> Void in

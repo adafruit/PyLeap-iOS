@@ -19,7 +19,6 @@ class WifiSubViewCellModel: ObservableObject {
 
         let nestedFolderURL = directoryPath.appendingPathComponent(project)
         
-
         if manager.fileExists(atPath: nestedFolderURL.relativePath) {
           print("\(project) - Exist")
             projectDownloaded = true

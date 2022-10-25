@@ -20,7 +20,7 @@ struct WifiView: View {
     @EnvironmentObject var rootViewModel: RootViewModel
     @ObservedObject var networkModel = NetworkService()
 
-    
+    @ObservedObject var wifiServiceViewModel = WifiServiceManager()
     
     @State private var downloadState = DownloadState.idle
     @State private var scrollViewID = UUID()
@@ -28,13 +28,14 @@ struct WifiView: View {
     @State private var boardBootInfo = "esp32-s2"
     @State var hostName = ""
     
+    @State private var showPopover: Bool = false
     
     func toggleViewModelIP() {
         viewModel.isInvalidIP.toggle()
     }
     
     func fetch() {
-        viewModel.networkModel.fetch()
+      //  viewModel.networkModel.fetch()
     }
     
     func scanNetworkWifi() {
@@ -157,6 +158,35 @@ struct WifiView: View {
                 
             }
             
+            Button("Show Service") {
+                            self.showPopover = true
+                        }.popover(
+                            isPresented: self.$showPopover,
+                            arrowEdge: .bottom
+                        ) {
+                            
+                            VStack {
+                                
+                                Text("Scanning...")
+                                    .font(.largeTitle)
+                                Text("SELECT PERIPHERAL")
+                                   
+                                
+                                List($wifiServiceViewModel.resolvedServices) { $service in
+                                    WifiRowView(wifiService: service)
+                                        .onTapGesture {
+                                            print(service.hostName)
+                                        }
+                                }
+                                .listStyle(PlainListStyle())
+                                
+                                
+                            }
+                            
+                        }
+            
+            
+            
            
             ScrollView(.vertical, showsIndicators: true) {
                 
@@ -245,7 +275,7 @@ struct WifiView: View {
         
         
         .onAppear(){
-            networkModel.fetch()
+          //  NetworkService.shared.fetch()
             initialIPStoreCheck()
             checkForStoredIPAddress()
         }
@@ -269,6 +299,7 @@ extension Notification.Name {
     public static let didCollectCustomProject = Notification.Name(kPrefix+".didCollectCustomProject")
     public static let didEncounterZipError = Notification.Name(kPrefix+".didEncounterZipError")
     public static let didCompleteZip = Notification.Name(kPrefix+".didCompleteZip")
+    public static let wifiDownloadComplete = Notification.Name(kPrefix+".wifiDownloadComplete")
     public static let didCompleteTransfer = Notification.Name(kPrefix+".didCompleteTransfer")
     public static let didEncounterTransferError = Notification.Name(kPrefix+".didEncounterTransferError")
     public static let downloadErrorDidOccur = Notification.Name(kPrefix+".downloadErrorDidOccur")

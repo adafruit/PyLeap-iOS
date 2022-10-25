@@ -21,6 +21,7 @@ class WifiTransferService: ObservableObject {
     let userDefaults = UserDefaults.standard
     private let kPrefix = Bundle.main.bundleIdentifier!
     
+    @Published var counter = 0
     
     @Published var webDirectoryInfo = [WebDirectoryModel]()
     
@@ -89,6 +90,11 @@ class WifiTransferService: ObservableObject {
                 
                 if let data = data {
                     print("File write success!")
+                    
+                    DispatchQueue.main.async {
+                        self.counter += 1
+                    }
+                    
                     handler(.success(data))
                 }
                 
@@ -148,7 +154,10 @@ class WifiTransferService: ObservableObject {
     
     //completion: @escaping (Bool) -> Void
     
-    func getRequest(read: String, completionHandler: @escaping (String) -> Void) -> Void {
+    typealias CompletionHandler = (_ success:String) -> Void
+
+    
+    func getRequest(read: String, completionHandler: @escaping CompletionHandler){
         
         var semaphore = DispatchSemaphore (value: 0)
         
@@ -163,7 +172,8 @@ class WifiTransferService: ObservableObject {
         
         let base64LoginString = loginData!.base64EncodedString()
         
-        // var request = URLRequest(url: URL(string: "http://cpy-9cbe10.local/fs/")!,timeoutInterval: Double.infinity)
+        print("Host Name: \(hostName)")
+        
         var request = URLRequest(url: URL(string: "http://\(hostName).local/fs/\(read)")!,timeoutInterval: Double.infinity)
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
@@ -176,11 +186,9 @@ class WifiTransferService: ObservableObject {
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data else {
                 print(String(describing: "Error Found: \(error)"))
-                semaphore.signal()
                 return
             }
             // print(String(data: data, encoding: .utf8)!)
-            semaphore.signal()
             
             do {
                 let wifiIncomingData = try JSONDecoder().decode([WebDirectoryModel].self, from: data)
@@ -195,14 +203,16 @@ class WifiTransferService: ObservableObject {
             if let str = String(data: data, encoding: .utf8) {
                 print(str)
                 outgoingString = str
+                print("\(#function) @Line: \(#line)")
                 completionHandler(outgoingString)
                 
-                
+            } else {
+                print("\(#function) @Line: \(#line)")
+                print("Error")
             }
+            
         }
         task.resume()
-        semaphore.wait()
-        
     }
     //  func putDirectory(directoryPath: String, completion: @escaping (Result<Data?, Error>) -> Void) {
     

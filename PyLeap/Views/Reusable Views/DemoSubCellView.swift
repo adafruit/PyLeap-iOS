@@ -179,7 +179,6 @@ Try again later
                             
                             RunItButton()
                                 .padding(.top, 20)
-                            
                         }
                     }
                     
@@ -216,7 +215,7 @@ Try again later
             } else {
                 
                 Button  {
-                    rootViewModel.goTobluetoothPairing()
+                    rootViewModel.goToSelection()
                 } label: {
                     ConnectButton()
                         .padding(.top, 20)
@@ -228,11 +227,11 @@ Try again later
             .frame(height: 30)
             .ignoresSafeArea(.all)
         
-        
             .onAppear(){
                 
                 print("On Appear")
                 contentTransfer.contentCommands.setup(fileTransferClient: connectionManager.selectedClient)
+            
                 // viewModel.readFile(filename: "boot_out.txt")
             }
         
@@ -257,6 +256,7 @@ Try again later
                 
                 contentTransfer.readMyStatus()
                 viewModel.searchPathForProject(nameOf: result.projectName)
+              
                 if viewModel.projectDownloaded {
                     viewModel.projectDownloaded = true
                 } else {

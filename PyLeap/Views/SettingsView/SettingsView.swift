@@ -117,7 +117,7 @@ struct SettingsView: View {
                             .keyboardType(.URL)
                             .textContentType(.URL)
                             .onSubmit {
-                                viewModel.networkModel.fetchThirdParyProject(urlString: pythonFileName)
+                             //   viewModel.networkModel.fetchThirdParyProject(urlString: pythonFileName)
                                 print(pythonFileName)
                                 pythonFileName = ""
                             }

@@ -222,10 +222,7 @@ struct BTConnectionView: View {
                     Text("Pair Device")
                         .font(Font.custom("ReadexPro-Regular", size: 25))
                         .foregroundColor(Color.white)
-                    
-                    
                         .padding(.horizontal, 60)
-                    
                         .frame(height: 50)
                         .background(Color("pyleap_pink"))
                         .clipShape(Capsule())

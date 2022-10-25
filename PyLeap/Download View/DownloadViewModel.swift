@@ -126,6 +126,7 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
 
                         NotificationCenter.default.post(name: .didCompleteZip, object: nil, userInfo: projectResponse)
 
+                        NotificationCenter.default.post(name: .wifiDownloadComplete, object: nil, userInfo: projectResponse)
                         
                     } catch {
                         print("Zip ERROR")
@@ -283,23 +284,7 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
     }
     
     
-    func startDownload(urlString: String, projectTitle: String, compeletion: () -> ()) {
-        print("Starting Download...")
-        isDownloading = true
-        // Check for valid URL
-        guard let validURL = URL(string: urlString) else {
-            self.reportError(error: "Invalid URL!")
-            return
-        }
-        downloadProgress = 0
-        
-        // Download Task...
-        let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
-        
-        downloadTaskSession = session.downloadTask(with: validURL)
-        downloadTaskSession.resume()
-          
-    }
+    
     
 }
 extension DownloadViewModel {

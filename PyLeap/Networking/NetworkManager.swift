@@ -15,16 +15,15 @@ import SwiftUI
 
 class NetworkService: ObservableObject {
     
-   // static let shared = NetworkService()
+    static let shared = NetworkService()
         
-    @Published var pdemos : [ResultItem] = []
+    @Published var pdemos = [ResultItem]()
     @State var storedURL = ""
     
     let userDefaults = UserDefaults.standard
     
     init(){
         fetch()
-          print("NetworkService: \(#function) @Line: \(#line)")
 //        load()
 //        loadCustProjects()
     }
@@ -255,7 +254,7 @@ class NetworkService: ObservableObject {
         
         let request = URLRequest(url: URL(string: AdafruitInfo.baseURL)!, cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData, timeoutInterval: 60.0)
         
-        print("Making Network Request.")
+        print("Making Network Request")
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             
@@ -269,6 +268,11 @@ class NetworkService: ObservableObject {
                 if let projectData = try? JSONDecoder().decode(RootResults.self, from: data) {
                     
                     DispatchQueue.main.async {
+                        
+//                        for i in projectData.projects {
+//                            print("\(i.projectName)")
+//                        }
+                        
                         self.save(content: projectData.projects)
                         self.load()
                     }

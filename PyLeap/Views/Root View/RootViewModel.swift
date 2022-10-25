@@ -23,6 +23,7 @@ public class RootViewModel: ObservableObject {
         case wifi
         case settings
         case mainSelection
+        case selection
     }
     
     @Published var destination: Destination = AppEnvironment.isRunningTests ? .mainSelection : .startup
@@ -38,6 +39,10 @@ public class RootViewModel: ObservableObject {
     
     func goTobluetoothPairing() {
         destination = .bluetoothPairing
+    }
+    
+    func goToSelection(){
+        destination = .selection
     }
     
     func goToMainSelection(){

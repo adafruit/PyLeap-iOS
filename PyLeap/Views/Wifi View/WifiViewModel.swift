@@ -35,12 +35,16 @@ class WifiViewModel: ObservableObject {
     
     @Published var wifiServiceManager = WifiServiceManager()
     
-    @ObservedObject var networkModel = NetworkService()
+   // @ObservedObject var networkModel = NetworkService()
     
+    var circuitPythonVersion = Int()
     
     @Published var webDirectoryInfo = [WebDirectoryModel]()
     
     @Published var hostName = ""
+    
+    @Published var downloadState: DownloadState = .idle
+
     
     // File Manager Data
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -58,11 +62,12 @@ class WifiViewModel: ObservableObject {
         checkIP()
         registerNotifications(enabled: true)
         wifiServiceManager.findService()
+        read()
     }
     
     /// Makes a network call to populate our project list
     func fetch() {
-        networkModel.fetch()
+      //  networkModel.fetch()
     }
     
     @Published var pyleapProjects = [ResultItem]()
@@ -73,38 +78,21 @@ class WifiViewModel: ObservableObject {
     
     func read() {
         // This method can't be used until the device has permission to communicate.
-        
-        
-        
-        var bootOutInformation = String()
-       // wifiTransferService.getRequest(read: "boot_out.txt")
-//        print("\(wifiTransferService.getRequest(read: "boot_out.txt"))")
-        
+
         wifiTransferService.getRequest(read: "boot_out.txt") { result in
-            if result.contains("CircuitPython") {
-                
-                let input = "CircuitPython"
-                let char = result[result.index(input.startIndex, offsetBy: 23)]
-              //  print(char.wholeNumberValue)
-                
-               // print("Contains CP Information\(char.wholeNumberValue")
-            } else {
-                print("Does not contain CircuitPython information.")
+            
+            if result.contains("CircuitPython 7") {
+                WifiCPVersion.versionNumber = 7
+                print("WifiCPVersion.versionNumber set to: \(WifiCPVersion.versionNumber)")
+            }
+            
+            if result.contains("CircuitPython 8") {
+                WifiCPVersion.versionNumber = 8
+                print("WifiCPVersion.versionNumber set to: \(WifiCPVersion.versionNumber)")
             }
             
         }
-        
-        //bootOutInformation = wifiTransferService.getRequest(read: "boot_out.txt")
-        
-        //print("Boot info: \(bootOutInformation)")
-        
-        if bootOutInformation.contains("CircuitPython") {
-            print("Contains CP Information")
-        } else {
-            print("Does not contain CircuitPython information.")
-        }
     }
-    
     
     private weak var invalidIPObserver: NSObjectProtocol?
     

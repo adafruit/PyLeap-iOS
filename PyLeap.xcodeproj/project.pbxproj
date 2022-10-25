@@ -11,6 +11,8 @@
 		D505B99E2756894300386E9F /* ViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D505B99D2756894300386E9F /* ViewModifier.swift */; };
 		D517F68126C5771D002996E8 /* FillerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D517F68026C5771D002996E8 /* FillerView.swift */; };
 		D5199A2F28DD16F100ACC34C /* BleContentTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5199A2E28DD16F100ACC34C /* BleContentTransfer.swift */; };
+		D52A92692906E1A900973B6B /* WifiSearchListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52A92682906E1A900973B6B /* WifiSearchListRowView.swift */; };
+		D52A926D29071DF400973B6B /* SelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52A926C29071DF400973B6B /* SelectionView.swift */; };
 		D52BE7EE269DF36E00630900 /* DownloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52BE7EA269DF36E00630900 /* DownloadViewModel.swift */; };
 		D52BE7F3269DF62100630900 /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = D52BE7F2269DF62100630900 /* Zip */; };
 		D52BE82A26A0660200630900 /* KeyboardUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54D38B82691E0D000FBFE47 /* KeyboardUtils.swift */; };
@@ -106,6 +108,8 @@
 		D505B99D2756894300386E9F /* ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifier.swift; sourceTree = "<group>"; };
 		D517F68026C5771D002996E8 /* FillerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FillerView.swift; sourceTree = "<group>"; };
 		D5199A2E28DD16F100ACC34C /* BleContentTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleContentTransfer.swift; sourceTree = "<group>"; };
+		D52A92682906E1A900973B6B /* WifiSearchListRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiSearchListRowView.swift; sourceTree = "<group>"; };
+		D52A926C29071DF400973B6B /* SelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionView.swift; sourceTree = "<group>"; };
 		D52BE7EA269DF36E00630900 /* DownloadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadViewModel.swift; sourceTree = "<group>"; };
 		D52BE85326A0E39100630900 /* BTConnectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTConnectionViewModel.swift; sourceTree = "<group>"; };
 		D52F7E702672F4C400911D43 /* PyLeap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PyLeap.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -349,6 +353,7 @@
 				D5BA1F7E28B66F280012FC62 /* WifiServiceManager.swift */,
 				D5DD39A628D11817000FAEB8 /* WifiFileTransfer.swift */,
 				D5DD39A828D11962000FAEB8 /* WifiTransferService.swift */,
+				D52A92682906E1A900973B6B /* WifiSearchListRowView.swift */,
 				D567E2B728C137880009F768 /* WifiCell.swift */,
 				D5AA27F728CA785B001CCE25 /* CircuitPythonType.swift */,
 				D5482F4A28E75053000B0C8E /* LocalNetworkAuth.swift */,
@@ -479,6 +484,7 @@
 			isa = PBXGroup;
 			children = (
 				D5640215271B54BF00AE1519 /* MainSelectionView.swift */,
+				D52A926C29071DF400973B6B /* SelectionView.swift */,
 				D5482F4828E63DB7000B0C8E /* MainSelectionViewModel.swift */,
 			);
 			path = "Unpaired View";
@@ -644,6 +650,8 @@
 				D59DFDB6268CD052001737F6 /* AppEnvironment.swift in Sources */,
 				D5CC6BB428173AE0008629FB /* HeaderView.swift in Sources */,
 				D52BE85626A0E5A700630900 /* PeripheralAutoConnect.swift in Sources */,
+				D52A926D29071DF400973B6B /* SelectionView.swift in Sources */,
+				D52A92692906E1A900973B6B /* WifiSearchListRowView.swift in Sources */,
 				D505B99E2756894300386E9F /* ViewModifier.swift in Sources */,
 				D5CC6BB628173B91008629FB /* SubHeaderView.swift in Sources */,
 				D544A24B281F92840038D483 /* ImageCaching.swift in Sources */,
@@ -823,7 +831,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
@@ -853,7 +861,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;

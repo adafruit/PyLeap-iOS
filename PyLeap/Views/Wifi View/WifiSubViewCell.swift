@@ -12,7 +12,7 @@ struct WifiSubViewCell: View {
     @State var isDownloaded = false
         
     @StateObject var wifiFileTransfer = WifiFileTransfer()
-   
+    let result : ResultItem
     
     
     @Binding var bindingString: String
@@ -21,12 +21,12 @@ struct WifiSubViewCell: View {
     
     @State private var toggleView: Bool = false
     
-    let title: String
-    let image: String
-    let description: String
-    let learnGuideLink: URLRequest
-    let downloadLink: String
-    let compatibility: [String]
+//    let title: String
+//    let image: String
+//    let description: String
+//    let learnGuideLink: URLRequest
+//    let downloadLink: String
+//    let compatibility: [String]
     
     @EnvironmentObject var rootViewModel: RootViewModel
     @StateObject var downloadModel = DownloadViewModel()
@@ -67,14 +67,14 @@ struct WifiSubViewCell: View {
                 }
 
                 
-                ImageWithURL(image)
+                ImageWithURL(result.projectImage)
                     .scaledToFit()
                     .frame(maxWidth: .infinity)
                     .cornerRadius(14)
                     .padding(.top, 30)
 
                 
-                Text(description)
+                Text(result.description)
                     .font(Font.custom("ReadexPro-Regular", size: 18))
                     .multilineTextAlignment(.leading)
                     .minimumScaleFactor(0.1)
@@ -82,9 +82,19 @@ struct WifiSubViewCell: View {
                 Text("Compatible with:")
                     .font(Font.custom("ReadexPro-Bold", size: 18))
                     .padding(.top, 5)
-                    
+             
+                HStack {
+                    Image(systemName: "checkmark")
+                        .resizable()
+                        .frame(width: 25, height: 22, alignment: .center)
+                        .foregroundColor(.green)
+                    Text("ESP32-S2")
+                        .font(Font.custom("ReadexPro-Regular", size: 18))
+                        .foregroundColor(.black)
+                }
+                .padding(.top, 10)
                 
-                ForEach(compatibility, id: \.self) { string in
+                ForEach(result.compatibility, id: \.self) { string in
                     if string == "circuitplayground_bluefruit" {
                         
                         HStack {
@@ -127,7 +137,7 @@ struct WifiSubViewCell: View {
                     .padding(.top, 20)
             }
             .sheet(isPresented: $showWebViewPopover, content: {
-                WebView(URLRequest(url: learnGuideLink.url!))
+                WebView(URLRequest(url: URL(fileURLWithPath: result.learnGuideLink)))
             })
             
             
@@ -135,20 +145,20 @@ struct WifiSubViewCell: View {
             
             if isConnected {
                 
-                if compatibility.contains(bindingString) {
-                                          
+                if result.compatibility.contains(bindingString) {
+                                       
+                    
+                    if wifiFileTransfer.downloadState == .idle {
+                        
+                        
                         Button {
-                            
-                            print("Wifi Project Attempt \(title)")
                             
                             if wifiFileTransfer.projectDownloaded {
                                 
-                                wifiFileTransfer.projectValidation(nameOf: title)
+                                wifiFileTransfer.testFileExistance(for: result.projectName, bundleLink: result.bundleLink)
                                 
                             } else {
-                                downloadModel.startDownload(urlString: downloadLink, projectTitle: title) {
-                                    print("DONE")
-                                }
+                                downloadModel.trueDownload(useProject: result.bundleLink, projectName: result.projectName)
                             }
                             
                         } label: {
@@ -158,9 +168,28 @@ struct WifiSubViewCell: View {
                         
                     }
                     
-                
-                
-                
+                    if wifiFileTransfer.downloadState == .transferring {
+                        DownloadingButton()
+                            .padding(.top, 20)
+                            .disabled(true)
+                        
+                        VStack(alignment: .center, spacing: 5) {
+                            ProgressView("", value: CGFloat(wifiFileTransfer.counter), total: CGFloat(wifiFileTransfer.numOfFiles) )
+                                .padding(.horizontal, 90)
+                                .padding(.top, -8)
+                                .padding(.bottom, 10)
+                                .accentColor(Color.gray)
+                                .scaleEffect(x: 1, y: 2, anchor: .center)
+                                .cornerRadius(10)
+                                .frame(height: 10)
+                            
+                            ProgressView()
+                        }
+                    }
+                    
+                    
+                    }
+                    
             } else {
                 
                 Button  {
@@ -176,40 +205,35 @@ struct WifiSubViewCell: View {
             .frame(height: 30)
         .ignoresSafeArea(.all)
         
-        
-    
-   
-    
-        
-        .onChange(of: downloadModel.didDownloadBundle, perform: { newValue in
-            print("For project: \(title), project download is \(newValue)")
-                        
-            if newValue {
-                DispatchQueue.main.async {
-                    print("Getting project from Subclass \(title)")
-                   // viewModel.getProjectForSubClass(nameOf: title)
-                    wifiFileTransfer.projectValidation(nameOf: title)
-                    
-                    isDownloaded = true
-                }
-            }else {
-                print("Is not downloaded")
-                isDownloaded = false
-            }
-            
-        })
+//        .onChange(of: downloadModel.didDownloadBundle, perform: { newValue in
+//            print("For project: \(title), project download is \(newValue)")
+//
+//            if newValue {
+//                DispatchQueue.main.async {
+//                    print("Getting project from Subclass \(title)")
+//                   // viewModel.getProjectForSubClass(nameOf: title)
+//                    wifiFileTransfer.projectValidation(nameOf: title)
+//
+//                    isDownloaded = true
+//                }
+//            }else {
+//                print("Is not downloaded")
+//                isDownloaded = false
+//            }
+//
+//        })
         .onAppear(perform: {
             
-            viewModel.searchPathForProject(nameOf: title)
+            viewModel.searchPathForProject(nameOf: result.projectName)
             
-            wifiFileTransfer.getProjectForSubClass(nameOf: title)
+          //  wifiFileTransfer.getProjectForSubClass(nameOf: title)
             
-            if wifiFileTransfer.projectDownloaded {
+            if viewModel.projectDownloaded {
                 isDownloaded = true
             } else {
                 isDownloaded = false
             }
-            print("is downloaded? \(isDownloaded)")
+            print("is downloaded? \(viewModel.projectDownloaded)")
         })
         .padding(.top, 8)
         

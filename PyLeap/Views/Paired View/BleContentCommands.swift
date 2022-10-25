@@ -237,6 +237,8 @@ class BleContentCommands: ObservableObject {
      func writeFileCommand(path: String, data: Data, completion: ((Result<Date?, Error>) -> Void)?) {
         guard let fileTransferClient = fileTransferClient else { completion?(.failure(ProjectViewError.fileTransferUndefined)); return }
         
+         
+         
         DispatchQueue.main.async {
             self.counter += 1
         }
@@ -255,9 +257,11 @@ class BleContentCommands: ObservableObject {
                 switch result {
                 case .success:
                     DLog("writeFile \(path) success. Size: \(data.count)")
-                    
+                      print("\(#function) @Line: \(#line)")
                 case .failure(let error):
                     DLog("writeFile  \(path) error: \(error)")
+                    print("Deep Error")
+                    print("\(#function) @Line: \(#line)")
                 }
             }
             

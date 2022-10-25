@@ -17,8 +17,6 @@ enum AdafruitDevices {
 struct MainSelectionView: View {
     
     @Environment(\.presentationMode) private var presentationMode
-    @EnvironmentObject private var connectionManager: FileTransferConnectionManager
-    
     @State private var showWebViewPopover: Bool = false
     
     
@@ -31,7 +29,6 @@ struct MainSelectionView: View {
     @State private var test = ""
     
     @State private var nilBinder = DownloadState.idle
-   // @ObservedObject var connectionManager = FileTransferConnectionManager.shared
     @EnvironmentObject var rootViewModel: RootViewModel
    
     @AppStorage("shouldShowOnboarding") var shouldShowOnboarding: Bool = true
@@ -42,31 +39,31 @@ struct MainSelectionView: View {
             MainHeaderView()
             
             
-            HStack(alignment: .center, spacing: 8, content: {
-                
-                Button {
-                    rootViewModel.goToWifiView()
-                       
-                } label: {
-                    Text("Connect to Wi-Fi Mode")
-                        .font(Font.custom("ReadexPro-Regular", size: 16))
-                        .underline()
-                        .transition(.move(edge: .top))
-                }
-                
-            })
-            .padding(.all, 0.0)
-            .frame(maxWidth: .infinity)
-            .frame(maxHeight: 40)
-            .background(Color("pyleap_blue"))
-            .foregroundColor(.white)
+//            HStack(alignment: .center, spacing: 8, content: {
+//                
+//                Button {
+//                    rootViewModel.goToWifiView()
+//                       
+//                } label: {
+//                    Text("Connect to Wi-Fi Mode")
+//                        .font(Font.custom("ReadexPro-Regular", size: 16))
+//                        .underline()
+//                        .transition(.move(edge: .top))
+//                }
+//                
+//            })
+//            .padding(.all, 0.0)
+//            .frame(maxWidth: .infinity)
+//            .frame(maxHeight: 40)
+//            .background(Color("pyleap_blue"))
+//            .foregroundColor(.white)
             
             
             HStack(alignment: .center, spacing: 8, content: {
                 Text("Not Connected to a Device.")
                     .font(Font.custom("ReadexPro-Regular", size: 16))
                 Button {
-                    rootViewModel.goTobluetoothPairing()
+                    rootViewModel.goToSelection()
                 } label: {
                     Text("Connect Now")
                         .font(Font.custom("ReadexPro-Regular", size: 16))
@@ -148,7 +145,9 @@ struct MainSelectionView: View {
             
         })
         .onAppear() {
-            networkModel.fetch()
+            
+          //  networkModel.fetch()
+            print("Opened MainSelectionView")
         }
         
         .fullScreenCover(isPresented: $shouldShowOnboarding, content: {

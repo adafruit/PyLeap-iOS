@@ -38,13 +38,7 @@ struct WifiCell: View {
             if isExpanded {
                 
                 Group {
-                    WifiSubViewCell(bindingString: $bootOne, downloadStateBinder: $stateBinder, title: result.projectName,
-                                image: result.projectImage,
-                                description: result.description,
-                                learnGuideLink: URLRequest(url: URL(string: result.learnGuideLink)!),
-                                downloadLink: result.bundleLink,
-                                compatibility: result.compatibility,
-                                isConnected: $isConnected)
+                    WifiSubViewCell(result: result, bindingString: $bootOne, downloadStateBinder: $stateBinder,isConnected: $isConnected)
                 }
 
             }

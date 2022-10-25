@@ -18,8 +18,15 @@ struct WifiStatusConnectedView: View {
     var body: some View {
         HStack(alignment: .center, spacing: 8, content: {
  
-            Text("Connected To \(hostName)")
-                .font(Font.custom("ReadexPro-Regular", size: 16))
+            Text("Connected to \(hostName)")
+                .font(Font.custom("ReadexPro-Regular", size: 14))
+            
+            Image(systemName: "wifi")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 20, height: 20)
+                .padding(5)
+                
         })
         .padding(.all, 0.0)
         .frame(maxWidth: .infinity)
@@ -34,7 +41,7 @@ struct WifiStatusNoConnectionView: View {
 
         HStack(alignment: .center, spacing: 8, content: {
             Text("No Device Detected")
-                .font(Font.custom("ReadexPro-Regular", size: 16))
+                .font(Font.custom("ReadexPro-Regular", size: 14))
         
         })
         .padding(.all, 0.0)
@@ -50,7 +57,7 @@ struct WifiStatusConnectingView: View {
     var body: some View {
         HStack(alignment: .center, spacing: 8, content: {
             Text("Searching for Adafruit Devices...")
-                .font(Font.custom("ReadexPro-Regular", size: 16))
+                .font(Font.custom("ReadexPro-Regular", size: 14))
         })
         .padding(.all, 0.0)
         .frame(maxWidth: .infinity)
@@ -68,7 +75,7 @@ struct NetworkConnectionBanner: View {
     var body: some View {
         HStack(alignment: .center, spacing: 8, content: {
             Text("Searching local network...")
-                .font(Font.custom("ReadexPro-Regular", size: 16))
+                .font(Font.custom("ReadexPro-Regular", size: 14))
             
        //     ProgressView()
                 //.resizable()

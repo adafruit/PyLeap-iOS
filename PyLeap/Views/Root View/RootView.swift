@@ -46,6 +46,9 @@ struct RootView: View {
             case .wifi:
                 WifiView()
                 
+            case .selection:
+                SelectionView()
+                
             case .settings:
                 SettingsView()
             default:

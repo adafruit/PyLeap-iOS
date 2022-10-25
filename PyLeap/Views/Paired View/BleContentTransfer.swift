@@ -320,7 +320,9 @@ class BleContentTransfer: ObservableObject {
             self.numOfFiles = self.filterCPVersion(incomingArray: self.projectFiles).count
         }
         
-        newMakeDirectory(directoryArray: filterCPVersion(incomingArray: projectDirectories), regularFilesArray: filterCPVersion(incomingArray: projectFiles))
+       
+        
+        makeDirectory(directoryArray: filterCPVersion(incomingArray: projectDirectories), regularFilesArray: filterCPVersion(incomingArray: projectFiles))
         
     }
     
@@ -337,6 +339,8 @@ class BleContentTransfer: ObservableObject {
             print("incoming Array \(i.absoluteString)")
         }
         
+        
+        
         let listWithoutCP8Folder = incomingArray.filter {
             $0.lastPathComponent != ("CircuitPython 8.x")
         }
@@ -345,10 +349,16 @@ class BleContentTransfer: ObservableObject {
             $0.lastPathComponent != ("CircuitPython 7.x")
         }
         
+        //CircuitPython_Templates
+        
+        let removedCPTemplates = listWithoutCP7Folder.filter {
+            $0.lastPathComponent != ("CircuitPython_Templates")
+            
+        }
         
         
         if sharedBootinfo.contains("CircuitPython 8") {
-            let listForCurrentCPVersion = listWithoutCP7Folder.filter {
+            let listForCurrentCPVersion = removedCPTemplates.filter {
                 !$0.absoluteString.contains("CircuitPython%207.x")
             }
             
@@ -371,80 +381,12 @@ class BleContentTransfer: ObservableObject {
             }
             return listForCurrentCPVersion
         }
+        
         return listWithoutCP7Folder
     }
     
     
-    
-    func pathManipulation(arrayOfAny: [URL], regularArray: [URL]) {
-        var indexOfCP = 0
-        fileTransferArray = regularArray
-        
-        for i in arrayOfAny {
-            print("Directories pathManipulation: \(i.absoluteString)")
-        }
-        
-        
-        for i in regularArray {
-            print("Regular File pathManipulation: \(i.absoluteString)")
-        }
-        
-        return
-        var tempArray = arrayOfAny
-        
-        if arrayOfAny.isEmpty {
-            // Continue
-            print("\(#function) @Line: \(#line)")
-            print("Done!")
-            print("RETURNED PATHS: \(returnedArray)")
-            
-            validateDirectory(directoryArray: returnedArray, fileArray: regularArray)
-            
-        } else {
-            
-            var tempPath = arrayOfAny[0].pathComponents
-            
-            if arrayOfAny[0].pathComponents.contains("CircuitPython 7.x") {
-                
-                print("Found CircuitPython 8.x")
-                
-                indexOfCP = arrayOfAny[0].pathComponents.firstIndex(of: "CircuitPython 7.x")!
-                
-                tempPath.removeSubrange(0...indexOfCP)
-                
-                tempArray.removeFirst()
-                
-                //  var joinedArrayPath = tempPath.joined(separator: "/")
-                
-                returnedArray.append(tempPath)
-                
-                fileTransferArray = regularArray
-                
-                pathManipulation(arrayOfAny: tempArray, regularArray: regularArray)
-            }
-            
-            if arrayOfAny[0].pathComponents.contains("CircuitPython 8.x") {
-                print("Found CircuitPython 7.x")
-                
-                indexOfCP = arrayOfAny[0].pathComponents.firstIndex(of: "CircuitPython 8.x")!
-                
-                tempPath.removeSubrange(0...indexOfCP)
-                
-                tempArray.removeFirst()
-                
-                // var joinedArrayPath = tempPath.joined(separator: "/")
-                
-                returnedArray.append(tempPath)
-                
-                pathManipulation(arrayOfAny: tempArray, regularArray: regularArray)
-                
-            }
-            
-        }
-        
-    }
-    
-    func newMakeDirectory(directoryArray: [URL], regularFilesArray: [URL]) {
+    func makeDirectory(directoryArray: [URL], regularFilesArray: [URL]) {
         print("\(#function) @Line: \(#line)")
         var recursiveArray = directoryArray
         
@@ -455,8 +397,12 @@ class BleContentTransfer: ObservableObject {
         if directoryArray.isEmpty {
             print("Array is empty. makeDirectory is done - Ready for file transfer!")
             newTransfer(listOf: regularFilesArray)
-            return
         } else {
+            
+            if recursiveArray.first?.lastPathComponent == "CircuitPython_Templates" {
+                recursiveArray.removeFirst()
+                self.makeDirectory(directoryArray: recursiveArray, regularFilesArray: regularFilesArray)
+            }
             
             if recursiveArray.first?.lastPathComponent == "lib" {
                 
@@ -464,10 +410,10 @@ class BleContentTransfer: ObservableObject {
                     switch result {
                     case .success(let contents):
                         if contents!.contains(where: { name in name.name == recursiveArray.first?.lastPathComponent}) {
-                            print("Lib found")
+                            print("Lib Folder Found - Will Skip")
                             
                             recursiveArray.removeFirst()
-                            self.newMakeDirectory(directoryArray: recursiveArray, regularFilesArray: regularFilesArray)
+                            self.makeDirectory(directoryArray: recursiveArray, regularFilesArray: regularFilesArray)
                             return
                         } else {
                             
@@ -478,8 +424,9 @@ class BleContentTransfer: ObservableObject {
                                 case .success:
                                     print("Directory made.")
                                     recursiveArray.removeFirst()
-                                    self.newMakeDirectory(directoryArray: recursiveArray, regularFilesArray: regularFilesArray)
+                                    self.makeDirectory(directoryArray: recursiveArray, regularFilesArray: regularFilesArray)
                                 case .failure(let error):
+                                      print("\(#function) @Line: \(#line)")
                                     print("Failure - \(error)")
                                 }
                             }
@@ -495,16 +442,17 @@ class BleContentTransfer: ObservableObject {
             } else {
                 let path = recursiveArray.first?.deletingLastPathComponent()
                 print("check path \(path?.absoluteString ?? "path")")
+                
                 contentCommands.listDirectoryCommand(path: makeDirectoryString(url: path!)) { [self] result in
                     switch result {
                         
                     case .success(let contents):
                         
                         if contents!.contains(where: { name in name.name == recursiveArray.first?.lastPathComponent}) {
-                            print(contents)
+                           // print(contents)
                             print("Exists for: \(String(describing: path?.absoluteString))")
                             recursiveArray.removeFirst()
-                            newMakeDirectory(directoryArray: recursiveArray, regularFilesArray: regularFilesArray)
+                            makeDirectory(directoryArray: recursiveArray, regularFilesArray: regularFilesArray)
                             
                         } else {
                             
@@ -516,9 +464,10 @@ class BleContentTransfer: ObservableObject {
                                 case .success:
                                     print("Directory made.")
                                     recursiveArray.removeFirst()
-                                    self.newMakeDirectory(directoryArray: recursiveArray, regularFilesArray: regularFilesArray)
+                                    self.makeDirectory(directoryArray: recursiveArray, regularFilesArray: regularFilesArray)
                                     
                                 case .failure(let error):
+                                      print("\(#function) @Line: \(#line)")
                                     print("Failure - \(error)")
                                 }
                             }
@@ -537,16 +486,86 @@ class BleContentTransfer: ObservableObject {
         
     }
     
+    enum ListCommandError: Error {
+        case belowMinimum
+        case isPrime
+    }
+    
+    func checkIfFilesExistOnBoard(url: URL) {
+        
+        contentCommands.listDirectoryCommand(path: makeDirectoryString(url: url)) { [self] result in
+          
+            switch result {
+                
+            case .success(let contents):
+                
+                if contents!.contains(where: { name in name.name == url.lastPathComponent}) {
+                    print(contents)
+                    print("Exists for: \(url.absoluteString)")
+                  
+                } else {
+                    print("File does not exist on board:  \(url.absoluteString)")
+                    print("Make File")
+                }
+                
+            case .failure(let error):
+                print(error)
+                print("\(#function) @Line: \(#line)")
+            }
+        }
+        
+    }
+    
+    
+    
+    func makeFileString(url: URL)-> String {
+        var indexOfCP = 0
+        var tempPathComponents = url.pathComponents
+        print("Incoming URL for makeFileString: \(url.absoluteString)")
+        
+        
+        if sharedBootinfo.contains("CircuitPython 7") {
+            
+            indexOfCP = tempPathComponents.firstIndex(of: "CircuitPython 7.x")!
+            tempPathComponents.removeSubrange(0...indexOfCP)
+            tempPathComponents.removeLast()
+            var joinedArrayPath = tempPathComponents.joined(separator: "/")
+            print("\(#function) @Line: \(#line)")
+            print("Outgoing makeFileString: \(joinedArrayPath) for CP 7")
+            return joinedArrayPath
+        }
+        
+        if sharedBootinfo.contains("CircuitPython 8") {
+            indexOfCP = tempPathComponents.firstIndex(of: "CircuitPython 8.x")!
+            tempPathComponents.removeSubrange(0...indexOfCP)
+            tempPathComponents.removeLast()
+            var joinedArrayPath = tempPathComponents.joined(separator: "/")
+            print("\(#function) @Line: \(#line)")
+            print("Outgoing makeFileString: \(joinedArrayPath) for CP 8")
+            return joinedArrayPath
+        }
+        
+        return ""
+    }
+    
+    
+    
+    
     func makeDirectoryString (url: URL) -> String {
         var indexOfCP = 0
         var tempPathComponents = url.pathComponents
         
+        print("Incoming URL: \(url.absoluteString) ")
+        
+        
         
         if sharedBootinfo.contains("CircuitPython 7") {
+            
             indexOfCP = tempPathComponents.firstIndex(of: "CircuitPython 7.x")!
             tempPathComponents.removeSubrange(0...indexOfCP)
             var joinedArrayPath = tempPathComponents.joined(separator: "/")
-            print("Outgoing String: \(joinedArrayPath)")
+            print("\(#function) @Line: \(#line)")
+            print("Outgoing String: \(joinedArrayPath) for CP 7")
             return joinedArrayPath
         }
         
@@ -554,7 +573,20 @@ class BleContentTransfer: ObservableObject {
             indexOfCP = tempPathComponents.firstIndex(of: "CircuitPython 8.x")!
             tempPathComponents.removeSubrange(0...indexOfCP)
             var joinedArrayPath = tempPathComponents.joined(separator: "/")
-            print("Outgoing String: \(joinedArrayPath)")
+            print("\(#function) @Line: \(#line)")
+            print("Outgoing String: \(joinedArrayPath) for CP 8")
+            return joinedArrayPath
+        } else {
+            
+            guard let projectName = projectName else {
+                   return "Unknown"
+               }
+            
+            indexOfCP = tempPathComponents.firstIndex(of: projectName)!
+            tempPathComponents.removeSubrange(0...indexOfCP)
+            var joinedArrayPath = tempPathComponents.joined(separator: "/")
+            print("\(#function) @Line: \(#line)")
+            print("Outgoing String: \(joinedArrayPath) for CP 7")
             return joinedArrayPath
         }
         
@@ -594,19 +626,17 @@ class BleContentTransfer: ObservableObject {
     func newTransfer(listOf urls: [URL]) {
         print("\(#function) @Line: \(#line)")
         var copiedFiles = urls
+        print("Files left for transfer: \(urls.count)")
         
-        print("Attempting to transfer...\(urls.first?.lastPathComponent ?? "No file found")")
+        print("Attempting to transfer... \(urls.first?.lastPathComponent ?? "No file found")")
         
         DispatchQueue.main.async {
             self.counter += 1
         }
         
         
-        
-        
-        
         if copiedFiles.isEmpty {
-            print("Array of contents empty - Check other directories")
+            print("All Files Transferred! 👍")
             self.completedTransfer()
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2){
@@ -626,6 +656,10 @@ class BleContentTransfer: ObservableObject {
             
             
             if copiedFiles.first?.lastPathComponent == "code.py" || copiedFiles.first?.lastPathComponent == "README.txt" {
+                
+                print("Input for writeFileCommand: \(copiedFiles.first?.absoluteString)")
+              
+                
                 self.contentCommands.writeFileCommand(path: copiedFiles.first!.lastPathComponent, data: data) { result in
                     switch result {
                         
@@ -635,6 +669,8 @@ class BleContentTransfer: ObservableObject {
                         self.newTransfer(listOf: copiedFiles)
                         
                     case .failure(let error):
+                        print("\(#function) @Line: \(#line)")
+                        print(error)
                         DispatchQueue.main.async {
                             print("Transfer Failure \(error)")
                             self.downloadState = .failed
@@ -649,24 +685,26 @@ class BleContentTransfer: ObservableObject {
             } else {
                 
                 print("Checking... 🫥")
-                print("makeDirectoryString transfer \(makeDirectoryString(url: copiedFiles.first!))")
+              //  print("makeDirectoryString transfer \(makeDirectoryString(url: copiedFiles.first!))")
                 
                 let directoryPath = makeDirectoryString(url: copiedFiles.first!)
-                
-                
+
+                print("Input writeFileCommand: \(directoryPath)")
                 self.contentCommands.writeFileCommand(path: directoryPath, data: data) { result in
                     switch result {
-                        
+
                     case .success(_):
                         print("Success ✅")
                         copiedFiles.removeFirst()
                         self.newTransfer(listOf: copiedFiles)
-                        
+
                     case .failure(let error):
+                        print("\(#function) @Line: \(#line)")
+                        print(error)
                         DispatchQueue.main.async {
                             print("Transfer Failure \(error)")
                             self.downloadState = .failed
-                            
+
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                                 self.downloadState = .idle
                             }
@@ -785,203 +823,10 @@ class BleContentTransfer: ObservableObject {
     
     
     
-    func sortDirectory(dirList: [URL], filesUrls: [URL]) {
-        
-        print(#function)
-        //Creates a sorted list of directories
-        var tempDirectory = dirList.sorted(by: { $1.pathComponents.count > $0.pathComponents.count} )
-        print("Evaluating: \(String(describing: tempDirectory.first?.lastPathComponent))")
-        print("With Path: \(String(describing: tempDirectory.first?.path))")
-        
-        print("Sorted Directory")
-        for i in tempDirectory{
-            
-            print(i.lastPathComponent)
-        }
-        // If directories are not found, start transferring files over to directories.
-        if dirList.isEmpty {
-            print("No directories left in queue")
-            projectDirectories.removeAll()
-            self.transferFiles(files: filesUrls)
-            
-        } else {
-            guard let firstDirectory = tempDirectory.first else {
-                print("No directory exist here")
-                return
-            }
-            
-            // If lib/ directory is found in the project bundle, make a lib directory on client.
-            if firstDirectory.lastPathComponent == "lib" {
-                mkLibDir(libDirectory: firstDirectory, copiedDirectory: tempDirectory, filesUrl: filesUrls)
-                
-            } else {
-                mkSubLibDir(subdirectory: firstDirectory, copiedDirectory: tempDirectory, filesURL: filesUrls)
-            }
-        }
-        self.projectDirectories.removeAll()
-    }
+
+
     
-    
-    
-    
-    
-    
-    
-    //Make lib/ Directory
-    func mkLibDir(libDirectory: URL, copiedDirectory: [URL], filesUrl: [URL]) {
-        print(#function)
-        var temp = copiedDirectory
-        // print(temp)
-        
-        print("mkLibDir list")
-        for i in temp {
-            print("\(i)")
-        }
-        
-        contentCommands.listDirectoryCommand(path: "") { result in
-            
-            switch result {
-                // Check that lib/ exist.
-            case .success(let contents):
-                print("ListDirCommand: \(String(describing: contents))")
-                
-                if contents!.contains(where: { name in name.name == libDirectory.lastPathComponent}) {
-                    print("lib directory exist")
-                    
-                    temp.removeFirst()
-                    self.sortDirectory(dirList: temp, filesUrls: filesUrl)
-                    
-                } else {
-                    print("lib directory does not exist")
-                    print("XXXX mkLibDir")
-                    var tempURL = libDirectory.pathComponents
-                    tempURL.removeFirst(12)
-                    
-                    let joined = tempURL.joined(separator: "/")
-                    print("FIXED PATHxx:\(joined)")
-                    
-                    
-                    self.contentCommands.makeDirectoryCommand(path: joined) { result in
-                        switch result {
-                        case .success:
-                            print("Success")
-                            
-                            temp.removeFirst()
-                            self.sortDirectory(dirList: temp, filesUrls: filesUrl)
-                            
-                        case .failure:
-                            print("Failed to create directory \(joined)")
-                            temp.removeAll()
-                            self.projectDirectories.removeAll()
-                            NotificationCenter.default.post(name: .didEncounterTransferError, object: nil, userInfo: nil)
-                        }
-                    }
-                }
-                
-            case .failure:
-                print("Failure - mkLibDir")
-                temp.removeAll()
-                self.projectDirectories.removeAll()
-                NotificationCenter.default.post(name: .didEncounterTransferError, object: nil, userInfo: nil)
-            }
-        }
-    }
-    
-    func mkSubLibDir(subdirectory: URL, copiedDirectory: [URL], filesURL: [URL]) {
-        print(#function)
-        var temp = copiedDirectory
-        
-        print("List of Directories Currently in mkSubLibDir")
-        for i in temp {
-            
-            print("\(i.path)")
-        }
-        
-        var tempURL = subdirectory.pathComponents
-        print("XYLO - \(tempURL)")
-        // tempURL.removeFirst(12)
-        
-        let joined = tempURL.joined(separator: "/")
-        
-        print("Modified Path top: \(joined)")
-        
-        var pathDirectoryForListCommand = tempURL
-        pathDirectoryForListCommand.removeLast()
-        let pathDirectoryForListCommandJoined = pathDirectoryForListCommand.joined(separator: "/")
-        
-        
-        print("pathDirectoryForListCommandJoined: \(pathDirectoryForListCommandJoined)")
-        print("How its taken: \(pathDirectoryForListCommandJoined)/")
-        
-        
-        contentCommands.listDirectoryCommand(path: "\(pathDirectoryForListCommandJoined)/") { result in
-            
-            switch result {
-                
-            case .success(let contents):
-                
-                
-                
-                
-                if contents!.contains(where: { name in name.name == subdirectory.lastPathComponent}) {
-                    print("FULL PATH OF: \(subdirectory.lastPathComponent)")
-                    print("\(subdirectory.path)")
-                    // Skips the existing directory.
-                    temp.removeFirst()
-                    self.sortDirectory(dirList: temp, filesUrls: filesURL)
-                    
-                } else {
-                    
-                    print("\(subdirectory.lastPathComponent) directory does not exist")
-                    print("Here's the full path of \(subdirectory.lastPathComponent): \(subdirectory.path)")
-                    print("XXXX mkSubLibDir")
-                    
-                    var tempURL = subdirectory.pathComponents
-                    
-                    print("Incoming URL: \(tempURL)")
-                    
-                    tempURL.removeFirst(12)
-                    
-                    print("Modified Path without seperators: \(tempURL)")
-                    
-                    let joined = tempURL.joined(separator: "/")
-                    
-                    print("Modified Path: \(joined)")
-                    
-                    var pathDirectoryForListCommand = tempURL
-                    pathDirectoryForListCommand.removeLast()
-                    let pathDirectoryForListCommandJoined = pathDirectoryForListCommand.joined(separator: "/")
-                    
-                    
-                    print("pathDirectoryForListCommandJoined: \(pathDirectoryForListCommandJoined)")
-                    
-                    
-                    self.contentCommands.makeDirectoryCommand(path: joined) { result in
-                        
-                        switch result {
-                        case .success:
-                            print("Success")
-                            
-                            temp.removeFirst()
-                            self.sortDirectory(dirList: temp, filesUrls: filesURL)
-                            
-                        case .failure:
-                            print("Failed to create directory - 2")
-                            temp.removeAll()
-                            self.projectDirectories.removeAll()
-                            NotificationCenter.default.post(name: .didEncounterTransferError, object: nil, userInfo: nil)                        }
-                    }
-                }
-                
-            case .failure:
-                print("Fail in: \(#function)")
-                print("\(tempURL)")
-                temp.removeAll()
-                self.projectDirectories.removeAll()
-                NotificationCenter.default.post(name: .didEncounterTransferError, object: nil, userInfo: nil)
-            }
-        }
-    }
+
     
     
     
