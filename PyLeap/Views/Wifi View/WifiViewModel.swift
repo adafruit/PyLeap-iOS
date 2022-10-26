@@ -24,7 +24,7 @@ class WifiViewModel: ObservableObject {
     @Published var connectionStatus: ConnectionStatus = .noConnection
     
     @Published  var isInvalidIP = false
-    
+    @Published  var ipInputValidation = false
     //Dependencies
     var networkMonitor = NetworkMonitor()
     var networkAuth = LocalNetworkAuthorization()
@@ -201,7 +201,7 @@ class WifiViewModel: ObservableObject {
             storeResolvedAddress(service: resolvedService[0])
             storeIPAddress(ipAddress: ip)
             connectionStatus = .connected
-            
+            ipInputValidation = true
         } else {
             isInvalidIP = true
             print("1 does not exists in the array")

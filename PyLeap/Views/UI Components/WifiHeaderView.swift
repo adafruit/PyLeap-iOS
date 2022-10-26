@@ -20,7 +20,7 @@ struct WifiHeaderView: View {
                 
                 Button {
                     presentationMode.wrappedValue.dismiss()
-                    rootViewModel.goToMain()
+                    rootViewModel.goToWiFiServiceSelection()
                     
                 } label: {
                     Image(systemName: "arrow.backward")

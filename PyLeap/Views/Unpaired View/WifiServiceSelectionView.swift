@@ -13,7 +13,6 @@ struct WifiServiceSelectionView: View {
     @EnvironmentObject var rootViewModel: RootViewModel
     @StateObject var viewModel = WifiViewModel()
     
-    
     let userDefaults = UserDefaults.standard
     private let kPrefix = Bundle.main.bundleIdentifier!
     
@@ -52,15 +51,25 @@ struct WifiServiceSelectionView: View {
        }
    }
     
+    func showAlertMessage() {
+        alertMessage(title: "IP address Not Found", exitTitle: "Ok") {
+            showValidationPrompt()
+        }
+    }
+    
+    func toggleViewModelIP() {
+        viewModel.isInvalidIP.toggle()
+    }
+    
     var body: some View {
         
         VStack {
             
             HStack {
-
+                
                 Button {
                     rootViewModel.goToSelection()
-
+                    
                 } label: {
                     Image(systemName: "arrow.backward")
                         .resizable()
@@ -69,21 +78,21 @@ struct WifiServiceSelectionView: View {
                         .foregroundColor(.black)
                 }
                 .padding()
-
+                
                 Spacer()
-
-//                Button {
-//                    wifiServiceViewModel.findService()
-//                } label: {
-//                    Image(systemName: "arrow.clockwise")
-//                        .resizable()
-//                        .scaledToFit()
-//                        .frame(width: 30, height: 30, alignment: .center)
-//
-//                        .foregroundColor(.black)
-//                }
-//                .padding()
-
+                
+                //                Button {
+                //                    wifiServiceViewModel.findService()
+                //                } label: {
+                //                    Image(systemName: "arrow.clockwise")
+                //                        .resizable()
+                //                        .scaledToFit()
+                //                        .frame(width: 30, height: 30, alignment: .center)
+                //
+                //                        .foregroundColor(.black)
+                //                }
+                //                .padding()
+                
             }
             .padding(.top, 15)
             
@@ -100,14 +109,14 @@ struct WifiServiceSelectionView: View {
                 Text("Enter IP address here...")
                     .font(Font.custom("ReadexPro-Regular", size: 16))
                     .foregroundColor(.black)
-                    
+                
                     .padding(5)
             }
             
             List($wifiServiceViewModel.resolvedServices) { $service in
                 WifiRowView(wifiService: service)
                     .onTapGesture {
-                       // print(service.hostName)
+                        // print(service.hostName)
                         // Save Cred to User Defaults
                         
                         showConfirmationPrompt(service: service, hostName: service.hostName)
@@ -116,8 +125,24 @@ struct WifiServiceSelectionView: View {
             }
             .listStyle(PlainListStyle())
         }
-
         
+        .onChange(of: viewModel.ipInputValidation, perform: { newValue in
+            if newValue {
+                rootViewModel.goToWifiView()
+                viewModel.ipInputValidation.toggle()
+            } 
+            
+        })
+        
+        
+        .onChange(of: viewModel.isInvalidIP, perform: { newValue in
+            print("viewModel.isInvalidIP .onChange")
+            if newValue {
+                showAlertMessage()
+                toggleViewModelIP()
+            }
+            
+        })
     }
 }
 struct WifiServiceSelectionView_Previews: PreviewProvider {
