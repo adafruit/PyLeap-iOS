@@ -56,10 +56,9 @@ errorObserver = notificationCenter.addObserver(forName: .invalidCustomNetworkReq
     
     func check() {
         print(#function)
-       if userDefaults.object(forKey: kPrefix+".storedIP") == nil {
+       if userDefaults.object(forKey: kPrefix+".storeResolvedAddress.ipAddress") == nil {
            connectedToDevice = false
        } else {
-           print("Stored: \(String(describing: userDefaults.object(forKey: kPrefix+".storedIP"))), @: \(kPrefix+".storedIP")")
            
            connectedToDevice = true
            

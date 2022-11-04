@@ -20,20 +20,11 @@ struct WifiSubViewCell: View {
     @Binding var downloadStateBinder: DownloadState
     
     @State private var toggleView: Bool = false
-    
-//    let title: String
-//    let image: String
-//    let description: String
-//    let learnGuideLink: URLRequest
-//    let downloadLink: String
-//    let compatibility: [String]
-    
+
     @EnvironmentObject var rootViewModel: RootViewModel
     @StateObject var downloadModel = DownloadViewModel()
     @StateObject var viewModel = WifiSubViewCellModel()
 
-    
-    
     @Binding var isConnected : Bool
     
     @State private var showWebViewPopover: Bool = false
@@ -186,6 +177,13 @@ struct WifiSubViewCell: View {
                             ProgressView()
                         }
                     }
+                    
+                    if wifiFileTransfer.downloadState == .complete {
+                        CompleteButton()
+                            .padding(.top, 20)
+                            .disabled(true)
+                    }
+                    
                     
                     
                     }

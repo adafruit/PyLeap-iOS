@@ -65,23 +65,31 @@ class NetworkService: ObservableObject {
             let defaults = UserDefaults.standard
             defaults.set(encoded, forKey: "CustomProjects")
         }
+        
+        saveCustomProjects(content: customProjects)
+        
     }
     
     func saveCustomProjects(content: [ResultItem]) {
+        print("\(#function) @Line: \(#line)")
         NotificationCenter.default.post(name: .didCollectCustomProject, object: nil, userInfo: nil)
         //  if let newIncoming = content.contains()
         
         var customList: [ResultItem] = []
         
-        
         if let savedProjects = userDefaults.object(forKey: "CustomProjects") as? Data {
+            
+            print("if let savedProjects = userDefaults.object(forKey: CustomProjects) as? Data")
             
             let decoder = JSONDecoder()
             
             if let loadedProjects = try? decoder.decode([ResultItem].self, from: savedProjects) {
                 print("Loading previous list")
                 
+                
+                print("\(#function) @Line: \(#line)")
                 for i in loadedProjects {
+                    
                     print("\(i.projectName)")
                 }
                 
@@ -103,6 +111,8 @@ class NetworkService: ObservableObject {
                 
                 
             }
+        } else {
+            print("Saving Error")
         }
         
     }
@@ -297,7 +307,9 @@ class NetworkService: ObservableObject {
         let cache = URLCache.shared
         
         guard let urlString = urlString else {
-            print("Error")
+            print("\(#function) @Line: \(#line)")
+            NotificationCenter.default.post(name: .invalidCustomNetworkRequest, object: nil, userInfo: nil)
+            print("Error urlString")
             return
         }
         
@@ -306,7 +318,15 @@ class NetworkService: ObservableObject {
             return
         }
         
-        let request = URLRequest(url: URL(string: urlString)!, cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData, timeoutInterval: 60.0)
+        guard let requestURL = URL(string: urlString) else {
+            print("\(#function) @Line: \(#line)")
+            print("Error requestURL")
+            NotificationCenter.default.post(name: .invalidCustomNetworkRequest, object: nil, userInfo: nil)
+            return
+        }
+        
+        
+        let request = URLRequest(url: requestURL, cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData, timeoutInterval: 60.0)
         
         
         print("Making Network Request for Custom Project.")
@@ -334,7 +354,8 @@ class NetworkService: ObservableObject {
                             print("\(i.projectName)")
                         }
                         //  self.pdemos.append(contentsOf: projects)
-                        self.saveCustomProjects(content: projects)
+                       // self.saveCustomProjects(content: projects)
+                        self.save(customProjects: projects)
                         
                     }
                     

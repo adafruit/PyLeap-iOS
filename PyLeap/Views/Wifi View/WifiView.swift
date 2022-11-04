@@ -40,16 +40,24 @@ struct WifiView: View {
     
     func scanNetworkWifi() {
         viewModel.wifiServiceManager.findService()
-
     }
     
-    
+    func printArray(array: [Any]) {
+        
+        for i in array {
+            print("\(i)")
+        }
+    }
     
     func checkForStoredIPAddress() {
         if userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName") == nil {
             print("storeResolvedAddress - not stored")
+           // showValidationPrompt()
         } else {
             hostName = userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName") as! String
+            viewModel.ipAddressStored = true
+            print("storeResolvedAddress - is stored")
+            viewModel.connectionStatus = .connected
         }
     }
     
@@ -69,17 +77,6 @@ struct WifiView: View {
     func showAlertMessage() {
         alertMessage(title: "IP address Not Found", exitTitle: "Ok") {
             showValidationPrompt()
-        }
-    }
-    
-    func initialIPStoreCheck() {
-        if userDefaults.object(forKey: kPrefix+".storedIP") == nil {
-            print("No IP address found.")
-            showValidationPrompt()
-        } else {
-            viewModel.connectionStatus = .connected
-            print("Stored: \(String(describing: userDefaults.object(forKey: kPrefix+".storedIP"))), @: \(kPrefix+".storedIP")")
-            
         }
     }
     
@@ -107,7 +104,7 @@ struct WifiView: View {
                     }
             }
 
-            if !viewModel.ipAddressStored {
+            if viewModel.ipAddressStored {
                 HStack(alignment: .center, content: {
                 
                     Button {
@@ -121,9 +118,11 @@ struct WifiView: View {
                     }
                     
                     Button {
-                        viewModel.read()
+                        viewModel.wifiTransferService.getRequestForFileCheck(read: "lib/") { success in
+                            printArray(array: success)
+                        }
                     } label: {
-                        Text("Read Boot")
+                        Text("List all files")
                             .foregroundColor(.white)
                             .background(.indigo)
                             .padding(5)
@@ -147,7 +146,6 @@ struct WifiView: View {
                             .padding(5)
                     }
 
-                    
                 })
                 .padding(.all, 0.0)
                 .frame(maxWidth: .infinity)
@@ -206,8 +204,7 @@ struct WifiView: View {
         }
         .onDisappear() {
             print("On Disappear")
-           // presentationMode.wrappedValue.dismiss()
-          
+        
             dismiss()
         }
         
@@ -218,39 +215,20 @@ struct WifiView: View {
             }
         })
         
-        
-        .onChange(of: viewModel.connectionStatus, perform: { newValue in
-            if newValue == .connected {
-            //    viewModel.read()
-            }
-        })
-        
+      
         .onChange(of: viewModel.wifiServiceManager.resolvedServices, perform: { newValue in
             print("Credential Check!")
             print(newValue)
-            
-            guard let isHostName = userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName") else {
-                print("No Host Name Found")
-                return
-            }
-            
-            guard let isIPAddress = userDefaults.object(forKey: kPrefix+".storedIP") else {
-                print("No Host Name Found")
-                return
-            }
-            
-            
-            
+
             if newValue.contains(where: { result in
-                result.hostName == userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName") as! String &&
-                result.ipAddress == userDefaults.object(forKey: kPrefix+".storedIP") as! String
+                result.hostName == userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName") as! String
             }) {
                 print("Matched")
-                
+
             } else {
                 print("Un-Matched")
             }
-            
+
         })
         
         .onChange(of: viewModel.isInvalidIP, perform: { newValue in
@@ -264,9 +242,8 @@ struct WifiView: View {
         
         
         .onAppear(){
-          //  NetworkService.shared.fetch()
-            initialIPStoreCheck()
             checkForStoredIPAddress()
+            viewModel.printStoredInfo()
             viewModel.read()
         }
     }

@@ -18,6 +18,9 @@ struct SettingsView: View {
     
     @EnvironmentObject var rootViewModel: RootViewModel
     @StateObject var viewModel = SettingsViewModel()
+    @ObservedObject var networkModel = NetworkService()
+    
+    @ObservedObject private var kGuardian = KeyboardGuardian(textFieldCount: 1)
     
     private let kPrefix = Bundle.main.bundleIdentifier!
     let userDefaults = UserDefaults.standard
@@ -48,7 +51,7 @@ struct SettingsView: View {
     
     
     var body: some View {
-    
+        
         VStack {
             
             Form {
@@ -99,33 +102,28 @@ struct SettingsView: View {
                     }
                 }
                 
-                Section {
-                    Toggle(isOn: .constant(false)) {
-                        Text("Dark Mode")
-                    }
-                }
-                
-            header: {
-                Text("Display")
-            }
                 
                 if viewModel.connectedToDevice {
                     
-                    Section {
-                        Text("Enter project URL")
-                        TextField("https://", text: $pythonFileName)
-                            .keyboardType(.URL)
-                            .textContentType(.URL)
-                            .onSubmit {
-                             //   viewModel.networkModel.fetchThirdParyProject(urlString: pythonFileName)
-                                print(pythonFileName)
-                                pythonFileName = ""
-                            }
-                        
-                    } header: {
+                        Section {
+                            Text("Enter project URL")
+                            TextField("https://", text: $pythonFileName)
+                                .background(GeometryGetter(rect: $kGuardian.rects[0]))
+                                .keyboardType(.URL)
+                                .textContentType(.URL)
+                                .onSubmit {
+                                    networkModel.fetchThirdParyProject(urlString: pythonFileName)
+                                    print(pythonFileName)
+                                    pythonFileName = ""
+                                }
+                            
+                        }
+                    header: {
                         Text("Add Project")
                     }
                     .listRowSeparator(.hidden)
+                    
+                    
                     
                     
                     Section {
@@ -175,6 +173,11 @@ struct SettingsView: View {
                 .font(.system(size: 16, weight: .semibold))
                 
             }
+            
+            .offset(y: kGuardian.slide).animation(.easeInOut(duration: 1.0))
+            .onAppear { self.kGuardian.addObserver() }
+            .onDisappear { self.kGuardian.removeObserver() }
+            
             .onChange(of: viewModel.invalidURL, perform: { newValue in
                 showInvalidURLEntryAlert()
                 viewModel.invalidURL = false
@@ -200,7 +203,7 @@ struct SettingsView: View {
                 }
             }
         }
-
+        
         .background(Color(UIColor.systemGroupedBackground))
         .safeAreaInset(edge: .top) {
             VStack {
@@ -210,45 +213,45 @@ struct SettingsView: View {
                     } label: {
                         Text("Back")
                     }
-    
+                    
                     .padding(.leading,20)
                     Spacer()
                 }
                 
                 .frame(height: UIScreen.main.bounds.height / 19)
                 .background(Color(.systemGroupedBackground))
-    
-    HStack {
-        Text("Settings")
-            .font(.largeTitle)
-            .bold()
-        
-            .padding(.leading,20)
-        Spacer()
-    }
-    .background(Color(.systemGroupedBackground))
+                
+                HStack {
+                    Text("Settings")
+                        .font(.largeTitle)
+                        .bold()
+                    
+                        .padding(.leading,20)
+                    Spacer()
+                }
+                .background(Color(.systemGroupedBackground))
             }
             .padding(.top, 25)
             
         }
-
-//        .safeAreaInset(edge: .top) {
-//            HStack {
-//                Button {
-//                    rootViewModel.goToWifiView()
-//                } label: {
-//                    Text("Back")
-//                }
-//
-//                .padding(.all,20)
-//                Spacer()
-//            }
-//           // .background(Color(UIColor.systemGroupedBackground))
-//
-//
-//
-//
-//        }
+        
+        //        .safeAreaInset(edge: .top) {
+        //            HStack {
+        //                Button {
+        //                    rootViewModel.goToWifiView()
+        //                } label: {
+        //                    Text("Back")
+        //                }
+        //
+        //                .padding(.all,20)
+        //                Spacer()
+        //            }
+        //           // .background(Color(UIColor.systemGroupedBackground))
+        //
+        //
+        //
+        //
+        //        }
     }
 }
 
@@ -316,4 +319,10 @@ extension View {
     }
     
     
+}
+
+struct SettingsView_Previews: PreviewProvider {
+    static var previews: some View {
+        SettingsView()
+    }
 }

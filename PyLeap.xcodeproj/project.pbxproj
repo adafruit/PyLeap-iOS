@@ -23,6 +23,7 @@
 		D52F7E742672F4C400911D43 /* PyLeapApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52F7E732672F4C400911D43 /* PyLeapApp.swift */; };
 		D52F7E782672F4C500911D43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D52F7E772672F4C500911D43 /* Assets.xcassets */; };
 		D52F7E7B2672F4C500911D43 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D52F7E7A2672F4C500911D43 /* Preview Assets.xcassets */; };
+		D53495A02910639300640692 /* KeyboardGuardian.swift in Sources */ = {isa = PBXBuildFile; fileRef = D534959F2910639300640692 /* KeyboardGuardian.swift */; };
 		D534F3FC280B59090053699C /* ExampleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D534F3FB280B59090053699C /* ExampleView.swift */; };
 		D535E21628E1FA910096E548 /* ScrollRefreshableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D535E21528E1FA910096E548 /* ScrollRefreshableView.swift */; };
 		D544A1D2281B9BB70038D483 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = D544A1D1281B9BB70038D483 /* Buttons.swift */; };
@@ -119,6 +120,7 @@
 		D52F7E772672F4C500911D43 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D52F7E7A2672F4C500911D43 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D52F7E7C2672F4C500911D43 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D534959F2910639300640692 /* KeyboardGuardian.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardGuardian.swift; sourceTree = "<group>"; };
 		D534F3FB280B59090053699C /* ExampleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleView.swift; sourceTree = "<group>"; };
 		D535E21528E1FA910096E548 /* ScrollRefreshableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollRefreshableView.swift; sourceTree = "<group>"; };
 		D544A1D1281B9BB70038D483 /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
@@ -342,6 +344,7 @@
 			isa = PBXGroup;
 			children = (
 				D567E2DE28C8D40C0009F768 /* SettingsView.swift */,
+				D534959F2910639300640692 /* KeyboardGuardian.swift */,
 				D5DD39AA28D234C3000FAEB8 /* SettingsViewModel.swift */,
 			);
 			path = SettingsView;
@@ -662,6 +665,7 @@
 				D5DD39A728D11817000FAEB8 /* WifiFileTransfer.swift in Sources */,
 				D5AA27FA28CA8D46001CCE25 /* WifiStatusHeaderBarView.swift in Sources */,
 				D5F53CEB2694B524007634C2 /* Blinka Animation.swift in Sources */,
+				D53495A02910639300640692 /* KeyboardGuardian.swift in Sources */,
 				D5597BF826A9E14B00DF17C0 /* AppDelegate.swift in Sources */,
 				D56F640E270242CA000E5975 /* String+DeletingPrefix.swift in Sources */,
 				D57858F328333CBC008E8BE4 /* TroubleshootView.swift in Sources */,
@@ -835,7 +839,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
@@ -865,7 +869,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;

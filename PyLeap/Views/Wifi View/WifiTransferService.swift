@@ -76,30 +76,23 @@ class WifiTransferService: ObservableObject {
         print("Print curl:")
         print(request.cURL(pretty: true))
         
-        let task = urlSession.dataTask(
-            with: request,
-            completionHandler: { data, response, error in
-                // Validate response and call handler
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+          
+            if let error = error  {
+                print("File write error")
                 
-                if let error = error  {
-                    print("File write error")
-                    
-                    handler(.failure(error))
-                    
-                }
-                
-                if let data = data {
-                    print("File write success!")
-                    
-                    DispatchQueue.main.async {
-                        self.counter += 1
-                    }
-                    
-                    handler(.success(data))
-                }
+                handler(.failure(error))
                 
             }
-        )
+            
+            if let data = data {
+                print("File write success!")
+                handler(.success(data))
+            }
+            
+            // print(String(data: data, encoding: .utf8)!)
+            
+        }
         
         task.resume()
         
@@ -214,6 +207,73 @@ class WifiTransferService: ObservableObject {
         }
         task.resume()
     }
+    
+    typealias CompletionHandlerForCheck = (_ success: [WebDirectoryModel]) -> Void
+
+    
+    func getRequestForFileCheck(read: String, completionHandler: @escaping CompletionHandlerForCheck){
+        
+        print("Incoming Read String: \(read)")
+        var semaphore = DispatchSemaphore (value: 0)
+        
+        let username = ""
+        let password = "passw0rd"
+        let loginString = "\(username):\(password)"
+        
+        var outgoingString = String()
+        
+        let loginData = loginString.data(using: String.Encoding.utf8)
+           
+        
+        let base64LoginString = loginData!.base64EncodedString()
+        
+        print("Host Name: \(hostName)")
+        
+        var request = URLRequest(url: URL(string: "http://\(hostName).local/fs/\(read)")!,timeoutInterval: Double.infinity)
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.addValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
+        request.httpMethod = "GET"
+        
+        print("GET Request: \(String(describing: request.url?.absoluteURL))\n")
+        
+        print("Print curl:")
+        print(request.cURL(pretty: true))
+        
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data else {
+                print(String(describing: "Error Found: \(error)"))
+                return
+            }
+            // print(String(data: data, encoding: .utf8)!)
+            
+            do {
+                let wifiIncomingData = try JSONDecoder().decode([WebDirectoryModel].self, from: data)
+                
+                DispatchQueue.main.async {
+                    self.webDirectoryInfo = wifiIncomingData
+                    completionHandler(self.webDirectoryInfo)
+                    print("On completion \(self.webDirectoryInfo)")
+                }
+            } catch {
+                print(error.localizedDescription)
+            }
+            
+            if let str = String(data: data, encoding: .utf8) {
+                print(str)
+                outgoingString = str
+                print("\(#function) @Line: \(#line)")
+                
+            } else {
+                print("\(#function) @Line: \(#line)")
+                print("Error")
+            }
+            
+        }
+        task.resume()
+    }
+    
+    
     //  func putDirectory(directoryPath: String, completion: @escaping (Result<Data?, Error>) -> Void) {
     
     func putRequest(fileName: String, fileContent: Data, completion: @escaping (Result<Data?, Error>) -> Void) {

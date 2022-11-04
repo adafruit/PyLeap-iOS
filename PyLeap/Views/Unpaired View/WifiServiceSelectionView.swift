@@ -17,6 +17,7 @@ struct WifiServiceSelectionView: View {
     private let kPrefix = Bundle.main.bundleIdentifier!
     
     func storeResolvedAddress(service: ResolvedService) {
+        print("Storing resolved address")
         userDefaults.set(service.ipAddress, forKey: kPrefix+".storeResolvedAddress.ipAddress" )
         userDefaults.set(service.hostName, forKey: kPrefix+".storeResolvedAddress.hostName" )
         userDefaults.set(service.device, forKey: kPrefix+".storeResolvedAddress.device" )

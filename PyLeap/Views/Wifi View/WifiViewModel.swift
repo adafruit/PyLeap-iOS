@@ -78,7 +78,7 @@ class WifiViewModel: ObservableObject {
     
     func read() {
         // This method can't be used until the device has permission to communicate.
-
+        print("READING CP Vers.")
         wifiTransferService.getRequest(read: "boot_out.txt") { result in
             
             if result.contains("CircuitPython 7") {
@@ -124,9 +124,7 @@ class WifiViewModel: ObservableObject {
             ipAddressStored = true
             hostName = userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName") as! String
         } else {
-            
-            print(userDefaults.object(forKey: kPrefix+".storedIP"))
-            ipAddressStored = false
+                ipAddressStored = false
         }
         
     }
@@ -150,14 +148,9 @@ class WifiViewModel: ObservableObject {
     
         // @Published var connectionStatus: ConnectionStatus = AppEnvironment.isRunningTests ? .connected : .noConnection
     
-    func printIPStorageAtLocation() {
-        print("Stored: \(String(describing: userDefaults.object(forKey: kPrefix+".storedIP"))), @: \(kPrefix+".storedIP")")
-    }
+
     
-    func storeIPAddress(ipAddress: String) {
-        userDefaults.set(ipAddress, forKey: kPrefix+".storedIP" )
-        printIPStorageAtLocation()
-    }
+    
  
     func printStoredInfo() {
         print("======Stored UserDefaults======")
@@ -182,7 +175,6 @@ class WifiViewModel: ObservableObject {
 
      func clearKnownIPAddress() {
         userDefaults.set(nil, forKey:  kPrefix+".storedIP")
-        printIPStorageAtLocation()
          
      }
     
@@ -199,7 +191,6 @@ class WifiViewModel: ObservableObject {
             // To store in UserDefaults
 
             storeResolvedAddress(service: resolvedService[0])
-            storeIPAddress(ipAddress: ip)
             connectionStatus = .connected
             ipInputValidation = true
         } else {
@@ -209,24 +200,14 @@ class WifiViewModel: ObservableObject {
         
     }
     
-    func checkServices() {
-        if wifiServiceManager.resolvedServices.isEmpty {
-            
-        } else {
-            
-        }
-        
-        
-    }
+
     
     
     func checkStoredIP() {
-        if userDefaults.object(forKey: kPrefix+".storedIP") == nil {
+        if userDefaults.object(forKey: kPrefix+".storeResolvedAddress.ipAddress") == nil {
             print("Nothing stored.")
         } else {
             NotificationCenter.default.post(name: .invalidIPNotif, object: nil, userInfo: nil)
-
-            print("Stored: \(String(describing: userDefaults.object(forKey: kPrefix+".storedIP"))), @: \(kPrefix+".storedIP")")
         }
     }
 
