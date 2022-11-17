@@ -47,9 +47,6 @@ struct SettingsView: View {
         }
     }
     
-    
-    
-    
     var body: some View {
         
         VStack {
@@ -95,7 +92,7 @@ struct SettingsView: View {
                 if viewModel.connectedToDevice {
                     Section() {
                         Button {
-                            showDisconnectionPrompt()
+                            rootViewModel.goToWiFiSelection()
                         } label: {
                             Text("Disconnect")
                         }
@@ -234,24 +231,7 @@ struct SettingsView: View {
             .padding(.top, 25)
             
         }
-        
-        //        .safeAreaInset(edge: .top) {
-        //            HStack {
-        //                Button {
-        //                    rootViewModel.goToWifiView()
-        //                } label: {
-        //                    Text("Back")
-        //                }
-        //
-        //                .padding(.all,20)
-        //                Spacer()
-        //            }
-        //           // .background(Color(UIColor.systemGroupedBackground))
-        //
-        //
-        //
-        //
-        //        }
+
     }
 }
 

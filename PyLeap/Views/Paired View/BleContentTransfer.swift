@@ -594,35 +594,6 @@ class BleContentTransfer: ObservableObject {
     }
     
     
-    func validateDirectory(directoryArray: [[String]], fileArray: [URL]) {
-        print(#function)
-        // Use Recursion to go through each directory
-        if self.returnedArray.isEmpty {
-            print("No directories left in queue")
-            print("Start file transfer...")
-            // self.transferFiles(files: fileArray)
-            
-            //   makeFile(files: fileArray)
-            filePathMod(listOf: fileArray)
-            
-            
-        } else {
-            
-            guard let firstDirectory = directoryArray.first else {
-                print("Failed :\(#function) @Line: \(#line)")
-                return
-            }
-            print("Array count \(returnedArray.count)")
-            // self.makeDirectory(arrayOf: returnedArray, files: fileArray)
-            
-        }
-        
-    }
-    
-    
-    
-    
-    
     func newTransfer(listOf urls: [URL]) {
         print("\(#function) @Line: \(#line)")
         var copiedFiles = urls

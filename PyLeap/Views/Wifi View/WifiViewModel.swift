@@ -53,8 +53,6 @@ class WifiViewModel: ObservableObject {
     
     var projectDirectories: [URL] = []
     
-    var returnedArray = [[String]]()
-
     var ipAddressStored = false
     
     init() {

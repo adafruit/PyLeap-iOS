@@ -20,7 +20,8 @@ class WifiFileTransfer: ObservableObject {
     
     @Published var projectDownloaded = false
     @Published var failedProjectLaunch = false
-    
+    @Published var transferError = false
+
     @Published var downloadState: DownloadState = .idle
     
     var manager = FileManager.default
@@ -28,7 +29,6 @@ class WifiFileTransfer: ObservableObject {
     var projectDirectories: [URL] = []
     var projectFiles: [URL] = []
     
-    var returnedArray = [[String]]()
     
     @Published var counter = 0
     @Published var numOfFiles = 0
@@ -43,6 +43,13 @@ class WifiFileTransfer: ObservableObject {
         }
     }
     
+    func restFileCounter() {
+        DispatchQueue.main.async {
+            self.counter = 0
+            self.numOfFiles = 0
+        }
+        
+    }
     
     func appendDirectories(_ url: URL) {
         projectDirectories.append(url)
@@ -65,7 +72,8 @@ class WifiFileTransfer: ObservableObject {
     
     
     private weak var wifiDownloadComplete: NSObjectProtocol?
-    
+    private weak var didEncounterTransferError: NSObjectProtocol?
+    private weak var downloadErrorDidOccur: NSObjectProtocol?
     
     private func registerNotification(enabled: Bool) {
         print("\(#function) @Line: \(#line)")
@@ -76,6 +84,10 @@ class WifiFileTransfer: ObservableObject {
             //    public static let wifiDownloadComplete = Notification.Name(kPrefix+".wifiDownloadComplete")
             
             NotificationCenter.default.addObserver(self, selector: #selector(zipSuccess(_:)), name: .wifiDownloadComplete,object: nil)
+            
+            NotificationCenter.default.addObserver(self, selector: #selector(displayErrorMessage(_:)), name: .didEncounterTransferError,object: nil)
+            
+            NotificationCenter.default.addObserver(self, selector: #selector(projectDownloadDidFail(_:)), name: .downloadErrorDidOccur,object: nil)
             
             
         } else {
@@ -92,6 +104,27 @@ class WifiFileTransfer: ObservableObject {
             }
         }
     }
+    
+    
+    @objc func displayErrorMessage(_ notification: Notification) {
+        print("displayErrorMessage occurred.")
+     
+        
+    }
+    
+    @objc func projectDownloadDidFail(_ notification: Notification) {
+        DispatchQueue.main.async {
+            self.transferError = true
+            self.downloadState = .failed
+        }
+                
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            self.downloadState = .idle
+            self.restFileCounter()
+        }
+    }
+    
+    
     
     
     func getProjectForSubClass(nameOf project: String) {
@@ -284,7 +317,14 @@ class WifiFileTransfer: ObservableObject {
             
             DispatchQueue.main.async {
                 self.numOfFiles = tempArray.count
+
             }
+                
+            
+            
+            print("tempArry set numOfFiles to : \(self.numOfFiles)")
+            
+            
             makeFile(files: tempArray)
             
         } else {
@@ -388,7 +428,7 @@ class WifiFileTransfer: ObservableObject {
     
     
     
-    func makeFileString(url: URL)-> String {
+    func makeFileString(url: URL) -> String {
         var indexOfCP = 0
         var tempPathComponents = url.pathComponents
         print("Incoming URL for makeFileString: \(url.absoluteString)")
@@ -417,14 +457,16 @@ class WifiFileTransfer: ObservableObject {
     }
     
     func completedTransfer() {
-        
+        print("Is main queue: \(Thread.isMainThread)")
         DispatchQueue.main.async {
+            print("\(#function) @Line: \(#line)")
             self.downloadState = .complete
+            self.counter = 0
             self.numOfFiles = 0
-            //  self.contentCommands.counter = 0
-            
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+            print("\(#function) @Line: \(#line)")
             self.downloadState = .idle
             
         }
@@ -469,27 +511,18 @@ class WifiFileTransfer: ObservableObject {
         var copiedArray = files
         
         if copiedArray.isEmpty {
+            completedTransfer()
             print("Transfer Complete")
             print("Copied Array: \(copiedArray)")
             print("Files Array: \(files)")
             print("Counter: \(counter)")
-            print("ProjectFiles:")
-            printArray(array: projectFiles)
-            print("ProjectDirectories:")
-            printArray(array: projectDirectories)
+            print("\(#function) @Line: \(#line)")
             
-            DispatchQueue.main.async {
-                self.counter = 0
-            }
+            print("Status: \(downloadState)")
             
-            completedTransfer()
-            
+
         } else {
-            
-            //            DispatchQueue.main.async {
-            //                self.counter += 1
-            //            }
-            
+
             guard let data = try? Data(contentsOf: URL(string: copiedArray.first!.absoluteString)!) else {
                 print("File not found")
                 return
@@ -529,10 +562,6 @@ class WifiFileTransfer: ObservableObject {
                 
                 wifiTransferService.getRequestForFileCheck(read: checkForExistingFilesOnBoard(url: copiedArray.first!.absoluteURL)) { success in
                     
-                    for i in success {
-                        print(i.name)
-                    }
-                    
                     if success.contains(where: { name in name.name == copiedArray.first?.lastPathComponent }) {
                         print("Exists in the array")
                         
@@ -550,8 +579,7 @@ class WifiFileTransfer: ObservableObject {
                                 
                             case .success(_):
                                 print("Successful Write for: \(copiedArray.first!.lastPathComponent)\n")
-                                print("Current Copied Array: \(copiedArray)\n")
-                                print("Removing: \(copiedArray.first!.lastPathComponent)\n")
+
                                 DispatchQueue.main.async {
                                     self.counter += 1
                                     print("Current counter: \(self.counter)")

@@ -79,7 +79,7 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
             
             
         } catch {
-            print("Zip ERROR")
+            print("newZip - Zip ERROR")
             print("Error: \(error)")
             print("Location 2: \(location)")
             self.state = .failed
@@ -129,10 +129,16 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
                         NotificationCenter.default.post(name: .wifiDownloadComplete, object: nil, userInfo: projectResponse)
                         
                     } catch {
-                        print("Zip ERROR")
+                        print("unzipProjectFile - Zip ERROR")
                         print("Error: \(error)")
 
-                        self.state = .failed
+                        NotificationCenter.default.post(name: .downloadErrorDidOccur, object: nil, userInfo: nil)
+                                   return
+                        
+                        
+                        DispatchQueue.main.async {
+                            self.state = .failed
+                        }
 
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                             self.state = .idle

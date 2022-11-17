@@ -11,6 +11,10 @@
 		D505B99E2756894300386E9F /* ViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D505B99D2756894300386E9F /* ViewModifier.swift */; };
 		D517F68126C5771D002996E8 /* FillerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D517F68026C5771D002996E8 /* FillerView.swift */; };
 		D5199A2F28DD16F100ACC34C /* BleContentTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5199A2E28DD16F100ACC34C /* BleContentTransfer.swift */; };
+		D5269C00291960A300C0CE4B /* WifiSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5269BFF291960A300C0CE4B /* WifiSelection.swift */; };
+		D5269C02291997DE00C0CE4B /* WifiServiceCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5269C01291997DE00C0CE4B /* WifiServiceCellView.swift */; };
+		D5269C042919985400C0CE4B /* WifiServiceCellSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5269C032919985400C0CE4B /* WifiServiceCellSubView.swift */; };
+		D5269C08291AB75800C0CE4B /* WifiPairingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5269C07291AB75800C0CE4B /* WifiPairingView.swift */; };
 		D52A92692906E1A900973B6B /* WifiSearchListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52A92682906E1A900973B6B /* WifiSearchListRowView.swift */; };
 		D52A926D29071DF400973B6B /* SelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52A926C29071DF400973B6B /* SelectionView.swift */; };
 		D52A926F29078E0A00973B6B /* WifiServiceSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52A926E29078E0A00973B6B /* WifiServiceSelectionView.swift */; };
@@ -110,6 +114,10 @@
 		D505B99D2756894300386E9F /* ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifier.swift; sourceTree = "<group>"; };
 		D517F68026C5771D002996E8 /* FillerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FillerView.swift; sourceTree = "<group>"; };
 		D5199A2E28DD16F100ACC34C /* BleContentTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleContentTransfer.swift; sourceTree = "<group>"; };
+		D5269BFF291960A300C0CE4B /* WifiSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WifiSelection.swift; path = "PyLeap/Views/Unpaired View/WifiSelection.swift"; sourceTree = SOURCE_ROOT; };
+		D5269C01291997DE00C0CE4B /* WifiServiceCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WifiServiceCellView.swift; path = ../../../../../../Desktop/WifiServiceCellView.swift; sourceTree = "<group>"; };
+		D5269C032919985400C0CE4B /* WifiServiceCellSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WifiServiceCellSubView.swift; path = ../../../../../../Desktop/WifiServiceCellSubView.swift; sourceTree = "<group>"; };
+		D5269C07291AB75800C0CE4B /* WifiPairingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiPairingView.swift; sourceTree = "<group>"; };
 		D52A92682906E1A900973B6B /* WifiSearchListRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiSearchListRowView.swift; sourceTree = "<group>"; };
 		D52A926C29071DF400973B6B /* SelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionView.swift; sourceTree = "<group>"; };
 		D52A926E29078E0A00973B6B /* WifiServiceSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiServiceSelectionView.swift; sourceTree = "<group>"; };
@@ -171,6 +179,7 @@
 		D59DFDC1268CFA36001737F6 /* OnboardingStepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStepView.swift; sourceTree = "<group>"; };
 		D59DFDC3268CFAB4001737F6 /* OnboardingDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingDataModel.swift; sourceTree = "<group>"; };
 		D59E31A9281B8DD300D24211 /* DownloadState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadState.swift; sourceTree = "<group>"; };
+		D5A3D4ED292575F000ECCEC9 /* ReadexPro-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ReadexPro-SemiBold.ttf"; sourceTree = "<group>"; };
 		D5AA27F728CA785B001CCE25 /* CircuitPythonType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircuitPythonType.swift; sourceTree = "<group>"; };
 		D5AA27F928CA8D46001CCE25 /* WifiStatusHeaderBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiStatusHeaderBarView.swift; sourceTree = "<group>"; };
 		D5BA1F7928B52A490012FC62 /* WifiListDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiListDetailView.swift; sourceTree = "<group>"; };
@@ -354,7 +363,12 @@
 			isa = PBXGroup;
 			children = (
 				D58E1C8728A2B10B00AB683E /* WifiView.swift */,
+				D5269C07291AB75800C0CE4B /* WifiPairingView.swift */,
+				D52A926E29078E0A00973B6B /* WifiServiceSelectionView.swift */,
+				D5269C01291997DE00C0CE4B /* WifiServiceCellView.swift */,
+				D5269C032919985400C0CE4B /* WifiServiceCellSubView.swift */,
 				D58E1C8928A2B15E00AB683E /* WifiViewModel.swift */,
+				D5269BFF291960A300C0CE4B /* WifiSelection.swift */,
 				D5BA1F7E28B66F280012FC62 /* WifiServiceManager.swift */,
 				D5DD39A628D11817000FAEB8 /* WifiFileTransfer.swift */,
 				D5DD39A828D11962000FAEB8 /* WifiTransferService.swift */,
@@ -438,6 +452,7 @@
 				D5C474C627E39FC8002DD160 /* ReadexPro-Medium.ttf */,
 				D5C474C727E39FC8002DD160 /* ReadexPro-Regular.ttf */,
 				D5C474C527E39FC8002DD160 /* ReadexPro-Light.ttf */,
+				D5A3D4ED292575F000ECCEC9 /* ReadexPro-SemiBold.ttf */,
 				D5C474C227E39FAD002DD160 /* ReadexPro-Bold.ttf */,
 			);
 			path = ReadexPro;
@@ -490,7 +505,6 @@
 			children = (
 				D5640215271B54BF00AE1519 /* MainSelectionView.swift */,
 				D52A926C29071DF400973B6B /* SelectionView.swift */,
-				D52A926E29078E0A00973B6B /* WifiServiceSelectionView.swift */,
 				D5482F4828E63DB7000B0C8E /* MainSelectionViewModel.swift */,
 			);
 			path = "Unpaired View";
@@ -643,6 +657,7 @@
 				D56F640C270242CA000E5975 /* UIColor+LightAndDark.swift in Sources */,
 				D5F53CED2694B7A9007634C2 /* OnboardingBackgroundView.swift in Sources */,
 				D5D1F4B227ECFF760040E2BF /* ProjectsModel.swift in Sources */,
+				D5269C02291997DE00C0CE4B /* WifiServiceCellView.swift in Sources */,
 				D5BA1F7A28B52A490012FC62 /* WifiListDetailView.swift in Sources */,
 				D52F7E742672F4C400911D43 /* PyLeapApp.swift in Sources */,
 				D567E2B628B81B730009F768 /* Queue.swift in Sources */,
@@ -660,11 +675,13 @@
 				D52A92692906E1A900973B6B /* WifiSearchListRowView.swift in Sources */,
 				D505B99E2756894300386E9F /* ViewModifier.swift in Sources */,
 				D5CC6BB628173B91008629FB /* SubHeaderView.swift in Sources */,
+				D5269C08291AB75800C0CE4B /* WifiPairingView.swift in Sources */,
 				D544A24B281F92840038D483 /* ImageCaching.swift in Sources */,
 				D517F68126C5771D002996E8 /* FillerView.swift in Sources */,
 				D5DD39A728D11817000FAEB8 /* WifiFileTransfer.swift in Sources */,
 				D5AA27FA28CA8D46001CCE25 /* WifiStatusHeaderBarView.swift in Sources */,
 				D5F53CEB2694B524007634C2 /* Blinka Animation.swift in Sources */,
+				D5269C00291960A300C0CE4B /* WifiSelection.swift in Sources */,
 				D53495A02910639300640692 /* KeyboardGuardian.swift in Sources */,
 				D5597BF826A9E14B00DF17C0 /* AppDelegate.swift in Sources */,
 				D56F640E270242CA000E5975 /* String+DeletingPrefix.swift in Sources */,
@@ -708,6 +725,7 @@
 				D5199A2F28DD16F100ACC34C /* BleContentTransfer.swift in Sources */,
 				D535E21628E1FA910096E548 /* ScrollRefreshableView.swift in Sources */,
 				D5640216271B54BF00AE1519 /* MainSelectionView.swift in Sources */,
+				D5269C042919985400C0CE4B /* WifiServiceCellSubView.swift in Sources */,
 				D505B99C2755323C00386E9F /* NetworkMonitor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -839,7 +857,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
@@ -869,7 +887,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;

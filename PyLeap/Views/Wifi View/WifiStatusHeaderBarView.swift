@@ -16,16 +16,18 @@ struct WifiStatusConnectedView: View {
     @Binding var hostName: String
 
     var body: some View {
-        HStack(alignment: .center, spacing: 8, content: {
+        HStack(alignment: .center, spacing: 0, content: {
  
-            Text("Connected to \(hostName)")
-                .font(Font.custom("ReadexPro-Regular", size: 14))
-            
             Image(systemName: "wifi")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 20, height: 20)
                 .padding(5)
+            
+            Text("Connected to \(hostName)")
+                .font(Font.custom("ReadexPro-Regular", size: 14))
+            
+
                 
         })
         .padding(.all, 0.0)
@@ -41,7 +43,7 @@ struct WifiStatusNoConnectionView: View {
 
         HStack(alignment: .center, spacing: 8, content: {
             Text("No Device Detected")
-                .font(Font.custom("ReadexPro-Regular", size: 14))
+                .font(Font.custom("ReadexPro-SemiBold", size: 14))
         
         })
         .padding(.all, 0.0)

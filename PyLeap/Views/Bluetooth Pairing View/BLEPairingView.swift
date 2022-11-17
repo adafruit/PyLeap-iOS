@@ -60,7 +60,7 @@ struct BLEPairingView: View {
                     //.padding(.top, 100)
                     .padding(.horizontal, 20)
                 
-                BlinkaAnimationView()
+                BlinkaAnimationView(height: 250, width: 250)
                     .rotationEffect(Angle(degrees: self.isAnimating ? 360 : 0.0))
                 
                     .onAppear(){

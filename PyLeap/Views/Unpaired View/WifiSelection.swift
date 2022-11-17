@@ -1,20 +1,23 @@
 //
-//  WifiServiceSelectionView.swift
+//  WifiSelection.swift
 //  PyLeap
 //
-//  Created by Trevor Beaton on 10/24/22.
+//  Created by Trevor Beaton on 11/7/22.
 //
 
 import SwiftUI
 
-struct WifiServiceSelectionView: View {
-    
+struct WifiSelection: View {
     @ObservedObject var wifiServiceViewModel = WifiServiceManager()
     @EnvironmentObject var rootViewModel: RootViewModel
     @StateObject var viewModel = WifiViewModel()
-    
+
     let userDefaults = UserDefaults.standard
     private let kPrefix = Bundle.main.bundleIdentifier!
+
+    func toggleViewModelIP() {
+        viewModel.isInvalidIP.toggle()
+    }
     
     func storeResolvedAddress(service: ResolvedService) {
         print("Storing resolved address")
@@ -28,6 +31,7 @@ struct WifiServiceSelectionView: View {
         print(userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName"))
         print(userDefaults.object(forKey: kPrefix+".storeResolvedAddress.device"))
     }
+
     
     func showConfirmationPrompt(service: ResolvedService, hostName: String) {
         comfirmationAlertMessage(title: "Would you like to connect to \(hostName)?", exitTitle: "Cancel", primaryTitle: "Connect") {
@@ -58,16 +62,11 @@ struct WifiServiceSelectionView: View {
         }
     }
     
-    func toggleViewModelIP() {
-        viewModel.isInvalidIP.toggle()
-    }
-    
     var body: some View {
         
         VStack {
             
             HStack {
-                
                 Button {
                     rootViewModel.goToSelection()
                     
@@ -79,59 +78,89 @@ struct WifiServiceSelectionView: View {
                         .foregroundColor(.black)
                 }
                 .padding()
-                
+                                
                 Spacer()
-                
-                //                Button {
-                //                    wifiServiceViewModel.findService()
-                //                } label: {
-                //                    Image(systemName: "arrow.clockwise")
-                //                        .resizable()
-                //                        .scaledToFit()
-                //                        .frame(width: 30, height: 30, alignment: .center)
-                //
-                //                        .foregroundColor(.black)
-                //                }
-                //                .padding()
-                
             }
             .padding(.top, 15)
+           // .border(.indigo, width: 2)
             
+            Image("pyleapLogo")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .padding(.top, 100)
+                .padding(.horizontal, 60)
             
-            Text("Scanning...")
-                .font(.largeTitle)
+            Text("How do you want to connect to your WiFi enabled device?")
+                .font(Font.custom("ReadexPro-Regular", size: 36))
+                .minimumScaleFactor(0.01)
+                .multilineTextAlignment(.center)
+                .padding(.top, 100)
+                .padding(.horizontal, 30)
             
-            Text("SELECT PERIPHERAL")
-                .font(.subheadline)
+            Spacer()
             
-            Button {
-                showValidationPrompt()
-            } label: {
-                Text("Enter IP address here...")
-                    .font(Font.custom("ReadexPro-Regular", size: 16))
-                    .foregroundColor(.black)
+            VStack {
                 
+                Button {
+                    rootViewModel.goToWiFiServiceSelection()
+                } label: {
+                    Text("Scan for a Device")
+                        .font(Font.custom("ReadexPro-Regular", size: 25))
+                        .foregroundColor(Color.white)
+                        .frame(width: 270, height: 50, alignment: .center)
+                        .background(Color("pyleap_pink"))
+                        .clipShape(Capsule())
+                        .padding(5)
+                }
+                
+                
+                
+                Button {
+                    showValidationPrompt()
+                } label: {
+                    Text("Manually Connect")
+                        .font(Font.custom("ReadexPro-Regular", size: 25))
+                        .foregroundColor(Color.white)
+                    
+                        .frame(width: 270, height: 50, alignment: .center)
+                        .background(Color("pyleap_purple"))
+                        .clipShape(Capsule())
+                        .padding(5)
+                }
+                
+                Link("Learn More", destination: URL(string: "https://learn.adafruit.com/pyleap-app")!)
+                    .font(Font.custom("ReadexPro-Regular", size: 25))
+                    .foregroundColor(Color.white)
+                   .minimumScaleFactor(0.1)
+                    .frame(width: 270, height: 50, alignment: .center)
+                    .background(Color.gray)
+                    .clipShape(Capsule())
                     .padding(5)
+                
+                
+                
+                
+                Button {
+                    rootViewModel.goTobluetoothPairing()
+                } label: {
+                    Text("Reconnect to a device")
+                        .font(Font.custom("ReadexPro-Regular", size: 25))
+                        .frame(width: 270, height: 50, alignment: .center)
+                        .foregroundColor(.blue)
+                }
+
+                
+                
             }
             
-            List($wifiServiceViewModel.resolvedServices) { $service in
-                WifiRowView(wifiService: service)
-                    .onTapGesture {
-                        // print(service.hostName)
-                        // Save Cred to User Defaults
-                        
-                        showConfirmationPrompt(service: service, hostName: service.hostName)
-                        
-                    }
-            }
-            .listStyle(PlainListStyle())
+            Spacer()
         }
         
         .onChange(of: viewModel.ipInputValidation, perform: { newValue in
             if newValue {
                 rootViewModel.goToWifiView()
                 viewModel.ipInputValidation.toggle()
-            } 
+            }
             
         })
         
@@ -144,10 +173,12 @@ struct WifiServiceSelectionView: View {
             }
             
         })
+        
     }
 }
-struct WifiServiceSelectionView_Previews: PreviewProvider {
+
+struct WifiSelection_Previews: PreviewProvider {
     static var previews: some View {
-        WifiServiceSelectionView()
+        WifiSelection()
     }
 }

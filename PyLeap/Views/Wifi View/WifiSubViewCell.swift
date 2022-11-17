@@ -34,6 +34,14 @@ struct WifiSubViewCell: View {
     @State var offlineWithoutProject = false
     
     
+    func showTransferErrorMessage() {
+        alertMessage(title: """
+Download Error
+Unable to download project
+""", exitTitle: "Retry") {
+            wifiFileTransfer.transferError = false
+        }
+    }
     
     var body: some View {
         
@@ -43,18 +51,18 @@ struct WifiSubViewCell: View {
                 
                 if viewModel.projectDownloaded {
                     
-                    HStack {
-                        Spacer()
-                        
-                        Text("Downloaded")
-                            .foregroundColor(.green)
-                            .padding(.trailing, -15)
-                        Circle()
-                            .fill(.green)
-                            .frame(width: 15, height: 15)
-                            .padding()
-                    }
-                    .padding(.vertical, -8)
+//                    HStack {
+//                        Spacer()
+//                        
+//                        Text("Downloaded")
+//                            .foregroundColor(.green)
+//                            .padding(.trailing, -15)
+//                        Circle()
+//                            .fill(.green)
+//                            .frame(width: 15, height: 15)
+//                            .padding()
+//                    }
+//                    .padding(.vertical, -8)
                 }
 
                 
@@ -130,7 +138,10 @@ struct WifiSubViewCell: View {
             .sheet(isPresented: $showWebViewPopover, content: {
                 WebView(URLRequest(url: URL(fileURLWithPath: result.learnGuideLink)))
             })
-            
+            .onAppear(){
+                wifiFileTransfer.counter = 0
+                wifiFileTransfer.numOfFiles = 0
+            }
             
             
             
@@ -176,6 +187,10 @@ struct WifiSubViewCell: View {
                             
                             ProgressView()
                         }
+                        .onChange(of: wifiFileTransfer.counter) { i in
+                            print("Wifi Project = \(result.projectName)  index: \(wifiFileTransfer.counter)")
+
+                        }
                     }
                     
                     if wifiFileTransfer.downloadState == .complete {
@@ -184,6 +199,11 @@ struct WifiSubViewCell: View {
                             .disabled(true)
                     }
                     
+                    if wifiFileTransfer.downloadState == .failed {
+                        FailedButton()
+                            .padding(.top, 20)
+                            .disabled(true)
+                    }
                     
                     
                     }
@@ -234,6 +254,12 @@ struct WifiSubViewCell: View {
             print("is downloaded? \(viewModel.projectDownloaded)")
         })
         .padding(.top, 8)
+        
+        .onChange(of: wifiFileTransfer.transferError, perform: { newValue in
+            if newValue {
+                showTransferErrorMessage()
+            }
+        })
         
     }
 }

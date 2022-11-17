@@ -14,6 +14,23 @@ struct SelectionView: View {
         
         VStack {
             
+            HStack {
+                Button {
+                    rootViewModel.goToMain()
+                    
+                } label: {
+                    Image(systemName: "arrow.backward")
+                        .resizable()
+                        .frame(width: 25, height: 25, alignment: .center)
+                        .offset(y: 15)
+                        .foregroundColor(.black)
+                }
+                .padding()
+                                
+                Spacer()
+            }
+            .padding(.top, 15)
+            
             Image("pyleapLogo")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
@@ -31,12 +48,11 @@ struct SelectionView: View {
             VStack {
                 
                 Button {
-                    rootViewModel.goToWiFiServiceSelection()
+                    rootViewModel.goToWiFiSelection()
                 } label: {
                     Text("Wifi")
                         .font(Font.custom("ReadexPro-Regular", size: 25))
                         .foregroundColor(Color.white)
-                        .padding(.horizontal, 60)
                         .frame(width: 270, height: 50, alignment: .center)
                         .background(Color("pyleap_pink"))
                         .clipShape(Capsule())
@@ -51,7 +67,6 @@ struct SelectionView: View {
                     Text("Bluetooth")
                         .font(Font.custom("ReadexPro-Regular", size: 25))
                         .foregroundColor(Color.white)
-                        .padding(.horizontal, 60)
                         .frame(width: 270, height: 50, alignment: .center)
                         .background(Color("bluetooth_button_color"))
                         .clipShape(Capsule())
@@ -88,7 +103,6 @@ struct SelectionView: View {
                 
                 
             }
-         //   .padding()
             
             Spacer()
         }

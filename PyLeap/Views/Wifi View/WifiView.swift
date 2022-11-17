@@ -52,7 +52,7 @@ struct WifiView: View {
     func checkForStoredIPAddress() {
         if userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName") == nil {
             print("storeResolvedAddress - not stored")
-           // showValidationPrompt()
+
         } else {
             hostName = userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName") as! String
             viewModel.ipAddressStored = true
@@ -84,14 +84,6 @@ struct WifiView: View {
 
         VStack(spacing: 0) {
             WifiHeaderView()
-                
-           
-            if viewModel.wifiServiceManager.isSearching {
-                NetworkConnectionBanner()
-            } else {
-                
-            }
-            
             
             Group{
                 switch viewModel.connectionStatus {
@@ -104,74 +96,55 @@ struct WifiView: View {
                     }
             }
 
-            if viewModel.ipAddressStored {
-                HStack(alignment: .center, content: {
-                
-                    Button {
-                        showValidationPrompt()
-                    } label: {
-                        Text("Enter IP address")
-                            .font(Font.custom("ReadexPro-Regular", size: 16))
-                            .foregroundColor(.white)
-                            .background(.indigo)
-                            .padding(5)
-                    }
-                    
-                    Button {
-                        viewModel.wifiTransferService.getRequestForFileCheck(read: "lib/") { success in
-                            printArray(array: success)
-                        }
-                    } label: {
-                        Text("List all files")
-                            .foregroundColor(.white)
-                            .background(.indigo)
-                            .padding(5)
-                    }
-                    
-                    Button {
-                        scanNetworkWifi()
-                    } label: {
-                        Text("Scan Network")
-                            .foregroundColor(.white)
-                            .background(.indigo)
-                            .padding(5)
-                    }
-                    
-                    Button {
-                        rootViewModel.goTobluetoothPairing()
-                    } label: {
-                        Text("BLE Mode")
-                            .foregroundColor(.white)
-                            .background(.indigo)
-                            .padding(5)
-                    }
-
-                })
-                .padding(.all, 0.0)
-                .frame(maxWidth: .infinity)
-                .frame(maxHeight: 40)
-                .background(Color.clear)
-                .foregroundColor(.black)
-            } else {
-                
-            }
-            
-//            Button("Show Service") {
-//                            self.showPopover = true
-//                        }.popover(
-//                            isPresented: self.$showPopover,
-//                            arrowEdge: .bottom
-//                        ) {
-//
-//                            VStack {
-//
-//
-//
-//
-//                            }
-//
+//            if viewModel.ipAddressStored {
+//                HStack(alignment: .center, content: {
+//                
+//                    Button {
+//                        showValidationPrompt()
+//                    } label: {
+//                        Text("Enter IP address")
+//                            .font(Font.custom("ReadexPro-Regular", size: 16))
+//                            .foregroundColor(.white)
+//                            .background(.indigo)
+//                            .padding(5)
+//                    }
+//                    
+//                    Button {
+//                        viewModel.wifiTransferService.getRequestForFileCheck(read: "lib/") { success in
+//                            printArray(array: success)
 //                        }
-            
+//                    } label: {
+//                        Text("List all files")
+//                            .foregroundColor(.white)
+//                            .background(.indigo)
+//                            .padding(5)
+//                    }
+//                    
+//                    Button {
+//                        scanNetworkWifi()
+//                    } label: {
+//                        Text("Scan Network")
+//                            .foregroundColor(.white)
+//                            .background(.indigo)
+//                            .padding(5)
+//                    }
+//                    
+//                    Button {
+//                        rootViewModel.goTobluetoothPairing()
+//                    } label: {
+//                        Text("BLE Mode")
+//                            .foregroundColor(.white)
+//                            .background(.indigo)
+//                            .padding(5)
+//                    }
+//
+//                })
+//                .padding(.all, 0.0)
+//                .frame(maxWidth: .infinity)
+//                .frame(maxHeight: 40)
+//                .background(Color.clear)
+//                .foregroundColor(.black)
+//            }
             
             
            

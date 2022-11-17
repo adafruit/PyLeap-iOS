@@ -25,8 +25,8 @@ class WifiServiceManager: NSObject, ObservableObject {
     var discoveredService: NetService?
     
     var services = [NetService]()
-    @Published var resolvedServices = [ResolvedService]()
-    @Published var fetching = false
+    var resolvedServices = [ResolvedService]()
+    
     
     func numberOfService() -> Int {
        return services.count
@@ -40,39 +40,50 @@ class WifiServiceManager: NSObject, ObservableObject {
         super.init()
         serviceManagerBrowser.delegate = self
         findService()
+        
     }
-    
-    
-    
- 
+
     
     func findService() {
-        print("Start Scan")
-        services = []
-        resolvedServices.removeAll()
-        
         print("Current state of isSearching: \(isSearching)")
         
         if isSearching == false {
+            print("Start Scanning")
             startDiscovery()
         }
     }
     
     func startDiscovery() {
         print("Start Discovery")
-        isSearching = true
+        DispatchQueue.main.async {
+            self.isSearching = true
+        }
+        
+        
+        print("\(#function) @Line: \(#line)")
+        print("Current state of isSearching: \(isSearching)")
         self.serviceManagerBrowser.searchForServices(ofType: CircuitPythonType.serviceType, inDomain: CircuitPythonType.serviceDomain)
+        
+        
+        let timer = Timer.scheduledTimer(withTimeInterval: 12, repeats: false) { timer in
+
+            self.stopDiscoveryScan()
+
+        }
+        
+        
     }
     
     func stopDiscoveryScan() {
         if isSearching {
             isSearching = false
             self.serviceManagerBrowser.stop()
-            
-            print("Found ResolvedServices = \(resolvedServices)")
+            print(resolvedServices)
         }
-        
     }
+    
+    
+    
 }
 extension WifiServiceManager: NetServiceBrowserDelegate, NetServiceDelegate {
     
@@ -108,16 +119,12 @@ extension WifiServiceManager: NetServiceBrowserDelegate, NetServiceDelegate {
     }
     
     
-    //@MainActor
+    
     func netServiceBrowser(_ browser: NetServiceBrowser, didFind service: NetService, moreComing: Bool) {
-        
-        fetching = true
-        
-        
         print(#function)
         discoveredService = service
         discoveredService?.delegate = self
-        discoveredService?.resolve(withTimeout: 9)
+        discoveredService?.resolve(withTimeout: 7)
 
         if services.contains(service) {
             print("All ready in service array")
@@ -144,7 +151,6 @@ extension WifiServiceManager: NetServiceBrowserDelegate, NetServiceDelegate {
     
     func netServiceDidStop(_ sender: NetService) {
         isSearching = false
-        fetching = false
         print("isSearching: \(isSearching)")
     }
 
@@ -152,9 +158,6 @@ extension WifiServiceManager: NetServiceBrowserDelegate, NetServiceDelegate {
     func netServiceDidResolveAddress(_ sender: NetService) {
         print(#function)
 
-        print("sender: \(sender)")
-        
-        
         var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
             guard let data = sender.addresses?.first else { return }
             data.withUnsafeBytes { (pointer:UnsafePointer<sockaddr>) -> Void in
