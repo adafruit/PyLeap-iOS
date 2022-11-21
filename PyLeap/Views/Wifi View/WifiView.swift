@@ -146,7 +146,8 @@ struct WifiView: View {
 //                .foregroundColor(.black)
 //            }
             
-            
+           
+
            
             ScrollView(.vertical, showsIndicators: true) {
                 
@@ -243,5 +244,6 @@ extension Notification.Name {
     public static let didCompleteTransfer = Notification.Name(kPrefix+".didCompleteTransfer")
     public static let didEncounterTransferError = Notification.Name(kPrefix+".didEncounterTransferError")
     public static let downloadErrorDidOccur = Notification.Name(kPrefix+".downloadErrorDidOccur")
+    public static let usbInUseErrorNotification = Notification.Name(kPrefix+".usbInUseErrorNotification")
 
 }

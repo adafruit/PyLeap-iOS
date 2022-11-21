@@ -98,6 +98,66 @@ class WifiTransferService: ObservableObject {
         
     }
     
+    func optionRequest(completionHandler: @escaping CompletionHandler) {
+        
+        print("HOST | \(hostName)")
+        let username = ""
+        let password = "passw0rd"
+        let loginString = "\(username):\(password)"
+        
+        guard let loginData = loginString.data(using: String.Encoding.utf8) else {
+            return
+        }
+        let base64LoginString = loginData.base64EncodedString()
+       
+        var request = URLRequest(url: URL(string: "http://\(hostName).local/fs/")!,timeoutInterval: Double.infinity)
+        
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+                
+        request.addValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
+        
+        request.httpMethod = "OPTIONS"
+        
+        request.httpBody = try? JSONSerialization.data(withJSONObject: [:], options: [])
+        
+        print("Print curl:")
+        
+        print(request.cURL(pretty: true))
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+          
+            if let response = response as? HTTPURLResponse {
+                 
+                print("Response HTTP Status code: \(response.statusCode)")
+                
+                print("Specific header: \(response.value(forHTTPHeaderField: "Access-Control-Allow-Methods") ?? "Header Not found")")
+                
+                completionHandler(response.value(forHTTPHeaderField: "Access-Control-Allow-Methods") ?? "Header Not found")
+              }
+            
+            guard let data = data else {
+                print(String(describing: "Error Found: \(String(describing: error))"))
+                return
+            }
+            
+            do {
+                let wifiIncomingData = try JSONDecoder().decode([WebDirectoryModel].self, from: data)
+                
+                DispatchQueue.main.async {
+                    self.webDirectoryInfo = wifiIncomingData
+                }
+            } catch {
+                print(error.localizedDescription)
+            }
+            
+            if let str = String(data: data, encoding: .utf8) {
+                print("Output:")
+                print(str)
+            }
+        }
+        task.resume()
+        
+    }
     
     
     func getRequest() {
@@ -114,8 +174,11 @@ class WifiTransferService: ObservableObject {
        
         // var request = URLRequest(url: URL(string: "http://cpy-9cbe10.local/fs/")!,timeoutInterval: Double.infinity)
         var request = URLRequest(url: URL(string: "http://\(hostName).local/fs/")!,timeoutInterval: Double.infinity)
+        
         request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
         request.addValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
+        
         request.httpMethod = "GET"
         
         print("Print curl:")

@@ -92,7 +92,7 @@ struct SettingsView: View {
                 if viewModel.connectedToDevice {
                     Section() {
                         Button {
-                            rootViewModel.goToWiFiSelection()
+                            rootViewModel.goToSelection()
                         } label: {
                             Text("Disconnect")
                         }

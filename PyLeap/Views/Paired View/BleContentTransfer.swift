@@ -29,6 +29,7 @@ class BleContentTransfer: ObservableObject {
     @Published var isTransferring = false
     
     @Published var transferError = false
+    
     @Published var downloaderror = false
     
     @Published var bootUpInfo = ""

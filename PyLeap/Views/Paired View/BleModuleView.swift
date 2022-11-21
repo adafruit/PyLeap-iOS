@@ -49,10 +49,15 @@ struct BleModuleView: View {
     @State var isExpanded = true
     @State var subviewHeight : CGFloat = 0
     
+    func showConfirmationPrompt() {
+        comfirmationAlertMessage(title: "Are you sure you want to disconnect?", exitTitle: "Cancel", primaryTitle: "Disconnect") {
+            connectionManager.isDisconnectingFromCurrent = true
+        } cancel: {
+            
+        }
+    }
+    
     var body: some View {
-        
-     //   var connectedPeripherals = connectionManager.peripherals.filter{$0.state == .connected }
-       // let selectedPeripheral = FileTransferConnectionManager.shared.selectedPeripheral
         
         VStack {
             //Start
@@ -61,6 +66,7 @@ struct BleModuleView: View {
                 HStack {
                     
                     Spacer()
+                    
                     Image("bluetooth")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
@@ -161,79 +167,91 @@ struct BleModuleView: View {
                     
                     HeaderView()
                     
-//                    Button {
-//                        print("Disconnect")
-//
-//                        activeAlert = .confirmUnpair(blePeripheral: connectedPeripherals[0])
-//                        connectedPeripherals = []
-//
-//                        connectionManager.isConnectedOrReconnecting = false
-//                        FileTransferConnectionManager.shared
-//                        connectionManager.selectedPeripheral = nil
-//                        connectionManager.isAnyPeripheralConnecting = false
-//                        connectionManager.isSelectedPeripheralReconnecting = false
-//                       // connectionManager.clearAllPeripheralInfo()
-//                        rootViewModel.goToMain()
-//
-//                        print("Destination: \(rootViewModel.destination)")
-//                    } label: {
-//                        Text("Disconnection")
-//                    }
 
-                    // Sub-Header
                     VStack {
+                        
+                        
                         
                         if boardBootInfo == "circuitplayground_bluefruit" {
                             HStack {
-                                Text("Connected to Circuit Playground Bluefruit")
-                                    .font(Font.custom("ReadexPro-Regular", size: 16))
                                 
-                            Image("bluetoothLogo")
+                                Image("bluetoothLogo")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 30, height: 30)
+                                    .frame(width: 16, height: 16)
+                                
+                                
+                                Text("Circuit Playground Bluefruit.")
+                                    .font(Font.custom("ReadexPro-Regular", size: 14))
+                                    .minimumScaleFactor(0.1)
+                                
+                                
+                                Button {
+                                    showConfirmationPrompt()
+                                } label: {
+                                    Text("Disconnect")
+                                        .font(Font.custom("ReadexPro-Bold", size: 14))
+                                        .underline()
+                                        .minimumScaleFactor(0.1)
+                                }
+                                
+                                
+                                
+                                
                             }
                             
-                                
+                            
                         }
                         
                         if boardBootInfo == "clue_nrf52840_express" {
                             VStack {
                                 
                                 HStack {
-                                    Text("Connected to Adafruit CLUE")
-                                        .font(Font.custom("ReadexPro-Regular", size: 16))
-                                    
                                     Image("bluetoothLogo")
                                         .resizable()
                                         .scaledToFit()
-                                        .frame(width: 20, height: 20)
+                                        .frame(width: 16, height: 16)
+                                    
+                                    Text("Adafruit CLUE.")
+                                        .font(Font.custom("ReadexPro-Regular", size: 14))
+                                    
+                                    Button {
+                                        showConfirmationPrompt()
+                                    
+                                        
+                                    } label: {
+                                        Text("Disconnect")
+                                            .font(Font.custom("ReadexPro-Bold", size: 14))
+                                            .underline()
+                                            .minimumScaleFactor(0.1)
+                                    }
+                                    
                                 }
-                               // Expandable
+                                // Expandable
                                 VStack {
                                     Text("More Info")
                                 }
                                 .background(GeometryReader {
-                                            Color.clear.preference(key: ViewHeightKey.self,
-                                                                   value: $0.frame(in: .local).size.height)
-                                        })
+                                    Color.clear.preference(key: ViewHeightKey.self,
+                                                           value: $0.frame(in: .local).size.height)
+                                })
                                 
                                 
                             }
                             
                             .onPreferenceChange(ViewHeightKey.self) { subviewHeight = $0 }
-                                    .frame(height: isExpanded ? subviewHeight : 50, alignment: .top)
+                            .frame(height: isExpanded ? subviewHeight : 50, alignment: .top)
                             
                             .clipped()
-                                    .frame(maxWidth: .infinity)
-                                    .transition(.move(edge: .bottom))
-
+                            .frame(maxWidth: .infinity)
+                            .transition(.move(edge: .bottom))
+                            
                             
                             .onTapGesture {
-                                        withAnimation(.easeIn(duration: 0.5)) {
-                                            isExpanded.toggle()
-                                        }
-                                    }
+                                withAnimation(.easeIn(duration: 0.5)) {
+                                    isExpanded.toggle()
+                                }
+                            }
                         }
                         
                     }
@@ -249,9 +267,16 @@ struct BleModuleView: View {
                         
                         ScrollViewReader { scroll in
                             
-                            MainSubHeaderView()
-                              //  .spotlight(enabled: spotlight.counter == 1, title: "1")
-                              
+                            if boardBootInfo == "clue_nrf52840_express" {
+                                MainSubHeaderView(device: "Adafruit CLUE")
+                            }
+                            
+                            if boardBootInfo == "circuitplayground_bluefruit" {
+                                MainSubHeaderView(device: "Circuit Playground")
+                                
+                            }
+                            
+                            
                             let check = networkService.pdemos.filter {
                                 $0.compatibility.contains(boardBootInfo)
                             }
@@ -265,7 +290,7 @@ struct BleModuleView: View {
                                         scroll.scrollTo(demo.id)
                                     }
                                 })
-                               
+                                
                                 
                             }
                             
@@ -275,12 +300,12 @@ struct BleModuleView: View {
                     }
                     
                 }
-
+                
             }
         }
         .background(Color.white)
-
-
+        
+        
         .onChange(of: viewModel.bootUpInfo, perform: { newValue in
             viewModel.readMyStatus()
             
@@ -291,15 +316,15 @@ struct BleModuleView: View {
         .onChange(of: connectionManager.selectedClient) { selectedClient in
             viewModel.setup(fileTransferClient: selectedClient)
         }
-
+        
         .onAppear(){
             print("Opened BleModuleView")
-         //   networkServiceModel.fetch()
+            //   networkServiceModel.fetch()
             
             viewModel.setup(fileTransferClient:connectionManager.selectedClient)
             
             connectionManager.isSelectedPeripheralReconnecting = true
-
+            
             viewModel.readFile(filename: "boot_out.txt")
         }
         

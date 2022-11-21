@@ -82,7 +82,7 @@ struct MainSelectionView: View {
             
             ScrollView {
                 
-                MainSubHeaderView()
+                MainSubHeaderView(device: "Adafruit device")
                 
                 if networkModel.pdemos.isEmpty {
                     HStack{

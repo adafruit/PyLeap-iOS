@@ -83,13 +83,28 @@ struct RootView: View {
         
         .onChange(of: connectionManager.isSelectedPeripheralReconnecting) { isConnectedOrReconnecting in
             
+            
             if isConnectedOrReconnecting, model.destination == .fileTransfer {
                 model.destination = .fileTransfer
                 isReconnecting = true
                 
             } else {
+               
                 isReconnecting = false
             }
+            
+        }
+        
+        .onChange(of: connectionManager.isDisconnectingFromCurrent) { isDisconnected in
+            
+            if isDisconnected {
+                isReconnecting = false
+                model.destination = .selection
+                connectionManager.clearAllPeripheralInfo()
+                connectionManager.isDisconnectingFromCurrent = false
+                isReconnecting = false
+            }
+            
         }
         
         

@@ -61,18 +61,18 @@ Try again later
             
             if viewModel.projectDownloaded {
                 
-                HStack {
-                    Spacer()
-                    
-                    Text("Downloaded")
-                        .foregroundColor(.green)
-                        .padding(.trailing, -15)
-                    Circle()
-                        .fill(.green)
-                        .frame(width: 15, height: 15)
-                        .padding()
-                }
-                .padding(.vertical, -8)
+//                HStack {
+//                    Spacer()
+//                    
+//                    Text("Downloaded")
+//                        .foregroundColor(.green)
+//                        .padding(.trailing, -15)
+//                    Circle()
+//                        .fill(.green)
+//                        .frame(width: 15, height: 15)
+//                        .padding()
+//                }
+//                .padding(.vertical, -8)
             }
             
             VStack(alignment: .leading, spacing: 0, content: {

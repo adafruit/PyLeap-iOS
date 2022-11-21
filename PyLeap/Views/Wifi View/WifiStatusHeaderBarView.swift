@@ -12,9 +12,18 @@ struct WifiStatusConnectedView: View {
     
     let userDefaults = UserDefaults.standard
     private let kPrefix = Bundle.main.bundleIdentifier!
+    @EnvironmentObject var rootViewModel: RootViewModel
 
     @Binding var hostName: String
 
+    func showConfirmationPrompt() {
+        comfirmationAlertMessage(title: "Are you sure you want to disconnect?", exitTitle: "Cancel", primaryTitle: "Disconnect") {
+            rootViewModel.goToSelection()
+        } cancel: {
+            
+        }
+    }
+    
     var body: some View {
         HStack(alignment: .center, spacing: 0, content: {
  
@@ -24,10 +33,17 @@ struct WifiStatusConnectedView: View {
                 .frame(width: 20, height: 20)
                 .padding(5)
             
-            Text("Connected to \(hostName)")
+            Text("Connected to \(hostName). ")
                 .font(Font.custom("ReadexPro-Regular", size: 14))
             
-
+            Button {
+                showConfirmationPrompt()
+            } label: {
+                Text("Disconnect")
+                    .font(Font.custom("ReadexPro-Bold", size: 14))
+                    .underline()
+                    .minimumScaleFactor(0.1)
+            }
                 
         })
         .padding(.all, 0.0)

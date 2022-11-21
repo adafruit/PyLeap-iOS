@@ -16,29 +16,24 @@ struct WifiHeaderView: View {
 
         VStack {
         
-            HStack {
-                
-                Button {
-                    presentationMode.wrappedValue.dismiss()
-                    rootViewModel.goToWiFiServiceSelection()
-                    
-                } label: {
-                    Image(systemName: "arrow.backward")
-                        .resizable()
-                        .frame(width: 30, height: 30, alignment: .center)
-                        .offset(y: 15)
-                        .foregroundColor(.white)
-                }
-                
-                .padding()
+            
+            
+            HStack (alignment: .center, spacing: 0) {
+
+                Image(systemName: "gearshape")
+                    .resizable()
+                    .frame(width: 25, height: 25, alignment: .center)
+                    .offset(y: 15)
+                    .padding(.leading, CGFloat(20))
+                    .foregroundColor(.clear)
                 
                 Spacer()
+                
                 Image("pyleap_logo_white")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 125, height: 125)
                     .offset(y: 12)
-                  //  .padding(.leading, 60)
                 
                 Spacer()
                 
@@ -47,12 +42,12 @@ struct WifiHeaderView: View {
                 } label: {
                     Image(systemName: "gearshape")
                         .resizable()
-                        .frame(width: 30, height: 30, alignment: .center)
+                        .frame(width: 25, height: 25, alignment: .center)
                         .offset(y: 15)
+                        .padding(.trailing, CGFloat(20))
                         .foregroundColor(.white)
                 }
                 
-                .padding()
             }
             Spacer()
         }

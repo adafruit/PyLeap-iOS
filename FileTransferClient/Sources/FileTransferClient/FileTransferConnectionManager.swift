@@ -27,6 +27,8 @@ public class FileTransferConnectionManager: ObservableObject {
     @Published public var isConnectedOrReconnecting = false         // Is any peripheral connected or trying to connect
     @Published public var isAnyPeripheralConnecting = false
     
+    @Published public var isDisconnectingFromCurrent = false
+    
     // Parameters
     public var userDefaults = UserDefaults.standard        // Can be replaced if data saved needs to be shared
 

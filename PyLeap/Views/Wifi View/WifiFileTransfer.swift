@@ -19,9 +19,11 @@ class WifiFileTransfer: ObservableObject {
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     
     @Published var projectDownloaded = false
+    
     @Published var failedProjectLaunch = false
+    
     @Published var transferError = false
-
+    
     @Published var downloadState: DownloadState = .idle
     
     var manager = FileManager.default

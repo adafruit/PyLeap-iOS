@@ -12,48 +12,19 @@ struct HeaderView: View {
     @EnvironmentObject var rootViewModel: RootViewModel
     var body: some View {
 
-        VStack {
+
             HStack {
                 
-                Button {
-                    rootViewModel.goToWifiView()
-                } label: {
-                    Image(systemName: "wifi.circle")
-                        .resizable()
-                        .frame(width: 30, height: 30, alignment: .center)
-                        .offset(y: 15)
-                        .foregroundColor(.white)
-                
-                }
-                .padding()
 
-                
-                Spacer()
                 Image("pyleap_logo_white")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 125, height: 125)
                     .offset(y: 12)
-                   // .padding(.leading, 60)
+     
                 
-                Spacer()
-                
-                Button {
-                    self.showSheetView.toggle()
-                } label: {
-                    Image(systemName: "info.circle")
-                        .resizable()
-                        .frame(width: 30, height: 30, alignment: .center)
-                        .offset(y: 15)
-                        .foregroundColor(.white)
-                }.sheet(isPresented: $showSheetView) {
-                    CreditView(isPresented: $showSheetView)
-                                    }
-                
-                .padding()
             }
-            Spacer()
-        }
+        
         .frame(maxWidth: .infinity)
         .frame(maxHeight: 120)
         .background(Color("pyleap_gray"))

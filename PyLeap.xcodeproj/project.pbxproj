@@ -363,12 +363,12 @@
 			isa = PBXGroup;
 			children = (
 				D58E1C8728A2B10B00AB683E /* WifiView.swift */,
+				D58E1C8928A2B15E00AB683E /* WifiViewModel.swift */,
 				D5269C07291AB75800C0CE4B /* WifiPairingView.swift */,
 				D52A926E29078E0A00973B6B /* WifiServiceSelectionView.swift */,
+				D5269BFF291960A300C0CE4B /* WifiSelection.swift */,
 				D5269C01291997DE00C0CE4B /* WifiServiceCellView.swift */,
 				D5269C032919985400C0CE4B /* WifiServiceCellSubView.swift */,
-				D58E1C8928A2B15E00AB683E /* WifiViewModel.swift */,
-				D5269BFF291960A300C0CE4B /* WifiSelection.swift */,
 				D5BA1F7E28B66F280012FC62 /* WifiServiceManager.swift */,
 				D5DD39A628D11817000FAEB8 /* WifiFileTransfer.swift */,
 				D5DD39A828D11962000FAEB8 /* WifiTransferService.swift */,
@@ -857,7 +857,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
@@ -887,7 +887,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;

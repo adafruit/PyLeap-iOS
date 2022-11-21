@@ -91,7 +91,7 @@ struct BTConnectionView: View {
                     }
                 
                 
-                Spacer()
+                
                 
                     .onAppear() {
                         Animation.linear(duration: 1.0)

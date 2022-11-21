@@ -80,7 +80,7 @@ struct WifiServiceSelectionView: View {
             HStack {
                 
                 Button {
-                    rootViewModel.goToWiFiSelection()
+                    rootViewModel.goToSelection()
                     
                 } label: {
                     Image(systemName: "arrow.backward")
@@ -168,61 +168,63 @@ struct WifiServiceSelectionView: View {
                 Spacer()
 
                 VStack {
-
+                    
                     if !wifiServiceViewModel.resolvedServices.isEmpty {
                         Text("Wi-Fi Devices Found")
                             .font(Font.custom("ReadexPro-Regular", size: 24))
                             .multilineTextAlignment(.center)
                             .lineLimit(1)
                             .minimumScaleFactor(0.1)
-
+                        
                     } else {
                         Text("No Wi-Fi Devices Found")
                             .font(Font.custom("ReadexPro-Regular", size: 24))
                             .multilineTextAlignment(.center)
                             .lineLimit(1)
                             .minimumScaleFactor(0.1)
-
+                        
                     }
-
-//                    Button {
-//                        print("Is searching: \(wifiServiceViewModel.isSearching)")
-//
-//                    } label: {
-//                        Text("Searching?")
-//                    }
-
-
-
-
+                    
+                    //                    Button {
+                    //                        print("Is searching: \(wifiServiceViewModel.isSearching)")
+                    //
+                    //                    } label: {
+                    //                        Text("Searching?")
+                    //                    }
+                    
+                    
+                    
+                    
                     Button {
                     } label: {
                         HStack {
-
+                            
                             Image(systemName: "arrow.clockwise")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 25, height: 25, alignment: .center)
                                 .foregroundColor(.white)
-
+                            
                             Button  {
                                 wifiServiceViewModel.findService()
                             } label: {
                                 Text("Rescan")
                             }
-
+                            
                         }
-
+                        
                         .font(Font.custom("ReadexPro-Regular", size: 25))
                         .foregroundColor(Color.white)
                         .frame(width: 146, height: 50, alignment: .center)
                         .background(Color("pyleap_purple"))
                         .clipShape(Capsule())
-
-
-
+                        
+                        
+                        
                     }
-
+                    
+                }
+                .padding(.vertical, 40)
 
                     ScrollView(.vertical, showsIndicators: true) {
                         ScrollViewReader { scroll in
@@ -240,12 +242,11 @@ struct WifiServiceSelectionView: View {
                         }
                         .id(self.scrollViewID)
                     }
-                    .frame()
                     .foregroundColor(.black)
 
 
 
-                }
+                
 
 
 

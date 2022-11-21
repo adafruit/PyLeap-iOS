@@ -27,6 +27,8 @@ struct WifiSubViewCell: View {
 
     @Binding var isConnected : Bool
     
+    
+    
     @State private var showWebViewPopover: Bool = false
     @State var errorOccured = false
     @State private var presentAlert = false
@@ -43,6 +45,19 @@ Unable to download project
         }
     }
     
+    func usbInUseErrorMessage() {
+        alertMessage(title: """
+USB In Use
+
+Disconnect device from the computer.
+
+Press "Reset" on the device and use a battery source.
+""", exitTitle: "Retry") {
+          //  wifiFileTransfer.transferError = false
+            
+        }
+    }
+    
     var body: some View {
         
         VStack {
@@ -53,7 +68,7 @@ Unable to download project
                     
 //                    HStack {
 //                        Spacer()
-//                        
+//
 //                        Text("Downloaded")
 //                            .foregroundColor(.green)
 //                            .padding(.trailing, -15)
@@ -63,6 +78,20 @@ Unable to download project
 //                            .padding()
 //                    }
 //                    .padding(.vertical, -8)
+                }
+
+                Button {
+                    wifiFileTransfer.wifiTransferService.optionRequest(completionHandler: { success in
+                        
+                        if success.contains("GET, OPTIONS, PUT, DELETE, MOVE") {
+                            print("USB not in use.")
+                        } else {
+                            print("USB in use.")
+                        }
+                        
+                    })
+                } label: {
+                    Text("Options Req.")
                 }
 
                 
@@ -154,6 +183,7 @@ Unable to download project
                         
                         
                         Button {
+                         //   NotificationCenter.default.post(name: .didCompleteZip, object: nil, userInfo: projectResponse)
                             
                             if wifiFileTransfer.projectDownloaded {
                                 
@@ -162,6 +192,21 @@ Unable to download project
                             } else {
                                 downloadModel.trueDownload(useProject: result.bundleLink, projectName: result.projectName)
                             }
+                            
+//                            wifiFileTransfer.wifiTransferService.optionRequest(completionHandler: { success in
+//
+//                                if success.contains("GET, OPTIONS, PUT, DELETE, MOVE") {
+//                                    print("USB not in use.")
+//
+//
+//
+//                                } else {
+//                                    print("USB in use.")
+//                                    NotificationCenter.default.post(name: .usbInUseErrorNotification, object: nil, userInfo: nil)
+//                                }
+//
+//                            })
+                            
                             
                         } label: {
                             RunItButton()
@@ -253,6 +298,24 @@ Unable to download project
             }
             print("is downloaded? \(viewModel.projectDownloaded)")
         })
+        
+//        .onAppear(perform: {
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 7) {
+//
+//                wifiFileTransfer.wifiTransferService.optionRequest(completionHandler: { success in
+//
+//                    if success.contains("GET, OPTIONS, PUT, DELETE, MOVE") {
+//                        print("USB not in use.")
+//                    } else {
+//                        print("USB in use.")
+//                    }
+//
+//                })
+//
+//            }
+//        })
+
+        
         .padding(.top, 8)
         
         .onChange(of: wifiFileTransfer.transferError, perform: { newValue in
@@ -260,6 +323,12 @@ Unable to download project
                 showTransferErrorMessage()
             }
         })
+        
+        .onChange(of: viewModel.usbInUseError) { newValue in
+            if newValue {
+                usbInUseErrorMessage()
+            }
+        }
         
     }
 }

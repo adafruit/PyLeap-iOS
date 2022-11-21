@@ -6,30 +6,32 @@
 //
 
 import SwiftUI
+import FileTransferClient
 
 struct SelectionView: View {
     @EnvironmentObject var rootViewModel: RootViewModel
-
+    @ObservedObject var connectionManager = FileTransferConnectionManager.shared
+    
     var body: some View {
         
         VStack {
             
-            HStack {
-                Button {
-                    rootViewModel.goToMain()
-                    
-                } label: {
-                    Image(systemName: "arrow.backward")
-                        .resizable()
-                        .frame(width: 25, height: 25, alignment: .center)
-                        .offset(y: 15)
-                        .foregroundColor(.black)
-                }
-                .padding()
-                                
-                Spacer()
-            }
-            .padding(.top, 15)
+//            HStack {
+//                Button {
+//                    rootViewModel.goToMain()
+//
+//                } label: {
+//                    Image(systemName: "arrow.backward")
+//                        .resizable()
+//                        .frame(width: 25, height: 25, alignment: .center)
+//                        .offset(y: 15)
+//                        .foregroundColor(.black)
+//                }
+//                .padding()
+//
+//                Spacer()
+//            }
+//            .padding(.top, 15)
             
             Image("pyleapLogo")
                 .resizable()
@@ -45,9 +47,11 @@ struct SelectionView: View {
                 .padding(.horizontal, 30)
             
             Spacer()
+           
             VStack {
                 
                 Button {
+                  //  connectionManager.isDisconnectingFromCurrent = true
                     rootViewModel.goToWiFiSelection()
                 } label: {
                     Text("Wifi")
