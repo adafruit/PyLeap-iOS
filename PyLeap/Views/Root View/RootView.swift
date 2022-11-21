@@ -120,6 +120,7 @@ struct RootView: View {
         .edgesIgnoringSafeArea(.all)
         .ignoresSafeArea(.all)
         .preferredColorScheme(.light)
+        .statusBar(hidden: true)
     }
 }
 

@@ -195,11 +195,7 @@ struct BleModuleView: View {
                                         .minimumScaleFactor(0.1)
                                 }
                                 
-                                
-                                
-                                
                             }
-                            
                             
                         }
                         
@@ -223,7 +219,7 @@ struct BleModuleView: View {
                                         Text("Disconnect")
                                             .font(Font.custom("ReadexPro-Bold", size: 14))
                                             .underline()
-                                            .minimumScaleFactor(0.1)
+                                            //.minimumScaleFactor(0.1)
                                     }
                                     
                                 }
