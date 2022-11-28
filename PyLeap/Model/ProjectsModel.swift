@@ -30,3 +30,5 @@ struct ResultItem: Codable, Identifiable, Equatable {
     let learnGuideLink: String
     let compatibility: [String]
 }
+
+

@@ -11,6 +11,7 @@
 		D505B99E2756894300386E9F /* ViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D505B99D2756894300386E9F /* ViewModifier.swift */; };
 		D517F68126C5771D002996E8 /* FillerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D517F68026C5771D002996E8 /* FillerView.swift */; };
 		D5199A2F28DD16F100ACC34C /* BleContentTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5199A2E28DD16F100ACC34C /* BleContentTransfer.swift */; };
+		D5267411292E902700D4C79E /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5267410292E902700D4C79E /* Networking.swift */; };
 		D5269C00291960A300C0CE4B /* WifiSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5269BFF291960A300C0CE4B /* WifiSelection.swift */; };
 		D5269C02291997DE00C0CE4B /* WifiServiceCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5269C01291997DE00C0CE4B /* WifiServiceCellView.swift */; };
 		D5269C042919985400C0CE4B /* WifiServiceCellSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5269C032919985400C0CE4B /* WifiServiceCellSubView.swift */; };
@@ -114,6 +115,7 @@
 		D505B99D2756894300386E9F /* ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifier.swift; sourceTree = "<group>"; };
 		D517F68026C5771D002996E8 /* FillerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FillerView.swift; sourceTree = "<group>"; };
 		D5199A2E28DD16F100ACC34C /* BleContentTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleContentTransfer.swift; sourceTree = "<group>"; };
+		D5267410292E902700D4C79E /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
 		D5269BFF291960A300C0CE4B /* WifiSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WifiSelection.swift; path = "PyLeap/Views/Unpaired View/WifiSelection.swift"; sourceTree = SOURCE_ROOT; };
 		D5269C01291997DE00C0CE4B /* WifiServiceCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WifiServiceCellView.swift; path = ../../../../../../Desktop/WifiServiceCellView.swift; sourceTree = "<group>"; };
 		D5269C032919985400C0CE4B /* WifiServiceCellSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WifiServiceCellSubView.swift; path = ../../../../../../Desktop/WifiServiceCellSubView.swift; sourceTree = "<group>"; };
@@ -473,6 +475,7 @@
 			children = (
 				D505B99B2755323C00386E9F /* NetworkMonitor.swift */,
 				D544A24A281F92840038D483 /* ImageCaching.swift */,
+				D5267410292E902700D4C79E /* Networking.swift */,
 				D5D1F4A327EBA7E30040E2BF /* NetworkManager.swift */,
 				D58358ED27DA5C0F0069F7F5 /* NetworkError.swift */,
 				D595FC2D2812C23D00569D8C /* Image Extension.swift */,
@@ -643,6 +646,7 @@
 				D544A1D2281B9BB70038D483 /* Buttons.swift in Sources */,
 				D5D1F4AE27ECFDA10040E2BF /* GifImage.swift in Sources */,
 				D58E1C8A28A2B15E00AB683E /* WifiViewModel.swift in Sources */,
+				D5267411292E902700D4C79E /* Networking.swift in Sources */,
 				D5C474AC27E174A5002DD160 /* WebView Content.swift in Sources */,
 				D544A2512822D4730038D483 /* Spotlight Extension.swift in Sources */,
 				D56F640D270242CA000E5975 /* FileTransferPathUtils.swift in Sources */,
@@ -857,7 +861,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
@@ -887,7 +891,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;

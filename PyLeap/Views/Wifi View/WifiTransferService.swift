@@ -89,16 +89,13 @@ class WifiTransferService: ObservableObject {
                 print("File write success!")
                 handler(.success(data))
             }
-            
-            // print(String(data: data, encoding: .utf8)!)
-            
         }
         
         task.resume()
         
     }
     
-    func optionRequest(completionHandler: @escaping CompletionHandler) {
+    func optionRequest(handler: @escaping(Result<String, Error>) -> Void) {
         
         print("HOST | \(hostName)")
         let username = ""
@@ -111,11 +108,8 @@ class WifiTransferService: ObservableObject {
         let base64LoginString = loginData.base64EncodedString()
        
         var request = URLRequest(url: URL(string: "http://\(hostName).local/fs/")!,timeoutInterval: Double.infinity)
-        
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-                
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
-        
         request.httpMethod = "OPTIONS"
         
         request.httpBody = try? JSONSerialization.data(withJSONObject: [:], options: [])
@@ -131,30 +125,30 @@ class WifiTransferService: ObservableObject {
                 print("Response HTTP Status code: \(response.statusCode)")
                 
                 print("Specific header: \(response.value(forHTTPHeaderField: "Access-Control-Allow-Methods") ?? "Header Not found")")
-                
-                completionHandler(response.value(forHTTPHeaderField: "Access-Control-Allow-Methods") ?? "Header Not found")
+                handler(.success(response.value(forHTTPHeaderField: "Access-Control-Allow-Methods") ?? "Header Not found"))
               }
+            
+            if let error = error  {
+                print("File write error")
+                
+                handler(.failure(error))
+                
+            }
+            
+            
             
             guard let data = data else {
                 print(String(describing: "Error Found: \(String(describing: error))"))
+                print("Failed! Option Request")
                 return
             }
-            
-            do {
-                let wifiIncomingData = try JSONDecoder().decode([WebDirectoryModel].self, from: data)
-                
-                DispatchQueue.main.async {
-                    self.webDirectoryInfo = wifiIncomingData
-                }
-            } catch {
-                print(error.localizedDescription)
-            }
-            
+
             if let str = String(data: data, encoding: .utf8) {
                 print("Output:")
                 print(str)
             }
         }
+        
         task.resume()
         
     }
@@ -386,7 +380,8 @@ class WifiTransferService: ObservableObject {
     
     // Make
     func putDirectory(directoryPath: String, completion: @escaping (Result<Data?, Error>) -> Void) {
-        
+        print("\(#function) @Line: \(#line)")
+      
         let username = ""
         let password = "passw0rd"
         let loginString = "\(username):\(password)"
@@ -407,6 +402,12 @@ class WifiTransferService: ObservableObject {
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             
+            
+            if let response = response as? HTTPURLResponse {
+                
+                print("Response HTTP Status code: \(response.statusCode)")
+                
+            }
             
             if let error = error  {
                 completion(.failure(error))

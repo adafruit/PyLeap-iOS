@@ -256,7 +256,7 @@ struct WifiServiceSelectionView: View {
             if wifiServiceViewModel.resolvedServices.isEmpty && !wifiServiceViewModel.isSearching {
                 
                 
-               Spacer()
+               
                 
                 VStack {
                    
@@ -265,14 +265,12 @@ struct WifiServiceSelectionView: View {
     compatible Adafruit devices
     on your network
     """)
-                    
-                  
-                    
                     .font(Font.custom("ReadexPro-Regular", size: 24))
+                    
                     .multilineTextAlignment(.center)
                     .minimumScaleFactor(0.1)
                     .lineLimit(3)
-                    .padding(.bottom, 30)
+                   
                     
                     Button {
                         rootViewModel.goToWifiPairingTutorial()
@@ -280,7 +278,7 @@ struct WifiServiceSelectionView: View {
                         Text("Pairing Tutorial")
                             .font(Font.custom("ReadexPro-Regular", size: 25))
                             .foregroundColor(Color.white)
-                           .minimumScaleFactor(0.1)
+                            .minimumScaleFactor(0.1)
                             .frame(width: 270, height: 50, alignment: .center)
                             .background(Color("pyleap_pink"))
                             .clipShape(Capsule())

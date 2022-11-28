@@ -69,10 +69,7 @@ class WifiViewModel: ObservableObject {
     }
     
     @Published var pyleapProjects = [ResultItem]()
-    
-    func appendPyleapProjects() {
-        
-    }
+
     
     func read() {
         // This method can't be used until the device has permission to communicate.
@@ -91,6 +88,8 @@ class WifiViewModel: ObservableObject {
             
         }
     }
+    
+
     
     private weak var invalidIPObserver: NSObjectProtocol?
     
