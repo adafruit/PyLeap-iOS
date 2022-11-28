@@ -74,6 +74,10 @@ public class RootViewModel: ObservableObject {
         }
     }
     
+    func backToMain() {
+        destination = .main
+    }
+    
     func goToStartup(){
         destination = .startup
     }

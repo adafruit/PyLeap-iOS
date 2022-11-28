@@ -80,7 +80,7 @@ struct SelectionView: View {
                 
                 
                 Button {
-                    rootViewModel.goToMainSelection()
+                    rootViewModel.backToMain()
                 } label: {
                     Text("I Don't Know")
                         .font(Font.custom("ReadexPro-Regular", size: 25))

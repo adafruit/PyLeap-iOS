@@ -16,7 +16,6 @@ enum AdafruitDevices {
 
 struct MainSelectionView: View {
     
-    @Environment(\.presentationMode) private var presentationMode
     @State private var showWebViewPopover: Bool = false
     
     
@@ -37,28 +36,7 @@ struct MainSelectionView: View {
         
         VStack(alignment: .center, spacing: 0) {
             MainHeaderView()
-            
-            
-//            HStack(alignment: .center, spacing: 8, content: {
-//                
-//                Button {
-//                    rootViewModel.goToWifiView()
-//                       
-//                } label: {
-//                    Text("Connect to Wi-Fi Mode")
-//                        .font(Font.custom("ReadexPro-Regular", size: 16))
-//                        .underline()
-//                        .transition(.move(edge: .top))
-//                }
-//                
-//            })
-//            .padding(.all, 0.0)
-//            .frame(maxWidth: .infinity)
-//            .frame(maxHeight: 40)
-//            .background(Color("pyleap_blue"))
-//            .foregroundColor(.white)
-            
-            
+
             HStack(alignment: .center, spacing: 8, content: {
                 Text("Not Connected to a Device.")
                     .font(Font.custom("ReadexPro-Regular", size: 16))
@@ -76,9 +54,6 @@ struct MainSelectionView: View {
             .frame(maxHeight: 40)
             .background(Color("pyleap_burg"))
             .foregroundColor(.white)
-            
-            
-            
             
             ScrollView {
                 
