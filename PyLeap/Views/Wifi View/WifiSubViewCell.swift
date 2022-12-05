@@ -64,62 +64,76 @@ Remove device from USB. Press "Reset" on the device.
         }
     }
     
+
+    
     func startTransferProcess() {
         
-        wifiTransferService.getRequest(read: "boot_out.txt") { results in
-            print("Success - second loop")
-            print(results)
-            
-            if wifiFileTransfer.projectDownloaded {
-                
+    
+            if isDownloaded {
+                print("Project found")
                 wifiFileTransfer.testFileExistance(for: result.projectName, bundleLink: result.bundleLink)
                 
             } else {
+            print("Project not found")
                 downloadModel.trueDownload(useProject: result.bundleLink, projectName: result.projectName)
             }
-        }
+        
         
     }
     
     
-    func checkIfUSBInUse() {
-        
-        wifiTransferService.optionRequest(handler: { results in
+  
+    
+    
+        func testOperation() {
+            let operationQueue = OperationQueue()
+
+            let operation1 = BlockOperation {
+                wifiTransferService.optionRequest(handler: { results in
+                    
+                    switch results {
+                        
+                    case .success(let contents):
+
+                        if contents.contains("GET, OPTIONS, PUT, DELETE, MOVE") {
+                            
+                        } else {
+                            print("Connected to USB")
+                            DispatchQueue.main.async {
+                                usbInUseErrorMessage()
+                                wifiFileTransfer.stopTransfer = true
+                            }
+                        }
+                        
+                    case .failure:
+                        print("Failure")
+                    }
+                })
+            }
             
-            switch results {
+            let operation2 = BlockOperation {
                 
-            case .success(let contents):
-                
-                print("Success")
-                
-                if contents.contains("GET, OPTIONS, PUT, DELETE, MOVE") {
-                    
-                    print("Success - first loop")
-                    
-                    startTransferProcess()
+                if isDownloaded {
+                    print("Project found")
+                    wifiFileTransfer.testFileExistance(for: result.projectName, bundleLink: result.bundleLink)
                     
                 } else {
-                    print("Connected to USB")
-                    DispatchQueue.main.async {
-                        usbInUseErrorMessage()
-                    }
+                print("Project not found")
+                    downloadModel.trueDownload(useProject: result.bundleLink, projectName: result.projectName)
                 }
+            
                 
-            case .failure:
-                print("Failure")
             }
-        })
-        
-        
-        if wifiFileTransfer.projectDownloaded {
-            wifiFileTransfer.testFileExistance(for: result.projectName, bundleLink: result.bundleLink)
-        } else {
-            downloadModel.trueDownload(useProject: result.bundleLink, projectName: result.projectName)
+            
+            
+            // Add operations to the operation queue
+            operationQueue.addOperation(operation1)
+            operationQueue.addOperation(operation2)
+            
+            // Block the current thread until all operations have finished executing
+            operationQueue.waitUntilAllOperationsAreFinished()
+            
         }
-        
-        
-        
-    }
     
     
     var body: some View {
@@ -127,22 +141,6 @@ Remove device from USB. Press "Reset" on the device.
         VStack {
             
             VStack(alignment: .leading, spacing: 0, content: {
-                
-                if viewModel.projectDownloaded {
-                    
-                    //                                        HStack {
-                    //                                            Spacer()
-                    //
-                    //                                            Text("Downloaded")
-                    //                                                .foregroundColor(.green)
-                    //                                                .padding(.trailing, -15)
-                    //                                            Circle()
-                    //                                                .fill(.green)
-                    //                                                .frame(width: 15, height: 15)
-                    //                                                .padding()
-                    //                                        }
-                    //                                        .padding(.vertical, -8)
-                }
                 
                 ImageWithURL(result.projectImage)
                     .scaledToFit()
@@ -231,9 +229,9 @@ Remove device from USB. Press "Reset" on the device.
                         
                         Button {
                             //   NotificationCenter.default.post(name: .didCompleteZip, object: nil, userInfo: projectResponse)
+
+                            testOperation()
                             
-                            checkIfUSBInUse()
-                           
                         } label: {
                             RunItButton()
                                 .padding(.top, 20)
@@ -241,7 +239,7 @@ Remove device from USB. Press "Reset" on the device.
                         
                     }
                     
-                    if wifiFileTransfer.testIndex.downloadState == .transferring {
+                    if wifiFileTransfer.testIndex.downloadState == .transferring  {
                         DownloadingButton()
                             .padding(.top, 20)
                             .disabled(true)
@@ -271,6 +269,7 @@ Remove device from USB. Press "Reset" on the device.
                             .padding(.top, 20)
                             .disabled(true)
                     }
+                    
                     
                     
                 }
@@ -346,6 +345,7 @@ Remove device from USB. Press "Reset" on the device.
                 print("New download state : \(newValue)")
             }
         
+            
         
             .onChange(of: wifiFileTransfer.downloadState) { newValue in
                 switch newValue {

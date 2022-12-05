@@ -14,6 +14,8 @@ class WifiSubViewCellModel: ObservableObject {
     
     @ObservedObject var wifiFileTransfer =  WifiFileTransfer()
     
+    @Published var downloadState: DownloadState = .idle
+    
     @Published var projectDownloaded = false
     @Published var failedProjectLaunch = false
     
@@ -42,6 +44,9 @@ class WifiSubViewCellModel: ObservableObject {
             
         }
     }
+    
+    
+    
     
     func zipSuccess() {
         showUsbInUseError = true
@@ -95,6 +100,7 @@ class WifiSubViewCellModel: ObservableObject {
         
     }
     
+
     
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     

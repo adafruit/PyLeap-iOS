@@ -104,7 +104,7 @@ struct WifiServiceSelectionView: View {
             
             
             if wifiServiceViewModel.isSearching && wifiServiceViewModel.resolvedServices.isEmpty  {
-                Text("Wi-Fi Connect")
+                Text("WiFi Connect")
                     .font(Font.custom("ReadexPro-Regular", size: 36))
                     .multilineTextAlignment(.center)
                     .lineLimit(1)
@@ -163,14 +163,14 @@ struct WifiServiceSelectionView: View {
                 VStack {
                     
                     if !wifiServiceViewModel.resolvedServices.isEmpty {
-                        Text("Wi-Fi Devices Found")
+                        Text("WiFi Devices Found")
                             .font(Font.custom("ReadexPro-Regular", size: 24))
                             .multilineTextAlignment(.center)
                             .lineLimit(1)
                             .minimumScaleFactor(0.1)
                         
                     } else {
-                        Text("No Wi-Fi Devices Found")
+                        Text("No WiFi Devices Found")
                             .font(Font.custom("ReadexPro-Regular", size: 24))
                             .multilineTextAlignment(.center)
                             .lineLimit(1)

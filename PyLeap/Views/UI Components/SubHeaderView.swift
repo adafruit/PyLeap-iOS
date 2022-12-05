@@ -11,7 +11,7 @@ struct SubHeaderView: View {
     var body: some View {
         HStack {
             
-            Text("Browse available Wi-Fi PyLeap Projects")
+            Text("Browse available WiFi PyLeap Projects")
                 .fixedSize(horizontal: false, vertical: true)
                 .multilineTextAlignment(/*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                 .font(Font.custom("ReadexPro-Regular", size: 25))

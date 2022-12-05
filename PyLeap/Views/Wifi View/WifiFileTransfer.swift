@@ -73,6 +73,9 @@ class WifiFileTransfer: ObservableObject {
              numberOfFiles = 0
              downloadState = .idle
         }
+        
+        
+        
     }
    
     var testIndex = TestIndex()
@@ -104,6 +107,8 @@ class WifiFileTransfer: ObservableObject {
     
     @Published var transferError = false
     
+    @Published var stopTransfer = false
+    
     @Published var downloadState: DownloadState = .idle
     
     var manager = FileManager.default
@@ -124,6 +129,8 @@ class WifiFileTransfer: ObservableObject {
             print("\(i)")
         }
     }
+    
+
     
     func restFileCounter() {
         DispatchQueue.main.async {
@@ -146,6 +153,18 @@ class WifiFileTransfer: ObservableObject {
         projectFiles.removeAll()
     }
     
+    func showFailedButton() {
+       
+       DispatchQueue.main.async {
+          
+           self.testIndex.downloadState = .failed
+       }
+               
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) {
+            self.testIndex.downloadState = .idle
+            self.stopTransfer = false
+       }
+   }
 
     private weak var wifiDownloadComplete: NSObjectProtocol?
     private weak var didEncounterTransferError: NSObjectProtocol?
@@ -202,6 +221,7 @@ class WifiFileTransfer: ObservableObject {
     }
     
     
+ 
     
     
     func getProjectForSubClass(nameOf project: String) {
@@ -368,7 +388,16 @@ class WifiFileTransfer: ObservableObject {
     
     
     
+   
+    
     func newMakeDirectory(directoryArray: [URL], regularFilesArray: [URL]) {
+        
+        if stopTransfer {
+            showFailedButton()
+            print("Stopped")
+            return
+        }
+        
         print("==============Start=================\n")
 
 

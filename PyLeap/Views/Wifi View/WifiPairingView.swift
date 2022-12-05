@@ -66,7 +66,7 @@ struct WifiPairingView: View {
                 
                 
                 Text("""
-        PyLeap’s Wi-Fi mode requires EPS32 devices to have Wi-Fi credentials in an ./env file.
+        PyLeap’s WiFi mode requires EPS32 devices to have WiFi credentials in an ./env file.
         
         If you’re having trouble connecting, check this documentation:
         
