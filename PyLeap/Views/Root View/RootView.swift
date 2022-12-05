@@ -11,6 +11,7 @@ import FileTransferClient
 struct RootView: View {
     
     @StateObject private var model = RootViewModel()
+    @StateObject var currentCellID = ExpandedState()
     @ObservedObject var connectionManager = FileTransferConnectionManager.shared
     @AppStorage("onboarding") var onboardingSeen = true
     
@@ -48,6 +49,7 @@ struct RootView: View {
                 
             case .wifi:
                 WifiView()
+                    
                 
             case .selection:
                 SelectionView()
@@ -65,7 +67,8 @@ struct RootView: View {
             }
                 
         }
-        
+        .environmentObject(currentCellID)
+    
         
         
         .onReceive(NotificationCenter.default.publisher(for: .didUpdateBleState)) { notification in

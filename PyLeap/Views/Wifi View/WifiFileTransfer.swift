@@ -11,7 +11,87 @@ struct WifiCPVersion {
     static var versionNumber = 0
 }
 
+struct TestIndex {
+     var count = 0
+     var numberOfFiles = 0
+}
+
 class WifiFileTransfer: ObservableObject {
+    
+    
+//    func fetchDocuments<T: Sequence>(in sequence: T) where T.Element == Int {
+//        var documentNumbers = sequence.map { String($0) }
+//
+//        let timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { [weak self] timer in
+//            guard
+//                let self = self,
+//                let documentNumber = documentNumbers.first
+//            else {
+//                timer.invalidate()
+//                return
+//            }
+//
+//            self.fetchDocument(byNumber: documentNumber)
+//            documentNumbers.removeLast()
+//        }
+//        timer.fire() // if you don't want to wait 2 seconds for the first one to fire, go ahead and fire it manually
+//    }
+    
+    
+    func fetchDocumentsq<T: Sequence>(in sequence: T) where T.Element == URL {
+       
+        print(sequence)
+        
+        guard let value = sequence.first(where: { _ in true }) else {
+            print("Complete - fetchDocumentsq")
+            return
+            
+        }
+
+    //    let docNumber = String(value)
+      //  fetchDocument(byNumber: docNumber)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+     //       self?.fetchDocuments(in: sequence.dropFirst())
+            
+            print(value)
+            self?.fetchDocumentsq(in: sequence.dropFirst())
+            
+        }
+        
+        
+    }
+    
+    
+    struct TestIndex {
+         var count = 0
+         var numberOfFiles = 0
+         var downloadState: DownloadState = .idle
+        
+        mutating func backToIdle(){
+             count = 0
+             numberOfFiles = 0
+             downloadState = .idle
+        }
+    }
+   
+    var testIndex = TestIndex()
+   
+    
+    func copy(with zone: NSZone? = nil) -> Any {
+        let copy = WifiFileTransfer()
+                copy.counter = counter
+                copy.numOfFiles = numOfFiles
+                return copy
+    }
+    
+    init() {
+        print("WifiFileTransfer initialized")
+    }
+    
+    deinit {
+           print("Deinitializing WifiFileTransfer")
+       }
     
     @Published var wifiTransferService = WifiTransferService()
     
@@ -66,18 +146,12 @@ class WifiFileTransfer: ObservableObject {
         projectFiles.removeAll()
     }
     
-    
-    init() {
-        registerNotification(enabled: true)
-    }
-    
-    
-    
+
     private weak var wifiDownloadComplete: NSObjectProtocol?
     private weak var didEncounterTransferError: NSObjectProtocol?
     private weak var downloadErrorDidOccur: NSObjectProtocol?
     
-    private func registerNotification(enabled: Bool) {
+     func registerWifiNotification(enabled: Bool) {
         print("\(#function) @Line: \(#line)")
         
         let notificationCenter = NotificationCenter.default
@@ -93,6 +167,7 @@ class WifiFileTransfer: ObservableObject {
             
             
         } else {
+            print("Else testObserver")
             if let testObserver = wifiDownloadComplete {notificationCenter.removeObserver(testObserver)}
         }
     }
@@ -157,18 +232,18 @@ class WifiFileTransfer: ObservableObject {
     
     func testFileExistance(for project: String, bundleLink: String) {
         print("\(#function) @Line: \(#line)")
-        //removeFileArrayElements()
         
         projectName = project
         
         DispatchQueue.main.async {
             self.downloadState = .transferring
+            self.testIndex.downloadState = .transferring
         }
         
         let nestedFolderURL = directoryPath.appendingPathComponent(project)
         
         if manager.fileExists(atPath: nestedFolderURL.relativePath) {
-            print("Exist")
+            print("Exist within testFileExistance")
                         
             removeDirectoryAndFiles()
             startFileTransfer(url: nestedFolderURL)
@@ -188,22 +263,10 @@ class WifiFileTransfer: ObservableObject {
     
     
     
-    func filesDownloaded(url: URL) {
-        // removeFileArrayElements()
-        
-        var files = [URL]()
-        // Returns a directory enumerator object that can be used to perform a deep enumeration of the directory at the specified URL.
-        if let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
-            // for case condition: Only process URLs
-            for case let fileURL as URL in enumerator {
-                
-            }
-            
-            
-        }
-    }
+
     
     func startFileTransfer(url: URL) {
+        print("times startFileTransfer was called")
         print("Project Location: \(url)")
         let localFileManager = FileManager()
         let resourceKeys = Set<URLResourceKey>([.nameKey, .isDirectoryKey])
@@ -225,8 +288,6 @@ class WifiFileTransfer: ObservableObject {
             } else {
                 
                 if isDirectory {
-                    print("Directories Found")
-                    print(fileURL.lastPathComponent)
                     if name == "_extras" {
                         dirEnumerator.skipDescendants()
                     }
@@ -246,7 +307,8 @@ class WifiFileTransfer: ObservableObject {
                 }
             }
         }
-        
+      
+        print("times newMakeDirectory was called here")
         newMakeDirectory(directoryArray: filterOutCPDirectories(urls: projectDirectories), regularFilesArray: filterOutCPDirectories(urls: projectFiles))
         
     }
@@ -288,6 +350,7 @@ class WifiFileTransfer: ObservableObject {
     }
     
     func removeNonCPDirectories(urls: [URL]) -> [URL] {
+        print("removeNonCPDirectories called")
         var mutableURLList = urls
         var outgoingArray = [URL]()
         
@@ -298,7 +361,6 @@ class WifiFileTransfer: ObservableObject {
             } else {
                 print("Removed non-CP Directories: \(i)")
             }
-            
         }
         
         return outgoingArray
@@ -308,103 +370,106 @@ class WifiFileTransfer: ObservableObject {
     
     func newMakeDirectory(directoryArray: [URL], regularFilesArray: [URL]) {
         print("==============Start=================\n")
-        
-        print("Count: \(directoryArray.count)")
+
+
         var recursiveArray = removeNonCPDirectories(urls: directoryArray)
-        
-        if recursiveArray.isEmpty {
-            print("newMakeDirectory is empty!")
-            
+        print("directoryArray Count : \(directoryArray.count)")
+        printArray(array: directoryArray)
+        print("recursiveArray Count : \(recursiveArray.count)")
+        printArray(array: recursiveArray)
+
+
+        if recursiveArray.count == 0 {
+
+
             var tempArray = removeNonCPDirectories(urls: regularFilesArray)
+
+            print("TempArray count \(tempArray)")
             
             DispatchQueue.main.async {
                 self.numOfFiles = tempArray.count
+                self.makeFile(files: tempArray)
+             //   self.testIndex.numberOfFiles = self.numOfFiles
 
             }
-                
-            
-            
-            print("tempArry set numOfFiles to : \(self.numOfFiles)")
-            
-            
-            makeFile(files: tempArray)
-            
+
+
         } else {
-            
+
             print("Input URL: \(recursiveArray.first!)")
             var tempPath = recursiveArray.first!.pathComponents
-            
-            
+
+
             if tempPath.contains("CircuitPython 7.x") {
                 var indexOfCP = 0
-                
+
                 print("Found CircuitPython 8.x")
-                
+
                 indexOfCP = recursiveArray[0].pathComponents.firstIndex(of: "CircuitPython 7.x")!
-                
+
                 tempPath.removeSubrange(0...indexOfCP)
-                
+
                 let joined = tempPath.joined(separator: "/")
                 print("Outgoing path:\(joined)")
-                
+
                 print(indexOfCP)
                 print(recursiveArray[0].pathComponents.count)
-                
+
                 wifiTransferService.putDirectory(directoryPath: joined) { result in
-                    
+
                     switch result {
-                        
+
                     case .success(let consent):
                         print("Successful")
-                        
+
                         recursiveArray.removeFirst()
                         self.newMakeDirectory(directoryArray: recursiveArray, regularFilesArray: regularFilesArray)
-                        
+
                     case .failure(let error):
                         print("Error: \(error)")
                     }
                 }
-                
+
             }
-            
+
             if tempPath.contains("CircuitPython 8.x") {
                 var indexOfCP = 0
-                
+
                 print("For \(recursiveArray[0].absoluteString)")
-                
+
                 print("Count \(tempPath.count)")
-                
-                
-                
+
+
+
                 indexOfCP = recursiveArray[0].pathComponents.firstIndex(of: "CircuitPython 8.x")!
                 print("indexOfCP \(indexOfCP)")
                 print(tempPath)
                 tempPath.removeSubrange(0...indexOfCP)
-                
+
                 let joined = tempPath.joined(separator: "/")
                 print("Outgoing path:\(joined)")
                 print(indexOfCP)
                 print(recursiveArray[0].pathComponents.count)
-                
+
                 wifiTransferService.putDirectory(directoryPath: joined) { result in
-                    
+
                     switch result {
-                        
+
                     case .success(let consent):
                         print("Successful")
                         recursiveArray.removeFirst()
                         self.newMakeDirectory(directoryArray: recursiveArray, regularFilesArray: regularFilesArray)
-                        
+
                     case .failure(let error):
                         print("Error: \(error)")
                     }
                 }
-                
-                
+
+
             }
-            
+
         }
-        
+
     }
     
     
@@ -460,17 +525,26 @@ class WifiFileTransfer: ObservableObject {
     
     func completedTransfer() {
         print("Is main queue: \(Thread.isMainThread)")
-        DispatchQueue.main.async {
-            print("\(#function) @Line: \(#line)")
-            self.downloadState = .complete
-            self.counter = 0
-            self.numOfFiles = 0
-        }
         
+        DispatchQueue.main.asyncAfter(deadline: .now()) { [self] in
+            
+            print("\(#function) @Line: \(#line)")
+            downloadState = .complete
+            testIndex.downloadState = .complete
+            counter = 0
+            testIndex.count = 0
+            testIndex.numberOfFiles = 0
+            numOfFiles = 0
+            print("downloadState")
+            print(downloadState)
+            
+          }
+        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
             print("\(#function) @Line: \(#line)")
             self.downloadState = .idle
-            
+            self.testIndex.backToIdle()
         }
     }
     
@@ -512,16 +586,28 @@ class WifiFileTransfer: ObservableObject {
         printArray(array: files)
         var copiedArray = files
         
+        //    self.fetchDocumentsq(in: files)
+        
+        DispatchQueue.main.async {
+            self.counter += 1
+            self.testIndex.count += 1
+            print("Counted.")
+        }
+
         if copiedArray.isEmpty {
-            completedTransfer()
+
+
             print("Transfer Complete")
             print("Copied Array: \(copiedArray)")
             print("Files Array: \(files)")
             print("Counter: \(counter)")
             print("\(#function) @Line: \(#line)")
-            
+
             print("Status: \(downloadState)")
-            
+            DispatchQueue.main.asyncAfter(deadline: .now()) {
+                self.completedTransfer()
+            }
+
 
         } else {
 
@@ -531,74 +617,66 @@ class WifiFileTransfer: ObservableObject {
             }
             // || copiedArray.first?.lastPathComponent == "README.txt"
             if copiedArray.first?.lastPathComponent == "code.py" {
-                
+
                 wifiTransferService.sendPutRequest(fileName: copiedArray.first!.lastPathComponent , body: data) { result in
                     switch result {
-                        
+
                     case .success(_):
                         print("Success\n")
-                        
+
                         print("Removing: \(copiedArray.first!.lastPathComponent)\n")
-                        
-                        DispatchQueue.main.async {
-                            self.counter += 1
-                        }
-                        
+
+
+
                         copiedArray.removeFirst()
                         self.makeFile(files: copiedArray)
-                        
+
                     case .failure(_):
                         print("Failed to write")
                     }
                 }
             } else {
-                
+
                 print("ELSE")
-                
+
                 guard let data = try? Data(contentsOf: URL(string: copiedArray.first!.absoluteString)!) else {
                     print("File not found")
                     return
                 }
-                
+
                 print("Checking for URL: \(copiedArray.first?.lastPathComponent)")
-                
+
                 wifiTransferService.getRequestForFileCheck(read: checkForExistingFilesOnBoard(url: copiedArray.first!.absoluteURL)) { success in
-                    
+
                     if success.contains(where: { name in name.name == copiedArray.first?.lastPathComponent }) {
                         print("Exists in the array")
-                        
-                        DispatchQueue.main.async {
-                            self.counter += 1
-                        }
-                        
+
+
                         copiedArray.removeFirst()
                         self.makeFile(files: copiedArray)
-                        
+
                     } else {
-                        
+
                         self.wifiTransferService.sendPutRequest(fileName: self.makeFileString(url: copiedArray.first!), body: data) { result in
                             switch result {
-                                
+
                             case .success(_):
                                 print("Successful Write for: \(copiedArray.first!.lastPathComponent)\n")
 
-                                DispatchQueue.main.async {
-                                    self.counter += 1
-                                    print("Current counter: \(self.counter)")
-                                }
+
                                 copiedArray.removeFirst()
                                 self.makeFile(files: copiedArray)
                             case .failure(_):
                                 print("Failed to write")
                             }
                         }
-                        
-                        
+
+
                     }
                 }
-                
+
             }
-            
+
         }
         
     }

@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct WifiSubViewCell: View {
+    
     @State var transferInProgress = false
+    
     @State var isDownloaded = false
     
     @StateObject var wifiFileTransfer = WifiFileTransfer()
     @StateObject var wifiTransferService = WifiTransferService()
-    
     let result : ResultItem
-    
     
     @Binding var bindingString: String
     
@@ -25,10 +25,13 @@ struct WifiSubViewCell: View {
     
     @EnvironmentObject var rootViewModel: RootViewModel
     @StateObject var downloadModel = DownloadViewModel()
-    @StateObject var viewModel = WifiSubViewCellModel()
+    @ObservedObject var viewModel = WifiSubViewCellModel()
     
     @Binding var isConnected : Bool
     
+    @State private var counter = 0
+    @State private var numOfFiles = 0
+    @State var downloadState: DownloadState = .idle
     
     
     @State private var showWebViewPopover: Bool = false
@@ -42,6 +45,7 @@ struct WifiSubViewCell: View {
         alertMessage(title: """
 Download Error
 Unable to download project
+Try again later
 """, exitTitle: "Retry") {
             wifiFileTransfer.transferError = false
         }
@@ -60,6 +64,64 @@ Remove device from USB. Press "Reset" on the device.
         }
     }
     
+    func startTransferProcess() {
+        
+        wifiTransferService.getRequest(read: "boot_out.txt") { results in
+            print("Success - second loop")
+            print(results)
+            
+            if wifiFileTransfer.projectDownloaded {
+                
+                wifiFileTransfer.testFileExistance(for: result.projectName, bundleLink: result.bundleLink)
+                
+            } else {
+                downloadModel.trueDownload(useProject: result.bundleLink, projectName: result.projectName)
+            }
+        }
+        
+    }
+    
+    
+    func checkIfUSBInUse() {
+        
+        wifiTransferService.optionRequest(handler: { results in
+            
+            switch results {
+                
+            case .success(let contents):
+                
+                print("Success")
+                
+                if contents.contains("GET, OPTIONS, PUT, DELETE, MOVE") {
+                    
+                    print("Success - first loop")
+                    
+                    startTransferProcess()
+                    
+                } else {
+                    print("Connected to USB")
+                    DispatchQueue.main.async {
+                        usbInUseErrorMessage()
+                    }
+                }
+                
+            case .failure:
+                print("Failure")
+            }
+        })
+        
+        
+        if wifiFileTransfer.projectDownloaded {
+            wifiFileTransfer.testFileExistance(for: result.projectName, bundleLink: result.bundleLink)
+        } else {
+            downloadModel.trueDownload(useProject: result.bundleLink, projectName: result.projectName)
+        }
+        
+        
+        
+    }
+    
+    
     var body: some View {
         
         VStack {
@@ -68,18 +130,18 @@ Remove device from USB. Press "Reset" on the device.
                 
                 if viewModel.projectDownloaded {
                     
-                    //                    HStack {
-                    //                        Spacer()
+                    //                                        HStack {
+                    //                                            Spacer()
                     //
-                    //                        Text("Downloaded")
-                    //                            .foregroundColor(.green)
-                    //                            .padding(.trailing, -15)
-                    //                        Circle()
-                    //                            .fill(.green)
-                    //                            .frame(width: 15, height: 15)
-                    //                            .padding()
-                    //                    }
-                    //                    .padding(.vertical, -8)
+                    //                                            Text("Downloaded")
+                    //                                                .foregroundColor(.green)
+                    //                                                .padding(.trailing, -15)
+                    //                                            Circle()
+                    //                                                .fill(.green)
+                    //                                                .frame(width: 15, height: 15)
+                    //                                                .padding()
+                    //                                        }
+                    //                                        .padding(.vertical, -8)
                 }
                 
                 ImageWithURL(result.projectImage)
@@ -109,6 +171,7 @@ Remove device from USB. Press "Reset" on the device.
                 }
                 .padding(.top, 10)
                 
+
                 ForEach(result.compatibility, id: \.self) { string in
                     if string == "circuitplayground_bluefruit" {
                         
@@ -154,10 +217,7 @@ Remove device from USB. Press "Reset" on the device.
             .sheet(isPresented: $showWebViewPopover, content: {
                 WebView(URLRequest(url: URL(fileURLWithPath: result.learnGuideLink)))
             })
-            .onAppear(){
-                wifiFileTransfer.counter = 0
-                wifiFileTransfer.numOfFiles = 0
-            }
+            
             
             
             
@@ -166,58 +226,14 @@ Remove device from USB. Press "Reset" on the device.
                 if result.compatibility.contains(bindingString) {
                     
                     
-                    if wifiFileTransfer.downloadState == .idle {
+                    if wifiFileTransfer.testIndex.downloadState == .idle {
                         
                         
                         Button {
                             //   NotificationCenter.default.post(name: .didCompleteZip, object: nil, userInfo: projectResponse)
                             
-                            if wifiFileTransfer.projectDownloaded {
-                                
-                                wifiFileTransfer.testFileExistance(for: result.projectName, bundleLink: result.bundleLink)
-                                
-                            } else {
-                                downloadModel.trueDownload(useProject: result.bundleLink, projectName: result.projectName)
-                            }
-                            
-                            
-//                            wifiTransferService.optionRequest(handler: { results in
-//                                switch results {
-//                                    
-//                                case .success(let contents):
-//                                    print("Success")
-//                                    
-//                                    if contents.contains("GET, OPTIONS, PUT, DELETE, MOVE") {
-//                                        
-//                                        self.wifiTransferService.getRequest(read: "boot_out.txt") { results in
-//                                            print(results)
-//                                            
-//                                            if wifiFileTransfer.projectDownloaded {
-//                                                
-//                                                wifiFileTransfer.testFileExistance(for: result.projectName, bundleLink: result.bundleLink)
-//                                                
-//                                            } else {
-//                                                downloadModel.trueDownload(useProject: result.bundleLink, projectName: result.projectName)
-//                                            }
-//                                            
-//                                            
-//                                        }
-//                                    } else {
-//                                        print("Connected to USB")
-//                                        DispatchQueue.main.async {
-//                                            usbInUseErrorMessage()
-//                                        }
-//                                        self.wifiTransferService.getRequest(read: "boot_out.txt") { result in
-//                                           
-//                                        }
-//                                        
-//                                    }
-//                                    
-//                                case .failure:
-//                                    print("Failure")
-//                                }
-//                            })
-                            
+                            checkIfUSBInUse()
+                           
                         } label: {
                             RunItButton()
                                 .padding(.top, 20)
@@ -225,15 +241,15 @@ Remove device from USB. Press "Reset" on the device.
                         
                     }
                     
-                    if wifiFileTransfer.downloadState == .transferring {
+                    if wifiFileTransfer.testIndex.downloadState == .transferring {
                         DownloadingButton()
                             .padding(.top, 20)
                             .disabled(true)
                         
                         VStack(alignment: .center, spacing: 5) {
-                            ProgressView("", value: CGFloat(wifiFileTransfer.counter), total: CGFloat(wifiFileTransfer.numOfFiles) )
+                            ProgressView("", value: CGFloat(counter), total: CGFloat(numOfFiles))
                                 .padding(.horizontal, 90)
-                                .padding(.top, -8)
+                                .padding(.top, -5)
                                 .padding(.bottom, 10)
                                 .accentColor(Color.gray)
                                 .scaleEffect(x: 1, y: 2, anchor: .center)
@@ -242,19 +258,15 @@ Remove device from USB. Press "Reset" on the device.
                             
                             ProgressView()
                         }
-                        .onChange(of: wifiFileTransfer.counter) { i in
-                            print("Wifi Project = \(result.projectName)  index: \(wifiFileTransfer.counter)")
-                            
-                        }
                     }
                     
-                    if wifiFileTransfer.downloadState == .complete {
+                    if wifiFileTransfer.testIndex.downloadState == .complete {
                         CompleteButton()
                             .padding(.top, 20)
                             .disabled(true)
                     }
                     
-                    if wifiFileTransfer.downloadState == .failed {
+                    if wifiFileTransfer.testIndex.downloadState == .failed {
                         FailedButton()
                             .padding(.top, 20)
                             .disabled(true)
@@ -274,32 +286,18 @@ Remove device from USB. Press "Reset" on the device.
                 
             }
         }
+        
         Spacer()
             .frame(height: 30)
             .ignoresSafeArea(.all)
         
-        //        .onChange(of: downloadModel.didDownloadBundle, perform: { newValue in
-        //            print("For project: \(title), project download is \(newValue)")
-        //
-        //            if newValue {
-        //                DispatchQueue.main.async {
-        //                    print("Getting project from Subclass \(title)")
-        //                   // viewModel.getProjectForSubClass(nameOf: title)
-        //                    wifiFileTransfer.projectValidation(nameOf: title)
-        //
-        //                    isDownloaded = true
-        //                }
-        //            }else {
-        //                print("Is not downloaded")
-        //                isDownloaded = false
-        //            }
-        //
-        //        })
+
             .onAppear(perform: {
+                
+                wifiFileTransfer.registerWifiNotification(enabled: true)
                 
                 viewModel.searchPathForProject(nameOf: result.projectName)
                 
-                //  wifiFileTransfer.getProjectForSubClass(nameOf: title)
                 
                 if viewModel.projectDownloaded {
                     isDownloaded = true
@@ -307,26 +305,8 @@ Remove device from USB. Press "Reset" on the device.
                     isDownloaded = false
                 }
                 print("is downloaded? \(viewModel.projectDownloaded)")
-                
-                //  viewModel.checkIfUSBInUse()
-                
+                            
             })
-        
-        //        .onAppear(perform: {
-        //            DispatchQueue.main.asyncAfter(deadline: .now() + 7) {
-        //
-        //                wifiFileTransfer.wifiTransferService.optionRequest(completionHandler: { success in
-        //
-        //                    if success.contains("GET, OPTIONS, PUT, DELETE, MOVE") {
-        //                        print("USB not in use.")
-        //                    } else {
-        //                        print("USB in use.")
-        //                    }
-        //
-        //                })
-        //
-        //            }
-        //        })
         
         
             .padding(.top, 8)
@@ -340,6 +320,50 @@ Remove device from USB. Press "Reset" on the device.
             .onChange(of: viewModel.showUsbInUseError) { newValue in
                 if newValue {
                     usbInUseErrorMessage()
+                }
+            }
+        
+            .onChange(of: wifiFileTransfer.counter) { newValue in
+                print("New counter : \(newValue)")
+                counter = newValue
+            }
+        
+            .onChange(of: wifiFileTransfer.numOfFiles) { newValue in
+                print("New numOfFiles : \(newValue)")
+                numOfFiles = newValue
+            }
+        
+        
+            .onChange(of: wifiFileTransfer.testIndex.count) { newValue in
+                print("New count index : \(newValue)")
+            }
+        
+            .onChange(of: wifiFileTransfer.testIndex.numberOfFiles) { newValue in
+                print("New numberOfFiles index : \(newValue)")
+            }
+        
+            .onChange(of: wifiFileTransfer.testIndex.downloadState) { newValue in
+                print("New download state : \(newValue)")
+            }
+        
+        
+            .onChange(of: wifiFileTransfer.downloadState) { newValue in
+                switch newValue {
+                case .idle:
+                    downloadState = .idle
+                    print("idle")
+                case .transferring:
+                    downloadState = .transferring
+                    print("transferring")
+                case .complete:
+                    downloadState = .complete
+                    print("complete")
+                case .downloading:
+                    downloadState = .downloading
+                    print("downloading")
+                case .failed:
+                    downloadState = .failed
+                    print("failed")
                 }
             }
         

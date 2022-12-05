@@ -75,8 +75,6 @@ struct WifiServiceSelectionView: View {
         
         VStack {
             
-            
-            
             HStack {
                 
                 Button {
@@ -89,7 +87,7 @@ struct WifiServiceSelectionView: View {
                         .offset(y: 15)
                         .foregroundColor(.black)
                 }
-                .padding()
+                .padding(.leading, 30)
                 
                 Spacer()
             }
@@ -105,13 +103,8 @@ struct WifiServiceSelectionView: View {
 
             
             
-           
-            
-           
-            
-            
             if wifiServiceViewModel.isSearching && wifiServiceViewModel.resolvedServices.isEmpty  {
-                Text("WiFi Connect")
+                Text("Wi-Fi Connect")
                     .font(Font.custom("ReadexPro-Regular", size: 36))
                     .multilineTextAlignment(.center)
                     .lineLimit(1)
@@ -158,7 +151,7 @@ struct WifiServiceSelectionView: View {
                 }
                 
                 .padding(.horizontal, 30)
-                .padding(.bottom, 50)
+                .padding(.bottom, 60)
 
                 
                 
@@ -184,16 +177,7 @@ struct WifiServiceSelectionView: View {
                             .minimumScaleFactor(0.1)
                         
                     }
-                    
-                    //                    Button {
-                    //                        print("Is searching: \(wifiServiceViewModel.isSearching)")
-                    //
-                    //                    } label: {
-                    //                        Text("Searching?")
-                    //                    }
-                    
-                    
-                    
+
                     
                     Button {
                     } label: {
@@ -287,18 +271,15 @@ struct WifiServiceSelectionView: View {
                     
                 }
                 .padding(.horizontal, 30)
-                .padding(.bottom, 30)
+               
 
                 
             }
-
+           
            
         }
+        .padding(.bottom, 60)
 
-        .onAppear(){
-           // wifiServiceViewModel.startDiscovery()
-        }
-        
         .onChange(of: viewModel.ipInputValidation, perform: { newValue in
             if newValue {
                 rootViewModel.goToWifiView()

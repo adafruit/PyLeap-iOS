@@ -128,6 +128,9 @@ class BleContentTransfer: ObservableObject {
         if let projectInfo = notification.userInfo as Dictionary? {
             if let title = projectInfo["projectTitle"] as? String, let link = projectInfo["projectLink"] as? String {
                 testFileExistance(for: title, bundleLink: link)
+                DispatchQueue.main.asyncAfter(deadline: .now()) {
+                    self.downloadState = .transferring
+                }
             }
         }
     }

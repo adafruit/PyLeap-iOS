@@ -295,11 +295,8 @@ struct BTConnectionView: View {
         case .disconnected(let error):
             if let error = error {
                 text = "Disconnected: \(error.localizedDescription)"
-                //self.showSheetView.toggle()
             } else {
                 text = "Disconnected"
-                
-                
             }
         }
         return text

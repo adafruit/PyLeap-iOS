@@ -16,22 +16,23 @@ struct SelectionView: View {
         
         VStack {
             
-//            HStack {
-//                Button {
-//                    rootViewModel.goToMain()
-//
-//                } label: {
-//                    Image(systemName: "arrow.backward")
-//                        .resizable()
-//                        .frame(width: 25, height: 25, alignment: .center)
-//                        .offset(y: 15)
-//                        .foregroundColor(.black)
-//                }
-//                .padding()
-//
-//                Spacer()
-//            }
-//            .padding(.top, 15)
+            HStack {
+                Button {
+                   // rootViewModel.goToSelection()
+                    
+                } label: {
+                    Image(systemName: "arrow.backward")
+                        .resizable()
+                        .frame(width: 25, height: 25, alignment: .center)
+                        .offset(y: 15)
+                        .foregroundColor(.clear)
+                }
+                .padding()
+                                
+                Spacer()
+            }
+            .padding(.top, 15)
+
             
             Image("pyleapLogo")
                 .resizable()
@@ -51,7 +52,6 @@ struct SelectionView: View {
             VStack {
                 
                 Button {
-                  //  connectionManager.isDisconnectingFromCurrent = true
                     rootViewModel.goToWiFiSelection()
                 } label: {
                     Text("Wifi")
@@ -62,7 +62,6 @@ struct SelectionView: View {
                         .clipShape(Capsule())
                         .padding(5)
                 }
-                
                 
                 
                 Button {
@@ -108,9 +107,9 @@ struct SelectionView: View {
                 
             }
             
-            Spacer()
+            
         }
-        
+        .padding(.bottom, 60)
         
     }
 }

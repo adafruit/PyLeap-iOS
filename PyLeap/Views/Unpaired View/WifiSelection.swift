@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct WifiSelection: View {
-    @ObservedObject var wifiServiceViewModel = WifiServiceManager()
     @EnvironmentObject var rootViewModel: RootViewModel
     @StateObject var viewModel = WifiViewModel()
 
@@ -77,12 +76,11 @@ struct WifiSelection: View {
                         .offset(y: 15)
                         .foregroundColor(.black)
                 }
-                .padding()
+                .padding(.leading, 30)
                                 
                 Spacer()
             }
             .padding(.top, 15)
-           // .border(.indigo, width: 2)
             
             Image("pyleapLogo")
                 .resizable()
@@ -112,7 +110,6 @@ struct WifiSelection: View {
                         .clipShape(Capsule())
                         .padding(5)
                 }
-                
                 
                 
                 Button {
@@ -153,8 +150,9 @@ struct WifiSelection: View {
                 
             }
             
-            Spacer()
+            
         }
+        .padding(.bottom, 60)
         
         .onChange(of: viewModel.ipInputValidation, perform: { newValue in
             if newValue {

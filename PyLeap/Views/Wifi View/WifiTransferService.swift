@@ -16,7 +16,7 @@ protocol WifiTransferServiceDelegate: AnyObject {
 
 class WifiTransferService: ObservableObject {
 
-    weak var delegate: WifiTransferServiceDelegate?
+ //   weak var delegate: WifiTransferServiceDelegate?
     
     let userDefaults = UserDefaults.standard
     private let kPrefix = Bundle.main.bundleIdentifier!
@@ -137,16 +137,18 @@ class WifiTransferService: ObservableObject {
             
             
             
-            guard let data = data else {
-                print(String(describing: "Error Found: \(String(describing: error))"))
-                print("Failed! Option Request")
-                return
-            }
-
-            if let str = String(data: data, encoding: .utf8) {
-                print("Output:")
-                print(str)
-            }
+//            guard let data = data else {
+//                print(String(describing: "Error Found: \(String(describing: error))"))
+//                print("Failed! Option Request")
+//                return
+//            }
+//
+//            if let str = String(data: data, encoding: .utf8) {
+//                print("Output:")
+//                print(str)
+//            }
+            
+            
         }
         
         task.resume()
@@ -207,8 +209,8 @@ class WifiTransferService: ObservableObject {
     typealias CompletionHandler = (_ success:String) -> Void
 
     
-    func getRequest(read: String, completionHandler: @escaping CompletionHandler){
-        
+    func getRequest(read: String, completionHandler: @escaping CompletionHandler) {
+        print("Second network call made!")
         var semaphore = DispatchSemaphore (value: 0)
         
         let username = ""
@@ -238,9 +240,9 @@ class WifiTransferService: ObservableObject {
                 print(String(describing: "Error Found: \(error)"))
                 return
             }
-            // print(String(data: data, encoding: .utf8)!)
             
             do {
+                print("In do-catch loop of getRequest")
                 let wifiIncomingData = try JSONDecoder().decode([WebDirectoryModel].self, from: data)
                 
                 DispatchQueue.main.async {
@@ -251,7 +253,7 @@ class WifiTransferService: ObservableObject {
             }
             
             if let str = String(data: data, encoding: .utf8) {
-                print(str)
+                print("Out-going getRequest data: \(str)")
                 outgoingString = str
                 print("\(#function) @Line: \(#line)")
                 completionHandler(outgoingString)
@@ -264,6 +266,41 @@ class WifiTransferService: ObservableObject {
         }
         task.resume()
     }
+    
+    
+    func myFunction() {
+        var a = 0
+
+        let group = DispatchGroup()
+        group.enter()
+        
+        
+        
+
+        // avoid deadlocks by not using .main queue here
+        DispatchQueue.global(qos: .default).async {
+            a = 1
+            group.leave()
+        }
+
+        // wait ...
+        group.wait()
+        
+        print(a) // you could also `return a` here
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     typealias CompletionHandlerForCheck = (_ success: [WebDirectoryModel]) -> Void
 
@@ -334,7 +371,6 @@ class WifiTransferService: ObservableObject {
     //  func putDirectory(directoryPath: String, completion: @escaping (Result<Data?, Error>) -> Void) {
     
     func putRequest(fileName: String, fileContent: Data, completion: @escaping (Result<Data?, Error>) -> Void) {
-        print("Test Transfer")
         let parameters = fileContent
         let postData = parameters
         
@@ -371,9 +407,7 @@ class WifiTransferService: ObservableObject {
                 print("File write success!")
                 completion(.success(data))
             }
-            
-            // print(String(data: data, encoding: .utf8)!)
-            
+                        
         }
         task.resume()
     }

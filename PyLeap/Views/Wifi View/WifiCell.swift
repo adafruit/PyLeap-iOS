@@ -8,21 +8,35 @@
 import SwiftUI
 import Foundation
 
+
+class ExpandedState: ObservableObject {
+    @Published var currentCell = ""
+}
+
+
+
 struct WifiCell: View {
+    @EnvironmentObject var expandedState : ExpandedState
     
     let result : ResultItem
     
-    @State private var isExpanded: Bool = false {
+    @State var isExpanded: Bool = false {
         didSet {
-            onViewGeometryChanged()
+                onViewGeometryChanged()
         }
     }
+   
+    @State var isExpandedTest: String = ""
     
+    
+    @ObservedObject var viewModel = WifiCellViewModel()
     @Binding var isConnected: Bool
     @Binding var bootOne: String
     @Binding var stateBinder: DownloadState
     
     var showRunItButton = false
+    
+    var projectName = String()
     
     let onViewGeometryChanged: ()->Void
     
@@ -31,42 +45,54 @@ struct WifiCell: View {
             .frame(maxWidth: .infinity)
     }
     
-    private var content: some View {
+    var header: some View {
+       
+       HStack {
+           Text(result.projectName)
+               .font(Font.custom("ReadexPro-Regular", size: 24))
+               .padding(8)
+               .foregroundColor(.white)
+           
+           Spacer()
+           
+           Image(systemName: "chevron.down")
+               .resizable()
+               .scaledToFit()
+               .frame(width: 30, height: 15, alignment: .center)
+               .foregroundColor(.white)
+               .padding(.trailing, 30)
+       }
+           
+       
+       .padding(.vertical, 5)
+       .padding(.leading)
+       .frame(maxWidth: .infinity)
+       .background(Color("pyleap_purple"))
+       .onTapGesture {
+      //    isExpanded.toggle()
+           expandedState.currentCell = result.bundleLink
+       }
+       
+
+       
+   }
+    
+    
+     var content: some View {
         VStack(alignment: .leading, spacing: 8) {
             header
-               
-            if isExpanded {
-                
+            
+            if isExpanded  {
                 Group {
                     WifiSubViewCell(result: result, bindingString: $bootOne, downloadStateBinder: $stateBinder,isConnected: $isConnected)
+                       
                 }
-
             }
         }
     }
     
-    private var header: some View {
-       
-            HStack {
-                Text(result.projectName)
-                                .font(Font.custom("ReadexPro-Regular", size: 24))
-                                .padding(8)
-                                .foregroundColor(.white)
-                            
-                            Spacer()
-                            
-                            Image(systemName: "chevron.down")
-                                .resizable()
-                                .frame(width: 30, height: 15, alignment: .center)
-                                .foregroundColor(.white)
-                                .padding(.trailing, 30)
-            }
-        
-        .padding(.vertical, 5)
-        .padding(.leading)
-        .frame(maxWidth: .infinity)
-        .background(Color("pyleap_purple"))
-        .onTapGesture { isExpanded.toggle() }
-    }
+
+    
+
     
 }

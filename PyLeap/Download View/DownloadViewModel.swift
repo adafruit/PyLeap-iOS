@@ -98,7 +98,7 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
 
     
     func unzipProjectFile(urlString: String, projectTitle: String) {
-
+        print("Times unzipProjectFile was called")
         let CPZipName = directoryPath.appendingPathComponent("\(projectTitle).zip")
 
      //   _ = directoryPath.appendingPathComponent("PyLeap Folder")
@@ -110,7 +110,7 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
                 if let zipTempFileUrl = tempFileUrl {
                    
                     do {
-
+                        print("Times do looped in unzipProjectFile")
                         let zipData = try Data(contentsOf: zipTempFileUrl)
 
                         try zipData.write(to: CPZipName)
@@ -126,6 +126,8 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
 
                         NotificationCenter.default.post(name: .didCompleteZip, object: nil, userInfo: projectResponse)
 
+                        print("times wifiDownloadComplete was triggered")
+                        
                         NotificationCenter.default.post(name: .wifiDownloadComplete, object: nil, userInfo: projectResponse)
                         
                     } catch {
@@ -183,6 +185,8 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        
+        
         guard let error = error else { return }
         print(error)
 
@@ -195,6 +199,8 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
 
     /// Tells the delegate that a download task has finished downloading.
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+        
+        print("urlSession completed")
         
         guard let httpResponse = downloadTask.response as? HTTPURLResponse,
                    (200...299).contains(httpResponse.statusCode) else {
@@ -224,20 +230,8 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
             try FileManager.default.copyItem(at: location, to: destinationURL)
            
             DispatchQueue.main.async {
-              
+              print("unzipProjectFile loop")
                 self.unzipProjectFile(urlString: self.bundleURL, projectTitle: self.bundleTitle)
-                
-                // If Successful...
-//                print("Successful Download")
-//                self.isDownloading = false
-//                print("Download Location: \(location)")
-//                self.downloadProgress = 1.0
-//                print("\(self.didDownloadBundle) CURRENT STATE")
-//                self.didDownloadBundle = true
-//                print("\(self.didDownloadBundle) CURRENT STATE")
-                  
-                
-
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     self.attemptToSendBunle.toggle()
@@ -280,7 +274,6 @@ class DownloadViewModel: NSObject, ObservableObject, URLSessionDownloadDelegate 
         downloadTaskSession = session.downloadTask(with: validURL)
         downloadTaskSession.resume()
         
-      //  unzipProjectFile(urlString: urlString, projectTitle: projectTitle)
     }
     
     

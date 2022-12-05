@@ -6,11 +6,13 @@
 //
 
 import Foundation
-
+import SwiftUI
 
 class WifiSubViewCellModel: ObservableObject {
     
-    @Published var wifiTransferService =  WifiTransferService()
+    @ObservedObject var wifiTransferService =  WifiTransferService()
+    
+    @ObservedObject var wifiFileTransfer =  WifiFileTransfer()
     
     @Published var projectDownloaded = false
     @Published var failedProjectLaunch = false
@@ -20,12 +22,12 @@ class WifiSubViewCellModel: ObservableObject {
     
     
     init() {
-        registerNotification(enabled: true)
+        registerForUSBInUseErrorNotification(enabled: true)
     }
     
     private weak var usbInUseErrorNotification: NSObjectProtocol?
     
-    private func registerNotification(enabled: Bool) {
+    private func registerForUSBInUseErrorNotification(enabled: Bool) {
         print("\(#function) @Line: \(#line)")
         
         let notificationCenter = NotificationCenter.default
