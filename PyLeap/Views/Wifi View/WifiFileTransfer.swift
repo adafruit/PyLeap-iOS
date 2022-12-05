@@ -156,11 +156,12 @@ class WifiFileTransfer: ObservableObject {
     func showFailedButton() {
        
        DispatchQueue.main.async {
-          
+           self.downloadState = .failed
            self.testIndex.downloadState = .failed
        }
                
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) {
+            self.downloadState = .idle
             self.testIndex.downloadState = .idle
             self.stopTransfer = false
        }
