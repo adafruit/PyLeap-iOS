@@ -564,8 +564,10 @@ class BleContentTransfer: ObservableObject {
         
         
         if sharedBootinfo.contains("CircuitPython 7") {
-            
+            print(tempPathComponents)
             indexOfCP = tempPathComponents.firstIndex(of: "CircuitPython 7.x")!
+            
+            
             tempPathComponents.removeSubrange(0...indexOfCP)
             var joinedArrayPath = tempPathComponents.joined(separator: "/")
             print("\(#function) @Line: \(#line)")

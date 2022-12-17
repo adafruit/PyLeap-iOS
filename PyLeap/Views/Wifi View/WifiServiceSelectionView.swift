@@ -152,9 +152,7 @@ struct WifiServiceSelectionView: View {
                 
                 .padding(.horizontal, 30)
                 .padding(.bottom, 60)
-
-                
-                
+   
             }
              
             else  {
@@ -203,8 +201,10 @@ struct WifiServiceSelectionView: View {
                         .background(Color("pyleap_purple"))
                         .clipShape(Capsule())
                         
-                        
-                        
+                    }
+                    
+                    if wifiServiceViewModel.isSearching {
+                        ProgressView()
                     }
                     
                 }
@@ -227,20 +227,9 @@ struct WifiServiceSelectionView: View {
                         .id(self.scrollViewID)
                     }
                     .foregroundColor(.black)
-
-
-
-                
-
-
-
             }
 
-            
             if wifiServiceViewModel.resolvedServices.isEmpty && !wifiServiceViewModel.isSearching {
-                
-                
-               
                 
                 VStack {
                    
@@ -272,8 +261,6 @@ struct WifiServiceSelectionView: View {
                 }
                 .padding(.horizontal, 30)
                
-
-                
             }
            
            

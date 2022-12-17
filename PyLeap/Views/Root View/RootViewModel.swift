@@ -22,11 +22,13 @@ public class RootViewModel: ObservableObject {
         case fileTransfer
         case wifi
         case settings
+        case bleSettings
         case mainSelection
         case wifiSelection
         case wifiPairingTutorial
         case wifiServiceSelection
         case selection
+        
     }
     
     @Published var destination: Destination = AppEnvironment.isRunningTests ? .mainSelection : .startup
@@ -92,6 +94,10 @@ public class RootViewModel: ObservableObject {
     
     func goToSettings(){
         destination = .settings
+    }
+    
+    func goToBLESettings(){
+        destination = .bleSettings
     }
     
     func showWarningIfBluetoothStateIsNotReady() {

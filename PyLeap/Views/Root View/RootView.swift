@@ -12,6 +12,7 @@ struct RootView: View {
     
     @StateObject private var model = RootViewModel()
     @StateObject var currentCellID = ExpandedState()
+    @StateObject var currentBLECellID = ExpandedBLECellState()
     @ObservedObject var connectionManager = FileTransferConnectionManager.shared
     @AppStorage("onboarding") var onboardingSeen = true
     
@@ -49,7 +50,6 @@ struct RootView: View {
                 
             case .wifi:
                 WifiView()
-                    
                 
             case .selection:
                 SelectionView()
@@ -62,13 +62,17 @@ struct RootView: View {
                 
             case .settings:
                 SettingsView()
+                
+            case .bleSettings:
+                BLESettingsView()
+                
             default:
                 FillerView()
             }
                 
         }
         .environmentObject(currentCellID)
-    
+        .environmentObject(currentBLECellID)
         
         
         .onReceive(NotificationCenter.default.publisher(for: .didUpdateBleState)) { notification in
@@ -85,7 +89,6 @@ struct RootView: View {
         }
         
         .onChange(of: connectionManager.isSelectedPeripheralReconnecting) { isConnectedOrReconnecting in
-            print("😡")
             
             if isConnectedOrReconnecting, model.destination == .fileTransfer {
                 model.destination = .fileTransfer

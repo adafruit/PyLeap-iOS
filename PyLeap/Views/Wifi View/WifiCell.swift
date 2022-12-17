@@ -16,6 +16,7 @@ class ExpandedState: ObservableObject {
 
 
 struct WifiCell: View {
+    
     @EnvironmentObject var expandedState : ExpandedState
     
     let result : ResultItem
@@ -69,7 +70,6 @@ struct WifiCell: View {
        .frame(maxWidth: .infinity)
        .background(Color("pyleap_purple"))
        .onTapGesture {
-      //    isExpanded.toggle()
            expandedState.currentCell = result.bundleLink
        }
        

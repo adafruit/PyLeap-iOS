@@ -9,12 +9,11 @@
 import SwiftUI
 import Combine
 
-
-
 struct WifiView: View {
-    //   @Environment(\.dismiss) private var dismiss
+
     @StateObject var viewModel = WifiViewModel()
     private let kPrefix = Bundle.main.bundleIdentifier!
+   
     // User Defaults
     let userDefaults = UserDefaults.standard
     
@@ -119,30 +118,31 @@ struct WifiView: View {
                     
                     ForEach(check) { demo in
                         
-                                                if demo.bundleLink == test.currentCell {
-                                                    WifiCell(result: demo,isExpanded: trueTog, isConnected: $inConnectedInWifiView, bootOne: $boardBootInfo, stateBinder: $downloadState, onViewGeometryChanged: {
-                                                        
-                                                       
-                                                    })
-                                                    .onAppear(){
-                                                       
-                                                        withAnimation {
-                                                            scroll.scrollTo(demo.id)
-                                                        }
-
-                                                    }
-                                                    .onTapGesture {
-                                                        print("Hi!")
-                                                    }
-                                                    
-                        
-                                                } else {
-                                                    WifiCell(result: demo, isExpanded: falseTog, isConnected: $inConnectedInWifiView, bootOne: $boardBootInfo, stateBinder: $downloadState, onViewGeometryChanged: {
-                                                        withAnimation {
-                                                        //    scroll.scrollTo(demo.id)
-                                                        }
-                                                    })
-                                                }
+                        if demo.bundleLink == test.currentCell {
+                            WifiCell(result: demo,isExpanded: trueTog, isConnected: $inConnectedInWifiView, bootOne: $boardBootInfo, stateBinder: $downloadState, onViewGeometryChanged: {
+                                
+                                
+                            })
+                            .onAppear(){
+                                
+                                withAnimation {
+                                    scroll.scrollTo(demo.id)
+                                }
+                                
+                            }
+                          
+                            
+                            
+                        } else {
+                            
+                            WifiCell(result: demo, isExpanded: falseTog, isConnected: $inConnectedInWifiView, bootOne: $boardBootInfo, stateBinder: $downloadState, onViewGeometryChanged: {
+                                withAnimation {
+                                    //    scroll.scrollTo(demo.id)
+                                }
+                            })
+                            
+                            
+                        }
                     }
                     
                 }

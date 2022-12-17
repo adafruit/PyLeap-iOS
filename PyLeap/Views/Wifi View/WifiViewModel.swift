@@ -34,9 +34,7 @@ class WifiViewModel: ObservableObject {
     @Published var wifiTransferService =  WifiTransferService()
     
     @Published var wifiServiceManager = WifiServiceManager()
-    
-   // @ObservedObject var networkModel = NetworkService()
-    
+        
     var circuitPythonVersion = Int()
     
     @Published var webDirectoryInfo = [WebDirectoryModel]()

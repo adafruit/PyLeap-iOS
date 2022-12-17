@@ -9,7 +9,6 @@ import SwiftUI
 
 struct SettingsView: View {
     
-    
     @State private var jsonFileName: String = ""
     @State private var pythonFileName: String = ""
     
@@ -53,116 +52,128 @@ struct SettingsView: View {
             
             Form {
                 
-                VStack() {
-                    
-                    if viewModel.connectedToDevice {
-                        
-                        
-                        Section() {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("Host Name:")
-                                    .bold()
-                                Text(viewModel.hostName)
-                                Text("IP Address:")
-                                    .bold()
-                                Text(viewModel.ipAddress)
-                                Text("Device:")
-                                    .bold()
-                                Text(viewModel.device)
-                                
-                            }
-                            .padding(.leading,0)
-                        }
-                        
-                    } else {
-                        
-                        Section() {
-                            Button {
-                                rootViewModel.goToWifiView()
-                            } label: {
-                                Text("Connect to Adafruit Device")
-                            }
-                            
-                        }
-                        
-                    }
-                    
-                }
                 
-                if viewModel.connectedToDevice {
-                    Section() {
-                        Button {
-                            rootViewModel.goToSelection()
-                        } label: {
-                            Text("Disconnect")
-                        }
-                    }
-                }
+                    
+//                    if viewModel.connectedToDevice {
+//
+//
+//                        Section() {
+//                            VStack(alignment: .leading, spacing: 8) {
+//                                Text("Host Name:")
+//                                    .bold()
+//                                Text(viewModel.hostName)
+//                                Text("IP Address:")
+//                                    .bold()
+//                                Text(viewModel.ipAddress)
+//                                Text("Device:")
+//                                    .bold()
+//                                Text(viewModel.device)
+//
+//                            }
+//                            .padding(.leading,0)
+//                        }
+//
+//                    } else {
+//
+//                        Section() {
+//                            Button {
+//                                rootViewModel.goToWifiView()
+//                            } label: {
+//                                Text("Connect to Adafruit Device")
+//                            }
+//
+//                        }
+//
+//                    }
+                    
                 
                 
-                if viewModel.connectedToDevice {
-                    
-                        Section {
-                            Text("Enter project URL")
-                            TextField("https://", text: $pythonFileName)
-                                .background(GeometryGetter(rect: $kGuardian.rects[0]))
-                                .keyboardType(.URL)
-                                .textContentType(.URL)
-                                .onSubmit {
-                                    networkModel.fetchThirdParyProject(urlString: pythonFileName)
-                                    print(pythonFileName)
-                                    pythonFileName = ""
-                                }
-                            
+//                if viewModel.connectedToDevice {
+//                    Section() {
+//                        Button {
+//                            rootViewModel.goToSelection()
+//                        } label: {
+//                            Text("Disconnect")
+//                        }
+//                    }
+//                }
+                
+//                Text("Download your own project here. Enter your URL to add your project to the collection.")
+//                    .foregroundColor(.gray)
+//
+                Section {
+                    Text("Enter project URL")
+                    TextField("https://", text: $pythonFileName)
+                        .background(GeometryGetter(rect: $kGuardian.rects[0]))
+                        .keyboardType(.URL)
+                        .textContentType(.URL)
+                        .onSubmit {
+                            networkModel.fetchThirdParyProject(urlString: pythonFileName)
+                            print(pythonFileName)
+                            pythonFileName = ""
                         }
-                    header: {
-                        Text("Add Project")
-                    }
-                    .listRowSeparator(.hidden)
-                    
-                    
-                    
-                    
-                    Section {
-                        
-                        Button("Create Python File"){
-                            presentPythonAlert = true
-                        }
-                        .alert("Create Python File", isPresented: $presentPythonAlert, actions: {
-                            
-                            TextField("", text: $pythonFileName)
-                            
-                            Button("Add", action: {})
-                            
-                            Button("Cancel", role: .cancel, action: {
-                                presentPythonAlert = false
-                            })
-                        }, message: {
-                            Text("Please enter your username and password.")
-                        })
-                        
-                        
-                        Button("Create JSON File"){
-                            presentJSONAlert = true
-                        }
-                        .alert("Create JSON File", isPresented: $presentJSONAlert, actions: {
-                            
-                            TextField("", text: $jsonFileName)
-                            
-                            Button("Add", action: {})
-                            
-                            Button("Cancel", role: .cancel, action: {
-                                presentJSONAlert = false
-                            })
-                        }, message: {
-                            Text("Please enter your username and password.")
-                        })
-                    }
-                header: {
-                    Text("Create")
-                }
                     
                 }
+            header: {
+                Text("""
+Download your own project here. Enter your URL to add your project to the collection.
+
+Add Project
+""")
+            }
+            .listRowSeparator(.hidden)
+   
+            
+        Section{
+            Label("[Go to GitHub](https://github.com/adafruit/pyleap.github.io)", systemImage: "link")
+        }
+            header: {
+                Text("""
+Find more information on adding your own project here:
+""")
+            }
+            
+                    
+//                    Section {
+//
+//                        Button("Create Python File"){
+//                            presentPythonAlert = true
+//                        }
+//                        .alert("Create Python File", isPresented: $presentPythonAlert, actions: {
+//
+//                            TextField("", text: $pythonFileName)
+//
+//                            Button("Add", action: {})
+//
+//                            Button("Cancel", role: .cancel, action: {
+//                                presentPythonAlert = false
+//                            })
+//                        }, message: {
+//                            Text("Please enter your username and password.")
+//                        })
+//
+//
+//                        Button("Create JSON File"){
+//                            presentJSONAlert = true
+//                        }
+//                        .alert("Create JSON File", isPresented: $presentJSONAlert, actions: {
+//
+//                            TextField("", text: $jsonFileName)
+//
+//                            Button("Add", action: {})
+//
+//                            Button("Cancel", role: .cancel, action: {
+//                                presentJSONAlert = false
+//                            })
+//                        }, message: {
+//                            Text("Please enter your username and password.")
+//                        })
+//                    }
+//                header: {
+//                    Text("Create")
+//                }
+                    
+                
                 
                 Section{
                     Label("[Go to Adafruit.com](https://www.adafruit.com)", systemImage: "link")
@@ -191,6 +202,7 @@ struct SettingsView: View {
                     
                     Button {
                         rootViewModel.goToWifiView()
+                        
                     } label: {
                         Text("Back")
                         // .font(.system(size: 18, weight: .regular, design: .default))
@@ -207,6 +219,7 @@ struct SettingsView: View {
                 HStack {
                     Button {
                         rootViewModel.goToWifiView()
+                        
                     } label: {
                         Text("Back")
                     }

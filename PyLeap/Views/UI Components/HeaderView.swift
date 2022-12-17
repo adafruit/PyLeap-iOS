@@ -10,20 +10,43 @@ import SwiftUI
 struct HeaderView: View {
     @State var showSheetView = false
     @EnvironmentObject var rootViewModel: RootViewModel
+
+    
+    
     var body: some View {
 
 
-            HStack {
-                
+        HStack (alignment: .center, spacing: 0) {
 
-                Image("pyleap_logo_white")
+            Image(systemName: "gearshape")
+                .resizable()
+                .frame(width: 25, height: 25, alignment: .center)
+                .offset(y: 15)
+                .padding(.leading, CGFloat(20))
+                .foregroundColor(.clear)
+            
+            Spacer()
+            
+            Image("pyleap_logo_white")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 125, height: 125)
+                .offset(y: 12)
+            
+            Spacer()
+            
+            Button {
+                rootViewModel.goToBLESettings()
+            } label: {
+                Image(systemName: "plus")
                     .resizable()
-                    .scaledToFit()
-                    .frame(width: 125, height: 125)
-                    .offset(y: 12)
-     
-                
+                    .frame(width: 25, height: 25, alignment: .center)
+                    .offset(y: 15)
+                    .padding(.trailing, CGFloat(20))
+                    .foregroundColor(.white)
             }
+            
+        }
         
         .frame(maxWidth: .infinity)
         .frame(maxHeight: 120)
@@ -78,6 +101,7 @@ struct MainHeaderView: View {
 
 
 struct HeaderView_Previews: PreviewProvider {
+
     static var previews: some View {
         HeaderView()
     }

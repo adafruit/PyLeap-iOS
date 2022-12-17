@@ -40,7 +40,7 @@ struct WifiHeaderView: View {
                 Button {
                     rootViewModel.goToSettings()
                 } label: {
-                    Image(systemName: "gearshape")
+                    Image(systemName: "plus")
                         .resizable()
                         .frame(width: 25, height: 25, alignment: .center)
                         .offset(y: 15)

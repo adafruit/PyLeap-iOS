@@ -10,9 +10,8 @@ import SwiftUI
 struct WifiPairingView: View {
     
     @EnvironmentObject var rootViewModel: RootViewModel
-    @State private var showModal = false
     
-   
+    @State private var showModal = false
     @State private var showProgress = false
 
     @State private var userWaitThreshold = false

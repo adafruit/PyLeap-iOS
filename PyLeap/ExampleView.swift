@@ -19,7 +19,7 @@ struct ExampleView: View {
 //
 //            PageView(title: "Choose your Adventure!", subtitle: "Choose a project you would like to send over to your PyLeap compatible device.", imageName: "slide3", showDismissButton: false, shouldShowOnboarding: $shouldShowOnboarding)
 //
-            PageView(title: "Send projects directly from the Adafruit Learning System to your Bluefruit Compatible Device...", subtitle: "...without opening a code editor or connecting to a computer.", imageName: "slide4", showDismissButton: true, shouldShowOnboarding: $shouldShowOnboarding)
+            PageView(title: "Send projects directly from the Adafruit Learning System to your Adafruit Device...", subtitle: "...without opening a code editor or connecting to a computer.", imageName: "slide4", showDismissButton: true, shouldShowOnboarding: $shouldShowOnboarding)
         }
         .tabViewStyle(PageTabViewStyle())
     }

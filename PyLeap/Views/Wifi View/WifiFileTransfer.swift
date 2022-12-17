@@ -582,6 +582,8 @@ class WifiFileTransfer: ObservableObject {
         var indexOfCP = 0
         var tempPathComponents = url.pathComponents
         
+        print("URL in checkForExistingFilesOnBoard : \(tempPathComponents)")
+        
         if WifiCPVersion.versionNumber == 7 {
             
             indexOfCP = tempPathComponents.firstIndex(of: "CircuitPython 7.x")!

@@ -1,14 +1,14 @@
 //
-//  SettingsViewModel.swift
+//  BLESettingsViewModel.swift
 //  PyLeap
 //
-//  Created by Trevor Beaton on 9/14/22.
+//  Created by Trevor Beaton on 12/15/22.
 //
 
 import Foundation
 import SwiftUI
 
-class SettingsViewModel: ObservableObject {
+class BLESettingsViewModel: ObservableObject {
         
     private let kPrefix = Bundle.main.bundleIdentifier!
     let userDefaults = UserDefaults.standard

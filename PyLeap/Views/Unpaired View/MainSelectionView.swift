@@ -18,6 +18,9 @@ struct MainSelectionView: View {
     
     @State private var showWebViewPopover: Bool = false
     
+    @State private var inConnectedInSelectionView = true
+    @State private var boardBootInfo = ""
+    @EnvironmentObject var expandedState : ExpandedBLECellState
     
     @ObservedObject var networkModel = NetworkService()
     @ObservedObject var viewModel = MainSelectionViewModel()
@@ -72,13 +75,35 @@ struct MainSelectionView: View {
                 
                 ScrollViewReader { scroll in
                     
+
+                    
+                    
                     ForEach(networkModel.pdemos) { demo in
-                        DemoViewCell(result: demo, isConnected: $isConnected, deviceInfo: $test, onViewGeometryChanged: {
-                            withAnimation {
-                                scroll.scrollTo(demo.id)
+                        
+                        if demo.bundleLink == expandedState.currentCell {
+                            
+                            DemoViewCell(result: demo, isExpanded: true, isConnected: $inConnectedInSelectionView, deviceInfo: $boardBootInfo, onViewGeometryChanged: {
+                            })
+                            .onAppear(){
+                                print("Cell Appeared")
+                                withAnimation {
+                                    scroll.scrollTo(demo.id)
+                                }
+                                
                             }
-                        })
+                            
+                        } else {
+                            
+                            DemoViewCell(result: demo, isExpanded: false, isConnected: $inConnectedInSelectionView, deviceInfo: $boardBootInfo, onViewGeometryChanged: {
+                                
+                                
+                            })
+                            
+                        }
+                        
                     }
+                    
+                    
                 }
             }
         }

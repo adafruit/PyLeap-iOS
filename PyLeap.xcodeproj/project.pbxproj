@@ -53,6 +53,8 @@
 		D567E2BA28C1382E0009F768 /* WifiSubViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D567E2B928C1382E0009F768 /* WifiSubViewCell.swift */; };
 		D567E2BC28C1527F0009F768 /* WifiSubViewCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D567E2BB28C1527F0009F768 /* WifiSubViewCellModel.swift */; };
 		D567E2DF28C8D40C0009F768 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D567E2DE28C8D40C0009F768 /* SettingsView.swift */; };
+		D56B75D4294BAAB400D008E7 /* BLESettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56B75D3294BAAB400D008E7 /* BLESettingsView.swift */; };
+		D56B75D6294BAACE00D008E7 /* BLESettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56B75D5294BAACE00D008E7 /* BLESettingsViewModel.swift */; };
 		D56F640C270242CA000E5975 /* UIColor+LightAndDark.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F6407270242CA000E5975 /* UIColor+LightAndDark.swift */; };
 		D56F640D270242CA000E5975 /* FileTransferPathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F640A270242CA000E5975 /* FileTransferPathUtils.swift */; };
 		D56F640E270242CA000E5975 /* String+DeletingPrefix.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56F6408270242CA000E5975 /* String+DeletingPrefix.swift */; };
@@ -160,6 +162,8 @@
 		D567E2B928C1382E0009F768 /* WifiSubViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiSubViewCell.swift; sourceTree = "<group>"; };
 		D567E2BB28C1527F0009F768 /* WifiSubViewCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiSubViewCellModel.swift; sourceTree = "<group>"; };
 		D567E2DE28C8D40C0009F768 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		D56B75D3294BAAB400D008E7 /* BLESettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLESettingsView.swift; sourceTree = "<group>"; };
+		D56B75D5294BAACE00D008E7 /* BLESettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLESettingsViewModel.swift; sourceTree = "<group>"; };
 		D56F6407270242CA000E5975 /* UIColor+LightAndDark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+LightAndDark.swift"; sourceTree = "<group>"; };
 		D56F6408270242CA000E5975 /* String+DeletingPrefix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+DeletingPrefix.swift"; sourceTree = "<group>"; };
 		D56F640A270242CA000E5975 /* FileTransferPathUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTransferPathUtils.swift; sourceTree = "<group>"; };
@@ -356,11 +360,21 @@
 		D567E2DD28C8D3E20009F768 /* SettingsView */ = {
 			isa = PBXGroup;
 			children = (
+				D56B75D2294BAA8900D008E7 /* BLESetttings */,
 				D567E2DE28C8D40C0009F768 /* SettingsView.swift */,
 				D534959F2910639300640692 /* KeyboardGuardian.swift */,
 				D5DD39AA28D234C3000FAEB8 /* SettingsViewModel.swift */,
 			);
 			path = SettingsView;
+			sourceTree = "<group>";
+		};
+		D56B75D2294BAA8900D008E7 /* BLESetttings */ = {
+			isa = PBXGroup;
+			children = (
+				D56B75D3294BAAB400D008E7 /* BLESettingsView.swift */,
+				D56B75D5294BAACE00D008E7 /* BLESettingsViewModel.swift */,
+			);
+			path = BLESetttings;
 			sourceTree = "<group>";
 		};
 		D58E1C8628A2B0DE00AB683E /* Wifi View */ = {
@@ -699,6 +713,7 @@
 				D5482F4928E63DB7000B0C8E /* MainSelectionViewModel.swift in Sources */,
 				D5597C3B26B98E1E00DF17C0 /* NumbersOnly.swift in Sources */,
 				D5D1F4A427EBA7E30040E2BF /* NetworkManager.swift in Sources */,
+				D56B75D6294BAACE00D008E7 /* BLESettingsViewModel.swift in Sources */,
 				D5DD39AB28D234C3000FAEB8 /* SettingsViewModel.swift in Sources */,
 				D52A926F29078E0A00973B6B /* WifiServiceSelectionView.swift in Sources */,
 				D5BA1F8328B68ED40012FC62 /* NetworkPeripheral.swift in Sources */,
@@ -725,6 +740,7 @@
 				D5D1F4B027ECFDE00040E2BF /* NavBarModifier.swift in Sources */,
 				D5597C0C26AF018800DF17C0 /* View+If.swift in Sources */,
 				D58E1C8D28A2B32C00AB683E /* Wifi_ifaddrs.m in Sources */,
+				D56B75D4294BAAB400D008E7 /* BLESettingsView.swift in Sources */,
 				D52BE7EE269DF36E00630900 /* DownloadViewModel.swift in Sources */,
 				D59E31AA281B8DD300D24211 /* DownloadState.swift in Sources */,
 				D5BA1F7F28B66F280012FC62 /* WifiServiceManager.swift in Sources */,
@@ -865,7 +881,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
@@ -895,7 +911,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;

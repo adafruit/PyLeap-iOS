@@ -9,10 +9,13 @@ import Foundation
 
 struct DemoViewCell: View {
     
+    @EnvironmentObject var expandedState : ExpandedBLECellState
+    
     let result : ResultItem
-    @State private var isExpanded: Bool = false {
+    
+    @State var isExpanded: Bool = false {
         didSet {
-            onViewGeometryChanged()
+                onViewGeometryChanged()
         }
     }
     
@@ -61,7 +64,10 @@ struct DemoViewCell: View {
         .padding(.leading)
         .frame(maxWidth: .infinity)
         .background(Color("pyleap_purple"))
-        .onTapGesture { isExpanded.toggle() }
+        .onTapGesture {
+            expandedState.currentCell = result.bundleLink
+            
+        }
     }
     
 }

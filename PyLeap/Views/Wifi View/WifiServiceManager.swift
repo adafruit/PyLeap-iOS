@@ -38,9 +38,15 @@ class WifiServiceManager: NSObject, ObservableObject {
     
     override init() {
         super.init()
+        print("Wifi Module Used")
         serviceManagerBrowser.delegate = self
         findService()
         
+    }
+    
+    deinit {
+        print("Wifi Module Removed")
+        self.serviceManagerBrowser.stop()
     }
 
     
@@ -177,7 +183,16 @@ extension WifiServiceManager: NetServiceBrowserDelegate, NetServiceDelegate {
         
         let resolvedService = ResolvedService(ipAddress: ipAddress, hostName: updatedHostName ?? "Unknown", device: sender.name)
                     
-        resolvedServices.append(resolvedService)
+    
+        if resolvedServices.contains(where: {$0.ipAddress == resolvedService.ipAddress}) {
+           // it exists, do nothing
+            print("\(resolvedService.ipAddress) for \(resolvedService.hostName) exists in network")
+        } else {
+            print("\(resolvedService.ipAddress) for \(resolvedService.hostName) Added to Network List")
+            resolvedServices.append(resolvedService)
+        }
+        
+       
         print("resolvedServices count: \(resolvedServices.count)")
 
         }

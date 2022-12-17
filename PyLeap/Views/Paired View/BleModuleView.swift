@@ -8,6 +8,10 @@
 import SwiftUI
 import FileTransferClient
 
+class ExpandedBLECellState: ObservableObject {
+    @Published var currentCell = ""
+}
+
 struct BleModuleView: View {
     
     // Data
@@ -22,31 +26,31 @@ struct BleModuleView: View {
     }
     
     @Environment(\.presentationMode) var presentationMode
-    
+    @EnvironmentObject var expandedState : ExpandedBLECellState
     @ObservedObject var connectionManager = FileTransferConnectionManager.shared
+    
+    
+    
     let selectedPeripheral = FileTransferConnectionManager.shared.selectedPeripheral
     
     @StateObject var viewModel = BleModuleViewModel()
     @ObservedObject var networkService = NetworkService()
     @EnvironmentObject var rootViewModel: RootViewModel
     
-    //clearKnownPeripheralUUIDs
     
     @State private var isConnected = false
     @State private var errorOccured = false
+    
+    @State var notExpanded = false
+    @State var isExpanded = true
+    
     @State private var scrollViewID = UUID()
-    
     @State private var activeAlert: ActiveAlert?
-    
-    
     @State private var boardBootInfo = ""
-    
-    
     @State private var inConnectedInSelectionView = true
     
     @AppStorage("shouldShowOnboarding123") var switchedView: Bool = false
     
-    @State var isExpanded = true
     @State var subviewHeight : CGFloat = 0
     
     func showConfirmationPrompt() {
@@ -259,7 +263,7 @@ struct BleModuleView: View {
                     
                     
                     
-                    ScrollView(.vertical, showsIndicators: true) {
+                    ScrollView(.vertical, showsIndicators: false) {
                         
                         ScrollViewReader { scroll in
                             
@@ -280,13 +284,26 @@ struct BleModuleView: View {
                             
                             ForEach(check) { demo in
                                 
-                                
-                                DemoViewCell(result: demo, isConnected: $inConnectedInSelectionView, deviceInfo: $boardBootInfo, onViewGeometryChanged: {
-                                    withAnimation {
-                                        scroll.scrollTo(demo.id)
+                                if demo.bundleLink == expandedState.currentCell {
+                                    
+                                    DemoViewCell(result: demo, isExpanded: true, isConnected: $inConnectedInSelectionView, deviceInfo: $boardBootInfo, onViewGeometryChanged: {
+                                    })
+                                    .onAppear(){
+                                        print("Cell Appeared")
+                                        withAnimation {
+                                            scroll.scrollTo(demo.id)
+                                        }
+                                        
                                     }
-                                })
-                                
+                                    
+                                } else {
+                                    
+                                    DemoViewCell(result: demo, isExpanded: false, isConnected: $inConnectedInSelectionView, deviceInfo: $boardBootInfo, onViewGeometryChanged: {
+                                        
+                                        
+                                    })
+                                    
+                                }
                                 
                             }
                             
@@ -294,7 +311,7 @@ struct BleModuleView: View {
                         
                         .id(self.scrollViewID)
                     }
-                    
+                    .environmentObject(expandedState)
                 }
                 
             }
