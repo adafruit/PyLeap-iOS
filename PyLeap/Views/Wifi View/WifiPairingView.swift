@@ -6,6 +6,24 @@
 //
 
 import SwiftUI
+import WebKit
+
+struct SwiftUIWebView: UIViewRepresentable {
+    typealias UIViewType = WKWebView
+    
+    let webView: WKWebView
+    
+    init() {
+        webView = WKWebView(frame: .zero)
+        webView.load(URLRequest(url: URL(string: "https://learn.adafruit.com/pyleap-app/wifi-pairing")!))
+    }
+    
+    func makeUIView(context: Context) -> WKWebView {
+        webView
+    }
+    func updateUIView(_ uiView: WKWebView, context: Context) {
+    }
+}
 
 struct WifiPairingView: View {
     
@@ -21,12 +39,14 @@ struct WifiPairingView: View {
     
     var body: some View {
         
-        VStack{
+        VStack {
+            
+            
             
             HStack {
-                
+
                 Button {
-                                           
+
                     self.rootViewModel.goToWiFiSelection()
                 } label: {
                     Image(systemName: "arrow.backward")
@@ -35,73 +55,96 @@ struct WifiPairingView: View {
                         .frame(width: 25, height: 25, alignment: .center)
                         .foregroundColor(Color("pyleap_gray"))
                 }
-                
-                
-                
-                
+
+
+
+
                 Spacer()
                 Image(systemName: "wifi")
                     .resizable()
+                    .foregroundColor(.clear)
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 25, height: 25, alignment: .center)
                     .offset(y: -5)
-                
+
 
             }
             .padding(.top, 50)
             .padding(.horizontal, 30)
+//
+//
+//
+//            Image("pyleapLogo")
+//                .resizable()
+//                .aspectRatio(contentMode: .fit)
+//                .padding(.top, 50)
+//                .padding(.horizontal, 60)
+//
+//
+//            if nextText == 0 {
+//
+//
+//
+//                Text("""
+//        PyLeap’s WiFi mode requires EPS32 devices to have WiFi credentials in an ./env file.
+//
+//        If you’re having trouble connecting, check this documentation:
+//
+//        https://docs.circuitpython.org/en/latest/docs/workflows.html#web
+//
+//        """)
+//                .font(Font.custom("ReadexPro-Regular", size: 24))
+//                .minimumScaleFactor(0.01)
+//                .multilineTextAlignment(.leading)
+//                .padding(.top, 100)
+//                .padding(.horizontal, 30)
+//                .padding(.bottom, 69)
+//
+//
+//                Spacer()
+//
+//                Button(action: {
+//                    rootViewModel.goToWiFiSelection()
+//                }) {
+//
+//                    Text("Back")
+//                        .font(Font.custom("ReadexPro-Regular", size: 25))
+//                        .foregroundColor(Color.white)
+//
+//                        .padding()
+//                        .padding(.horizontal, 60)
+//
+//                        .frame(height: 50)
+//                        .background(Color("pyleap_purple"))
+//                        .clipShape(Capsule())
+//
+//                }
+//                Spacer()
+//                    .frame(height: 60)
+//
+//            }
+            
+            SwiftUIWebView()
+                .padding(.vertical)
             
             
+                            Button(action: {
+                                rootViewModel.goToWiFiSelection()
+                            }) {
             
-            Image("pyleapLogo")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .padding(.top, 50)
-                .padding(.horizontal, 60)
+                                Text("Back")
+                                    .font(Font.custom("ReadexPro-Regular", size: 25))
+                                    .foregroundColor(Color.white)
             
-              
-            if nextText == 0 {
-                
-                
-                
-                Text("""
-        PyLeap’s WiFi mode requires EPS32 devices to have WiFi credentials in an ./env file.
-        
-        If you’re having trouble connecting, check this documentation:
-        
-        https://docs.circuitpython.org/en/latest/docs/workflows.html#web
-        
-        """)
-                .font(Font.custom("ReadexPro-Regular", size: 24))
-                .minimumScaleFactor(0.01)
-                .multilineTextAlignment(.leading)
-                .padding(.top, 100)
-                .padding(.horizontal, 30)
-                .padding(.bottom, 69)
-                
-                
-                Spacer()
-                
-                Button(action: {
-                    rootViewModel.goToWiFiSelection()
-                }) {
-                    
-                    Text("Back")
-                        .font(Font.custom("ReadexPro-Regular", size: 25))
-                        .foregroundColor(Color.white)
-                    
-                        .padding()
-                        .padding(.horizontal, 60)
-                    
-                        .frame(height: 50)
-                        .background(Color("pyleap_purple"))
-                        .clipShape(Capsule())
-                    
-                }
-                Spacer()
-                    .frame(height: 60)
-                
-            }
+                                    .padding()
+                                    .padding(.horizontal, 60)
+            
+                                    .frame(height: 50)
+                                    .background(Color("pyleap_purple"))
+                                    .clipShape(Capsule())
+            
+                            }
+                            .padding()
             
         }
         .edgesIgnoringSafeArea(.all)
