@@ -3,7 +3,7 @@
 //  PyLeap
 //
 //  Created by Trevor Beaton on 10/16/21.
-// Test Commit
+// 
 
 import SwiftUI
 import FileTransferClient
@@ -22,7 +22,6 @@ enum AdafruitDevices {
     @State private var boardBootInfo = ""
     @EnvironmentObject var expandedState : ExpandedBLECellState
 
-    @ObservedObject var networkModel = NetworkService()
     @ObservedObject var viewModel = MainSelectionViewModel()
 
 
@@ -62,7 +61,7 @@ enum AdafruitDevices {
 
                 MainSubHeaderView(device: "Adafruit device")
 
-                if networkModel.pdemos.isEmpty {
+                if viewModel.pdemos.isEmpty {
                     HStack{
                         Spacer()
                         ProgressView()
@@ -78,7 +77,7 @@ enum AdafruitDevices {
 
 
 
-                    ForEach(networkModel.pdemos) { demo in
+                    ForEach(viewModel.pdemos) { demo in
 
                         if demo.bundleLink == expandedState.currentCell {
 
@@ -146,7 +145,7 @@ enum AdafruitDevices {
         })
         .onAppear() {
 
-          //  networkModel.fetch()
+          
             print("Opened MainSelectionView")
         }
 

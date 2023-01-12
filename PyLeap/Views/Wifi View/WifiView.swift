@@ -18,7 +18,6 @@ struct WifiView: View {
     let userDefaults = UserDefaults.standard
     
     @EnvironmentObject var rootViewModel: RootViewModel
-    @ObservedObject var networkModel = NetworkService()
     
     @State private var downloadState = DownloadState.idle
     @State private var scrollViewID = UUID()
@@ -42,9 +41,6 @@ struct WifiView: View {
         viewModel.isInvalidIP.toggle()
     }
     
-    func fetch() {
-        //  viewModel.networkModel.fetch()
-    }
     
     func scanNetworkWifi() {
         viewModel.wifiServiceManager.findService()
@@ -112,7 +108,7 @@ struct WifiView: View {
                     SubHeaderView()
                     
                     
-                    let check = networkModel.pdemos.filter {
+                    let check = viewModel.pdemos.filter {
                         $0.compatibility.contains(boardBootInfo)
                     }
                     

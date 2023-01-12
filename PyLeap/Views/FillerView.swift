@@ -27,7 +27,6 @@ struct FillerView: View {
         .padding(.horizontal, 30)
         .modifier(Alerts(activeAlert: $model.activeAlert, model: model))
         .onAppear {
-            print("Filler View")
             model.setupBluetooth()
         }
         .onChange(of: model.isStartupFinished) { isStartupFinished in

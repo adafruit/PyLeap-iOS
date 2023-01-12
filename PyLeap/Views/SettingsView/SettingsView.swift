@@ -9,8 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     
-    @State private var jsonFileName: String = ""
-    @State private var pythonFileName: String = ""
+    @State private var thirdPartyLink: String = ""
     
     @State private var presentJSONAlert = false
     @State private var presentPythonAlert = false
@@ -103,14 +102,14 @@ struct SettingsView: View {
 //
                 Section {
                     Text("Enter project URL")
-                    TextField("https://", text: $pythonFileName)
+                    TextField("https://", text: $thirdPartyLink)
                         .background(GeometryGetter(rect: $kGuardian.rects[0]))
                         .keyboardType(.URL)
                         .textContentType(.URL)
                         .onSubmit {
-                            networkModel.fetchThirdParyProject(urlString: pythonFileName)
-                            print(pythonFileName)
-                            pythonFileName = ""
+                            networkModel.fetchThirdPartyProject(urlString: thirdPartyLink)
+                            print(thirdPartyLink)
+                            thirdPartyLink = ""
                         }
                     
                 }

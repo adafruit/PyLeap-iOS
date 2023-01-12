@@ -43,6 +43,11 @@ class WifiViewModel: ObservableObject {
     
     @Published var downloadState: DownloadState = .idle
 
+    let dataStore = DataStore()
+    
+    @Published var pdemos : [ResultItem] = []
+    
+
     
     // File Manager Data
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -54,7 +59,7 @@ class WifiViewModel: ObservableObject {
     var ipAddressStored = false
     
     init() {
-        
+        pdemos = dataStore.loadDefaultList()
         checkIP()
         registerNotifications(enabled: true)
         wifiServiceManager.findService()

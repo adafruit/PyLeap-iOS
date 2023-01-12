@@ -9,40 +9,34 @@ import Foundation
 import SwiftUI
 
 class MainSelectionViewModel: ObservableObject {
- 
-    let userDefaults = UserDefaults.standard
+    
+    @ObservedObject var networkModel = NetworkService()
+    
+    let fileManager = FileManager.default
+    
+    let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+    
+    let dataStore = DataStore()
     
     @Published var pdemos : [ResultItem] = []
     
     init() {
-      //  load()
-       // self.pdemos = load()
-    }
-    
-    func makeNetworkCall(){
-      //  networkModel.fetch()
-    }
-    
-    
-    
-    func load() -> [ResultItem] {
-        if let savedProjects = userDefaults.object(forKey: "SavedProjects") as? Data {
+        let fileURL = documentsDirectory.appendingPathComponent("StandardPyLeapProjects.json")
+        
+        if fileManager.fileExists(atPath: fileURL.relativePath) {
+            print("Loading cached remote data.")
+            self.pdemos = self.dataStore.loadDefaultList()
             
-            let decoder = JSONDecoder()
-            
-            if let loadedProjects = try? decoder.decode([ResultItem].self, from: savedProjects) {
+        } else {
+            print("Cached data not found. Fetching default list.")
+            networkModel.fetch {
+                self.pdemos = self.dataStore.loadDefaultList()
                 
-                print("Load saved projects")
-                print(loadedProjects)
-               // pdemos = loadedProjects
-                return loadedProjects
             }
-            
         }
-        print("Returned Empty pdemos")
-        return []
+        
+        
     }
-    
     
     
 }

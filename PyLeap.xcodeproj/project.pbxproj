@@ -32,6 +32,8 @@
 		D53495A02910639300640692 /* KeyboardGuardian.swift in Sources */ = {isa = PBXBuildFile; fileRef = D534959F2910639300640692 /* KeyboardGuardian.swift */; };
 		D534F3FC280B59090053699C /* ExampleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D534F3FB280B59090053699C /* ExampleView.swift */; };
 		D535E21628E1FA910096E548 /* ScrollRefreshableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D535E21528E1FA910096E548 /* ScrollRefreshableView.swift */; };
+		D5361098296F5E5400228E15 /* JSONDecoderHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5361097296F5E5400228E15 /* JSONDecoderHelper.swift */; };
+		D536109A296FB2BB00228E15 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5361099296FB2BB00228E15 /* DataStore.swift */; };
 		D544A1D2281B9BB70038D483 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = D544A1D1281B9BB70038D483 /* Buttons.swift */; };
 		D544A24B281F92840038D483 /* ImageCaching.swift in Sources */ = {isa = PBXBuildFile; fileRef = D544A24A281F92840038D483 /* ImageCaching.swift */; };
 		D544A24F282046840038D483 /* OnAnimationComplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = D544A24E282046840038D483 /* OnAnimationComplete.swift */; };
@@ -137,6 +139,8 @@
 		D534959F2910639300640692 /* KeyboardGuardian.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardGuardian.swift; sourceTree = "<group>"; };
 		D534F3FB280B59090053699C /* ExampleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleView.swift; sourceTree = "<group>"; };
 		D535E21528E1FA910096E548 /* ScrollRefreshableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollRefreshableView.swift; sourceTree = "<group>"; };
+		D5361097296F5E5400228E15 /* JSONDecoderHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONDecoderHelper.swift; sourceTree = "<group>"; };
+		D5361099296FB2BB00228E15 /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
 		D544A1D1281B9BB70038D483 /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		D544A24A281F92840038D483 /* ImageCaching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCaching.swift; sourceTree = "<group>"; };
 		D544A24E282046840038D483 /* OnAnimationComplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnAnimationComplete.swift; sourceTree = "<group>"; };
@@ -496,6 +500,7 @@
 				D5D1F4A327EBA7E30040E2BF /* NetworkManager.swift */,
 				D58358ED27DA5C0F0069F7F5 /* NetworkError.swift */,
 				D595FC2D2812C23D00569D8C /* Image Extension.swift */,
+				D5361097296F5E5400228E15 /* JSONDecoderHelper.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -504,6 +509,7 @@
 			isa = PBXGroup;
 			children = (
 				D5D1F4B127ECFF760040E2BF /* ProjectsModel.swift */,
+				D5361099296FB2BB00228E15 /* DataStore.swift */,
 				D5D7DF2C28B489C0008552D1 /* WebDirectoryModel.swift */,
 			);
 			path = Model;
@@ -722,6 +728,7 @@
 				D567E2BA28C1382E0009F768 /* WifiSubViewCell.swift in Sources */,
 				D59DFD8F268A4A4D001737F6 /* BTConnectionView.swift in Sources */,
 				D58D887B26CC02B60085604A /* OnboardingViewPure.swift in Sources */,
+				D5361098296F5E5400228E15 /* JSONDecoderHelper.swift in Sources */,
 				D52BE85426A0E39100630900 /* BTConnectionViewModel.swift in Sources */,
 				D5DD39A928D11962000FAEB8 /* WifiTransferService.swift in Sources */,
 				D59DFDC2268CFA36001737F6 /* OnboardingStepView.swift in Sources */,
@@ -729,6 +736,7 @@
 				D544A24F282046840038D483 /* OnAnimationComplete.swift in Sources */,
 				D5507AD126C668BC00512BAA /* SearchBarView.swift in Sources */,
 				D59DFDBA268CDEEC001737F6 /* RootViewModel.swift in Sources */,
+				D536109A296FB2BB00228E15 /* DataStore.swift in Sources */,
 				D5C74DF527EB93E300730505 /* DemoViewCell.swift in Sources */,
 				D567E2DF28C8D40C0009F768 /* SettingsView.swift in Sources */,
 				D5482F4B28E75053000B0C8E /* LocalNetworkAuth.swift in Sources */,

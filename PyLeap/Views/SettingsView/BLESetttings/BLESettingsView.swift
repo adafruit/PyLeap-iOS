@@ -61,7 +61,7 @@ struct BLESettingsView: View {
                         .keyboardType(.URL)
                         .textContentType(.URL)
                         .onSubmit {
-                            networkModel.fetchThirdParyProject(urlString: pythonFileName)
+                            networkModel.fetchThirdPartyProject(urlString: pythonFileName)
                             print(pythonFileName)
                             pythonFileName = ""
                         }

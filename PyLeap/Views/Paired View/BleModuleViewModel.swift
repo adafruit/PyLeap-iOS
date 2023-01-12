@@ -18,6 +18,16 @@ class BleModuleViewModel: ObservableObject {
     @Published var isTransmiting = false
     @Published var bootUpInfo = ""
 
+    let dataStore = DataStore()
+    
+    @Published var pdemos : [ResultItem] = []
+    
+    init() {
+       pdemos = dataStore.loadDefaultList()
+    }
+    
+
+    
     enum ProjectViewError: LocalizedError {
         case fileTransferUndefined
     }

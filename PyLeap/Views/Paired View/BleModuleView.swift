@@ -34,7 +34,6 @@ struct BleModuleView: View {
     let selectedPeripheral = FileTransferConnectionManager.shared.selectedPeripheral
     
     @StateObject var viewModel = BleModuleViewModel()
-    @ObservedObject var networkService = NetworkService()
     @EnvironmentObject var rootViewModel: RootViewModel
     
     
@@ -277,7 +276,7 @@ struct BleModuleView: View {
                             }
                             
                             
-                            let check = networkService.pdemos.filter {
+                            let check = viewModel.pdemos.filter {
                                 $0.compatibility.contains(boardBootInfo)
                             }
                             
