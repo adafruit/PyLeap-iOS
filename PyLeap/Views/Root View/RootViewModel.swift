@@ -92,7 +92,7 @@ public class RootViewModel: ObservableObject {
         destination = .fileTransfer
     }
     
-    func goToSettings(){
+    func goToSettings(content: SettingState){
         destination = .settings
     }
     

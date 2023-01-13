@@ -38,7 +38,7 @@ struct WifiHeaderView: View {
                 Spacer()
                 
                 Button {
-                    rootViewModel.goToSettings()
+                    rootViewModel.goToSettings(content: .wifi)
                 } label: {
                     Image(systemName: "plus")
                         .resizable()

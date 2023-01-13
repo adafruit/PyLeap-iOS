@@ -9,31 +9,20 @@ import SwiftUI
 
 struct BLESettingsView: View {
     
-    @State private var jsonFileName: String = ""
-    @State private var pythonFileName: String = ""
-    
-    @State private var presentJSONAlert = false
-    @State private var presentPythonAlert = false
+    @State private var thirdPartyLink: String = ""
     
     @EnvironmentObject var rootViewModel: RootViewModel
     @StateObject var viewModel = SettingsViewModel()
     @ObservedObject var networkModel = NetworkService()
     
-    @ObservedObject private var kGuardian = KeyboardGuardian(textFieldCount: 1)
-    
-    private let kPrefix = Bundle.main.bundleIdentifier!
-    let userDefaults = UserDefaults.standard
-    
     
     func showInvalidURLEntryAlert() {
         alertMessage(title: "Invalid URL entry", exitTitle: "Ok") {
-            
         }
     }
     
     func showDownloadConfirmationAlert() {
         alertMessage(title: "Added to Project List", exitTitle: "Ok") {
-            
         }
     }
     
@@ -42,56 +31,54 @@ struct BLESettingsView: View {
             viewModel.clearKnownIPAddress()
             rootViewModel.goToWifiView()
         } cancel: {
-            
         }
     }
 
-    
     var body: some View {
         
-        
-        VStack {
+        VStack(alignment: .leading, spacing: 8) {
+            
+            Text("Add Custom Project")
+                .font(Font.custom("ReadexPro-SemiBold", size: 24))
+                .padding([.horizontal, .top])
+            
+            Text("""
+Please enter the URL link to your own project that you would like to add to the current list of projects in PyLeap.
+""")
+            .font(Font.custom("ReadexPro-Regular", size: 18))
+            .font(.callout)
+            .padding()
+            
+            TextField("https://", text: $thirdPartyLink)
+                .background(Color.white)
+                .cornerRadius(5)
+                .keyboardType(.URL)
+                .textContentType(.URL)
+                .onSubmit {
+                    networkModel.fetchThirdPartyProject(urlString: thirdPartyLink)
+                    thirdPartyLink = ""
+                }
+                .padding(.horizontal)
+            
             
             Form {
                 
-                Section {
-                    Text("Enter project URL")
-                    TextField("https://", text: $pythonFileName)
-                        .background(GeometryGetter(rect: $kGuardian.rects[0]))
-                        .keyboardType(.URL)
-                        .textContentType(.URL)
-                        .onSubmit {
-                            networkModel.fetchThirdPartyProject(urlString: pythonFileName)
-                            print(pythonFileName)
-                            pythonFileName = ""
-                        }
-                    
+                Section{
+                    Label("[Go to GitHub](https://github.com/adafruit/pyleap.github.io)", systemImage: "link")
                 }
-            header: {
-                Text("""
-Download your own project here. Enter your URL to add your project to the collection.
-
-Add Project
-""")
-            }
-            .listRowSeparator(.hidden)
-   
-            
-        Section{
-            Label("[Go to GitHub](https://github.com/adafruit/pyleap.github.io)", systemImage: "link")
-        }
             header: {
                 Text("""
 Find more information on adding your own project here:
 """)
             }
-        
-        
+                
+                Section{
+                    Label("[Go to Adafruit.com](https://www.adafruit.com)", systemImage: "link")
+                }
+                .font(.system(size: 16, weight: .semibold))
+                
             }
             
-            .offset(y: kGuardian.slide).animation(.easeInOut(duration: 1.0))
-            .onAppear { self.kGuardian.addObserver() }
-            .onDisappear { self.kGuardian.removeObserver() }
             
             .onChange(of: viewModel.invalidURL, perform: { newValue in
                 showInvalidURLEntryAlert()
@@ -108,11 +95,10 @@ Find more information on adding your own project here:
                 ToolbarItem(placement: .navigationBarLeading) {
                     
                     Button {
-                        rootViewModel.goToFileTransfer()
+                        rootViewModel.goToWifiView()
                         
                     } label: {
                         Text("Back")
-                        // .font(.system(size: 18, weight: .regular, design: .default))
                             .foregroundColor(.blue)
                     }
                     .padding(12)
@@ -124,15 +110,44 @@ Find more information on adding your own project here:
         .safeAreaInset(edge: .top) {
             VStack {
                 HStack {
+                    
                     Button {
                         rootViewModel.goToFileTransfer()
-                        
                     } label: {
                         Text("Back")
                     }
-                    
-                    .padding(.leading,20)
+                    .padding(.leading, 20)
                     Spacer()
+                    
+                    //                    switch appState {
+                    //
+                    //                    case .ble:
+                    //                        Button {
+                    //                            rootViewModel.goToFileTransfer()
+                    //                        } label: {
+                    //                            Text("Back")
+                    //                        }
+                    //                        .padding(.leading, 20)
+                    //                        Spacer()
+                    //
+                    //                    case .wifi:
+                    //                        Button {
+                    //                            rootViewModel.goToWifiView()
+                    //                        } label: {
+                    //                            Text("Back")
+                    //                        }
+                    //                        .padding(.leading, 20)
+                    //                        Spacer()
+                    //
+                    //                    case .none:
+                    //                        Button {
+                    //                            rootViewModel.goToMainSelection()
+                    //                        } label: {
+                    //                            Text("Back")
+                    //                        }
+                    //                        .padding(.leading, 20)
+                    //                        Spacer()
+                    //                    }
                 }
                 
                 .frame(height: UIScreen.main.bounds.height / 19)
@@ -140,19 +155,17 @@ Find more information on adding your own project here:
                 
                 HStack {
                     Text("Settings")
-                        .font(.largeTitle)
-                        .bold()
-                    
+                        .font(Font.custom("ReadexPro-Bold", size: 32))
                         .padding(.leading,20)
                     Spacer()
                 }
-                .background(Color(.systemGroupedBackground))
             }
             .padding(.top, 25)
             
         }
         
     }
+
 }
 
 struct BLESettingsView_Previews: PreviewProvider {

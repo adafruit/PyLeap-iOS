@@ -7,32 +7,30 @@
 
 import SwiftUI
 
+enum SettingState {
+    case ble
+    case wifi
+    case none
+}
+
+
 struct SettingsView: View {
     
-    @State private var thirdPartyLink: String = ""
+    // @State public var appState: SettingState = .none
     
-    @State private var presentJSONAlert = false
-    @State private var presentPythonAlert = false
+    @State private var thirdPartyLink: String = ""
     
     @EnvironmentObject var rootViewModel: RootViewModel
     @StateObject var viewModel = SettingsViewModel()
     @ObservedObject var networkModel = NetworkService()
     
-    @ObservedObject private var kGuardian = KeyboardGuardian(textFieldCount: 1)
-    
-    private let kPrefix = Bundle.main.bundleIdentifier!
-    let userDefaults = UserDefaults.standard
-    
-    
     func showInvalidURLEntryAlert() {
         alertMessage(title: "Invalid URL entry", exitTitle: "Ok") {
-            
         }
     }
     
     func showDownloadConfirmationAlert() {
         alertMessage(title: "Added to Project List", exitTitle: "Ok") {
-            
         }
     }
     
@@ -41,138 +39,46 @@ struct SettingsView: View {
             viewModel.clearKnownIPAddress()
             rootViewModel.goToWifiView()
         } cancel: {
-            
         }
     }
     
     var body: some View {
         
-        VStack {
+        VStack(alignment: .leading, spacing: 8) {
+            
+            Text("Add Custom Project")
+                .font(Font.custom("ReadexPro-SemiBold", size: 24))
+                .padding([.horizontal, .top])
+            
+            Text("""
+Please enter the URL link to your own project that you would like to add to the current list of projects in PyLeap.
+""")
+            .font(Font.custom("ReadexPro-Regular", size: 18))
+            .font(.callout)
+            .padding()
+            
+            TextField("https://", text: $thirdPartyLink)
+                .background(Color.white)
+                .cornerRadius(5)
+                .keyboardType(.URL)
+                .textContentType(.URL)
+                .onSubmit {
+                    networkModel.fetchThirdPartyProject(urlString: thirdPartyLink)
+                    thirdPartyLink = ""
+                }
+                .padding(.horizontal)
+            
             
             Form {
                 
-                
-                    
-//                    if viewModel.connectedToDevice {
-//
-//
-//                        Section() {
-//                            VStack(alignment: .leading, spacing: 8) {
-//                                Text("Host Name:")
-//                                    .bold()
-//                                Text(viewModel.hostName)
-//                                Text("IP Address:")
-//                                    .bold()
-//                                Text(viewModel.ipAddress)
-//                                Text("Device:")
-//                                    .bold()
-//                                Text(viewModel.device)
-//
-//                            }
-//                            .padding(.leading,0)
-//                        }
-//
-//                    } else {
-//
-//                        Section() {
-//                            Button {
-//                                rootViewModel.goToWifiView()
-//                            } label: {
-//                                Text("Connect to Adafruit Device")
-//                            }
-//
-//                        }
-//
-//                    }
-                    
-                
-                
-//                if viewModel.connectedToDevice {
-//                    Section() {
-//                        Button {
-//                            rootViewModel.goToSelection()
-//                        } label: {
-//                            Text("Disconnect")
-//                        }
-//                    }
-//                }
-                
-//                Text("Download your own project here. Enter your URL to add your project to the collection.")
-//                    .foregroundColor(.gray)
-//
-                Section {
-                    Text("Enter project URL")
-                    TextField("https://", text: $thirdPartyLink)
-                        .background(GeometryGetter(rect: $kGuardian.rects[0]))
-                        .keyboardType(.URL)
-                        .textContentType(.URL)
-                        .onSubmit {
-                            networkModel.fetchThirdPartyProject(urlString: thirdPartyLink)
-                            print(thirdPartyLink)
-                            thirdPartyLink = ""
-                        }
-                    
+                Section{
+                    Label("[Go to GitHub](https://github.com/adafruit/pyleap.github.io)", systemImage: "link")
                 }
-            header: {
-                Text("""
-Download your own project here. Enter your URL to add your project to the collection.
-
-Add Project
-""")
-            }
-            .listRowSeparator(.hidden)
-   
-            
-        Section{
-            Label("[Go to GitHub](https://github.com/adafruit/pyleap.github.io)", systemImage: "link")
-        }
             header: {
                 Text("""
 Find more information on adding your own project here:
 """)
             }
-            
-                    
-//                    Section {
-//
-//                        Button("Create Python File"){
-//                            presentPythonAlert = true
-//                        }
-//                        .alert("Create Python File", isPresented: $presentPythonAlert, actions: {
-//
-//                            TextField("", text: $pythonFileName)
-//
-//                            Button("Add", action: {})
-//
-//                            Button("Cancel", role: .cancel, action: {
-//                                presentPythonAlert = false
-//                            })
-//                        }, message: {
-//                            Text("Please enter your username and password.")
-//                        })
-//
-//
-//                        Button("Create JSON File"){
-//                            presentJSONAlert = true
-//                        }
-//                        .alert("Create JSON File", isPresented: $presentJSONAlert, actions: {
-//
-//                            TextField("", text: $jsonFileName)
-//
-//                            Button("Add", action: {})
-//
-//                            Button("Cancel", role: .cancel, action: {
-//                                presentJSONAlert = false
-//                            })
-//                        }, message: {
-//                            Text("Please enter your username and password.")
-//                        })
-//                    }
-//                header: {
-//                    Text("Create")
-//                }
-                    
-                
                 
                 Section{
                     Label("[Go to Adafruit.com](https://www.adafruit.com)", systemImage: "link")
@@ -181,9 +87,6 @@ Find more information on adding your own project here:
                 
             }
             
-            .offset(y: kGuardian.slide).animation(.easeInOut(duration: 1.0))
-            .onAppear { self.kGuardian.addObserver() }
-            .onDisappear { self.kGuardian.removeObserver() }
             
             .onChange(of: viewModel.invalidURL, perform: { newValue in
                 showInvalidURLEntryAlert()
@@ -204,7 +107,6 @@ Find more information on adding your own project here:
                         
                     } label: {
                         Text("Back")
-                        // .font(.system(size: 18, weight: .regular, design: .default))
                             .foregroundColor(.blue)
                     }
                     .padding(12)
@@ -216,15 +118,44 @@ Find more information on adding your own project here:
         .safeAreaInset(edge: .top) {
             VStack {
                 HStack {
+                    
                     Button {
                         rootViewModel.goToWifiView()
-                        
                     } label: {
                         Text("Back")
                     }
-                    
-                    .padding(.leading,20)
+                    .padding(.leading, 20)
                     Spacer()
+                    
+                    //                    switch appState {
+                    //
+                    //                    case .ble:
+                    //                        Button {
+                    //                            rootViewModel.goToFileTransfer()
+                    //                        } label: {
+                    //                            Text("Back")
+                    //                        }
+                    //                        .padding(.leading, 20)
+                    //                        Spacer()
+                    //
+                    //                    case .wifi:
+                    //                        Button {
+                    //                            rootViewModel.goToWifiView()
+                    //                        } label: {
+                    //                            Text("Back")
+                    //                        }
+                    //                        .padding(.leading, 20)
+                    //                        Spacer()
+                    //
+                    //                    case .none:
+                    //                        Button {
+                    //                            rootViewModel.goToMainSelection()
+                    //                        } label: {
+                    //                            Text("Back")
+                    //                        }
+                    //                        .padding(.leading, 20)
+                    //                        Spacer()
+                    //                    }
                 }
                 
                 .frame(height: UIScreen.main.bounds.height / 19)
@@ -232,23 +163,17 @@ Find more information on adding your own project here:
                 
                 HStack {
                     Text("Settings")
-                        .font(.largeTitle)
-                        .bold()
-                    
+                        .font(Font.custom("ReadexPro-Bold", size: 32))
                         .padding(.leading,20)
                     Spacer()
                 }
-                .background(Color(.systemGroupedBackground))
             }
             .padding(.top, 25)
             
         }
-
+        
     }
 }
-
-
-
 
 extension View {
     
@@ -262,8 +187,6 @@ extension View {
         alert.addAction(.init(title: exitTitle, style: .cancel, handler: { _ in
             cancel()
         }))
-        
-        
         
         rootController().present(alert, animated: true, completion: nil)
     }
