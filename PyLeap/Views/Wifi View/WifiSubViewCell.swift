@@ -213,7 +213,7 @@ Remove device from USB. Press "Reset" on the device.
                     .padding(.top, 20)
             }
             .sheet(isPresented: $showWebViewPopover, content: {
-                WebView(URLRequest(url: URL(fileURLWithPath: result.learnGuideLink)))
+                SwiftUIWebView(webAddress: result.learnGuideLink)
             })
             
             

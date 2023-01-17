@@ -10,12 +10,13 @@ import WebKit
 
 struct SwiftUIWebView: UIViewRepresentable {
     typealias UIViewType = WKWebView
-    
+    let webAddress: String
     let webView: WKWebView
     
-    init() {
+    init(webAddress: String) {
+        self.webAddress = webAddress
         webView = WKWebView(frame: .zero)
-        webView.load(URLRequest(url: URL(string: "https://learn.adafruit.com/pyleap-app/wifi-pairing")!))
+        webView.load(URLRequest(url: URL(string: webAddress)!))
     }
     
     func makeUIView(context: Context) -> WKWebView {
@@ -36,6 +37,8 @@ struct WifiPairingView: View {
     @State private var nextText = 0
     @State var showSheetView = false
     @State var showConnectionErrorView = false
+    
+    let tutorialAddress = "https://learn.adafruit.com/pyleap-app/wifi-pairing"
     
     var body: some View {
         
@@ -124,7 +127,7 @@ struct WifiPairingView: View {
 //
 //            }
             
-            SwiftUIWebView()
+            SwiftUIWebView(webAddress: tutorialAddress)
                 .padding(.vertical)
             
             

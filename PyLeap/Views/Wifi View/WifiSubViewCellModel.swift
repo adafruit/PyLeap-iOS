@@ -36,7 +36,7 @@ class WifiSubViewCellModel: ObservableObject {
         
         if enabled {
             
-            //            NotificationCenter.default.addObserver(self, selector: #selector(zipSuccess(_:)), name: .usbInUseErrorNotification,object: nil)
+            // NotificationCenter.default.addObserver(self, selector: #selector(zipSuccess(_:)), name: .usbInUseErrorNotification,object: nil)
             
             usbInUseErrorNotification = notificationCenter.addObserver(forName: .usbInUseErrorNotification, object: nil, queue: .main, using: {[weak self] _ in self?.zipSuccess()})
             

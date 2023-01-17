@@ -142,7 +142,7 @@ Try again later
                     .padding(.top, 20)
             }
             .sheet(isPresented: $showWebViewPopover, content: {
-                WebView(URLRequest(url: URL(string: result.learnGuideLink)!))
+                SwiftUIWebView(webAddress: result.learnGuideLink)
             })
             
             
