@@ -11,7 +11,9 @@ import FileTransferClient
 struct RootView: View {
     
     @StateObject private var model = RootViewModel()
-    @ObservedObject private var connectionManager = FileTransferConnectionManager.shared
+    @StateObject var currentCellID = ExpandedState()
+    @StateObject var currentBLECellID = ExpandedBLECellState()
+    @ObservedObject var connectionManager = FileTransferConnectionManager.shared
     @AppStorage("onboarding") var onboardingSeen = true
     
     var data = OnboardingDataModel.data
@@ -19,7 +21,7 @@ struct RootView: View {
     
     var body: some View {
         
-        Group{
+        Group {
             switch model.destination {
             
             case .onboard :
@@ -41,15 +43,37 @@ struct RootView: View {
                 MainSelectionView()
 
             case .fileTransfer:
+                BleModuleView()
+                
+            case .wifiServiceSelection:
+                WifiServiceSelectionView()
+                
+            case .wifi:
+                WifiView()
+                
+            case .selection:
                 SelectionView()
                 
-//            case .test:
-//                ReconnectionView()
-//
+            case .wifiSelection:
+                WifiSelection()
+                
+            case .wifiPairingTutorial:
+                WifiPairingView()
+                
+            case .settings:
+                SettingsView()
+                
+            case .bleSettings:
+                BLESettingsView()
+                
             default:
                 FillerView()
             }
+                
         }
+        .environmentObject(currentCellID)
+        .environmentObject(currentBLECellID)
+        
         
         .onReceive(NotificationCenter.default.publisher(for: .didUpdateBleState)) { notification in
             if !Config.isSimulatingBluetooth {
@@ -69,10 +93,24 @@ struct RootView: View {
             if isConnectedOrReconnecting, model.destination == .fileTransfer {
                 model.destination = .fileTransfer
                 isReconnecting = true
-                
+
             } else {
                 isReconnecting = false
             }
+            
+        }
+        
+        .onChange(of: connectionManager.isDisconnectingFromCurrent) { isDisconnected in
+
+            if isDisconnected {
+                print("Is disconnected.")
+                isReconnecting = false
+                connectionManager.clearAllPeripheralInfo()
+                connectionManager.peripherals = []
+                connectionManager.isDisconnectingFromCurrent = false
+                model.destination = .selection
+            }
+            
         }
         
         
@@ -80,6 +118,7 @@ struct RootView: View {
             DLog("App moving to the foreground. Force reconnect")
             FileTransferConnectionManager.shared.reconnect()
         }
+        
         .environmentObject(model)
         .environmentObject(connectionManager)
         .background(Color.white)
@@ -87,6 +126,7 @@ struct RootView: View {
         .edgesIgnoringSafeArea(.all)
         .ignoresSafeArea(.all)
         .preferredColorScheme(.light)
+        .statusBar(hidden: true)
     }
 }
 

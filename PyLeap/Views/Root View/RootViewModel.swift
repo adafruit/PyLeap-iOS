@@ -8,7 +8,9 @@
 import Foundation
 import FileTransferClient
 
-class RootViewModel: ObservableObject {
+public class RootViewModel: ObservableObject {
+
+  //  public var shared = RootViewModel()
     
     enum Destination {
         //case splash
@@ -18,8 +20,15 @@ class RootViewModel: ObservableObject {
         case bluetoothPairing
         case bluetoothStatus
         case fileTransfer
-        //case test
+        case wifi
+        case settings
+        case bleSettings
         case mainSelection
+        case wifiSelection
+        case wifiPairingTutorial
+        case wifiServiceSelection
+        case selection
+        
     }
     
     @Published var destination: Destination = AppEnvironment.isRunningTests ? .mainSelection : .startup
@@ -29,8 +38,28 @@ class RootViewModel: ObservableObject {
         //destination = .test
     }
     
+    func goToWiFiServiceSelection() {
+        destination = .wifiServiceSelection
+    }
+    
+    func goToWifiPairingTutorial() {
+        destination = .wifiPairingTutorial
+    }
+    
+    func goToWiFiSelection() {
+        destination = .wifiSelection
+    }
+    
+    func goToWifiView() {
+        destination = .wifi
+    }
+    
     func goTobluetoothPairing() {
         destination = .bluetoothPairing
+    }
+    
+    func goToSelection(){
+        destination = .selection
     }
     
     func goToMainSelection(){
@@ -47,6 +76,10 @@ class RootViewModel: ObservableObject {
         }
     }
     
+    func backToMain() {
+        destination = .main
+    }
+    
     func goToStartup(){
         destination = .startup
     }
@@ -59,6 +92,13 @@ class RootViewModel: ObservableObject {
         destination = .fileTransfer
     }
     
+    func goToSettings(content: SettingState){
+        destination = .settings
+    }
+    
+    func goToBLESettings(){
+        destination = .bleSettings
+    }
     
     func showWarningIfBluetoothStateIsNotReady() {
         let bluetoothState = BleManager.shared.state
@@ -71,6 +111,8 @@ class RootViewModel: ObservableObject {
             goToStartup()
         }
     }
+    
+    
     
 }
 

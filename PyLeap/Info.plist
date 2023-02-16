@@ -25,9 +25,16 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>This app needs access to Bluetooth to connect to Adafruit devices</string>
+	<string>PyLeap requires access to Bluetooth to connect to Adafruit devices</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>This app needs access to Bluetooth to connect to Adafruit devices</string>
+	<string>PyLeap requires access to Bluetooth to connect to Adafruit devices</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_circuitpython._tcp</string>
+		<string>_bonjour._tcp</string>
+	</array>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>PyLeap uses the local network to communicate with your Adafruit device</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>ReadexPro-Medium.ttf</string>
@@ -57,10 +64,6 @@
 	<key>UIStatusBarHidden</key>
 	<false/>
 	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>

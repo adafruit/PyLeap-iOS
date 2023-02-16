@@ -16,13 +16,16 @@ struct BlinkaAnimationView: View {
                .repeatForever(autoreverses: false)
        }
     
+    var height: CGFloat
+    var width: CGFloat
+    
     var body: some View {
         
         ZStack {
             Image("BlinkaLoading")
                 .resizable(resizingMode: .stretch)
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 300, height: 300)
+                .frame(width: width, height: height)
                 .rotationEffect(Angle(degrees: self.isAnimating ? 360 : 0.0))
                 .animation(self.isAnimating ? foreverAnimation : .default)
             
@@ -34,6 +37,6 @@ struct BlinkaAnimationView: View {
 
 struct ScanningView_Previews: PreviewProvider {
     static var previews: some View {
-        BlinkaAnimationView()
+        BlinkaAnimationView(height: 300, width: 300)
     }
 }

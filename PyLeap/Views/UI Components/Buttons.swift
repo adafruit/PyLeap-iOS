@@ -35,8 +35,8 @@ struct PairingTutorialButton: View {
             Rectangle()
                 .frame(width: 270, height: 50, alignment: .center)
                 .cornerRadius(25)
-                .foregroundColor(Color("pyleap_pink"))
-            
+                .foregroundColor(Color("bluetooth_button_color"))
+
             Text("Pairing Tutorial")
                 .font(Font.custom("ReadexPro-Regular", size: 25))
                 .foregroundColor(Color.white)

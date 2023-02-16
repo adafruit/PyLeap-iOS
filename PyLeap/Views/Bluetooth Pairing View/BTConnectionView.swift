@@ -29,44 +29,37 @@ struct BTConnectionView: View {
         VStack{
             
             HStack {
-                
                 Button {
-                                           
-                    self.rootViewModel.goToMain()
+                    rootViewModel.goToSelection()
+                    
                 } label: {
                     Image(systemName: "arrow.backward")
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 30, height: 30, alignment: .center)
-                        .foregroundColor(Color("pyleap_gray"))
+                        .frame(width: 25, height: 25, alignment: .center)
+                        .offset(y: 15)
+                        .foregroundColor(.black)
                 }
-                
-                
-                
-                
+                .padding()
+                                
                 Spacer()
-                Image("bluetooth")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 30, height: 30, alignment: .center)
-                    .offset(y: -5)
                 
-                    .onReceive(timer) { _ in
-                        nextText = 1
-                        timer.upstream.connect().cancel()
-                    }
+    
+                
             }
-            .padding(.top, 50)
-            .padding(.horizontal, 30)
+            .padding(.top, 15)
+            
+            
+            
             
             
             
             Image("pyleapLogo")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
+                .minimumScaleFactor(0.1)
                 .padding(.top, 50)
                 .padding(.horizontal, 60)
-            
+
                 .sheet(isPresented: $showConnectionErrorView) {
                     TroubleshootView()
                 }
@@ -76,19 +69,29 @@ struct BTConnectionView: View {
                 
                 
                 
-                Text("Searching for PyLeap compatible device...")
+                Text("Bluetooth Connect")
+                    .font(Font.custom("ReadexPro-Regular", size: 36))
+                    .multilineTextAlignment(.center)
+                    .minimumScaleFactor(0.01)
+                    .lineLimit(1)
+                    .padding()
                     .padding(.horizontal, 30)
-                    .font(Font.custom("ReadexPro-Regular", size: 24))
-                    .minimumScaleFactor(0.1)
-                    .padding(.horizontal, 30)
+
                 
                 Spacer()
                 
-                BlinkaAnimationView()
-                    .minimumScaleFactor(0.1)
+                
+                BlinkaAnimationView(height: 150, width: 145)
+                    .padding(.bottom, 20)
                     .rotationEffect(Angle(degrees: self.isAnimating ? 360 : 0.0))
+                    .onAppear() {
+                        Animation.linear(duration: 1.0)
+                            .repeatForever(autoreverses: false)
+                        isAnimating = true
+                    }
                 
-                Spacer()
+                
+                
                 
                     .onAppear() {
                         Animation.linear(duration: 1.0)
@@ -98,6 +101,9 @@ struct BTConnectionView: View {
                 
                 Text(detailText)
                     .font(Font.custom("ReadexPro-Regular", size: 24))
+                    .multilineTextAlignment(.center)
+                    .minimumScaleFactor(0.1)
+                    .lineLimit(2)
                 
                 Button(action: {
                     nextText = 1
@@ -222,10 +228,7 @@ struct BTConnectionView: View {
                     Text("Pair Device")
                         .font(Font.custom("ReadexPro-Regular", size: 25))
                         .foregroundColor(Color.white)
-                    
-                    
                         .padding(.horizontal, 60)
-                    
                         .frame(height: 50)
                         .background(Color("pyleap_pink"))
                         .clipShape(Capsule())
@@ -275,7 +278,7 @@ struct BTConnectionView: View {
         let text: String
         switch model.connectionStatus {
         case .scanning:
-            text = "Scanning..."
+            text = "Scanning for PyLeap compatible devices..."
         case .restoringConnection:
             text = "Restoring connection..."
         case .connecting:
@@ -292,11 +295,8 @@ struct BTConnectionView: View {
         case .disconnected(let error):
             if let error = error {
                 text = "Disconnected: \(error.localizedDescription)"
-                //self.showSheetView.toggle()
             } else {
                 text = "Disconnected"
-                
-                
             }
         }
         return text

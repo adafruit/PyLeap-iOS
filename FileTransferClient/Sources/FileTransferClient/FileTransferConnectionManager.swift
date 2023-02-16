@@ -27,6 +27,8 @@ public class FileTransferConnectionManager: ObservableObject {
     @Published public var isConnectedOrReconnecting = false         // Is any peripheral connected or trying to connect
     @Published public var isAnyPeripheralConnecting = false
     
+    @Published public var isDisconnectingFromCurrent = false
+    
     // Parameters
     public var userDefaults = UserDefaults.standard        // Can be replaced if data saved needs to be shared
 
@@ -327,7 +329,15 @@ public class FileTransferConnectionManager: ObservableObject {
     private func clearKnownPeripheralUUIDs() {
         userDefaults.set(nil, forKey: Self.knownPeripheralsKey )
     }
+    
+    public func clearAllPeripheralInfo() {
+        fileTransferClients = [:]
+        NotificationCenter.default.post(name: .didFailToReconnectToKnownPeripheral, object: nil)
 
+        userDefaults.set(nil, forKey: Self.knownPeripheralsKey )
+    }
+    
+    
     // MARK: - Notifications
     private var willConnectToPeripheralObserver: NSObjectProtocol?
     private var didConnectToPeripheralObserver: NSObjectProtocol?

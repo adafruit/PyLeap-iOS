@@ -18,17 +18,15 @@ struct FillerView: View {
             Image("pyleapLogo")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .offset(y: -20)
+                .offset(y: -30)
             
             ProgressView()
 
         }
         .preferredColorScheme(.light)
-        .padding(.horizontal, 20)
-        .edgesIgnoringSafeArea(.all)
+        .padding(.horizontal, 30)
         .modifier(Alerts(activeAlert: $model.activeAlert, model: model))
         .onAppear {
-            print("Filler View")
             model.setupBluetooth()
         }
         .onChange(of: model.isStartupFinished) { isStartupFinished in

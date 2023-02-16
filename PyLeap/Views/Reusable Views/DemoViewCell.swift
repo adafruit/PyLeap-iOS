@@ -9,22 +9,20 @@ import Foundation
 
 struct DemoViewCell: View {
     
-    
-    
-    @StateObject var spotlight = SpotlightCounter()
+    @EnvironmentObject var expandedState : ExpandedBLECellState
     
     let result : ResultItem
-    @State private var isExpanded: Bool = false {
+    
+    @State var isExpanded: Bool = false {
         didSet {
-            onViewGeometryChanged()
+                onViewGeometryChanged()
         }
     }
+    
     @Binding var isConnected: Bool
-    @Binding var bootOne: String
+    @Binding var deviceInfo: String
    
     let onViewGeometryChanged: ()->Void
-    
-    @Binding var stateBinder: DownloadState
     
     var body: some View {
         content
@@ -35,23 +33,12 @@ struct DemoViewCell: View {
         VStack(alignment: .leading, spacing: 8) {
             header
                
-            
-            
-            
             if isExpanded {
                 
                 Group {
-                    DemoSubview(bindingString: $bootOne, downloadStateBinder: $stateBinder, title: result.projectName,
-                                image: result.projectImage,
-                                description: result.description,
-                                learnGuideLink: URLRequest(url: URL(string: result.learnGuideLink)!),
-                                downloadLink: result.bundleLink,
-                                compatibility: result.compatibility,
-                                isConnected: $isConnected)
+                    DemoSubview(bindingString: $deviceInfo, result: result, isConnected: $isConnected)
                 }
-                .onTapGesture {
-                    print("sub \(spotlight.counter)")
-                }
+                
             }
         }
     }
@@ -77,7 +64,10 @@ struct DemoViewCell: View {
         .padding(.leading)
         .frame(maxWidth: .infinity)
         .background(Color("pyleap_purple"))
-        .onTapGesture { isExpanded.toggle() }
+        .onTapGesture {
+            expandedState.currentCell = result.bundleLink
+            
+        }
     }
     
 }

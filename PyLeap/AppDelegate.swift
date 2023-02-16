@@ -9,8 +9,6 @@ import UIKit
 
 class AppDelegate: NSObject, UIApplicationDelegate {
    
-    
-    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
         // UI
@@ -20,21 +18,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
     
     private func setupAppearances() {
-        print("Set Appearance")
-        // Navigation bar title
-      //  UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.white]
-    //    UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.white]
-        
-        // Navigation bar background
-      //  UINavigationBar.appearance().barTintColor = .clear
-     //   UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
-        
-        // List background
-//        UITableView.appearance().backgroundColor = UIColor.clear
-//        UITableView.appearance().separatorStyle = .none
-//        UITableViewCell.appearance().backgroundColor = .clear
-//
-        // Alerts
+         // Alerts
         UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .blue
     }
 }

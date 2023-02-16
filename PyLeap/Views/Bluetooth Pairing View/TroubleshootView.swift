@@ -86,7 +86,7 @@ struct TroubleshootView: View {
             
             Button {
                 
-                UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                UIApplication.shared.open(URL(string: "App-Prefs:root=Bluetooth")!)
             } label: {
                 
                 ZStack {
