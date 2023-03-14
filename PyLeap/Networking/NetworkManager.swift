@@ -26,7 +26,7 @@ class NetworkService: ObservableObject {
         
         // Session Configuration & Caching Policy
         let configuration = URLSessionConfiguration.default
-        //   configuration.requestCachePolicy = .useProtocolCachePolicy
+           configuration.requestCachePolicy = .returnCacheDataElseLoad
         
         return URLSession(configuration: configuration)
     }()
@@ -34,8 +34,8 @@ class NetworkService: ObservableObject {
     
     func fetch(completion: @escaping() -> Void) {
         print("Attempting Network Request")
-        let request = URLRequest(url: URL(string: AdafruitInfo.baseURL)!, cachePolicy: URLRequest.CachePolicy.reloadIgnoringLocalCacheData, timeoutInterval: 60.0)
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        let request = URLRequest(url: URL(string: AdafruitInfo.baseURL)!, cachePolicy: URLRequest.CachePolicy.returnCacheDataElseLoad, timeoutInterval: 60.0)
+        let task = session.dataTask(with: request) { data, response, error in
             
             if let error = error {
                 print("error: \(error)")

@@ -17,7 +17,7 @@ struct RunItButton: View {
                 .cornerRadius(25)
                 .foregroundColor(Color("pyleap_pink"))
             
-            Text("Run it!")
+            Text("Run")
                 .font(Font.custom("ReadexPro-Regular", size: 25))
                 .foregroundColor(Color.white)
                 .frame(height: 50)
