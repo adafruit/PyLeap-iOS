@@ -379,6 +379,7 @@
 		D58E1C8628A2B0DE00AB683E /* Wifi View */ = {
 			isa = PBXGroup;
 			children = (
+				D567E2DD28C8D3E20009F768 /* SettingsView */,
 				D58E1C8728A2B10B00AB683E /* WifiView.swift */,
 				D567E2B728C137880009F768 /* WifiCell.swift */,
 				D51D1412293A53BD0028AEDD /* WifiCellViewModel.swift */,
@@ -411,7 +412,6 @@
 		D59DFDB2268CCEAC001737F6 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				D567E2DD28C8D3E20009F768 /* SettingsView */,
 				D58E1C8628A2B0DE00AB683E /* Wifi View */,
 				D5507ACE26C668BC00512BAA /* UI Components */,
 				D59DFDB3268CCEB9001737F6 /* Onboarding Views */,
