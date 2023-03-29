@@ -16,8 +16,6 @@ struct WifiHeaderView: View {
 
         VStack {
         
-            
-            
             HStack (alignment: .center, spacing: 0) {
 
                 Image(systemName: "gearshape")
