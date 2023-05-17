@@ -69,32 +69,7 @@ class WifiSubViewCellModel: ObservableObject {
                 print("Failure")
             }
             
-            
-            
-            
-            //            if success.contains("GET, OPTIONS, PUT, DELETE, MOVE") {
-            //
-            //                print("USB not in use.")
-            //                DispatchQueue.main.async {
-            //                    self.usbInUse = false
-            //                }
-            //
-            //                //                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            //                //                     if wifiFileTransfer.projectDownloaded {
-            //                //
-            //                //                         wifiFileTransfer.testFileExistance(for: result.projectName, bundleLink: result.bundleLink)
-            //                //
-            //                //                     } else {
-            //                //                         downloadModel.trueDownload(useProject: result.bundleLink, projectName: result.projectName)
-            //                //                     }
-            //                //                 }
-            //
-            //            } else {
-            //                DispatchQueue.main.async {
-            //                    self.usbInUse = true
-            //                }
-            //                print("USB in use - files cannot be tranferred or moved while USB is in use. Show Error")
-            //            }
+
             
         })
         

@@ -63,7 +63,6 @@ class WifiViewModel: ObservableObject {
         checkIP()
         registerNotifications(enabled: true)
         wifiServiceManager.findService()
-        //read()
     }
     
     /// Makes a network call to populate our project list
