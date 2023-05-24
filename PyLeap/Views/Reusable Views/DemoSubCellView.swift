@@ -10,13 +10,13 @@ import FileTransferClient
 
 struct DemoSubview: View {
     
-    @Binding var bindingString: String
-    
     let result: ResultItem
     
     @EnvironmentObject var rootViewModel: RootViewModel
     @StateObject var viewModel = SubCellViewModel()
-    @StateObject var contentTransfer = BleContentTransfer()
+    //@StateObject var contentTransfer = BleContentTransfer()
+    @StateObject var contentTransfer = BleContentTransfer.shared
+    
     
     @ObservedObject var connectionManager = FileTransferConnectionManager.shared
     
@@ -150,16 +150,7 @@ Try again later
             
             if isConnected {
                 
-                if result.compatibility.contains(bindingString) {
-                    
-//                    Button {
-//                        viewModel.deleteStoredFilesInFM()
-//                    } label: {
-//                        Text("Delete File Manager Contents")
-//                            .bold()
-//                            .padding(12)
-//                    }
-                    
+
                     if contentTransfer.downloadState == .idle {
                         
                         Button(action: {
@@ -210,7 +201,7 @@ Try again later
                         CompleteButton()
                             .padding(.top, 20)
                     }
-                }
+                
                 
             } else {
                 
@@ -231,9 +222,7 @@ Try again later
                 
                 print("On Appear")
                 contentTransfer.contentCommands.setup(fileTransferClient: connectionManager.selectedClient)
-            
-                // viewModel.readFile(filename: "boot_out.txt")
-            }
+                }
         
             .onChange(of: contentTransfer.transferError, perform: { newValue in
                 if newValue {
@@ -246,15 +235,9 @@ Try again later
                     showDownloadErrorMessage()
                 }
             })
-        
-        
-//            .onChange(of: connectionManager.selectedClient) { selectedClient in
-//                viewModel.setup(fileTransferClient: selectedClient)
-//            }
-        
+
             .onAppear(perform: {
                 
-                contentTransfer.readMyStatus()
                 viewModel.searchPathForProject(nameOf: result.projectName)
               
                 if viewModel.projectDownloaded {

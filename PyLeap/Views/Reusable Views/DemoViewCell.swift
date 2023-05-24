@@ -36,7 +36,7 @@ struct DemoViewCell: View {
             if isExpanded {
                 
                 Group {
-                    DemoSubview(bindingString: $deviceInfo, result: result, isConnected: $isConnected)
+                    DemoSubview(result: result, isConnected: $isConnected)
                 }
                 
             }

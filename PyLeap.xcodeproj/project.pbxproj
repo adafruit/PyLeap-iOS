@@ -84,6 +84,8 @@
 		D5BA1F7F28B66F280012FC62 /* WifiServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BA1F7E28B66F280012FC62 /* WifiServiceManager.swift */; };
 		D5BA1F8128B66F920012FC62 /* CircuitPythonService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BA1F8028B66F920012FC62 /* CircuitPythonService.swift */; };
 		D5BA1F8328B68ED40012FC62 /* NetworkPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BA1F8228B68ED40012FC62 /* NetworkPeripheral.swift */; };
+		D5BBD12C2A1538C100961B68 /* BoardDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BBD12B2A1538C100961B68 /* BoardDataProvider.swift */; };
+		D5BBD12E2A1C6AB300961B68 /* BleBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BBD12D2A1C6AB300961B68 /* BleBannerView.swift */; };
 		D5C474AC27E174A5002DD160 /* WebView Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C474AB27E174A5002DD160 /* WebView Content.swift */; };
 		D5C474C827E39FD7002DD160 /* ReadexPro-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D5C474C627E39FC8002DD160 /* ReadexPro-Medium.ttf */; };
 		D5C474C927E39FDA002DD160 /* ReadexPro-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D5C474C727E39FC8002DD160 /* ReadexPro-Regular.ttf */; };
@@ -194,6 +196,8 @@
 		D5BA1F7E28B66F280012FC62 /* WifiServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiServiceManager.swift; sourceTree = "<group>"; };
 		D5BA1F8028B66F920012FC62 /* CircuitPythonService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircuitPythonService.swift; sourceTree = "<group>"; };
 		D5BA1F8228B68ED40012FC62 /* NetworkPeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkPeripheral.swift; sourceTree = "<group>"; };
+		D5BBD12B2A1538C100961B68 /* BoardDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardDataProvider.swift; sourceTree = "<group>"; };
+		D5BBD12D2A1C6AB300961B68 /* BleBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleBannerView.swift; sourceTree = "<group>"; };
 		D5C474AB27E174A5002DD160 /* WebView Content.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WebView Content.swift"; sourceTree = "<group>"; };
 		D5C474C227E39FAD002DD160 /* ReadexPro-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ReadexPro-Bold.ttf"; sourceTree = "<group>"; };
 		D5C474C527E39FC8002DD160 /* ReadexPro-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ReadexPro-Light.ttf"; sourceTree = "<group>"; };
@@ -278,6 +282,7 @@
 				D59DFDB5268CD052001737F6 /* AppEnvironment.swift */,
 				D534F3FB280B59090053699C /* ExampleView.swift */,
 				D544A2502822D4730038D483 /* Spotlight Extension.swift */,
+				D5BBD12A2A15389400961B68 /* Helpers */,
 				D567E2B428B80DC10009F768 /* Outline.md */,
 				D5C74DF027EB92E900730505 /* Model */,
 				D59DFDB2268CCEAC001737F6 /* Views */,
@@ -438,6 +443,14 @@
 			path = "Onboarding Views";
 			sourceTree = "<group>";
 		};
+		D5BBD12A2A15389400961B68 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				D5BBD12B2A1538C100961B68 /* BoardDataProvider.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		D5C41D6726C5F509004C38E3 /* Download View */ = {
 			isa = PBXGroup;
 			children = (
@@ -535,6 +548,7 @@
 			children = (
 				D59E31A9281B8DD300D24211 /* DownloadState.swift */,
 				D5507ACB26C668BC00512BAA /* BleModuleView.swift */,
+				D5BBD12D2A1C6AB300961B68 /* BleBannerView.swift */,
 				D5507ACC26C668BC00512BAA /* BleModuleViewModel.swift */,
 				D5199A2E28DD16F100ACC34C /* BleContentTransfer.swift */,
 				D5D5BB3828DD19F000E5D93F /* BleContentCommands.swift */,
@@ -681,6 +695,7 @@
 				D5D1F4B227ECFF760040E2BF /* ProjectsModel.swift in Sources */,
 				D5BA1F7A28B52A490012FC62 /* WifiListDetailView.swift in Sources */,
 				D52F7E742672F4C400911D43 /* PyLeapApp.swift in Sources */,
+				D5BBD12E2A1C6AB300961B68 /* BleBannerView.swift in Sources */,
 				D567E2B628B81B730009F768 /* Queue.swift in Sources */,
 				D534F3FC280B59090053699C /* ExampleView.swift in Sources */,
 				D57858ED28327E18008E8BE4 /* PairingTutorialView.swift in Sources */,
@@ -751,6 +766,7 @@
 				D535E21628E1FA910096E548 /* ScrollRefreshableView.swift in Sources */,
 				D5640216271B54BF00AE1519 /* MainSelectionView.swift in Sources */,
 				D505B99C2755323C00386E9F /* NetworkMonitor.swift in Sources */,
+				D5BBD12C2A1538C100961B68 /* BoardDataProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -886,7 +902,7 @@
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = PyLeap/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -917,7 +933,7 @@
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = PyLeap/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -13,8 +13,8 @@ class BleContentCommands: ObservableObject {
     
     private weak var fileTransferClient: FileTransferClient?
     @Published var transmissionProgress: TransmissionProgress?
+    
     @Published var isTransmiting = false
-    @Published var bootUpInfo = String()
     @Published var counter = 0
     
     enum ProjectViewError: LocalizedError {
@@ -63,7 +63,6 @@ class BleContentCommands: ObservableObject {
     @Published var lastTransmit: TransmissionLog? =  TransmissionLog(type: .write(size: 334))
     
 
-    @Published var activeAlert: ActiveAlert?
     
     // Data
     private let bleManager = BleManager.shared
@@ -102,10 +101,7 @@ class BleContentCommands: ObservableObject {
                 case .success(let data):
                     self.lastTransmit = TransmissionLog(type: .read(data: data))
                     let str = String(decoding: data, as: UTF8.self)
-                    print("Read: \(str)")
-                    self.bootUpInfo = str
-                    sharedBootinfo = str
-                    
+                    print("Read: \(str)")                    
                     
                 case .failure(let error):
                     self.lastTransmit = TransmissionLog(type: .error(message: error.localizedDescription))

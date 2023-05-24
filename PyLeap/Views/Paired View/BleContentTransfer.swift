@@ -8,7 +8,24 @@
 import SwiftUI
 import FileTransferClient
 
-class BleContentTransfer: ObservableObject {
+protocol BoardInfoDelegate: AnyObject {
+    func boardInfoDidUpdate(to newBoard: Board?)
+}
+
+enum ListCommandError: Error {
+    case belowMinimum
+    case isPrime
+}
+
+class BleContentTransfer: ObservableObject, BoardInfoDelegate {
+    
+    @Published var currentBoard: Board? {
+        didSet {
+
+        }
+    }
+    
+    static let shared = BleContentTransfer()
     
     private weak var fileTransferClient: FileTransferClient?
     
@@ -22,7 +39,6 @@ class BleContentTransfer: ObservableObject {
     
     @Published var downloadState: DownloadState = .idle
     
-    @State var circuitPythonVersion = String()
     
     @Published var isTransmiting = false
     
@@ -31,19 +47,14 @@ class BleContentTransfer: ObservableObject {
     @Published var transferError = false
     
     @Published var downloaderror = false
-    
-    @Published var bootUpInfo = ""
-    
+
     
     
     @Published var contentCommands = BleContentCommands()
     // CLEAN UP
     var projectDirectories: [URL] = []
     var projectFiles: [URL] = []
-    var returnedArray = [[String]]()
-    var fileTransferArray : [URL] = []
     
-    var filesReadyForTransfer : [URL] = []
     
     @Published var sendingBundle = false
     @Published var didCompleteTranfer = false
@@ -57,11 +68,13 @@ class BleContentTransfer: ObservableObject {
     
     @Published var isConnectedToInternet = false
     @Published var showAlert = false
-    
-    var downloadPhases: String = ""
-    
+        
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     
+    func boardInfoDidUpdate(to newBoard: Board?) {
+            self.currentBoard = newBoard
+            // Add any other logic you need to handle the new board here.
+        }
     
     enum ProjectViewError: LocalizedError {
         case fileTransferUndefined
@@ -77,24 +90,8 @@ class BleContentTransfer: ObservableObject {
     }
     
     init() {
-        getCPVersion()
         registerNotification(enabled: true)
     }
-    
-    func getCPVersion() {
-        if sharedBootinfo.contains("CircuitPython 7") {
-            print("circuitPythonVersion = 7")
-            circuitPythonVersion = "7"
-            print(circuitPythonVersion)
-        }
-        
-        if sharedBootinfo.contains("CircuitPython 8") {
-            print("circuitPythonVersion = 8")
-            circuitPythonVersion = "8"
-            print(circuitPythonVersion)
-        }
-    }
-    
     
     private weak var didCompleteZip: NSObjectProtocol?
     private weak var didEncounterTransferError: NSObjectProtocol?
@@ -310,14 +307,7 @@ class BleContentTransfer: ObservableObject {
                 }
             }
         }
-        
-        
-        //  filterCPVersion(incomingArray: regularFileUrls)
-        //  filterCPFiles(filesArray: regularFileUrls)
-        
-        
-        // pathManipulation(arrayOfAny: filterCPVersion(incomingArray: projectDirectories), regularArray: filterCPVersion(incomingArray: projectFiles))
-        
+
         projectDirectories.removeFirst()
         
         DispatchQueue.main.async {
@@ -336,70 +326,28 @@ class BleContentTransfer: ObservableObject {
     
     
     func filterCPVersion(incomingArray: [URL]) -> [URL] {
-        print("project name \(projectName)")
-        
-        
-        for i in incomingArray {
-            print("incoming Array \(i.absoluteString)")
+
+        let filteredList = incomingArray.filter {
+            let lastPathComponent = $0.lastPathComponent
+            return lastPathComponent != "CircuitPython 8.x"
+                && lastPathComponent != "CircuitPython 7.x"
+                && lastPathComponent != "CircuitPython_Templates"
         }
-        
-        
-        
-        let listWithoutCP8Folder = incomingArray.filter {
-            $0.lastPathComponent != ("CircuitPython 8.x")
-        }
-        
-        let listWithoutCP7Folder = listWithoutCP8Folder.filter {
-            $0.lastPathComponent != ("CircuitPython 7.x")
-        }
-        
-        //CircuitPython_Templates
-        
-        let removedCPTemplates = listWithoutCP7Folder.filter {
-            $0.lastPathComponent != ("CircuitPython_Templates")
             
-        }
-        
-        
-        if sharedBootinfo.contains("CircuitPython 8") {
-            let listForCurrentCPVersion = removedCPTemplates.filter {
-                !$0.absoluteString.contains("CircuitPython%207.x")
-            }
-            
-            for i in listForCurrentCPVersion {
-                print("listForCurrentCPVersion :- \(i.absoluteString)")
-            }
-            
-            return listForCurrentCPVersion
-            
-        }
-        
-        if sharedBootinfo.contains("CircuitPython 7") {
-            
-            let listForCurrentCPVersion = listWithoutCP7Folder.filter {
-                !$0.absoluteString.contains("CircuitPython%208.x")
-            }
-            
-            for i in listForCurrentCPVersion {
-                print("listForCurrentCPVersion :- \(i.absoluteString)")
-            }
+                let listForCurrentCPVersion = filteredList.filter {
+                    $0.absoluteString.contains("CircuitPython%20\(Board.shared.versionNumber).x")
+                }
+     
             return listForCurrentCPVersion
         }
-        
-        return listWithoutCP7Folder
-    }
     
     
     func makeDirectory(directoryArray: [URL], regularFilesArray: [URL]) {
         print("\(#function) @Line: \(#line)")
         var recursiveArray = directoryArray
         
-        for i in recursiveArray {
-            print("recursiveArray \(i.absoluteString)")
-        }
-        
+     
         if directoryArray.isEmpty {
-            print("Array is empty. makeDirectory is done - Ready for file transfer!")
             newTransfer(listOf: regularFilesArray)
         } else {
             
@@ -490,10 +438,7 @@ class BleContentTransfer: ObservableObject {
         
     }
     
-    enum ListCommandError: Error {
-        case belowMinimum
-        case isPrime
-    }
+
     
     func checkIfFilesExistOnBoard(url: URL) {
         
@@ -527,29 +472,16 @@ class BleContentTransfer: ObservableObject {
         var tempPathComponents = url.pathComponents
         print("Incoming URL for makeFileString: \(url.absoluteString)")
         
-        
-        if sharedBootinfo.contains("CircuitPython 7") {
-            
-            indexOfCP = tempPathComponents.firstIndex(of: "CircuitPython 7.x")!
-            tempPathComponents.removeSubrange(0...indexOfCP)
-            tempPathComponents.removeLast()
-            var joinedArrayPath = tempPathComponents.joined(separator: "/")
-            print("\(#function) @Line: \(#line)")
-            print("Outgoing makeFileString: \(joinedArrayPath) for CP 7")
-            return joinedArrayPath
-        }
-        
-        if sharedBootinfo.contains("CircuitPython 8") {
-            indexOfCP = tempPathComponents.firstIndex(of: "CircuitPython 8.x")!
+        indexOfCP = tempPathComponents.firstIndex(of: "CircuitPython \(Board.shared.versionNumber).x")!
             tempPathComponents.removeSubrange(0...indexOfCP)
             tempPathComponents.removeLast()
             var joinedArrayPath = tempPathComponents.joined(separator: "/")
             print("\(#function) @Line: \(#line)")
             print("Outgoing makeFileString: \(joinedArrayPath) for CP 8")
             return joinedArrayPath
-        }
         
-        return ""
+        
+    
     }
     
     
@@ -561,255 +493,80 @@ class BleContentTransfer: ObservableObject {
         
         print("Incoming URL: \(url.absoluteString) ")
         
-        
-        
-        if sharedBootinfo.contains("CircuitPython 7") {
-            print(tempPathComponents)
-            indexOfCP = tempPathComponents.firstIndex(of: "CircuitPython 7.x")!
+        print(tempPathComponents)
+        indexOfCP = tempPathComponents.firstIndex(of: "CircuitPython \(Board.shared.versionNumber).x")!
             
             
             tempPathComponents.removeSubrange(0...indexOfCP)
             var joinedArrayPath = tempPathComponents.joined(separator: "/")
             print("\(#function) @Line: \(#line)")
-            print("Outgoing String: \(joinedArrayPath) for CP 7")
+            print("Outgoing Directory String: \(joinedArrayPath) for CP \(Board.shared.versionNumber)")
             return joinedArrayPath
-        }
         
-        if sharedBootinfo.contains("CircuitPython 8") {
-            indexOfCP = tempPathComponents.firstIndex(of: "CircuitPython 8.x")!
-            tempPathComponents.removeSubrange(0...indexOfCP)
-            var joinedArrayPath = tempPathComponents.joined(separator: "/")
-            print("\(#function) @Line: \(#line)")
-            print("Outgoing String: \(joinedArrayPath) for CP 8")
-            return joinedArrayPath
-        } else {
-            
-            guard let projectName = projectName else {
-                   return "Unknown"
-               }
-            
-            indexOfCP = tempPathComponents.firstIndex(of: projectName)!
-            tempPathComponents.removeSubrange(0...indexOfCP)
-            var joinedArrayPath = tempPathComponents.joined(separator: "/")
-            print("\(#function) @Line: \(#line)")
-            print("Outgoing String: \(joinedArrayPath) for CP 7")
-            return joinedArrayPath
-        }
-        
-        return ""
     }
     
     
     func newTransfer(listOf urls: [URL]) {
-        print("\(#function) @Line: \(#line)")
-        var copiedFiles = urls
-        print("Files left for transfer: \(urls.count)")
-        
-        print("Attempting to transfer... \(urls.first?.lastPathComponent ?? "No file found")")
-        
-        DispatchQueue.main.async {
-            self.counter += 1
-        }
-        
-        
-        if copiedFiles.isEmpty {
+        guard !urls.isEmpty else {
             print("All Files Transferred! 👍")
-            self.completedTransfer()
-            
+            completedTransfer()
             DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                self.sendingBundle = false
-                self.completedTransfer()
-                self.numOfFiles = 0
-                self.counter = 0
-                self.contentList.removeAll()
+                self.resetTransferParameters()
             }
-            
-        } else {
-            
-            guard let data = try? Data(contentsOf: URL(string: copiedFiles.first!.absoluteString)!) else {
-                print("File not found")
-                return
-            }
-            
-            
-            if copiedFiles.first?.lastPathComponent == "code.py" || copiedFiles.first?.lastPathComponent == "README.txt" {
-                
-                print("Input for writeFileCommand: \(copiedFiles.first?.absoluteString)")
-              
-                
-                self.contentCommands.writeFileCommand(path: copiedFiles.first!.lastPathComponent, data: data) { result in
-                    switch result {
-                        
-                    case .success(_):
-                        print("Success ✅")
-                        copiedFiles.removeFirst()
-                        self.newTransfer(listOf: copiedFiles)
-                        
-                    case .failure(let error):
-                        print("\(#function) @Line: \(#line)")
-                        print(error)
-                        DispatchQueue.main.async {
-                            print("Transfer Failure \(error)")
-                            self.downloadState = .failed
-                            
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                self.downloadState = .idle
-                            }
-                            NotificationCenter.default.post(name: .didEncounterTransferError, object: nil, userInfo: nil)
-                        }
-                    }
-                }
-            } else {
-                
-                print("Checking... 🫥")
-              //  print("makeDirectoryString transfer \(makeDirectoryString(url: copiedFiles.first!))")
-                
-                let directoryPath = makeDirectoryString(url: copiedFiles.first!)
-
-                print("Input writeFileCommand: \(directoryPath)")
-                self.contentCommands.writeFileCommand(path: directoryPath, data: data) { result in
-                    switch result {
-
-                    case .success(_):
-                        print("Success ✅")
-                        copiedFiles.removeFirst()
-                        self.newTransfer(listOf: copiedFiles)
-
-                    case .failure(let error):
-                        print("\(#function) @Line: \(#line)")
-                        print(error)
-                        DispatchQueue.main.async {
-                            print("Transfer Failure \(error)")
-                            self.downloadState = .failed
-
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                self.downloadState = .idle
-                            }
-                            NotificationCenter.default.post(name: .didEncounterTransferError, object: nil, userInfo: nil)
-                        }
-                    }
-                }
-            }
-            
+            return
         }
         
+        print("\(#function) @Line: \(#line)")
+        print("Files left for transfer: \(urls.count)")
+        print("Attempting to transfer... \(urls.first?.lastPathComponent ?? "No file found")")
+        DispatchQueue.main.async { self.counter += 1 }
         
+        guard let url = urls.first,
+              let data = try? Data(contentsOf: url) else {
+            print("File not found")
+            return
+        }
+        
+        let path = isDirectFile(name: url.lastPathComponent) ? url.lastPathComponent : makeDirectoryString(url: url)
+        
+        contentCommands.writeFileCommand(path: path, data: data) { result in
+            switch result {
+            case .success:
+                print("Success ✅")
+                self.newTransfer(listOf: Array(urls.dropFirst()))
+            case .failure(let error):
+                print("Transfer Failure \(error)")
+                self.handleTransferError(error)
+            }
+        }
     }
-    
-    
-    
-    func filePathMod(listOf files: [URL]) {
-        var indexOfCP = 0
-        
-        for i in files {
-            print("-\(i.absoluteString)-\n")
-        }
-        
-        var tempArray = files
-        
-        if files.isEmpty {
-            // Continue
+
+    private func handleTransferError(_ error: Error) {
+        DispatchQueue.main.async {
             print("\(#function) @Line: \(#line)")
-            print("Done!")
-            // print("RETURNED PATHS: \(returnedArray)\n")
-            
-            for i in filesReadyForTransfer {
-                print("\(i)")
+            print(error)
+            self.downloadState = .failed
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.downloadState = .idle
             }
-            
-            //  self.transferFiles(files: fileArray)
-            
-            //          validateDirectory(directoryArray: returnedArray, fileArray: fileArray)
-            
-        } else {
-            
-            var tempPath = files[0].pathComponents
-            
-            print("temp path \(tempPath)")
-            
-            if tempPath.contains("CircuitPython 7.x") {
-                
-                print("\(#function) @Line: \(#line)")
-                
-                indexOfCP = tempPath.firstIndex(of: "CircuitPython 7.x")!
-                
-                tempPath.removeSubrange(0...indexOfCP)
-                
-                print("removeSubrange temp path - \(tempPath)")
-                
-                
-                tempArray.removeFirst()
-                
-                var joinedArrayPath = tempPath.joined(separator: "/")
-                
-                
-                filesReadyForTransfer.append(URL(string: joinedArrayPath)!)
-                
-                filePathMod(listOf: tempArray)
-                
-            }
-            
-            if tempPath.contains("CircuitPython 8.x") {
-                
-                print("\(#function) @Line: \(#line)")
-                
-                indexOfCP = tempPath.firstIndex(of: "CircuitPython 8.x")!
-                
-                tempPath.removeSubrange(0...indexOfCP)
-                
-                print("removeSubrange temp path - \(tempPath)")
-                
-                
-                tempArray.removeFirst()
-                
-                var joinedArrayPath = tempPath.joined(separator: "/")
-                
-                filesReadyForTransfer.append(URL(string: joinedArrayPath)!)
-                
-                filePathMod(listOf: tempArray)
-                
-            }
-            
-            
-            if tempPath.contains(projectName ?? "unknown") {
-                
-                print("\(#function) @Line: \(#line)")
-                
-                indexOfCP = tempPath.firstIndex(of: projectName!)!
-                
-                tempPath.removeSubrange(0...indexOfCP+1)
-                
-                print("removeSubrange temp path - \(tempPath)")
-                
-                tempArray.removeFirst()
-                
-                var joinedArrayPath = tempPath.joined(separator: "/")
-                
-                filesReadyForTransfer.append(URL(string: joinedArrayPath)!)
-                
-                filePathMod(listOf: tempArray)
-                
-            }
-            
-            
-            
+            NotificationCenter.default.post(name: .didEncounterTransferError, object: nil, userInfo: nil)
         }
-        
-        
     }
-    
-    
-    
 
+    private func resetTransferParameters() {
+        sendingBundle = false
+        completedTransfer()
+        numOfFiles = 0
+        counter = 0
+        contentList.removeAll()
+    }
 
-    
-
-    
+    private func isDirectFile(name: String) -> Bool {
+        return name == "code.py" || name == "README.txt"
+    }
     
     
     func completedTransfer() {
-        
-        
         
         DispatchQueue.main.async {
             self.downloadState = .complete
@@ -824,186 +581,7 @@ class BleContentTransfer: ObservableObject {
             
         }
     }
-    
-    
-    
-    func transferFiles(files: [URL]) {
-        print(#function)
-        var copiedFiles = files
-        print("Number of files in filesArray \(files.count)")
-        print(files)
-        
-        if files.isEmpty {
-            print("Array of contents empty - Check other directories")
-            self.completedTransfer()
-            
-            
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-                self.sendingBundle = false
-                self.completedTransfer()
-                self.numOfFiles = 0
-                self.contentList.removeAll()
-            }
-            
-        } else {
-            
-            guard let selectedUrl = files.first else {
-                print("No such file exist here")
-                return
-            }
-            
-            guard let data = try? Data(contentsOf: URL(fileURLWithPath: selectedUrl.deletingPathExtension().lastPathComponent, relativeTo: selectedUrl).appendingPathExtension(selectedUrl.pathExtension)) else {
-                print("File not found")
-                return
-            }
-            
-            if selectedUrl.deletingLastPathComponent().lastPathComponent == "CircuitPython 7.x"{
-                
-                print("Selected Path: \(selectedUrl.path)")
-                
-                var tempURL = selectedUrl.pathComponents
-                
-                tempURL.removeFirst(12)
-                let joined = tempURL.joined(separator: "/")
-                
-                
-                var newModPath = tempURL
-                newModPath.removeLast()
-                print("Test file path: \(tempURL)")
-                
-                print("File transfer modified path xx: \(joined)")
-                
-                
-                
-                self.contentCommands.writeFileCommand(path: joined, data: data) { result in
-                    switch result {
-                        
-                    case .success(_):
-                        copiedFiles.removeFirst()
-                        self.transferFiles(files: copiedFiles)
-                        
-                    case .failure(_):
-                        DispatchQueue.main.async {
-                            
-                            print("Transfer Failure")
-                            print("\(joined)")
-                            self.downloadState = .failed
-                            
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                self.downloadState = .idle
-                            }
-                            
-                        }
-                        
-                        NotificationCenter.default.post(name: .didEncounterTransferError, object: nil, userInfo: nil)
-                    }
-                }
-            }
-            
-            
-            
-            else if selectedUrl.deletingLastPathComponent().lastPathComponent == "lib" {
-                
-                
-                
-                var tempURL = selectedUrl.pathComponents
-                tempURL.removeFirst(12)
-                let joined = tempURL.joined(separator: "/")
-                print("File transfer modified path 11:\(joined)")
-                
-                
-                
-                print("Updated Path:\(joined)")
-                
-                
-                
-                contentCommands.writeFileCommand(path: joined, data: data) { result in
-                    switch result {
-                    case .success(_):
-                        copiedFiles.removeFirst()
-                        self.transferFiles(files: copiedFiles)
-                        
-                    case .failure(_):
-                        print("Transfer Failure - 2")
-                        self.downloadState = .failed
-                        NotificationCenter.default.post(name: .didEncounterTransferError, object: nil, userInfo: nil)
-                    }
-                }
-            } else {
-                
-                if selectedUrl.lastPathComponent == "README.txt" {
-                    print("Got one")
-                    copiedFiles.removeFirst()
-                    self.transferFiles(files: copiedFiles)
-                    
-                    
-                } else {
-                    var tempURL = selectedUrl.pathComponents
-                    
-                    tempURL.removeFirst(12)
-                    let joined = tempURL.joined(separator: "/")
-                    print("File transfer modified path: \(joined)")
-                    
-                    
-                    
-                    print("Updated Path:\(joined)")
-                    
-                    
-                    contentCommands.writeFileCommand(path: joined, data: data) { result in
-                        switch result {
-                        case .success(_):
-                            copiedFiles.removeFirst()
-                            self.transferFiles(files: copiedFiles)
-                        case .failure(let error):
-                            print("Failed: \(error): \(result)")
-                            NotificationCenter.default.post(name: .didEncounterTransferError, object: nil, userInfo: nil)
-                            
-                        }
-                    }
-                }
-                
-                
-                
-            }
-        }
-        
-        DispatchQueue.main.async {
-            self.sendingBundle = true
-        }
-    }
-    
-    func readMyStatus() {
-        ///model.readFile(filename: "boot_out.txt")
-        print(#function)
-        
-        print("BOOT INFO: \(bootUpInfo)")
-        
-        switch bootUpInfo.description {
-            
-        case let str where str.contains("CircuitPython 7"):
-            print("CircuitPython 7")
-            circuitPythonVersion = "CircuitPython 7"
-            
-        case let str where str.contains("CircuitPython 8"):
-            print("CircuitPython 8")
-            circuitPythonVersion = "CircuitPython 8"
-        default:
-            print("Unknown Device")
-        }
-        
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     // MARK: System
     
     struct TransmissionProgress {
@@ -1047,7 +625,6 @@ class BleContentTransfer: ObservableObject {
     @Published var lastTransmit: TransmissionLog? =  TransmissionLog(type: .write(size: 334))
     
     
-    @Published var activeAlert: ActiveAlert?
     
     // Data
     private let bleManager = BleManager.shared
@@ -1088,8 +665,7 @@ class BleContentTransfer: ObservableObject {
                     let str = String(decoding: data, as: UTF8.self)
                     print("\(#function) @Line: \(#line)")
                     print("Read: \(str)")
-                    //self.readMyStatus()
-                    self.bootUpInfo = str
+
                     
                     
                     

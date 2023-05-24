@@ -10,30 +10,45 @@ import Zip
 import FileTransferClient
 
 class BleModuleViewModel: ObservableObject {
-
+    
+    weak var delegate: BoardInfoDelegate?
+       
+       @Published var boardInfoForView: Board? {
+           didSet {
+               print("Changed")
+               delegate?.boardInfoDidUpdate(to: boardInfoForView)
+           }
+       }
+    
     private weak var fileTransferClient: FileTransferClient?
-    @StateObject var contentTransfer = BleContentTransfer()
+    @State var contentTransfer = BleContentTransfer()
     
     @Published var entries = [BlePeripheral.DirectoryEntry]()
     @Published var isTransmiting = false
     @Published var bootUpInfo = ""
-
+    
+    
+    var boardDataProvider = BoardDataProvider()
+    var connectedBoard: Board?
+    
     let dataStore = DataStore()
     
     @Published var pdemos : [ResultItem] = []
     
+    
     init() {
-       pdemos = dataStore.loadDefaultList()
+        pdemos = dataStore.loadDefaultList()
+        self.delegate = contentTransfer
     }
     
-
+    
     
     enum ProjectViewError: LocalizedError {
         case fileTransferUndefined
     }
-
+    
     func readMyStatus() {
-
+        
         print("BOOT INFO: \(bootUpInfo)")
         
         switch bootUpInfo.description {
@@ -41,11 +56,11 @@ class BleModuleViewModel: ObservableObject {
         case let str where str.contains("circuitplayground_bluefruit"):
             print("Circuit Playground Bluefruit device")
             bootUpInfo = "circuitplayground_bluefruit"
-
+            
         case let str where str.contains("clue_nrf52840_express"):
             print("Clue device")
             bootUpInfo = "clue_nrf52840_express"
-
+            
         default:
             print("Unknown Device")
         }
@@ -71,7 +86,6 @@ class BleModuleViewModel: ObservableObject {
     
     @Published var transmissionProgress: TransmissionProgress?
     @Published var lastTransmit: TransmissionLog? =  TransmissionLog(type: .write(size: 334))
-    @Published var activeAlert: ActiveAlert?
     // Data
     private let bleManager = BleManager.shared
     
@@ -100,7 +114,7 @@ class BleModuleViewModel: ObservableObject {
             return modeText
         }
     }
-
+    
     // MARK: - Setup
     func onAppear() {
         //registerNotifications(enabled: true)
@@ -121,6 +135,28 @@ class BleModuleViewModel: ObservableObject {
         
     }
     
+
+    func setupBoardInfoForDisplay(_ boardInfo: String?) -> Board {
+        // First, safely unwrap the optional 'boardInfo' string
+        guard let info = boardInfo else {
+            print("boardInfo is nil")
+            return Board.shared
+        }
+        
+        let boardID = boardDataProvider.getBoardID(from: info) ?? "Unrecognized Board"
+        // Board default version is set to 8
+        let boardVersion = boardDataProvider.getCircuitPythonMajorVersion(from: info) ?? "8"
+        
+        Board.shared.name = boardID
+        Board.shared.versionNumber = boardVersion
+        
+        // Create a new Board object with the acquired name and version
+        let board = Board.shared
+        
+        return board
+    }
+    
+    
     // MARK: - Actions
     
     func readFile(filename: String) {
@@ -135,8 +171,10 @@ class BleModuleViewModel: ObservableObject {
                     let str = String(decoding: data, as: UTF8.self)
                     
                     print("Read: \(str)")
-                    self.bootUpInfo = str
-                    sharedBootinfo = str
+
+                   self.connectedBoard = self.setupBoardInfoForDisplay(str)
+                   self.boardInfoForView = self.connectedBoard
+                    
                     
                 case .failure(let error):
                     self.lastTransmit = TransmissionLog(type: .error(message: error.localizedDescription))
@@ -342,20 +380,6 @@ class BleModuleViewModel: ObservableObject {
             }
             
             completion?(result)
-        }
-    }
-    
-    
-}
-
-public var sharedBootinfo = ""
-
-enum ActiveAlert: Identifiable {
-    case error(error: Error)
-    
-    var id: Int {
-        switch self {
-        case .error: return 1
         }
     }
 }
