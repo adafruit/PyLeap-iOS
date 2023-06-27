@@ -11,7 +11,7 @@ import Foundation
  /// This is a DataStore class that is used for saving and loading data to/from the file system using the FileManager class.
  */
 
-public class DataStore {
+public class DataStore: ObservableObject {
     
     let fileManager = FileManager.default
     
@@ -28,7 +28,7 @@ public class DataStore {
      */
     
     func save(content: [ResultItem], completion: @escaping () -> Void) {
-        
+        print(#function)
         let encoder = JSONEncoder()
         if let encodedProjectData = try? encoder.encode(content) {
             
@@ -82,7 +82,7 @@ public class DataStore {
     }
     
     /**
-     /// : This method reads the "StandardPyLeapProjects.json" file in the documents directory, decodes it as an array of ResultItem objects, and returns it.
+     ///  This method reads the "StandardPyLeapProjects.json" file in the documents directory, decodes it as an array of ResultItem objects, and returns it.
      */
     
     func loadDefaultList() -> [ResultItem] {

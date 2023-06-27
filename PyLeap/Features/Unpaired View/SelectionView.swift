@@ -54,7 +54,7 @@ struct SelectionView: View {
                 Button {
                     rootViewModel.goToWiFiSelection()
                 } label: {
-                    Text("Wifi")
+                    Text("WiFi")
                         .font(Font.custom("ReadexPro-Regular", size: 25))
                         .foregroundColor(Color.white)
                         .frame(width: 270, height: 50, alignment: .center)
@@ -110,6 +110,9 @@ struct SelectionView: View {
             
         }
         .padding(.bottom, 60)
+        .onAppear() {
+            print("In Selection view")
+        }
         
     }
 }

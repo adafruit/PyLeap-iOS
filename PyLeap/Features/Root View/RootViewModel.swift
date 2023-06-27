@@ -47,7 +47,7 @@ public class RootViewModel: ObservableObject {
     }
     
     func goToWiFiSelection() {
-        destination = .wifiSelection
+        destination = .wifiServiceSelection
     }
     
     func goToWifiView() {

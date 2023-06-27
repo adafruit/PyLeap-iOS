@@ -22,7 +22,7 @@ enum AdafruitDevices {
     @State private var boardBootInfo = ""
     @EnvironmentObject var expandedState : ExpandedBLECellState
 
-    @ObservedObject var viewModel = MainSelectionViewModel()
+    @ObservedObject var vm = MainSelectionViewModel()
 
 
     @State private var isConnected = false
@@ -61,7 +61,7 @@ enum AdafruitDevices {
 
                 MainSubHeaderView(device: "Adafruit device")
 
-                if viewModel.pdemos.isEmpty {
+                if vm.pdemos.isEmpty {
                     HStack{
                         Spacer()
                         ProgressView()
@@ -74,10 +74,7 @@ enum AdafruitDevices {
 
                 ScrollViewReader { scroll in
 
-
-
-
-                    ForEach(viewModel.pdemos) { demo in
+                    ForEach(vm.pdemos) { demo in
 
                         if demo.bundleLink == expandedState.currentCell {
 
@@ -105,44 +102,23 @@ enum AdafruitDevices {
 
                 }
             }
+            .refreshable {
+                vm.pdemos = []
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    vm.networkModel.fetch {
+                        
+                        vm.loadProjectsFromStorage()
+                        
+                    }
+                }
+                
+                
+                
+            }
         }
 
-        .onDisappear() {
 
-        }
-
-        /// **Pull down to Refresh feature**
-        //            ScrollRefreshableView(title: "Refresh", tintColor: .purple) {
-        //                HStack{
-        //                    Spacer()
-        //                    MainSubHeaderView()
-        //                    Spacer()
-        //                }
-        //                .padding(0)
-        //
-        //                if networkModel.pdemos.isEmpty {
-        //                    HStack{
-        //                        Spacer()
-        //                        ProgressView()
-        //                            .scaleEffect(2)
-        //                        Spacer()
-        //                    }
-        //                    .padding(0)
-        //
-        //                }
-        //
-        //        }//            } onRefresh: {
-        //                self.networkModel.fetch()
-        //            }
-        //
-        //            }
-
-
-        .onChange(of: viewModel.pdemos, perform: { newValue in
-            print("Update")
-
-
-        })
         .onAppear() {
 
           

@@ -17,52 +17,7 @@ struct TestIndex {
 }
 
 class WifiFileTransfer: ObservableObject {
-    
-    
-//    func fetchDocuments<T: Sequence>(in sequence: T) where T.Element == Int {
-//        var documentNumbers = sequence.map { String($0) }
-//
-//        let timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { [weak self] timer in
-//            guard
-//                let self = self,
-//                let documentNumber = documentNumbers.first
-//            else {
-//                timer.invalidate()
-//                return
-//            }
-//
-//            self.fetchDocument(byNumber: documentNumber)
-//            documentNumbers.removeLast()
-//        }
-//        timer.fire() // if you don't want to wait 2 seconds for the first one to fire, go ahead and fire it manually
-//    }
-    
-    
-    func fetchDocumentsq<T: Sequence>(in sequence: T) where T.Element == URL {
-       
-        print(sequence)
-        
-        guard let value = sequence.first(where: { _ in true }) else {
-            print("Complete - fetchDocumentsq")
-            return
-            
-        }
 
-    //    let docNumber = String(value)
-      //  fetchDocument(byNumber: docNumber)
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-     //       self?.fetchDocuments(in: sequence.dropFirst())
-            
-            print(value)
-            self?.fetchDocumentsq(in: sequence.dropFirst())
-            
-        }
-        
-        
-    }
-    
-    
     struct TestIndex {
          var count = 0
          var numberOfFiles = 0
@@ -74,13 +29,10 @@ class WifiFileTransfer: ObservableObject {
              downloadState = .idle
         }
         
-        
-        
     }
    
     var testIndex = TestIndex()
    
-    
     func copy(with zone: NSZone? = nil) -> Any {
         let copy = WifiFileTransfer()
                 copy.counter = counter
@@ -125,6 +77,7 @@ class WifiFileTransfer: ObservableObject {
     
     func printArray(array: [Any]) {
         
+        print("From print array:")
         for i in array {
             print("\(i)")
         }
@@ -339,34 +292,20 @@ class WifiFileTransfer: ObservableObject {
     
     func filterOutCPDirectories(urls: [URL]) -> [URL] {
         // Removes - CircuitPython 8.x directory at the lastPathComponent
-        let removingCP8FromArray = urls.filter {
-            $0.lastPathComponent != ("CircuitPython 8.x")
+        let filteredList = urls.filter {
+            let lastPathComponent = $0.lastPathComponent
+            return lastPathComponent != "CircuitPython 8.x"
+                && lastPathComponent != "CircuitPython 7.x"
+                && lastPathComponent != "CircuitPython_Templates"
         }
         
-        // Removes - CircuitPython 7.x directory at the lastPathComponent
-        let removingCP7FromArray = removingCP8FromArray.filter {
-            $0.lastPathComponent != ("CircuitPython 7.x")
+        let listForCurrentCPVersion = filteredList.filter {
+            $0.absoluteString.contains("CircuitPython%20\(Board.shared.versionNumber).x")
         }
         
-        if WifiCPVersion.versionNumber == 8 {
-            let listForCurrentCPVersion = removingCP7FromArray.filter {
-                !$0.absoluteString.contains("CircuitPython%207.x")
-                
-            }
-            return listForCurrentCPVersion
-        }
+        printArray(array: listForCurrentCPVersion)
         
-        if WifiCPVersion.versionNumber == 7 {
-            let listForCurrentCPVersion = removingCP7FromArray.filter {
-                !$0.absoluteString.contains("CircuitPython%208.x")
-                
-            }
-            return listForCurrentCPVersion
-        }
-        
-        
-        
-        return removingCP7FromArray
+        return listForCurrentCPVersion
         
     }
     
@@ -419,8 +358,6 @@ class WifiFileTransfer: ObservableObject {
             DispatchQueue.main.async {
                 self.numOfFiles = tempArray.count
                 self.makeFile(files: tempArray)
-             //   self.testIndex.numberOfFiles = self.numOfFiles
-
             }
 
 
@@ -618,7 +555,6 @@ class WifiFileTransfer: ObservableObject {
         printArray(array: files)
         var copiedArray = files
         
-        //    self.fetchDocumentsq(in: files)
         
         DispatchQueue.main.async {
             self.counter += 1

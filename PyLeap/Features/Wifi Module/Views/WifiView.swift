@@ -11,7 +11,7 @@ import Combine
 
 struct WifiView: View {
 
-    @StateObject var viewModel = WifiViewModel()
+    @StateObject var vm = WifiViewModel()
     private let kPrefix = Bundle.main.bundleIdentifier!
    
     // User Defaults
@@ -38,12 +38,12 @@ struct WifiView: View {
     @State private var showPopover: Bool = false
     
     func toggleViewModelIP() {
-        viewModel.isInvalidIP.toggle()
+        vm.isInvalidIP.toggle()
     }
     
     
     func scanNetworkWifi() {
-        viewModel.wifiServiceManager.findService()
+        vm.wifiServiceManager.findService()
     }
     
     func printArray(array: [Any]) {
@@ -59,9 +59,9 @@ struct WifiView: View {
             
         } else {
             hostName = userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName") as! String
-            viewModel.ipAddressStored = true
+            vm.ipAddressStored = true
             print("storeResolvedAddress - is stored")
-            viewModel.connectionStatus = .connected
+            vm.connectionStatus = .connected
         }
     }
     
@@ -71,10 +71,18 @@ struct WifiView: View {
                 hintText: "IP Address...",
                 primaryTitle: "Done",
                 secondaryTitle: "Cancel") { text in
-            viewModel.checkServices(ip: text)
+            vm.checkServices(ip: text)
             
         } secondaryAction: {
             print("Cancel")
+        }
+    }
+    
+    func showConfirmationPrompt() {
+        comfirmationAlertMessage(title: "Are you sure you want to disconnect?", exitTitle: "Cancel", primaryTitle: "Disconnect") {
+            rootViewModel.goToSelection()
+        } cancel: {
+            
         }
     }
     
@@ -84,15 +92,19 @@ struct WifiView: View {
         }
     }
     
+    @State var boardInfoForView = Board.shared
+    
     var body: some View {
         
         VStack(spacing: 0) {
             WifiHeaderView()
             
             Group{
-                switch viewModel.connectionStatus {
+                switch vm.connectionStatus {
                 case .connected:
-                    WifiStatusConnectedView(hostName: $hostName)
+                    WifiStatusConnectedView(hostName: $hostName,  disconnectAction: {
+                        showConfirmationPrompt()
+                    })
                 case .noConnection:
                     WifiStatusNoConnectionView()
                 case .connecting:
@@ -100,23 +112,20 @@ struct WifiView: View {
                 }
             }
             
-            
             ScrollView(.vertical, showsIndicators: false) {
                 
                 ScrollViewReader { scroll in
                     
                     SubHeaderView()
-                    
-                    
-                    let check = viewModel.pdemos.filter {
-                        $0.compatibility.contains(boardBootInfo)
-                    }
+                
+                    let check = vm.pdemos.filter {
+                                            $0.compatibility.contains(boardBootInfo)
+                                        }
                     
                     ForEach(check) { demo in
                         
                         if demo.bundleLink == test.currentCell {
                             WifiCell(result: demo,isExpanded: trueTog, isConnected: $inConnectedInWifiView, bootOne: $boardBootInfo, stateBinder: $downloadState, onViewGeometryChanged: {
-                                
                                 
                             })
                             .onAppear(){
@@ -124,41 +133,37 @@ struct WifiView: View {
                                 withAnimation {
                                     scroll.scrollTo(demo.id)
                                 }
-                                
                             }
                           
-                            
-                            
                         } else {
                             
                             WifiCell(result: demo, isExpanded: falseTog, isConnected: $inConnectedInWifiView, bootOne: $boardBootInfo, stateBinder: $downloadState, onViewGeometryChanged: {
                                 withAnimation {
-                                    //    scroll.scrollTo(demo.id)
                                 }
                             })
-                            
-                            
                         }
                     }
-                    
                 }
                 
                 .id(self.scrollViewID)
             }
             .foregroundColor(.black)
             .environmentObject(test)
+            .refreshable {
+                vm.fetchAndLoadProjectsFromStorage()
+            }
         }
         
         
         
-        .onChange(of: viewModel.connectionStatus, perform: { newValue in
+        .onChange(of: vm.connectionStatus, perform: { newValue in
             if newValue == .connected {
                 hostName = userDefaults.object(forKey: kPrefix+".storeResolvedAddress.hostName") as! String
             }
         })
         
         
-        .onChange(of: viewModel.wifiServiceManager.resolvedServices, perform: { newValue in
+        .onChange(of: vm.wifiServiceManager.resolvedServices, perform: { newValue in
             print("Credential Check!")
             print(newValue)
             
@@ -173,7 +178,7 @@ struct WifiView: View {
             
         })
         
-        .onChange(of: viewModel.isInvalidIP, perform: { newValue in
+        .onChange(of: vm.isInvalidIP, perform: { newValue in
             print("viewModel.isInvalidIP .onChange")
             if newValue {
                 showAlertMessage()
@@ -185,8 +190,8 @@ struct WifiView: View {
         
         .onAppear(){
             checkForStoredIPAddress()
-            viewModel.printStoredInfo()
-            viewModel.read()
+            vm.printStoredInfo()
+            vm.read()
         }
     }
     

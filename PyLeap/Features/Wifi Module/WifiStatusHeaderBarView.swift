@@ -9,19 +9,16 @@ import SwiftUI
 import Foundation
 
 struct WifiStatusConnectedView: View {
-    
-    let userDefaults = UserDefaults.standard
-    private let kPrefix = Bundle.main.bundleIdentifier!
-    @EnvironmentObject var rootViewModel: RootViewModel
 
     @Binding var hostName: String
+    
+    var disconnectAction: () -> Void
 
-    func showConfirmationPrompt() {
-        comfirmationAlertMessage(title: "Are you sure you want to disconnect?", exitTitle: "Cancel", primaryTitle: "Disconnect") {
-            rootViewModel.goToSelection()
-        } cancel: {
-            
-        }
+    func removeAdafruitString(from boardName: String) -> String {
+        let removeString = "Adafruit"
+        let updatedText = boardName.replacingOccurrences(of: removeString, with: "")
+        
+        return updatedText
     }
     
     var body: some View {
@@ -33,16 +30,13 @@ struct WifiStatusConnectedView: View {
                 .frame(width: 20, height: 20)
                 .padding(5)
             
-            Text("Connected to \(hostName). ")
+            Text("Connected to \(hostName) ")
                 .font(Font.custom("ReadexPro-Regular", size: 14))
             
-            Button {
-                showConfirmationPrompt()
-            } label: {
+            Button(action: disconnectAction) {
                 Text("Disconnect")
                     .font(Font.custom("ReadexPro-Bold", size: 14))
                     .underline()
-                    .minimumScaleFactor(0.1)
             }
                 
         })

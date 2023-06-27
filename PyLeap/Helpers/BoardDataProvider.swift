@@ -31,9 +31,6 @@ final class BoardDataProvider {
              let capitalizedBoardID = boardIDWithSpaces.capitalized
              print("Outgoing: \(capitalizedBoardID)")
              return capitalizedBoardID
-             
-             
-            
          }
          
          return nil

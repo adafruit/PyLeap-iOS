@@ -14,6 +14,7 @@ import Foundation
 import SwiftUI
 
 class NetworkService: ObservableObject {
+   
     let dataStore = DataStore()
     
     let thirdPartyBackgroundQueue = DispatchQueue(label: "com.PyLeap.thirdPartyBackgroundQueue", qos: .background, attributes: .concurrent)
@@ -43,7 +44,7 @@ class NetworkService: ObservableObject {
             
             if let data = data {
                 
-                print("Updating UIList with new data...")
+                print("Updating storage with new data.")
                 if let projectData = try? JSONDecoder().decode(RootResults.self, from: data) {
                     
                     DispatchQueue.main.async {

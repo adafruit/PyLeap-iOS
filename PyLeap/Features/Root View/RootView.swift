@@ -54,8 +54,7 @@ struct RootView: View {
             case .selection:
                 SelectionView()
                 
-            case .wifiSelection:
-                WifiSelection()
+                
                 
             case .wifiPairingTutorial:
                 WifiPairingView()

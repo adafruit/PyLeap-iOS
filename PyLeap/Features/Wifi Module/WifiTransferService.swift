@@ -173,7 +173,7 @@ class WifiTransferService: ObservableObject {
         }
         let base64LoginString = loginData.base64EncodedString()
        
-        // var request = URLRequest(url: URL(string: "http://cpy-9cbe10.local/fs/")!,timeoutInterval: Double.infinity)
+        
         var request = URLRequest(url: URL(string: "http://\(hostName).local/fs/")!,timeoutInterval: Double.infinity)
         
         request.addValue("application/json", forHTTPHeaderField: "Accept")
@@ -226,7 +226,6 @@ class WifiTransferService: ObservableObject {
         
         let loginData = loginString.data(using: String.Encoding.utf8)
            
-        
         let base64LoginString = loginData!.base64EncodedString()
         
         print("Host Name: \(hostName)")

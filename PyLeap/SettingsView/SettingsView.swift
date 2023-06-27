@@ -175,6 +175,9 @@ Find more information on adding your own project here:
     }
 }
 
+
+
+
 extension View {
     
     func comfirmationAlertMessage(title: String, exitTitle: String, primaryTitle: String,disconnect: @escaping() -> (),cancel: @escaping() -> ()){

@@ -58,31 +58,42 @@ class MainSelectionViewModel: ObservableObject {
     let dataStore = DataStore()
     
     @Published var pdemos : [ResultItem] = []
+   
     var networkMonitorCancellable: AnyCancellable?
     
     init() {
-        let fileURL = documentsDirectory.appendingPathComponent("StandardPyLeapProjects.json")
-        
-
+        startUp()
+    }
+    
+    
+    func loadProjectsFromStorage() {
+        self.pdemos = self.dataStore.loadDefaultList()
+    }
+    
+    func fetchAndLoadProjectsFromStorage() {
+        self.networkModel.fetch {
+            self.pdemos = self.dataStore.loadDefaultList()
+        }
+    }
+    
+    func startUp(){
         networkMonitorCancellable = networkMonitor.$isConnected.sink { isConnected in
-                    if isConnected {
-                        print("The device is currently connected to the internet.")
-                        // Perform some action when the device is connected to the internet.
-                        self.networkModel.fetch {
-                            self.pdemos = self.dataStore.loadDefaultList()
-                        }
+                    
+            if isConnected {
+// Perform some action when the device is connected to the internet.
+                self.fetchAndLoadProjectsFromStorage()
+                print("The device is currently connected to the internet.")
                         
                     } else {
                         print("The device is not currently connected to the internet.")
                         // Perform some action when the device is not connected to the internet.
                         print("Loading cached remote data.")
-                        self.pdemos = self.dataStore.loadDefaultList()
-                        
+                        self.loadProjectsFromStorage()
                         
                     }
                 }
-        
     }
     
+
     
 }

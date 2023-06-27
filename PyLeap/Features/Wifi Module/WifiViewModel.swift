@@ -27,6 +27,7 @@ class WifiViewModel: ObservableObject {
     @Published  var ipInputValidation = false
     //Dependencies
     var networkMonitor = NetworkMonitor()
+    
     var networkAuth = LocalNetworkAuthorization()
     
     public var wifiNetworkService = WifiNetworkService()
@@ -34,7 +35,7 @@ class WifiViewModel: ObservableObject {
     @Published var wifiTransferService =  WifiTransferService()
     
     @Published var wifiServiceManager = WifiServiceManager()
-        
+    @ObservedObject var networkModel = NetworkService()
     var circuitPythonVersion = Int()
     
     @Published var webDirectoryInfo = [WebDirectoryModel]()
@@ -48,6 +49,16 @@ class WifiViewModel: ObservableObject {
     @Published var pdemos : [ResultItem] = []
     
 
+    func loadProjectsFromStorage() {
+        self.pdemos = self.dataStore.loadDefaultList()
+    }
+    
+    func fetchAndLoadProjectsFromStorage() {
+        self.networkModel.fetch {
+            self.pdemos = self.dataStore.loadDefaultList()
+        }
+    }
+    
     
     // File Manager Data
     let directoryPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -59,7 +70,7 @@ class WifiViewModel: ObservableObject {
     var ipAddressStored = false
     
     init() {
-        pdemos = dataStore.loadDefaultList()
+        loadProjectsFromStorage()
         checkIP()
         registerNotifications(enabled: true)
         wifiServiceManager.findService()
@@ -71,25 +82,35 @@ class WifiViewModel: ObservableObject {
     }
     
     @Published var pyleapProjects = [ResultItem]()
-
+  
+    var boardDataProvider = BoardDataProvider()
+    
+    
+    // This function reads the boards the boot_out.txt file to then set the current board's name and version number for file transfer.
+    
+    func setBoardToDefault() {
+        Board.shared.name = "Unrecognized Board"
+        Board.shared.versionNumber = "8"
+    }
     
     func read() {
+        setBoardToDefault()
         // This method can't be used until the device has permission to communicate.
         print("READING CP Vers.")
         wifiTransferService.getRequest(read: "boot_out.txt") { result in
+
+            let boardID = self.boardDataProvider.getBoardID(from: result) ?? "Unrecognized Board"
+            // Board default version is set to 8
+            let boardVersion = self.boardDataProvider.getCircuitPythonMajorVersion(from: result) ?? "8"
             
-            if result.contains("CircuitPython 7") {
-                WifiCPVersion.versionNumber = 7
-                print("WifiCPVersion.versionNumber set to: \(WifiCPVersion.versionNumber)")
-            }
-            
-            if result.contains("CircuitPython 8") {
-                WifiCPVersion.versionNumber = 8
-                print("WifiCPVersion.versionNumber set to: \(WifiCPVersion.versionNumber)")
-            }
+            Board.shared.name = boardID
+            Board.shared.versionNumber = boardVersion
+            dump(Board.shared)
             
         }
     }
+    
+    
     
 
     
@@ -145,12 +166,7 @@ class WifiViewModel: ObservableObject {
         connectionStatus = .connected
     }
     
-        // @Published var connectionStatus: ConnectionStatus = AppEnvironment.isRunningTests ? .connected : .noConnection
-    
 
-    
-    
- 
     func printStoredInfo() {
         print("======Stored UserDefaults======")
         

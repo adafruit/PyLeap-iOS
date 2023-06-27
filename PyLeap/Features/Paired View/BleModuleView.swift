@@ -13,11 +13,12 @@ class ExpandedBLECellState: ObservableObject {
 }
 
 class Board: Equatable {
+   
     static func == (lhs: Board, rhs: Board) -> Bool {
         return lhs.name == rhs.name && lhs.versionNumber == rhs.versionNumber
     }
     
-    static let shared = Board(name: "DefaultName", versionNumber: "DefaultVersion")
+    static let shared = Board(name: "Unrecognized Board", versionNumber: "8")
 
     var name: String
     var versionNumber: String

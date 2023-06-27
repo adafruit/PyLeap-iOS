@@ -9,13 +9,13 @@
 /* Begin PBXBuildFile section */
 		D505B99C2755323C00386E9F /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D505B99B2755323C00386E9F /* NetworkMonitor.swift */; };
 		D505B99E2756894300386E9F /* ViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = D505B99D2756894300386E9F /* ViewModifier.swift */; };
+		D50887632A2E35510002B798 /* Wifi_ifaddrs.m in Sources */ = {isa = PBXBuildFile; fileRef = D50887622A2E35510002B798 /* Wifi_ifaddrs.m */; };
 		D517F68126C5771D002996E8 /* FillerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D517F68026C5771D002996E8 /* FillerView.swift */; };
 		D5199A2F28DD16F100ACC34C /* BleContentTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5199A2E28DD16F100ACC34C /* BleContentTransfer.swift */; };
 		D51D1413293A53BD0028AEDD /* WifiCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51D1412293A53BD0028AEDD /* WifiCellViewModel.swift */; };
 		D520D69029D4C9380022048D /* WifiServiceCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D520D68F29D4C9380022048D /* WifiServiceCellView.swift */; };
 		D520D69229D4C9900022048D /* WifiServiceCellSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D520D69129D4C9900022048D /* WifiServiceCellSubView.swift */; };
 		D5267411292E902700D4C79E /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5267410292E902700D4C79E /* Networking.swift */; };
-		D5269C00291960A300C0CE4B /* WifiSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5269BFF291960A300C0CE4B /* WifiSelection.swift */; };
 		D5269C08291AB75800C0CE4B /* WifiPairingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5269C07291AB75800C0CE4B /* WifiPairingView.swift */; };
 		D52A926D29071DF400973B6B /* SelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52A926C29071DF400973B6B /* SelectionView.swift */; };
 		D52A926F29078E0A00973B6B /* WifiServiceSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52A926E29078E0A00973B6B /* WifiServiceSelectionView.swift */; };
@@ -68,7 +68,6 @@
 		D58D887B26CC02B60085604A /* OnboardingViewPure.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58D887A26CC02B60085604A /* OnboardingViewPure.swift */; };
 		D58E1C8828A2B10B00AB683E /* WifiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58E1C8728A2B10B00AB683E /* WifiView.swift */; };
 		D58E1C8A28A2B15E00AB683E /* WifiViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58E1C8928A2B15E00AB683E /* WifiViewModel.swift */; };
-		D58E1C8D28A2B32C00AB683E /* Wifi_ifaddrs.m in Sources */ = {isa = PBXBuildFile; fileRef = D58E1C8C28A2B32C00AB683E /* Wifi_ifaddrs.m */; };
 		D58E1C8F28A30A5300AB683E /* WifiNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58E1C8E28A30A5300AB683E /* WifiNetworkService.swift */; };
 		D595FC2E2812C23D00569D8C /* Image Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D595FC2D2812C23D00569D8C /* Image Extension.swift */; };
 		D59DFD8F268A4A4D001737F6 /* BTConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59DFD8E268A4A4D001737F6 /* BTConnectionView.swift */; };
@@ -118,13 +117,14 @@
 		D50237E3280994F900F1EE8A /* PyLeap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = PyLeap.entitlements; path = "../../../../Desktop/Copy Of PyLeap Entitlement/PyLeap.entitlements"; sourceTree = "<group>"; };
 		D505B99B2755323C00386E9F /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		D505B99D2756894300386E9F /* ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifier.swift; sourceTree = "<group>"; };
+		D50887612A2E35490002B798 /* PyLeap-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PyLeap-Bridging-Header.h"; sourceTree = "<group>"; };
+		D50887622A2E35510002B798 /* Wifi_ifaddrs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Wifi_ifaddrs.m; sourceTree = "<group>"; };
 		D517F68026C5771D002996E8 /* FillerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FillerView.swift; sourceTree = "<group>"; };
 		D5199A2E28DD16F100ACC34C /* BleContentTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleContentTransfer.swift; sourceTree = "<group>"; };
 		D51D1412293A53BD0028AEDD /* WifiCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiCellViewModel.swift; sourceTree = "<group>"; };
 		D520D68F29D4C9380022048D /* WifiServiceCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiServiceCellView.swift; sourceTree = "<group>"; };
 		D520D69129D4C9900022048D /* WifiServiceCellSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiServiceCellSubView.swift; sourceTree = "<group>"; };
 		D5267410292E902700D4C79E /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
-		D5269BFF291960A300C0CE4B /* WifiSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WifiSelection.swift; path = "PyLeap/Views/Unpaired View/WifiSelection.swift"; sourceTree = SOURCE_ROOT; };
 		D5269C07291AB75800C0CE4B /* WifiPairingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiPairingView.swift; sourceTree = "<group>"; };
 		D52A926C29071DF400973B6B /* SelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionView.swift; sourceTree = "<group>"; };
 		D52A926E29078E0A00973B6B /* WifiServiceSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiServiceSelectionView.swift; sourceTree = "<group>"; };
@@ -179,7 +179,6 @@
 		D58D887A26CC02B60085604A /* OnboardingViewPure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewPure.swift; sourceTree = "<group>"; };
 		D58E1C8728A2B10B00AB683E /* WifiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiView.swift; sourceTree = "<group>"; };
 		D58E1C8928A2B15E00AB683E /* WifiViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiViewModel.swift; sourceTree = "<group>"; };
-		D58E1C8C28A2B32C00AB683E /* Wifi_ifaddrs.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Wifi_ifaddrs.m; sourceTree = "<group>"; };
 		D58E1C8E28A30A5300AB683E /* WifiNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiNetworkService.swift; sourceTree = "<group>"; };
 		D595FC2D2812C23D00569D8C /* Image Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image Extension.swift"; sourceTree = "<group>"; };
 		D59DFD8E268A4A4D001737F6 /* BTConnectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTConnectionView.swift; sourceTree = "<group>"; };
@@ -222,7 +221,6 @@
 		D5DD39A628D11817000FAEB8 /* WifiFileTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiFileTransfer.swift; sourceTree = "<group>"; };
 		D5DD39A828D11962000FAEB8 /* WifiTransferService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiTransferService.swift; sourceTree = "<group>"; };
 		D5DD39AA28D234C3000FAEB8 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
-		D5ECF4B828C8E3C600FBF93D /* PyLeap-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PyLeap-Bridging-Header.h"; sourceTree = "<group>"; };
 		D5F53CEA2694B524007634C2 /* Blinka Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Blinka Animation.swift"; sourceTree = "<group>"; };
 		D5F53CEC2694B7A9007634C2 /* OnboardingBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingBackgroundView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -284,8 +282,9 @@
 				D544A2502822D4730038D483 /* Spotlight Extension.swift */,
 				D5BBD12A2A15389400961B68 /* Helpers */,
 				D567E2B428B80DC10009F768 /* Outline.md */,
+				D567E2DD28C8D3E20009F768 /* SettingsView */,
 				D5C74DF027EB92E900730505 /* Model */,
-				D59DFDB2268CCEAC001737F6 /* Views */,
+				D59DFDB2268CCEAC001737F6 /* Features */,
 				D5C74DEE27EB91D600730505 /* Networking */,
 				D5C74DED27EB919200730505 /* Resource */,
 				D5C41D6726C5F509004C38E3 /* Download View */,
@@ -381,23 +380,29 @@
 			path = BLESetttings;
 			sourceTree = "<group>";
 		};
-		D58E1C8628A2B0DE00AB683E /* Wifi View */ = {
+		D56FFE1C2A2A4ED500EF1E3B /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				D567E2DD28C8D3E20009F768 /* SettingsView */,
 				D58E1C8728A2B10B00AB683E /* WifiView.swift */,
 				D567E2B728C137880009F768 /* WifiCell.swift */,
-				D51D1412293A53BD0028AEDD /* WifiCellViewModel.swift */,
 				D567E2B928C1382E0009F768 /* WifiSubViewCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		D58E1C8628A2B0DE00AB683E /* Wifi Module */ = {
+			isa = PBXGroup;
+			children = (
+				D56FFE1C2A2A4ED500EF1E3B /* Views */,
+				D51D1412293A53BD0028AEDD /* WifiCellViewModel.swift */,
 				D58E1C8928A2B15E00AB683E /* WifiViewModel.swift */,
 				D5269C07291AB75800C0CE4B /* WifiPairingView.swift */,
 				D52A926E29078E0A00973B6B /* WifiServiceSelectionView.swift */,
-				D5269BFF291960A300C0CE4B /* WifiSelection.swift */,
 				D520D68F29D4C9380022048D /* WifiServiceCellView.swift */,
-				D520D69129D4C9900022048D /* WifiServiceCellSubView.swift */,
 				D5BA1F7E28B66F280012FC62 /* WifiServiceManager.swift */,
 				D5DD39A628D11817000FAEB8 /* WifiFileTransfer.swift */,
 				D5DD39A828D11962000FAEB8 /* WifiTransferService.swift */,
+				D520D69129D4C9900022048D /* WifiServiceCellSubView.swift */,
 				D5AA27F728CA785B001CCE25 /* CircuitPythonType.swift */,
 				D5482F4A28E75053000B0C8E /* LocalNetworkAuth.swift */,
 				D5AA27F928CA8D46001CCE25 /* WifiStatusHeaderBarView.swift */,
@@ -407,17 +412,17 @@
 				D5BA1F8028B66F920012FC62 /* CircuitPythonService.swift */,
 				D58E1C8E28A30A5300AB683E /* WifiNetworkService.swift */,
 				D5BA1F8228B68ED40012FC62 /* NetworkPeripheral.swift */,
+				D50887622A2E35510002B798 /* Wifi_ifaddrs.m */,
+				D50887612A2E35490002B798 /* PyLeap-Bridging-Header.h */,
 				D5D7DF2A28B3E321008552D1 /* BasicCredentials.swift */,
-				D58E1C8C28A2B32C00AB683E /* Wifi_ifaddrs.m */,
-				D5ECF4B828C8E3C600FBF93D /* PyLeap-Bridging-Header.h */,
 			);
-			path = "Wifi View";
+			path = "Wifi Module";
 			sourceTree = "<group>";
 		};
-		D59DFDB2268CCEAC001737F6 /* Views */ = {
+		D59DFDB2268CCEAC001737F6 /* Features */ = {
 			isa = PBXGroup;
 			children = (
-				D58E1C8628A2B0DE00AB683E /* Wifi View */,
+				D58E1C8628A2B0DE00AB683E /* Wifi Module */,
 				D5507ACE26C668BC00512BAA /* UI Components */,
 				D59DFDB3268CCEB9001737F6 /* Onboarding Views */,
 				D5C474AA27E1746F002DD160 /* WebView */,
@@ -429,7 +434,7 @@
 				D517F68026C5771D002996E8 /* FillerView.swift */,
 				D5D1F4AC27ECFD200040E2BF /* Startup View */,
 			);
-			path = Views;
+			path = Features;
 			sourceTree = "<group>";
 		};
 		D59DFDB3268CCEB9001737F6 /* Onboarding Views */ = {
@@ -717,7 +722,6 @@
 				D5DD39A728D11817000FAEB8 /* WifiFileTransfer.swift in Sources */,
 				D5AA27FA28CA8D46001CCE25 /* WifiStatusHeaderBarView.swift in Sources */,
 				D5F53CEB2694B524007634C2 /* Blinka Animation.swift in Sources */,
-				D5269C00291960A300C0CE4B /* WifiSelection.swift in Sources */,
 				D5597BF826A9E14B00DF17C0 /* AppDelegate.swift in Sources */,
 				D56F640E270242CA000E5975 /* String+DeletingPrefix.swift in Sources */,
 				D57858F328333CBC008E8BE4 /* TroubleshootView.swift in Sources */,
@@ -754,8 +758,8 @@
 				D567E2B828C137880009F768 /* WifiCell.swift in Sources */,
 				D5D1F4B027ECFDE00040E2BF /* NavBarModifier.swift in Sources */,
 				D5597C0C26AF018800DF17C0 /* View+If.swift in Sources */,
-				D58E1C8D28A2B32C00AB683E /* Wifi_ifaddrs.m in Sources */,
 				D56B75D4294BAAB400D008E7 /* BLESettingsView.swift in Sources */,
+				D50887632A2E35510002B798 /* Wifi_ifaddrs.m in Sources */,
 				D52BE7EE269DF36E00630900 /* DownloadViewModel.swift in Sources */,
 				D59E31AA281B8DD300D24211 /* DownloadState.swift in Sources */,
 				D520D69029D4C9380022048D /* WifiServiceCellView.swift in Sources */,
@@ -897,7 +901,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
@@ -907,13 +911,12 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.adafruit.PyLeap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = "PyLeap/Views/Wifi View/PyLeap-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -928,7 +931,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PyLeap/PyLeap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PyLeap/Preview Content\"";
 				DEVELOPMENT_TEAM = 2X94RM7457;
 				ENABLE_PREVIEWS = YES;
@@ -938,13 +941,12 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.adafruit.PyLeap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = "PyLeap/Views/Wifi View/PyLeap-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
