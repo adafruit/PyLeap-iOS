@@ -41,7 +41,7 @@ struct BleModuleView: View {
     
     let selectedPeripheral = FileTransferConnectionManager.shared.selectedPeripheral
     
-    @StateObject var viewModel = BleModuleViewModel()
+    @StateObject var vm = BleModuleViewModel()
     @EnvironmentObject var rootViewModel: RootViewModel
     
     
@@ -221,7 +221,7 @@ struct BleModuleView: View {
                             }
                             
                             
-                            let check = viewModel.pdemos.filter {
+                            let check = vm.pdemos.filter {
                                 
                                 if boardInfoForView?.name == "Circuitplayground Bluefruit" {
                                     let cpbProjects = $0.compatibility.contains("circuitplayground_bluefruit")
@@ -270,6 +270,9 @@ struct BleModuleView: View {
                         .id(self.scrollViewID)
                     }
                     .environmentObject(expandedState)
+                    .refreshable {
+                        vm.fetchAndLoadProjectsFromStorage()
+                    }
                 }
                 
             }
@@ -277,18 +280,18 @@ struct BleModuleView: View {
         .background(Color.white)
         
         
-        .onChange(of: viewModel.bootUpInfo, perform: { newValue in
-            viewModel.readMyStatus()
+        .onChange(of: vm.bootUpInfo, perform: { newValue in
+            vm.readMyStatus()
             
             print("newValue \(newValue)")
             boardBootInfo = newValue
         })
         
         .onChange(of: connectionManager.selectedClient) { selectedClient in
-            viewModel.setup(fileTransferClient: selectedClient)
+            vm.setup(fileTransferClient: selectedClient)
         }
         
-        .onChange(of: viewModel.connectedBoard, perform: { newValue in
+        .onChange(of: vm.connectedBoard, perform: { newValue in
             dump(newValue)
             boardInfoForView = newValue
             unknownBoardName = newValue?.name
@@ -297,11 +300,13 @@ struct BleModuleView: View {
         .onAppear(){
             
             
-            viewModel.setup(fileTransferClient:connectionManager.selectedClient)
+            vm.setup(fileTransferClient:connectionManager.selectedClient)
             
             connectionManager.isSelectedPeripheralReconnecting = true
             
-            viewModel.readFile(filename: "boot_out.txt")
+            vm.readFile(filename: "boot_out.txt")
+            
+            print("x\(boardBootInfo)")
             
         }
         

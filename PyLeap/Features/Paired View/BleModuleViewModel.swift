@@ -32,12 +32,24 @@ class BleModuleViewModel: ObservableObject {
     var connectedBoard: Board?
     
     let dataStore = DataStore()
+    @ObservedObject var networkModel = NetworkService()
+
     
     @Published var pdemos : [ResultItem] = []
     
+    func loadProjectsFromStorage() {
+        self.pdemos = self.dataStore.loadDefaultList()
+    }
+    
+    func fetchAndLoadProjectsFromStorage() {
+        self.networkModel.fetch {
+            self.pdemos = self.dataStore.loadDefaultList()
+        }
+    }
+    
     
     init() {
-        pdemos = dataStore.loadDefaultList()
+        loadProjectsFromStorage()
         self.delegate = contentTransfer
     }
     
