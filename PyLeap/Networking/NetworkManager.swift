@@ -35,37 +35,38 @@ class NetworkService: ObservableObject {
     
     func fetch(completion: @escaping() -> Void) {
         print("Attempting Network Request")
-        let request = URLRequest(url: URL(string: AdafruitInfo.baseURL)!, cachePolicy: URLRequest.CachePolicy.returnCacheDataElseLoad, timeoutInterval: 60.0)
+        let request = URLRequest(url: URL(string: AdafruitInfo.baseURL)!)
         let task = session.dataTask(with: request) { data, response, error in
             
             if let error = error {
                 print("error: \(error)")
-            }
-            
-            if let data = data {
-                
-                print("Updating storage with new data.")
-                if let projectData = try? JSONDecoder().decode(RootResults.self, from: data) {
-                    
-                    DispatchQueue.main.async {
-                      
-                        self.dataStore.save(content: projectData.projects, completion: self.dataStore.loadDefaultProjectList)
-                        
-                        completion()
-                    }
-                } else {
-                    print("No data found")
-                }
-            } else {
                 print("Updating UIList with Cached data...")
                 DispatchQueue.main.async {
                     self.dataStore.loadDefaultProjectList()
                     completion()
                 }
+                return
+            }
+            
+            if let data = data {
+                print("Updating storage with new data.")
+                do {
+                    let projectData = try JSONDecoder().decode(RootResults.self, from: data)
+                    dump(projectData.projects)
+                    
+                    DispatchQueue.main.async {
+                        self.dataStore.save(content: projectData.projects, completion: self.dataStore.loadDefaultProjectList)
+                        completion()
+                    }
+                } catch {
+                    print("Decoding error: \(error)")
+                }
+                
             }
         }
         task.resume()
     }
+
     
     
     func fetchThirdPartyProject(urlString: String?) {

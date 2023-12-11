@@ -15,7 +15,7 @@ struct WifiSubViewCell: View {
     
     @StateObject var wifiFileTransfer = WifiFileTransfer()
     @StateObject var wifiTransferService = WifiTransferService()
-    let result : ResultItem
+    let result : PyProject
     
     @Binding var bindingString: String
     
@@ -85,7 +85,7 @@ Remove device from USB. Press "Reset" on the device.
   
     
     
-        func testOperation() {
+        func startOperationQueue() {
             let operationQueue = OperationQueue()
 
             let operation1 = BlockOperation {
@@ -157,49 +157,18 @@ Remove device from USB. Press "Reset" on the device.
                 Text("Compatible with:")
                     .font(Font.custom("ReadexPro-Bold", size: 18))
                     .padding(.top, 5)
-                
-                HStack {
-                    Image(systemName: "checkmark")
-                        .resizable()
-                        .frame(width: 25, height: 22, alignment: .center)
-                        .foregroundColor(.green)
-                    Text("ESP32-S2")
-                        .font(Font.custom("ReadexPro-Regular", size: 18))
-                        .foregroundColor(.black)
-                }
-                .padding(.top, 10)
-                
-
-                ForEach(result.compatibility, id: \.self) { string in
-                    if string == "circuitplayground_bluefruit" {
-                        
-                        HStack {
-                            Image(systemName: "checkmark")
-                                .resizable()
-                                .frame(width: 25, height: 22, alignment: .center)
-                                .foregroundColor(.green)
-                            Text("Circuit Playground Bluefruit")
-                                .font(Font.custom("ReadexPro-Regular", size: 18))
-                                .foregroundColor(.black)
-                        }
-                        .padding(.top, 10)
+            
+                ForEach(result.compatibility, id: \.self) { device in
+                    HStack {
+                        Image(systemName: "checkmark")
+                            .resizable()
+                            .frame(width: 25, height: 22, alignment: .center)
+                            .foregroundColor(.green)
+                        Text(formatDeviceName(device))
+                            .font(Font.custom("ReadexPro-Regular", size: 18))
+                            .foregroundColor(.black)
                     }
-                    
-                    
-                    
-                    if string  == "clue_nrf52840_express" {
-                        
-                        HStack {
-                            Image(systemName: "checkmark")
-                                .resizable()
-                                .frame(width: 25, height: 22, alignment: .center)
-                                .foregroundColor(.green)
-                            Text("Adafruit CLUE")
-                                .font(Font.custom("ReadexPro-Regular", size: 18))
-                                .foregroundColor(.black)
-                        }
-                        .padding(.top, 10)
-                    }
+                    .padding(.top, 10)
                 }
             })
             .ignoresSafeArea(.all)
@@ -219,18 +188,15 @@ Remove device from USB. Press "Reset" on the device.
             
             
             
-            if isConnected {
+            
                 
-                if result.compatibility.contains(bindingString) {
-                    
                     
                     if wifiFileTransfer.testIndex.downloadState == .idle {
                         
                         
                         Button {
-                            //   NotificationCenter.default.post(name: .didCompleteZip, object: nil, userInfo: projectResponse)
 
-                            testOperation()
+                            startOperationQueue()
                             
                         } label: {
                             RunItButton()
@@ -270,20 +236,8 @@ Remove device from USB. Press "Reset" on the device.
                             .disabled(true)
                     }
                     
-                    
-                    
-                }
                 
-            } else {
-                
-                Button  {
-                    rootViewModel.goTobluetoothPairing()
-                } label: {
-                    ConnectButton()
-                        .padding(.top, 20)
-                }
-                
-            }
+            
         }
         
         Spacer()

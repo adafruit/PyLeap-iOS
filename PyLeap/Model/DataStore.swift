@@ -27,7 +27,7 @@ public class DataStore: ObservableObject {
      /// This method writes it to a file named "StandardPyLeapProjects.json" in the documents directory.
      */
     
-    func save(content: [ResultItem], completion: @escaping () -> Void) {
+    func save(content: [PyProject], completion: @escaping () -> Void) {
         print(#function)
         let encoder = JSONEncoder()
         if let encodedProjectData = try? encoder.encode(content) {
@@ -47,7 +47,7 @@ public class DataStore: ObservableObject {
      /// This method reads the "StandardPyLeapProjects.json" file in the documents directory and decodes it as an array of ResultItem objects, and then appends the customProjects array to it and saves it back to the file.
      */
     
-    func save(customProjects: [ResultItem], completion: @escaping () -> Void) {
+    func save(customProjects: [PyProject], completion: @escaping () -> Void) {
         
         var temp = customProjects
         
@@ -55,7 +55,7 @@ public class DataStore: ObservableObject {
         let savedData = try? Data(contentsOf: fileURL)
         
         if let savedData = savedData,
-           let savedProjects = try? JSONDecoder().decode([ResultItem].self, from: savedData) {
+           let savedProjects = try? JSONDecoder().decode([PyProject].self, from: savedData) {
             NotificationCenter.default.post(name: .didCollectCustomProject, object: nil, userInfo: nil)
             temp.append(contentsOf: savedProjects)
             
@@ -76,7 +76,7 @@ public class DataStore: ObservableObject {
         let savedData = try? Data(contentsOf: fileURL)
         
         if let savedData = savedData,
-           let savedProjects = try? JSONDecoder().decode([ResultItem].self, from: savedData) {
+           let savedProjects = try? JSONDecoder().decode([PyProject].self, from: savedData) {
             loadCustomProjectList(contents: savedProjects)
         }
     }
@@ -85,15 +85,15 @@ public class DataStore: ObservableObject {
      ///  This method reads the "StandardPyLeapProjects.json" file in the documents directory, decodes it as an array of ResultItem objects, and returns it.
      */
     
-    func loadDefaultList() -> [ResultItem] {
+    func loadDefaultList() -> [PyProject] {
         
-        var result = [ResultItem]()
+        var result = [PyProject]()
         let fileURL = documentsDirectory.appendingPathComponent("StandardPyLeapProjects.json")
         
         let savedData = try? Data(contentsOf: fileURL)
         
         if let savedData = savedData,
-           let savedProjects = try? JSONDecoder().decode([ResultItem].self, from: savedData) {
+           let savedProjects = try? JSONDecoder().decode([PyProject].self, from: savedData) {
             result = savedProjects
         }
         return result
@@ -107,14 +107,14 @@ public class DataStore: ObservableObject {
      /// This method reads the "CustomProjects.json" file in the documents directory, decodes it as an array of ResultItem objects, appends it to the input array, and then calls
      */
     
-    func loadCustomProjectList(contents: [ResultItem]) {
+    func loadCustomProjectList(contents: [PyProject]) {
         var temp = contents
         
         let fileURL = documentsDirectory.appendingPathComponent("CustomProjects.json")
         let savedData = try? Data(contentsOf: fileURL)
         
         if let savedData = savedData,
-           let savedProjects = try? JSONDecoder().decode([ResultItem].self, from: savedData) {
+           let savedProjects = try? JSONDecoder().decode([PyProject].self, from: savedData) {
             temp.append(contentsOf: savedProjects)
             removeDuplicates(projectList: temp)
             
@@ -129,9 +129,9 @@ public class DataStore: ObservableObject {
      /// This method uses the reduce(into:_:) method to iterate over the array, and it builds a new array that only contains unique ResultItem objects based on their bundleLink property. It then calls the save(content:completion:) method to save the new array to "StandardPyLeapProjects.json" file.
      */
     
-    func removeDuplicates(projectList: [ResultItem]) {
+    func removeDuplicates(projectList: [PyProject]) {
         
-        let combinedLists = projectList.reduce(into: [ResultItem]()) { (result, projectList) in
+        let combinedLists = projectList.reduce(into: [PyProject]()) { (result, projectList) in
             
             if !result.contains(where: { $0.bundleLink == projectList.bundleLink }) {
                 result.append(projectList)
@@ -146,7 +146,7 @@ public class DataStore: ObservableObject {
         let savedData = try? Data(contentsOf: fileURL)
         
         if let savedData = savedData,
-           let savedProjects = try? JSONDecoder().decode([ResultItem].self, from: savedData) {
+           let savedProjects = try? JSONDecoder().decode([PyProject].self, from: savedData) {
             
             for project in savedProjects {
                 print("CustomProjects name: \(project.projectName)")

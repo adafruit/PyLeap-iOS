@@ -31,5 +31,10 @@ extension View {
         }
     }
     
+    func formatDeviceName(_ name: String) -> String {
+        let replaced = name.replacingOccurrences(of: "_", with: " ").replacingOccurrences(of: "-", with: " ")
+        let formatted = replaced.capitalized
+        return formatted
+    }
     
 }

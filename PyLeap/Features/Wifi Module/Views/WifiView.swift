@@ -119,8 +119,8 @@ struct WifiView: View {
                     SubHeaderView()
                 
                     let check = vm.pdemos.filter {
-                                            $0.compatibility.contains(boardBootInfo)
-                                        }
+                        $0.wifiCompatible
+                    }
                     
                     ForEach(check) { demo in
                         

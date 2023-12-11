@@ -19,7 +19,7 @@ struct WifiCell: View {
     
     @EnvironmentObject var expandedState : ExpandedState
     
-    let result : ResultItem
+    let result : PyProject
     
     @State var isExpanded: Bool = false {
         didSet {

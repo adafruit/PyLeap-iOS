@@ -11,7 +11,7 @@ struct DemoViewCell: View {
     
     @EnvironmentObject var expandedState : ExpandedBLECellState
     
-    let result : ResultItem
+    let result : PyProject
     
     @State var isExpanded: Bool = false {
         didSet {

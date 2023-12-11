@@ -10,7 +10,7 @@ import FileTransferClient
 
 struct DemoSubview: View {
     
-    let result: ResultItem
+    let result: PyProject
     
     @EnvironmentObject var rootViewModel: RootViewModel
     @StateObject var viewModel = SubCellViewModel()

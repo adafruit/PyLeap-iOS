@@ -46,7 +46,7 @@ class WifiViewModel: ObservableObject {
 
     let dataStore = DataStore()
     
-    @Published var pdemos : [ResultItem] = []
+    @Published var pdemos : [PyProject] = []
     
 
     func loadProjectsFromStorage() {
@@ -81,7 +81,7 @@ class WifiViewModel: ObservableObject {
       //  networkModel.fetch()
     }
     
-    @Published var pyleapProjects = [ResultItem]()
+    @Published var pyleapProjects = [PyProject]()
   
     var boardDataProvider = BoardDataProvider()
     

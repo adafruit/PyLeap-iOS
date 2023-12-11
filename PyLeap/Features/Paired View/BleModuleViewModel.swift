@@ -35,7 +35,7 @@ class BleModuleViewModel: ObservableObject {
     @ObservedObject var networkModel = NetworkService()
 
     
-    @Published var pdemos : [ResultItem] = []
+    @Published var pdemos : [PyProject] = []
     
     func loadProjectsFromStorage() {
         self.pdemos = self.dataStore.loadDefaultList()

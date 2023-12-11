@@ -79,9 +79,3 @@ struct WifiServiceCellView: View {
     
     
 }
-
-//struct WifiServiceCellView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        WifiServiceCellView()
-//    }
-//}

@@ -17,23 +17,23 @@ class InternetConnectionManager: ObservableObject {
     @Published var isConnected = false
     
     init() {
-       
+        
         startMonitoring(completion: {
             monitor.pathUpdateHandler = { path in
                 
                 DispatchQueue.main.async {
                     let newIsConnected = path.status == .satisfied
-                                      if self.isConnected != newIsConnected {
-                                          self.isConnected = newIsConnected
-                                          print("net: \(path.status) \(self.isConnected)")
-                                      }
+                    if self.isConnected != newIsConnected {
+                        self.isConnected = newIsConnected
+                        print("net: \(path.status) \(self.isConnected)")
+                    }
                 }
             }
         })
     }
     
     func startMonitoring(completion:()->Void) {
-       print("Start Monitoring Network")
+        print("Start Monitoring Network")
         monitor.start(queue: queue)
         completion()
         
@@ -57,8 +57,8 @@ class MainSelectionViewModel: ObservableObject {
     
     let dataStore = DataStore()
     
-    @Published var pdemos : [ResultItem] = []
-   
+    @Published var pdemos: [PyProject] = []
+    
     var networkMonitorCancellable: AnyCancellable?
     
     init() {
@@ -78,22 +78,22 @@ class MainSelectionViewModel: ObservableObject {
     
     func startUp(){
         networkMonitorCancellable = networkMonitor.$isConnected.sink { isConnected in
-                    
+            
             if isConnected {
-// Perform some action when the device is connected to the internet.
+                // Perform some action when the device is connected to the internet.
                 self.fetchAndLoadProjectsFromStorage()
                 print("The device is currently connected to the internet.")
-                        
-                    } else {
-                        print("The device is not currently connected to the internet.")
-                        // Perform some action when the device is not connected to the internet.
-                        print("Loading cached remote data.")
-                        self.loadProjectsFromStorage()
-                        
-                    }
-                }
+                
+            } else {
+                print("The device is not currently connected to the internet.")
+                // Perform some action when the device is not connected to the internet.
+                print("Loading cached remote data.")
+                self.loadProjectsFromStorage()
+                
+            }
+        }
     }
     
-
+    
     
 }

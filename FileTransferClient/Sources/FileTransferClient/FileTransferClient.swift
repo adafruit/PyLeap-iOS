@@ -98,7 +98,7 @@ public class FileTransferClient {
         // Set current peripheral
         self.blePeripheral = blePeripheral
         
-        // Setup services
+        // Setup servic*es
         let servicesGroup = DispatchGroup()
         
         var error: Error? = nil
